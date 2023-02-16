@@ -1,0 +1,20 @@
+a {
+    color: inherit;
+    text-decoration: none;
+}
+.row {
+    display: flex;
+}
+.column {
+    display: inline;
+}
+.chord {
+    color: #f0b647;
+    font-weight: bold;
+    min-height: 2em;
+    font-style: italic;
+} 
+.lyrics {
+    min-height: 2em;
+    white-space:pre-wrap;
+} 

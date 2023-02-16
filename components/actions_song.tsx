@@ -1,0 +1,95 @@
+import { useAppDispatch, useAppSelector } from '@/logic/redux/store'
+import { Song } from '@/logic/local_logic'
+import Container from '@mui/material/Container'
+import LyricsRoundedIcon from '@mui/icons-material/LyricsRounded';
+import ZoomInRoundedIcon from '@mui/icons-material/ZoomInRounded';
+import ZoomOutRoundedIcon from '@mui/icons-material/ZoomOutRounded';
+import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
+import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded';
+import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
+import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded';
+import IconButton from '@mui/material/IconButton'
+import { InfoLocalSong, modifySong } from '@/logic/redux/info_song_slice'
+import { setShowChords } from '@/logic/redux/settings_slice'
+import Tooltip from '@mui/material/Tooltip';
+
+interface PropsActionSong {
+    song: Song
+    onPressVideo: Function
+    videoIsPlaying: boolean
+    setOpenSheet: Function
+}
+
+const ActionIconButton = (props: any) => {
+    const {title, children, ...propsIconButton  } = props
+
+    return (
+        <Tooltip title={title} placement="left">
+            <IconButton sx={{ boxShadow: 10, p: 1.5, m: 1 }} {...propsIconButton}>
+                {children}
+            </IconButton>
+        </Tooltip>
+    )
+
+}
+
+export default function ActionsSong(props: PropsActionSong) {
+    const infoSong: InfoLocalSong | undefined = useAppSelector(state => state.infoSongs.infoSongs[props.song.id])
+    const showChords = useAppSelector(state => state.settings.showChords)
+    const dispatch = useAppDispatch()
+    const actualTranspose = infoSong?.transpose ?? 0
+    const actualZoom = infoSong?.zoom ?? 17
+
+    return (
+        <Container disableGutters sx={{width: 30}} style={{position: 'fixed', top: 80, right: 45}}>
+            <ActionIconButton 
+                color={showChords ? 'primary' : undefined}   
+                onClick={() => dispatch(setShowChords(!showChords))}
+                title="Mostra accordi"
+            >
+                <LyricsRoundedIcon />
+            </ActionIconButton>
+            <ActionIconButton 
+                title="+1 #"
+                onClick={() => dispatch(modifySong({id: props.song.id, transpose: actualTranspose + 1}))}
+                color={actualTranspose > 0 ? 'primary' : undefined}   
+            >
+                <KeyboardArrowUpRoundedIcon />
+            </ActionIconButton>
+            <ActionIconButton 
+                title="-1 #"
+                onClick={() => dispatch(modifySong({id: props.song.id, transpose: actualTranspose - 1}))}
+                color={actualTranspose < 0 ? 'primary' : undefined}   
+            >
+                <KeyboardArrowDownRoundedIcon />
+            </ActionIconButton>
+            <ActionIconButton 
+                title="+ Zoom"
+                onClick={() => dispatch(modifySong({id: props.song.id, zoom: actualZoom + 1}))}
+                color={actualZoom > 17 ? 'primary' : undefined}    
+            >
+                <ZoomInRoundedIcon />
+            </ActionIconButton>
+            <ActionIconButton 
+                title="- Zoom"
+                onClick={() => dispatch(modifySong({id: props.song.id, zoom: actualZoom - 1}))}
+                color={actualZoom < 17 ? 'primary' : undefined}
+            >
+                <ZoomOutRoundedIcon />
+            </ActionIconButton>
+            <ActionIconButton 
+                title="Riproduci video"
+                onClick={() => props.onPressVideo()}
+                color={props.videoIsPlaying ? 'primary' : undefined}  
+            >
+                <PlayArrowRoundedIcon />
+            </ActionIconButton>
+            <ActionIconButton 
+                title="Aggiungi a playlist"
+                onClick={() => props.setOpenSheet()}>
+                <PlaylistAddRoundedIcon />
+            </ActionIconButton>
+        </Container>
+    )
+  
+}
