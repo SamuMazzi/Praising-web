@@ -1,11 +1,7 @@
 import Container from '@mui/material/Container'
-import useSWR from 'swr'
-import Typography from '@mui/material/Typography'
-import { SongAppBar } from '@/components/appbar'
+import { PlaylistAppBar } from '@/components/appbar'
 import { getSingleSong } from '@/logic/local_logic'
 import { useAppSelector } from '@/logic/redux/store'
-import List from '@mui/material/List'
-import SongTile from '@/components/song_tile'
 import ListSongs from '@/components/list_songs'
 import { useState } from 'react'
 import { ModalBottomSheetPlaylist } from '@/components/bottom_sheet'
@@ -30,7 +26,7 @@ export default function PlaylistPage(props: PropsSongPage) {
 
     return (
         <Container sx={{minHeight: '100vh'}}>
-            <SongAppBar title={playlist.name}/>
+            <PlaylistAppBar title={playlist.name}/>
             <Container sx={{py: 5}}/>
             <ListSongs songs={songs} mode='inside_playlist' />
 

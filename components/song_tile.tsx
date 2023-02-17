@@ -3,13 +3,14 @@ import { Song } from '@/logic/local_logic'
 import { NextLinkComposed } from './link_composed'
 import ListItem from '@mui/material/ListItem'
 import IconButton from '@mui/material/IconButton'
-import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import ListItemButton from '@mui/material/ListItemButton'
 import { handleSongForPlaylist, Playlist } from '@/logic/redux/playlist_slice'
 import { useAppDispatch } from '@/logic/redux/store'
+import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded';
 
 interface PropsSongTile {
     song: Song
+    onSecondaryAction: Function
 }
 
 export default function SongTile(props: PropsSongTile) {
@@ -17,8 +18,11 @@ export default function SongTile(props: PropsSongTile) {
     <ListItem component={NextLinkComposed} to={{pathname: '/songs/' + props.song.id}} 
         sx={{backgroundColor: '#F2F2F2', borderRadius: 8, my: 1}}
         secondaryAction={
-            <IconButton>
-                <AddRoundedIcon />
+            <IconButton onClick={(e: any) => {
+                e.preventDefault()
+                props.onSecondaryAction()
+            }}>
+                <PlaylistAddRoundedIcon />
             </IconButton>
         }
     >

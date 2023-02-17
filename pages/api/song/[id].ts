@@ -11,7 +11,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(404).json({message: 'Not found'});
         return
     }
-    const jsonDirectory = path.join(process.cwd(), 'accordi');
-    const fileContents = await fs.readFile(jsonDirectory + '/' + song.name + '.crd', 'utf8');
+
+    const dirRelativeToPublicFolder = 'accordi'
+
+    const dir = path.resolve('./public', dirRelativeToPublicFolder);
+    //const dir = path.join(process.cwd(), 'accordi');
+    const fileContents = await fs.readFile(dir + '/' + song.name + '.crd', 'utf8');
     res.status(200).json(fileContents);
 }

@@ -1,6 +1,6 @@
 import Container from '@mui/material/Container'
 import { filterArgomenti, filterMomenti, getLocalSongs } from '@/logic/local_logic'
-import PraisingAppBar from '@/components/appbar'
+import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar'
 import ListSongs from '@/components/list_songs'
 
 FilterPage.getInitialProps = async (props: any) => {
@@ -21,7 +21,7 @@ export default function FilterPage(props: PropsFilterPage) {
     return (
         <Container>
             <PraisingAppBar title={nameFilter} backIcon/>
-            <Container sx={{py: 5}}/>
+            <Container sx={{pt: 4, pb: 7}}/>
             <ListSongs songs={localSongs} mode='normal'/>
         </Container>
     )

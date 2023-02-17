@@ -9,14 +9,13 @@ const fetchLiturgia = async (url: string) => {
 
 const extractLiturgia = async (url: string) => {
     const $ = await fetchLiturgia(url);
-    const letture = $(".letture .lettura")
-    .toArray()
-    .map((elem) => $(elem).text().trim());
-    console.log(letture)
+    const firstLecture = $(".cci-liturgia-giorno-prima-lettura").text().trim()
+    //.toArray()
+    //.map((elem) => $(elem).text().trim());
     
-    const salmo = $(".salmo .lettura").text().trim();
-    const vangelo = $(".vangelo .lettura").text().trim();
-    return { letture, salmo, vangelo };
+    const psalm = $(".cci-liturgia-giorno-salmo").text().trim();
+    const gospel = $(".cci-liturgia-giorno-vangelo").text().trim();
+    return { firstLecture, psalm, gospel };
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -24,8 +23,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const url = `https://www.chiesacattolica.it/liturgia-del-giorno/?data-liturgia=${date}`;
 
     const out = await extractLiturgia(url)
-    console.log(out)
-    //{ letture, salmo, vangelo }
 
     res.status(200).json(out);
 }

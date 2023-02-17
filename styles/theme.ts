@@ -12,6 +12,12 @@ export const app_theme = createTheme({
             //light: '#AFC4FF',
             //dark: '#353E57',
         },
+        success: {
+            main: '#7DCFB6'
+        },
+        error: {
+            main: '#EF3E36'
+        },
         background: {
             default: '#F9F9F9',
         },

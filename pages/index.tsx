@@ -15,6 +15,7 @@ import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar'
 import { filterArgomenti, filterMomenti, getLastRecentsSongs, getSingleSong } from '@/logic/local_logic'
 import SongTile from '@/components/song_tile'
 import Routes from '@/logic/routes'
+import ListSongs from '@/components/list_songs'
 
 
 export default function Home() {
@@ -84,9 +85,11 @@ export default function Home() {
             <Typography variant="h2" sx={{pt: 2, pb: 2, pl: 2}}>
                 Gli ultimi canti scelti
             </Typography>
-            {
-              recentSongs.map(v => (<SongTile key={v.id} song={v}/>))
-            }
+            <ListSongs 
+              songs={recentSongs}
+              mode='normal'
+              withSearch={false}
+            />
           </Container>
         }
         <NavBar />

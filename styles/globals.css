@@ -8,6 +8,9 @@ a {
 .column {
     display: inline;
 }
+.chorus {
+    font-weight: bold;
+} 
 .chord {
     color: #f0b647;
     font-weight: bold;

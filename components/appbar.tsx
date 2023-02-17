@@ -8,6 +8,9 @@ import Toolbar from "@mui/material/Toolbar";
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import IconButton from "@mui/material/IconButton";
 import { useRouter } from "next/router";
+import Box from "@mui/material/Box";
+import CircleRoundedIcon from '@mui/icons-material/CircleRounded';
+import Tooltip from "@mui/material/Tooltip";
 //TODO: Implementare clide-side routing anche con useRouter
 
 interface PropsHideOnScroll {
@@ -69,6 +72,7 @@ export default function PraisingAppBar(props: PropsAppBar) {
 interface PropsSongAppBar {
     title: string
     transpose?: number
+    wakeLockActive: boolean
 }
 
 export const SongAppBar = (props: PropsSongAppBar) => {
@@ -78,20 +82,53 @@ export const SongAppBar = (props: PropsSongAppBar) => {
       <React.Fragment>
         <CssBaseline />
         <HideOnScroll {...props}>
-            <AppBar style={{ backgroundColor: 'white' }}>
+            <AppBar style={{ backgroundColor: 'white', display: 'flex' }}>
                 <Toolbar>
-                <IconButton edge="start" sx={{ mr: 2 }} onClick={() => router.back()}>
-                    <ArrowBackRoundedIcon />
-                </IconButton>
-                <Typography variant="h1" >
-                    {props.title}
-                </Typography>
-                <Typography variant="h6" textAlign='end' style={{color: 'black'}}>
-                    {props.transpose}
-                </Typography>
+                  <IconButton edge="start" sx={{ mr: 2 }} onClick={() => router.back()}>
+                      <ArrowBackRoundedIcon />
+                  </IconButton>
+                  <Box sx={{ flexGrow: 1, display: 'flex' }} alignItems="center">
+                    <Typography variant="h1" sx={{py: 1}} >
+                        {props.title}
+                    </Typography>
+                    <Tooltip title={props.wakeLockActive ? 'WakeLock attivo' : 'WakeLock disattivato'}>
+                      <CircleRoundedIcon sx={{ml: 1}} fontSize="small" color={props.wakeLockActive ? 'success' : 'error'}/>
+                    </Tooltip>
+                  </Box>
+                  <Box sx={{ flexGrow: 0, display: 'flex' }} alignItems="center">
+                    <Typography color='primary' style={{fontWeight: 600}}>
+                        {props.transpose === 0 ? '' : props.transpose}
+                    </Typography>
+                  </Box>
                 </Toolbar>
             </AppBar>
         </HideOnScroll>
       </React.Fragment>
     );
+}
+
+interface PropsPlaylistAppBar {
+  title: string
+}
+
+export const PlaylistAppBar = (props: PropsPlaylistAppBar) => {
+  const router = useRouter()
+  
+  return (
+    <React.Fragment>
+      <CssBaseline />
+      <HideOnScroll {...props}>
+          <AppBar style={{ backgroundColor: 'white', display: 'flex' }}>
+              <Toolbar>
+                <IconButton edge="start" sx={{ mr: 2 }} onClick={() => router.back()}>
+                    <ArrowBackRoundedIcon />
+                </IconButton>
+                <Typography variant="h1" sx={{py: 1}} >
+                    {props.title}
+                </Typography>
+              </Toolbar>
+          </AppBar>
+      </HideOnScroll>
+    </React.Fragment>
+  );
 }
