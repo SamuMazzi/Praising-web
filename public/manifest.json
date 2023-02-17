@@ -4,6 +4,7 @@
     "display": "standalone",
     "orientation": "portrait",
     "start_url": "/",
+    "id": "/",
     "name": "Praising",
     "short_name": "Praising",
     "icons": [

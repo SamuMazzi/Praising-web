@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const dirRelativeToPublicFolder = 'accordi'
-
+    
     const dir = path.resolve('./public', dirRelativeToPublicFolder);
     //const dir = path.join(process.cwd(), 'accordi');
     const fileContents = await fs.readFile(dir + '/' + song.name + '.crd', 'utf8');

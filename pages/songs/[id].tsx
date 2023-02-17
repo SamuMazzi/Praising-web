@@ -50,15 +50,15 @@ export const getServerSideProps = async (context: NextPageContext) => {
 }
 
 interface PropsSongPage {
-    fileContent: string
-    song: Song
+    fileContent: string | undefined
+    song: Song | undefined
 }
 
 export default function SongPage(props: PropsSongPage) {
     const song = props.song
     const [openModalPlaylist, setOpenModalPlaylist] = useState(false)
     const [showVideo, setShowVideo] = useState(false)
-    const infoSong: InfoLocalSong | undefined = useAppSelector(state => state.infoSongs.infoSongs[props.song.id])
+    const infoSong: InfoLocalSong | undefined = useAppSelector(state => props.song?.id ? state.infoSongs.infoSongs[props.song.id] : undefined)
     const showChords = useAppSelector(state => state.settings.showChords)
     const { isSupported, released, request, release } = useWakeLock({});
     const [messageSnackbar, setMessageSnackbar] = useState("")
@@ -73,19 +73,30 @@ export default function SongPage(props: PropsSongPage) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const songToRender = renderSong({
-        fileContent: props.fileContent,
-        showChords: showChords,
-        transpose: infoSong?.transpose
-    })
-
     const handlePressVideo = () => {
-        if(song.link !== undefined) {
+        if(song?.link !== undefined) {
             setShowVideo(old => !old)
         } else {
             setMessageSnackbar('Link non disponibile per questa canzone')
         }
     }
+
+    if(props.fileContent === undefined || props.song === undefined) {
+        return (
+            <Container sx={{minHeight: '100vh'}}>
+                <SongAppBar title={''} wakeLockActive={!released}/>
+                <Typography sx={{pt: 15}} textAlign="center">
+                    {"C'è stato un'errore, riprovare"}
+                </Typography>
+            </Container>
+        )
+    }
+
+    const songToRender = renderSong({
+        fileContent: props.fileContent,
+        showChords: showChords,
+        transpose: infoSong?.transpose
+    })
 
     return (
         <Container sx={{minHeight: '100vh'}}>
@@ -94,9 +105,9 @@ export default function SongPage(props: PropsSongPage) {
                     Questo browser non supporta il wakelock
                 </Typography>
             }
-            <SongAppBar title={song.name} transpose={infoSong?.transpose} wakeLockActive={!released}/>
+            <SongAppBar title={song!.name} transpose={infoSong?.transpose} wakeLockActive={!released}/>
             <Container sx={{py: 5}}/>
-            <ActionsSong song={song} videoIsPlaying={showVideo} onPressVideo={handlePressVideo} 
+            <ActionsSong song={song!} videoIsPlaying={showVideo} onPressVideo={handlePressVideo} 
                 setOpenSheet={() => setOpenModalPlaylist(true)}/>
             <Container disableGutters sx={{py: 1}}>
                 <Typography style={{fontSize: infoSong?.zoom ?? 17}}>
@@ -104,7 +115,7 @@ export default function SongPage(props: PropsSongPage) {
                 </Typography>
             </Container>
             {
-            showVideo && song.link && 
+            showVideo && song?.link && 
             <Box 
                 style={{position: 'fixed', bottom: 20, right: 0}} 
                 sx={{px: 2, pb: 2, mr: 3, backgroundColor: 'white', borderRadius: 4, boxShadow: 12, maxWidth: '90%'}}
@@ -113,7 +124,7 @@ export default function SongPage(props: PropsSongPage) {
                     <CloseRounded />
                 </IconButton>
                     <YouTube
-                        videoId={song.link?.split('youtu.be/')[1]}
+                        videoId={song?.link?.split('youtu.be/')[1]}
                         opts={{
                             width: typeof window !== "undefined" ? (window.screen.availWidth < 700 ? (window.screen.availWidth*(4/5)).toString() : '640') : '640',
                             playerVars: {
@@ -124,7 +135,7 @@ export default function SongPage(props: PropsSongPage) {
             </Box>
             }
             <MessageSnackbar handleClose={() => setMessageSnackbar('')} message={messageSnackbar} />
-            <ModalBottomSheetSong song_id={song.id} open={openModalPlaylist} onClose={() => setOpenModalPlaylist(false)}/>
+            <ModalBottomSheetSong song_id={song!.id} open={openModalPlaylist} onClose={() => setOpenModalPlaylist(false)}/>
         </Container>
     )
 }
