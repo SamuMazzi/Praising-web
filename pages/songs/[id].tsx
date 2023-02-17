@@ -65,7 +65,7 @@ export default function SongPage(props: PropsSongPage) {
             <Container sx={{minHeight: '100vh'}}>
                 <SongAppBar title={''} wakeLockActive={!released}/>
                 {
-                    isLoading ? <CircularProgress sx={{textAlign: 'center', pt: 15}}/> :
+                    isLoading ? <CircularProgress sx={{textAlign: 'center', mt: 15}}/> :
                     <Typography sx={{pt: 15}} textAlign="center">
                         {"C'è stato un'errore, riprovare"}
                     </Typography>
