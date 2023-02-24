@@ -1,15 +1,17 @@
-import Container from '@mui/material/Container'
+import MuiContainer from '@mui/material/Container'
 import List from '@mui/material/List'
 import { Song } from '@/logic/local_logic'
 import SongTile, { PlaylistSongTile, SelectableSongTile } from '@/components/song_tile'
 import TypeSearch from '@/components/search_field'
 import { useState } from 'react'
-import { Playlist } from '@/logic/redux/playlist_slice'
+import { applyDrag, Playlist } from '@/logic/redux/playlist_slice'
 import { ModalBottomSheetSong } from './bottom_sheet'
+import DragContainer from './react-smooth-dnd/Container'
+import { useAppDispatch, useAppSelector } from '@/logic/redux/store'
 
 interface PropsListSongs {
     songs: Song[]
-    mode: 'normal' | 'selection_playlist' | 'inside_playlist'
+    mode: 'normal' | 'selection_playlist'
     playlist?: Playlist
     withSearch?: boolean
 }
@@ -22,7 +24,7 @@ export default function ListSongs(props: PropsListSongs) {
         .sort((a,b) => ('' + a.name).localeCompare(b.name))
 
     return (
-        <Container>
+        <MuiContainer>
             {
                 props.withSearch === undefined || props.withSearch && <TypeSearch query={filter} setQuery={setFilter}/>
             }
@@ -31,12 +33,49 @@ export default function ListSongs(props: PropsListSongs) {
                     localSongs.map(song => {
                         if (props.mode === 'normal') return <SongTile key={song.id} song={song} onSecondaryAction={() => setSongModal(song.id)}/>
                         if (props.mode === 'selection_playlist') return <SelectableSongTile key={song.id} song={song} playlist={props.playlist!}/>
-                        if (props.mode === 'inside_playlist') return <PlaylistSongTile key={song.id} song={song} playlist={props.playlist!}/>
                     })
                 }
             </List>
             <ModalBottomSheetSong open={songModal !== ''} onClose={() => setSongModal('')} song_id={songModal}/>
-        </Container>
+        </MuiContainer>
+    )
+  
+}
+
+interface PropsListSongsPlaylist {
+    songs: Song[]
+    playlist_id: string
+}
+
+export function ListSongsPlaylist(props: PropsListSongsPlaylist) {
+    const dispatch = useAppDispatch()
+    const playlist = useAppSelector(state => state.playlist.playlist[props.playlist_id])
+    const [songModal, setSongModal] = useState('')
+    const [filter, setFilter] = useState("")
+    const localSongs = props.songs
+        .filter(v => v.name.toLowerCase().includes(filter.toLowerCase()))
+
+    return (
+        <MuiContainer>
+            <TypeSearch query={filter} setQuery={setFilter}/>
+            <List>
+                <DragContainer dragHandleSelector='.column-drag-handle' onDrop={e => {
+                    dispatch(applyDrag({
+                        id: props.playlist_id,
+                        dragResult: e 
+                    }))
+                }}>
+                    <>
+                    {
+                        localSongs.map(song => (
+                            <PlaylistSongTile key={song.id} song={song} playlist={playlist!}/>
+                        ))
+                    }
+                    </>
+                </DragContainer>
+            </List>
+            <ModalBottomSheetSong open={songModal !== ''} onClose={() => setSongModal('')} song_id={songModal}/>
+        </MuiContainer>
     )
   
 }

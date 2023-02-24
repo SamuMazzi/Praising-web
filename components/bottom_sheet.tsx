@@ -1,5 +1,4 @@
 import Sheet from 'react-modal-sheet';
-import { useState } from 'react';
 import ListSongs from './list_songs';
 import { getLocalSongs } from '@/logic/local_logic';
 import { useAppSelector } from '@/logic/redux/store';
@@ -25,8 +24,10 @@ export function ModalBottomSheetPlaylist(props: PropsModalBottomSheetPlaylist) {
   return (
     <>
       <Sheet isOpen={props.open} onClose={() => props.onClose()} 
-        snapPoints={[0.8, 0.6,0]}
-        initialSnap={1}>
+        snapPoints={[0.6]}
+        initialSnap={0}
+        disableDrag
+      >
         <Sheet.Container>
             <Sheet.Header>
                 <TitleModal onClose={props.onClose} title={"Canzoni per " + playlist?.name}/>
@@ -49,8 +50,10 @@ export function ModalBottomSheetSong(props: PropsModalBottomSheetSong) {
   return (
     <>
       <Sheet isOpen={props.open} onClose={() => props.onClose()} 
-        snapPoints={[0.6,0]}
-        initialSnap={0}>
+        snapPoints={[0.6]}
+        initialSnap={0}
+        disableDrag
+      >
         <Sheet.Container>
             <Sheet.Header>
                 <TitleModal onClose={props.onClose} title="Playlist"/>

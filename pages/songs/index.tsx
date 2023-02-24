@@ -11,7 +11,7 @@ export default function SongsPage() {
         <Container>
             <PraisingAppBar title='Canzoni'/>
             <Container disableGutters sx={{pt: verticalPaddingAppBar*3 + 2, pb: 7}}>
-                <ListSongs songs={localSongs} mode='normal'/>
+                <ListSongs songs={localSongs} mode='normal' withSearch/>
             </Container>
             <NavBar />
         </Container>

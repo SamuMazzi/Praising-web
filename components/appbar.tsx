@@ -11,6 +11,12 @@ import { useRouter } from "next/router";
 import Box from "@mui/material/Box";
 import CircleRoundedIcon from '@mui/icons-material/CircleRounded';
 import Tooltip from "@mui/material/Tooltip";
+import { Playlist } from "@/logic/redux/playlist_slice";
+import FirstPageRoundedIcon from '@mui/icons-material/FirstPageRounded';
+import LastPageRoundedIcon from '@mui/icons-material/LastPageRounded';
+import { NextLinkComposed } from "./link_composed";
+import Routes from "@/logic/routes";
+
 //TODO: Implementare clide-side routing anche con useRouter
 
 interface PropsHideOnScroll {
@@ -70,13 +76,17 @@ export default function PraisingAppBar(props: PropsAppBar) {
 }
 
 interface PropsSongAppBar {
+    id: string
     title: string
     transpose?: number
     wakeLockActive: boolean
+    playlist?: Playlist
 }
 
 export const SongAppBar = (props: PropsSongAppBar) => {
     const router = useRouter()
+    const indexInPlaylist = props.playlist?.songs.indexOf(props.id)
+    //TODO: Risolvi navigazione in playlist
     
     return (
       <React.Fragment>
@@ -99,6 +109,24 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                     <Typography color='primary' style={{fontWeight: 600}}>
                         {props.transpose === 0 ? '' : props.transpose}
                     </Typography>
+                    {
+                      indexInPlaylist !== undefined && 
+                      <>
+                        <IconButton sx={{ mx: 2 }} >
+                            <FirstPageRoundedIcon 
+                            component={props.playlist ? NextLinkComposed : 'span'} 
+                            to={{
+                              pathname: Routes.Songs + '/' + props.playlist!.songs[indexInPlaylist - 1],
+                              query: { playlist_id: props.playlist!.id }
+                            }}
+                        />
+                        </IconButton>
+                        <IconButton sx={{ mx: 2 }} onClick={() => router.back()}>
+                            <LastPageRoundedIcon />
+                        </IconButton>
+                      </>
+
+                    }
                   </Box>
                 </Toolbar>
             </AppBar>

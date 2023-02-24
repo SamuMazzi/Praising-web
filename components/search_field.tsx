@@ -52,7 +52,7 @@ export default function TypeSearch(props: PropsTypeSearch) {
   };
 
   const handleClick = (): void => {
-    // TODO: Clear the search input
+    //* Clear the search input
     console.log("clicked the clear icon...");
   };
 

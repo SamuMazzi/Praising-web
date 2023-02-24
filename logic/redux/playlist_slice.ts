@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { DropResult } from 'smooth-dnd/dist/src/exportTypes'
 import { getFromStorage, saveToStorage } from '../local_logic'
 
 export interface Playlist {
@@ -29,10 +30,38 @@ interface HandleSongParam {
     id: string
 }
 
+interface ApplyDragParam {
+    id: string
+    dragResult: DropResult
+}
+
 export const playlistSlice = createSlice({
     name: 'playlist',
     initialState: initialState,
     reducers: {
+        applyDrag: (state, action: PayloadAction<ApplyDragParam>) => {
+            const { removedIndex, addedIndex, payload } = action.payload.dragResult;
+            if (removedIndex === null && addedIndex === null) return
+            const newPlaylist: Playlist = state.playlist[action.payload.id]!
+
+            const result = [...newPlaylist.songs];
+
+            let itemToAdd = payload;
+        
+            if (removedIndex !== null) {
+                itemToAdd = result.splice(removedIndex, 1)[0];
+            }
+        
+            if (addedIndex !== null) {
+                result.splice(addedIndex, 0, itemToAdd);
+            }
+            newPlaylist.songs = [...result]
+            state.playlist = {
+                ...state.playlist,
+                [action.payload.id]: newPlaylist
+            }
+            saveToStorage('playlists', state.playlist)
+        },
         copyPlaylist: (state, action) => {
             const id = getNewId(state.playlist)
             const newPlaylist: Playlist = {
@@ -93,6 +122,6 @@ export const playlistSlice = createSlice({
     },
 })
 
-export const { addPlaylist, modifyNamePlaylist, deletePlaylist, handleSongForPlaylist, copyPlaylist } = playlistSlice.actions
+export const { addPlaylist, modifyNamePlaylist, deletePlaylist, handleSongForPlaylist, copyPlaylist, applyDrag } = playlistSlice.actions
 
 export default playlistSlice.reducer

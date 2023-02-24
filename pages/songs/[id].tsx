@@ -16,24 +16,25 @@ import IconButton from '@mui/material/IconButton'
 import CloseRounded from '@mui/icons-material/CloseRounded'
 import { CircularProgress } from '@mui/material'
 import useSWR from 'swr'
+import { Playlist } from '@/logic/redux/playlist_slice'
 
 SongPage.getInitialProps = async (props: any) => {
-    const {id} = props.query
-    return {id}
+    const {id, playlist_id} = props.query
+    return {id, playlist_id}
 }
 
 interface PropsSongPage {
     id: string
-    //fileContent: string | undefined
-    //song: Song | undefined
+    playlist_id: string | undefined
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function SongPage(props: PropsSongPage) {
+    console.log(props.playlist_id)
     const { data, error, isLoading } = useSWR('/api/song/' + props.id, fetcher)
     const song = getSingleSong(props.id)
-    //const song = props.song
+    const playlist: Playlist | undefined = useAppSelector(state => props.playlist_id !== undefined ? state.playlist.playlist[props.playlist_id] : undefined)
     const [openModalPlaylist, setOpenModalPlaylist] = useState(false)
     const [showVideo, setShowVideo] = useState(false)
     const infoSong: InfoLocalSong | undefined = useAppSelector(state => song?.id ? state.infoSongs.infoSongs[song.id] : undefined)
@@ -63,7 +64,7 @@ export default function SongPage(props: PropsSongPage) {
     if(error || isLoading) {
         return (
             <Container sx={{minHeight: '100vh'}}>
-                <SongAppBar title={''} wakeLockActive={!released}/>
+                <SongAppBar id={''} title={''} wakeLockActive={!released}/>
                 {
                     isLoading ? <CircularProgress sx={{textAlign: 'center', mt: 15}}/> :
                     <Typography sx={{pt: 15}} textAlign="center">
@@ -87,7 +88,7 @@ export default function SongPage(props: PropsSongPage) {
                     Questo browser non supporta il wakelock
                 </Typography>
             }
-            <SongAppBar title={song!.name} transpose={infoSong?.transpose} wakeLockActive={!released}/>
+            <SongAppBar id={song?.id || ''} title={song!.name} transpose={infoSong?.transpose} wakeLockActive={!released} playlist={playlist}/>
             <Container sx={{py: 5}}/>
             <ActionsSong song={song!} videoIsPlaying={showVideo} onPressVideo={handlePressVideo} 
                 setOpenSheet={() => setOpenModalPlaylist(true)}/>

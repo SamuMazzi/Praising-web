@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "analyze": "source-map-explorer 'build/static/js/*.js'"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
@@ -29,6 +30,7 @@
     "fs": "^0.0.1-security",
     "next": "13.1.6",
     "next-pwa": "^5.6.0",
+    "prop-types": "^15.8.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-modal-sheet": "1.9.0",
@@ -37,6 +39,7 @@
     "react-web-share": "^2.0.2",
     "react-youtube": "^10.1.0",
     "sharp": "^0.31.3",
+    "smooth-dnd": "^0.12.1",
     "swr": "^2.0.3",
     "typescript": "4.9.5"
   }

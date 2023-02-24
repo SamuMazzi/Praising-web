@@ -1,10 +1,72 @@
 import ChordSheetJS, { Chord, Song } from 'chordsheetjs';
-import { Cheerio, CheerioAPI, load } from 'cheerio'
+import { Cheerio, CheerioAPI, Element, load } from 'cheerio'
 
 interface ParamsTranslateChord {
     chord: string
     transpose?: number
 }
+
+function americanToItalianChord(chord: string): string {
+    const chordMap: { [key: string]: string } = {
+      'A': 'La',
+      'A#': 'La#',
+      'Bb': 'Sib',
+      'B': 'Si',
+      'C': 'Do',
+      'C#': 'Do#',
+      'Db': 'Reb',
+      'D': 'Re',
+      'D#': 'Re#',
+      'Eb': 'Mib',
+      'E': 'Mi',
+      'F': 'Fa',
+      'F#': 'Fa#',
+      'Gb': 'Solb',
+      'G': 'Sol',
+      'G#': 'Sol#'
+    };
+    const chordVariants: { [key: string]: string } = {
+      'm': ' -',
+      'maj': '',
+      'dim': ' dim',
+      'aug': ' aug',
+      'sus2': ' 2',
+      'sus4': ' 4',
+      '7': ' 7',
+      'maj7': ' 7+',
+      'm7': ' -7',
+      'm7b5': ' -7b5',
+      'dim7': ' dim7',
+      '6': ' 6',
+      '9': ' 9',
+      '11': ' 11',
+      '13': ' 13'
+    };
+  
+    // Split the chord into its root and variant parts
+    const root = chord.match(/[A-G]#?b?/)?.[0];
+    const variant = chord.replace(root as string, '');
+  
+    // Check if the chord has a valid root
+    if (!root) {
+      return chord;
+    }
+  
+    // Translate the root to Italian
+    const italianRoot = chordMap[root];
+  
+    // Check if the variant is a valid variant
+    if (variant && !chordVariants[variant]) {
+      return chord;
+    }
+  
+    // Translate the variant to Italian
+    const italianVariant = chordVariants[variant] || '';
+  
+    // Return the translated chord
+    return italianRoot + italianVariant;
+  }
+  
  
 const translateChord = (props: ParamsTranslateChord) => {
     const chordVariants: Record<string, string> = {
@@ -90,9 +152,13 @@ const boldenChorus = ($: CheerioAPI, linesChorus: number[]) => {
     })
 }
 
+const rowHasLyrics = ($: CheerioAPI, el: Element) => {
+    const res = $(el).children('.column').filter((i, e) => $(e).children('.lyrics').text().trim() !== '')
+    return res.length !== 0
+}
+
 const removeChordsFromHTML = ($: CheerioAPI) => {
     $('.row').each((i, row) => {
-        //console.log($(row).text())
         //* Solo testo
         if($(row).children('.column').length === 1) {
             $(row).find('.column .chord').each((index, lyrics) => {
@@ -101,6 +167,20 @@ const removeChordsFromHTML = ($: CheerioAPI) => {
                 }
             })
         }
+
+        //* Solo accordi
+        if(!rowHasLyrics($, row)) {
+            $(row).find('.column .lyrics').each((index, lyrics) => {
+                if ($(lyrics).hasClass('lyrics') && !$(lyrics).hasClass('chorus')) {
+                    $(lyrics).removeClass('lyrics')
+                }
+            })
+        }
+        
+        //TODO: Traduci accordi in italiano da HTML
+        /*$('.chord').each((i, chord) => {
+            $(chord).text()
+        }) */
     })
 }
 

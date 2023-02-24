@@ -7,6 +7,10 @@ import ListItemButton from '@mui/material/ListItemButton'
 import { handleSongForPlaylist, Playlist } from '@/logic/redux/playlist_slice'
 import { useAppDispatch } from '@/logic/redux/store'
 import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded';
+import Draggable from './react-smooth-dnd/Draggable';
+import DragHandleRoundedIcon from '@mui/icons-material/DragHandleRounded';
+import Typography from '@mui/material/Typography'
+import Routes from '@/logic/routes'
 
 interface PropsSongTile {
     song: Song
@@ -15,7 +19,7 @@ interface PropsSongTile {
 
 export default function SongTile(props: PropsSongTile) {
   return (
-    <ListItem component={NextLinkComposed} to={{pathname: '/songs/' + props.song.id}} 
+    <ListItem component={NextLinkComposed} to={{pathname: Routes.Songs + '/' + props.song.id}} 
         sx={{backgroundColor: '#F2F2F2', borderRadius: 8, my: 1}}
         secondaryAction={
             <IconButton onClick={(e: any) => {
@@ -59,18 +63,28 @@ interface PropsSelectableSongTile {
     playlist: Playlist
 }
 
-//TODO: Reorder
-//https://www.npmjs.com/package/@edorivai/react-smooth-dnd
-//https://github.com/kutlugsahin/react-smooth-dnd
 export function PlaylistSongTile(props: PropsSelectableSongTile) {
-    //const dispatch = useAppDispatch()
     return (
-        <ListItem component={NextLinkComposed} to={{pathname: '/songs/' + props.song.id}} 
-        sx={{backgroundColor: '#F2F2F2', borderRadius: 8, my: 1}}
-        >
-            <ListItemText
-                primary={props.song.name}
-            />
-        </ListItem>
+        <Draggable key={props.song.id}>
+            <ListItem 
+                sx={{backgroundColor: '#F2F2F2', borderRadius: 8, my: 1}}
+                secondaryAction={
+                    <IconButton className='column-drag-handle'>
+                        <DragHandleRoundedIcon />
+                    </IconButton>
+                }
+            >
+                <ListItemText
+                    disableTypography
+                    primary={<Typography
+                        component={NextLinkComposed} 
+                        to={{pathname: Routes.Songs + '/' + props.song.id, query: { playlist_id: props.playlist.id }}} 
+                    >
+                        {props.song.name}
+                    </Typography>}
+                />
+            </ListItem>
+        </Draggable>
+            
     )
 }
