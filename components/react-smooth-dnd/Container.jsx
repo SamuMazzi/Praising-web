@@ -6,14 +6,8 @@ import { dropHandlers } from 'smooth-dnd';
 container.dropHandler = dropHandlers.reactDropHandler().handler;
 container.wrapChild = false;
 
-interface ContainerProps extends ContainerOptions {
-	render?: (rootRef: React.RefObject<any>) => React.ReactElement;
-	style?: CSSProperties;
-	children: JSX.Element;
-}
-
-class DragContainer extends Component<ContainerProps> {
-	public static propTypes = {
+class DragContainer extends Component {
+	static propTypes = {
 		behaviour: PropTypes.oneOf(['move', 'copy', 'drop-zone', 'contain']),
 		groupName: PropTypes.string,
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
@@ -47,15 +41,15 @@ class DragContainer extends Component<ContainerProps> {
     ]),
 	};
 
-	public static defaultProps = {
+	static defaultProps = {
 		behaviour: 'move',
 		orientation: 'vertical',
 	};
 
-	prevContainer: null;
-	container: SmoothDnD = null!;
-	containerRef: React.RefObject<any> = createRef();
-  constructor(props: ContainerProps) {
+	prevContainer;
+	container= null;
+	containerRef = createRef();
+  constructor(props) {
     super(props);
 		this.getContainerOptions = this.getContainerOptions.bind(this);
     this.getContainer = this.getContainer.bind(this);
@@ -70,10 +64,10 @@ class DragContainer extends Component<ContainerProps> {
 
   componentWillUnmount() {
     this.container.dispose();
-    this.container = null!;
+    this.container = null;
   }
 
-  componentDidUpdate(prevProps: ContainerProps) {
+  componentDidUpdate(prevProps) {
     if (this.getContainer()) {
       if (this.prevContainer && this.prevContainer !== this.getContainer()) {
         this.container.dispose();
@@ -88,11 +82,11 @@ class DragContainer extends Component<ContainerProps> {
     }
   }
 
-  isObjectTypePropsChanged(prevProps: ContainerProps) {
+  isObjectTypePropsChanged(prevProps) {
     const { render, children, style, ...containerOptions } = this.props;
 
     for (const _key in containerOptions) {
-      const key = _key as keyof ContainerOptions;
+      const key = _key;
       if (containerOptions.hasOwnProperty(key)) {
         const prop = containerOptions[key];
 
@@ -121,21 +115,21 @@ class DragContainer extends Component<ContainerProps> {
 		return this.containerRef.current;
 	}
 
-  getContainerOptions(): ContainerOptions {
-    return Object.keys(this.props).reduce((result: ContainerOptions, key: string) => {
-      const optionName = key as keyof ContainerOptions;
+  getContainerOptions() {
+    return Object.keys(this.props).reduce((result, key) => {
+      const optionName = key;
       const prop = this.props[optionName];
 
       if (typeof prop === 'function') {
-        result[optionName] = (...params: any[]) => {
-          return (this.props[optionName] as Function)(...params);
+        result[optionName] = (...params) => {
+          return (this.props[optionName])(...params);
         }
       } else {
         result[optionName] = prop;
       }
 
       return result;
-    },{}) as ContainerOptions;
+    },{});
   }
 }
 

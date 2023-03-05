@@ -59,7 +59,7 @@ export function ListSongsPlaylist(props: PropsListSongsPlaylist) {
         <MuiContainer>
             <TypeSearch query={filter} setQuery={setFilter}/>
             <List>
-                <DragContainer dragHandleSelector='.column-drag-handle' onDrop={e => {
+                <DragContainer dragHandleSelector='.column-drag-handle' onDrop={(e: any) => {
                     dispatch(applyDrag({
                         id: props.playlist_id,
                         dragResult: e 
