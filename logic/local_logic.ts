@@ -1,4 +1,5 @@
 import { NextRouter } from 'next/router'
+import { ChordNotations } from './redux/settings_slice'
 import songs from './songs.config.json'
 
 export const filterMomenti: Record<string, string> = {
@@ -117,4 +118,13 @@ export const updateLastRecentsSongs = (song: Song) => {
 export const getLastRecentsSongs = () => {
     const recents: string[] = getFromStorage('recents') || []
     return recents
+}
+
+export const getLocalChordNotation = () => {
+    const out: ChordNotations = getFromStorage('chordNotation') || 'ITALIAN'
+    return out
+}
+
+export const setLocalChordNotation = (notation: ChordNotations) => {
+    saveToStorage('chordNotation', notation)
 }

@@ -31,7 +31,6 @@ interface PropsSongPage {
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function SongPage(props: PropsSongPage) {
-    console.log(props.playlist_id)
     const { data, error, isLoading } = useSWR('/api/song/' + props.id, fetcher)
     const song = getSingleSong(props.id)
     const playlist: Playlist | undefined = useAppSelector(state => props.playlist_id !== undefined ? state.playlist.playlist[props.playlist_id] : undefined)
@@ -41,6 +40,7 @@ export default function SongPage(props: PropsSongPage) {
     const showChords = useAppSelector(state => state.settings.showChords)
     const { isSupported, released, request, release } = useWakeLock({});
     const [messageSnackbar, setMessageSnackbar] = useState("")
+    const chordNotation = useAppSelector(state => state.settings.chordNotation)
 
     useEffect(() => {
         updateLastRecentsSongs(song!)
@@ -78,7 +78,8 @@ export default function SongPage(props: PropsSongPage) {
     const songToRender = renderSong({
         fileContent: data, //props.fileContent
         showChords: showChords,
-        transpose: infoSong?.transpose
+        transpose: infoSong?.transpose,
+        chordNotation: chordNotation
     })
 
     return (

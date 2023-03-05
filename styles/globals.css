@@ -8,6 +8,12 @@ a {
 .column {
     display: inline;
 }
+.first-line-chorus {
+    margin-top: 2em;
+} 
+.last-line-chorus {
+    margin-bottom: 2em;
+} 
 .chorus {
     font-weight: bold;
 } 

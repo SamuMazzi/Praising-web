@@ -13,7 +13,6 @@ import ImageListItem from '@mui/material/ImageListItem'
 import { NextLinkComposed } from '@/components/link_composed'
 import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar'
 import { filterArgomenti, filterMomenti, getLastRecentsSongs, getSingleSong } from '@/logic/local_logic'
-import SongTile from '@/components/song_tile'
 import Routes from '@/logic/routes'
 import ListSongs from '@/components/list_songs'
 

@@ -33,7 +33,7 @@
     "prop-types": "^15.8.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-modal-sheet": "1.9.0",
+    "react-modal-sheet": "^1.10.1",
     "react-redux": "^8.0.5",
     "react-screen-wake-lock": "^3.0.1",
     "react-web-share": "^2.0.2",
@@ -42,5 +42,8 @@
     "smooth-dnd": "^0.12.1",
     "swr": "^2.0.3",
     "typescript": "4.9.5"
+  },
+  "devDependencies": {
+    "prettier": "^2.8.4"
   }
 }

@@ -16,6 +16,9 @@ import FirstPageRoundedIcon from '@mui/icons-material/FirstPageRounded';
 import LastPageRoundedIcon from '@mui/icons-material/LastPageRounded';
 import { NextLinkComposed } from "./link_composed";
 import Routes from "@/logic/routes";
+import { useAppDispatch, useAppSelector } from "@/logic/redux/store";
+import { setChordNotation } from "@/logic/redux/settings_slice";
+import Button from "@mui/material/Button";
 
 //TODO: Implementare clide-side routing anche con useRouter
 
@@ -86,11 +89,13 @@ interface PropsSongAppBar {
 export const SongAppBar = (props: PropsSongAppBar) => {
     const router = useRouter()
     const indexInPlaylist = props.playlist?.songs.indexOf(props.id)
+    const chordNotation = useAppSelector(state => state.settings.chordNotation)
+    const dispatch = useAppDispatch()
+
     //TODO: Risolvi navigazione in playlist
     
     return (
       <React.Fragment>
-        <CssBaseline />
         <HideOnScroll {...props}>
             <AppBar style={{ backgroundColor: 'white', display: 'flex' }}>
                 <Toolbar>
@@ -125,8 +130,16 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                             <LastPageRoundedIcon />
                         </IconButton>
                       </>
-
                     }
+                    <Button onClick={() => {
+                      if (chordNotation === 'AMERICAN') {
+                        dispatch(setChordNotation('ITALIAN'))
+                      } else if (chordNotation === 'ITALIAN') {
+                        dispatch(setChordNotation('AMERICAN'))
+                      }
+                    }} style={{fontWeight: 'bold'}}>
+                      {chordNotation === 'AMERICAN' ? 'ENG' : 'ITA'}
+                    </Button>
                   </Box>
                 </Toolbar>
             </AppBar>

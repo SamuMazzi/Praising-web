@@ -1,12 +1,16 @@
-import { createSlice } from '@reduxjs/toolkit'
-import { saveToStorage } from '../local_logic'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { saveToStorage, setLocalChordNotation } from '../local_logic'
+
+export type ChordNotations = 'AMERICAN' | 'ITALIAN'
 
 interface SettingsState {
     showChords: boolean
+    chordNotation: ChordNotations
 }
 
 const initialState: SettingsState = {
-    showChords: true
+    showChords: true,
+    chordNotation: 'AMERICAN'
 }
 
 export const settingsSlice = createSlice({
@@ -17,9 +21,13 @@ export const settingsSlice = createSlice({
             state.showChords = action.payload
             saveToStorage('show_chords', action.payload)
         },
+        setChordNotation: (state, action: PayloadAction<ChordNotations>) => {
+            state.chordNotation = action.payload
+            setLocalChordNotation(action.payload)
+        },
     },
 })
 
-export const { setShowChords } = settingsSlice.actions
+export const { setShowChords, setChordNotation } = settingsSlice.actions
 
 export default settingsSlice.reducer

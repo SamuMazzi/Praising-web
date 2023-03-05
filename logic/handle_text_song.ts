@@ -1,12 +1,13 @@
 import ChordSheetJS, { Chord, Song } from 'chordsheetjs';
-import { Cheerio, CheerioAPI, Element, load } from 'cheerio'
+import { CheerioAPI, Element, load } from 'cheerio'
+import { ChordNotations } from './redux/settings_slice';
 
 interface ParamsTranslateChord {
     chord: string
     transpose?: number
 }
 
-function americanToItalianChord(chord: string): string {
+function americanToItalianChord(completeChord: string): string {
     const chordMap: { [key: string]: string } = {
       'A': 'La',
       'A#': 'La#',
@@ -26,48 +27,50 @@ function americanToItalianChord(chord: string): string {
       'G#': 'Sol#'
     };
     const chordVariants: { [key: string]: string } = {
-      'm': ' -',
+      'm': '-',
       'maj': '',
-      'dim': ' dim',
-      'aug': ' aug',
-      'sus2': ' 2',
-      'sus4': ' 4',
-      '7': ' 7',
-      'maj7': ' 7+',
-      'm7': ' -7',
-      'm7b5': ' -7b5',
-      'dim7': ' dim7',
-      '6': ' 6',
-      '9': ' 9',
-      '11': ' 11',
-      '13': ' 13'
+      'dim': 'dim',
+      'aug': 'aug',
+      'sus': '4',
+      'sus2': '2',
+      'sus4': '4',
+      '7': '7',
+      'maj7': '7+',
+      'm7': '-7',
+      'm7b5': '-7b5',
+      'dim7': 'dim7',
+      '6': '6',
+      '9': '9',
+      '11': '11',
+      '13': '13'
     };
   
-    // Split the chord into its root and variant parts
-    const root = chord.match(/[A-G]#?b?/)?.[0];
-    const variant = chord.replace(root as string, '');
-  
-    // Check if the chord has a valid root
-    if (!root) {
-      return chord;
-    }
-  
-    // Translate the root to Italian
-    const italianRoot = chordMap[root];
-  
-    // Check if the variant is a valid variant
-    if (variant && !chordVariants[variant]) {
-      return chord;
-    }
-  
-    // Translate the variant to Italian
-    const italianVariant = chordVariants[variant] || '';
-  
-    // Return the translated chord
-    return italianRoot + italianVariant;
-  }
-  
- 
+    return completeChord.split('/').map(chord => {
+        // Split the chord into its root and variant parts
+        const root = chord.match(/[A-G]#?b?/)?.[0];
+        const variant = chord.replace(root as string, '');
+      
+        // Check if the chord has a valid root
+        if (!root) {
+          return chord;
+        }
+      
+        // Translate the root to Italian
+        const italianRoot = chordMap[root];
+      
+        // Check if the variant is a valid variant
+        if (variant && !chordVariants[variant]) {
+          return chord;
+        }
+      
+        // Translate the variant to Italian
+        const italianVariant = chordVariants[variant] || '';
+      
+        // Return the translated chord
+        return italianRoot + italianVariant;
+    }).join('/')
+}
+
 const translateChord = (props: ParamsTranslateChord) => {
     const chordVariants: Record<string, string> = {
         'do': 'C',
@@ -107,6 +110,7 @@ interface ParamsRenderSong {
     fileContent: string
     showChords: boolean
     transpose?: number
+    chordNotation: ChordNotations
 }
 
 const findLinesChorus = (deserialized: Song) => {
@@ -116,11 +120,14 @@ const findLinesChorus = (deserialized: Song) => {
         let isChordLyricsPair = false
         if(line.items.every(item => item instanceof ChordSheetJS.ChordLyricsPair)) {
             isChordLyricsPair = true
+            //console.log(cont.toString() + ' ' + line.items.map(item => item instanceof ChordSheetJS.ChordLyricsPair && item.lyrics).join(''))
         }
         if(line.isChorus() && isChordLyricsPair) {
             linesChorus.push(cont)
+            
         }
-        if(isChordLyricsPair) { //* Aggiorno solo se è una riga che verrà visualizzata
+        //* Se la riga è fatta solo di testo+accordi e il testo non è vuoto
+        if(isChordLyricsPair && line.items.map(item => item instanceof ChordSheetJS.ChordLyricsPair && item.lyrics).join('').trim() !== '') { //* Aggiorno solo se è una riga che verrà visualizzata
             cont += 1
         }
     });
@@ -157,30 +164,60 @@ const rowHasLyrics = ($: CheerioAPI, el: Element) => {
     return res.length !== 0
 }
 
-const removeChordsFromHTML = ($: CheerioAPI) => {
+const editHTML = ($: CheerioAPI, chordNotation: ChordNotations) => {
     $('.row').each((i, row) => {
-        //* Solo testo
-        if($(row).children('.column').length === 1) {
-            $(row).find('.column .chord').each((index, lyrics) => {
-                if ($(lyrics).hasClass('chord') && !$(lyrics).hasClass('chorus')) {
-                    $(lyrics).removeClass('chord')
-                }
-            })
+        removeChordsFromHTML($, row)
+        setSpacesBetweenChorusAndVerses($, row)
+        if (chordNotation === 'ITALIAN') {
+            translateChordsToItalian($)
         }
 
-        //* Solo accordi
-        if(!rowHasLyrics($, row)) {
-            $(row).find('.column .lyrics').each((index, lyrics) => {
-                if ($(lyrics).hasClass('lyrics') && !$(lyrics).hasClass('chorus')) {
-                    $(lyrics).removeClass('lyrics')
-                }
-            })
-        }
-        
-        //TODO: Traduci accordi in italiano da HTML
-        /*$('.chord').each((i, chord) => {
-            $(chord).text()
-        }) */
+        //TODO: Magari vorrei farlo per riga e non per "sezione della riga", sia per correttezza che performance
+        $('.lyrics').each((i, lyrics) => {
+            const reg = '/,\s*,/gm'
+            const lyr = $(lyrics).text()
+            const out = lyr.replace(reg, ',')
+            console.log(out)
+            $(lyrics).text(out)
+        })
+    })
+}
+
+const removeChordsFromHTML = ($: CheerioAPI, row: Element) => {
+    //* Solo testo
+    if($(row).children('.column').length === 1) {
+        $(row).find('.column .chord').each((index, lyrics) => {
+            if ($(lyrics).hasClass('chord') && !$(lyrics).hasClass('chorus')) {
+                $(lyrics).removeClass('chord')
+            }
+        })
+    }
+
+    //* Solo accordi
+    if(!rowHasLyrics($, row)) {
+        $(row).find('.column .lyrics').each((index, lyrics) => {
+            if ($(lyrics).hasClass('lyrics') && !$(lyrics).hasClass('chorus')) {
+                $(lyrics).removeClass('lyrics')
+            }
+        })
+    }
+}
+
+const setSpacesBetweenChorusAndVerses = ($: CheerioAPI, row: Element) => {
+    //* Aggiungi spazi fra chorus e verses
+    if($(row).hasClass('chorus') && !$(row).next().hasClass('chorus')) {
+        $(row).addClass('last-line-chorus')
+    }
+    //* Aggiungi spazi fra chorus e verses
+    if($(row).hasClass('chorus') && !$(row).prev().hasClass('chorus')) {
+        $(row).addClass('first-line-chorus')
+    }
+}
+
+const translateChordsToItalian = ($: CheerioAPI) => {
+    $('.chord').each((i, chord) => {
+        const americanChord = $(chord).text()
+        $(chord).text(americanToItalianChord(americanChord))
     })
 }
 
@@ -204,16 +241,20 @@ const removeChords = (serializedSong: any) => {
             if(v.type === 'chordLyricsPair') {
                 v.chords = ''
                 v.chord = null
+                console.log(v.lyrics)
             }
             return v
         })
     })
 }
 
+//TODO: Testare Jesus, I trust in you per ritornelli
+
 export const renderSong = (props: ParamsRenderSong) => {
     const parser = new ChordSheetJS.ChordProParser();
     const song_parsed = parser.parse(props.fileContent);
     const formatterDiv = new ChordSheetJS.HtmlDivFormatter();
+    //TODO: Le virgole ci sono già formattando questo sopra
     const serializedSong = new ChordSheetJS.ChordSheetSerializer().serialize(song_parsed);
     normalizeChords(serializedSong, props.transpose)
     if (!props.showChords) {
@@ -224,9 +265,10 @@ export const renderSong = (props: ParamsRenderSong) => {
     const $ = load(disp)
 
     const linesChorus = findLinesChorus(deserialized)
+    console.log(linesChorus)
     toggleShowChords($, props.showChords)
     boldenChorus($, linesChorus)
-    removeChordsFromHTML($)
+    editHTML($, props.chordNotation)
     return $.html()
 }
 
