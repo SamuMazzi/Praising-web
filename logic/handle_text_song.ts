@@ -174,7 +174,8 @@ const editHTML = ($: CheerioAPI, chordNotation: ChordNotations) => {
 
         //TODO: Magari vorrei farlo per riga e non per "sezione della riga", sia per correttezza che performance
         $('.lyrics').each((i, lyrics) => {
-            const reg = '/,\s*,/gm'
+            const reg = /,\s*,/gm
+            // const regSpecialChar = /[^a-zA-Z0-9]\s*,/gm
             const lyr = $(lyrics).text()
             const out = lyr.replace(reg, ',')
             console.log(out)
@@ -248,13 +249,13 @@ const removeChords = (serializedSong: any) => {
     })
 }
 
-//TODO: Testare Jesus, I trust in you per ritornelli
+//* Testare Jesus, I trust in you per ritornelli
 
 export const renderSong = (props: ParamsRenderSong) => {
     const parser = new ChordSheetJS.ChordProParser();
     const song_parsed = parser.parse(props.fileContent);
     const formatterDiv = new ChordSheetJS.HtmlDivFormatter();
-    //TODO: Le virgole ci sono già formattando questo sopra
+    //* Le virgole ci sono già formattando questo sopra
     const serializedSong = new ChordSheetJS.ChordSheetSerializer().serialize(song_parsed);
     normalizeChords(serializedSong, props.transpose)
     if (!props.showChords) {

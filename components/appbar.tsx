@@ -19,6 +19,7 @@ import Routes from "@/logic/routes";
 import { useAppDispatch, useAppSelector } from "@/logic/redux/store";
 import { setChordNotation } from "@/logic/redux/settings_slice";
 import Button from "@mui/material/Button";
+import Link from "next/link";
 
 //TODO: Implementare clide-side routing anche con useRouter
 
@@ -91,8 +92,6 @@ export const SongAppBar = (props: PropsSongAppBar) => {
     const indexInPlaylist = props.playlist?.songs.indexOf(props.id)
     const chordNotation = useAppSelector(state => state.settings.chordNotation)
     const dispatch = useAppDispatch()
-
-    //TODO: Risolvi navigazione in playlist
     
     return (
       <React.Fragment>
@@ -115,20 +114,24 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                         {props.transpose === 0 ? '' : props.transpose}
                     </Typography>
                     {
-                      indexInPlaylist !== undefined && 
+                      indexInPlaylist !== undefined && props.playlist && 
                       <>
-                        <IconButton sx={{ mx: 2 }} >
-                            <FirstPageRoundedIcon 
-                            component={props.playlist ? NextLinkComposed : 'span'} 
-                            to={{
-                              pathname: Routes.Songs + '/' + props.playlist!.songs[indexInPlaylist - 1],
-                              query: { playlist_id: props.playlist!.id }
-                            }}
-                        />
-                        </IconButton>
-                        <IconButton sx={{ mx: 2 }} onClick={() => router.back()}>
-                            <LastPageRoundedIcon />
-                        </IconButton>
+                        {
+                          indexInPlaylist > 0 &&
+                          <Link replace href={Routes.Songs + '/' + props.playlist!.songs[indexInPlaylist - 1] + '?playlist_id=' + props.playlist!.id} passHref> 
+                            <IconButton sx={{ ml: 2, mr: 0.5 }} LinkComponent={Link} >
+                              <FirstPageRoundedIcon />
+                            </IconButton>
+                          </Link>
+                        }
+                        {
+                          indexInPlaylist !== props.playlist!.songs.length - 2 &&
+                          <Link replace href={Routes.Songs + '/' + props.playlist!.songs[indexInPlaylist + 1] + '?playlist_id=' + props.playlist!.id} passHref>
+                            <IconButton sx={{ mr: 2 }} LinkComponent={Link}>
+                              <LastPageRoundedIcon />
+                            </IconButton>
+                          </Link>
+                        }
                       </>
                     }
                     <Button onClick={() => {
