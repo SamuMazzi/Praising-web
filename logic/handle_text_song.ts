@@ -124,10 +124,10 @@ const findLinesChorus = (deserialized: Song) => {
         }
         if(line.isChorus() && isChordLyricsPair) {
             linesChorus.push(cont)
-            
         }
         //* Se la riga è fatta solo di testo+accordi e il testo non è vuoto
         if(isChordLyricsPair && line.items.map(item => item instanceof ChordSheetJS.ChordLyricsPair && item.lyrics).join('').trim() !== '') { //* Aggiorno solo se è una riga che verrà visualizzata
+            //console.log(cont.toString() + ' ' + line.items.map(item => item instanceof ChordSheetJS.ChordLyricsPair && item.lyrics).join(''))
             cont += 1
         }
     });
@@ -148,12 +148,24 @@ const toggleShowChords = ($: CheerioAPI, showChords: boolean) => {
     })
 }
 
+const isThereLyricsInRow = ($: CheerioAPI, row: Element) => {
+    if ($(row).find('.column > .lyrics').length > 0) {
+        const lyricsPieces = $(row).find('.column > .lyrics').filter((i, l) => $(l).text().trim() !== '')
+        return lyricsPieces.length !== 0
+    }
+    return false
+}
+
 const boldenChorus = ($: CheerioAPI, linesChorus: number[]) => {
-    $('.row').each((i, lyrics) => {
-        //* Se è Chorus
-        if(linesChorus.includes(i)) {
-            if (!$(lyrics).hasClass('chorus')) {
-                $(lyrics).addClass('chorus')
+    let cont = -1
+    $('.row').each((i, row) => {
+        if (isThereLyricsInRow($, row)) {
+            cont += 1
+        }
+        //* Se è Chorus        
+        if(linesChorus.includes(cont)) {
+            if (!$(row).hasClass('chorus')) {
+                $(row).addClass('chorus')
             }
         }
     })
@@ -171,6 +183,8 @@ const editHTML = ($: CheerioAPI, chordNotation: ChordNotations) => {
         if (chordNotation === 'ITALIAN') {
             translateChordsToItalian($)
         }
+        //TODO: Testare con Jesus, I trust in you e Abbracciami per ritornello
+        //TODO: Informarsi su come dare le info per la deserializzazione 
 
         //TODO: Magari vorrei farlo per riga e non per "sezione della riga", sia per correttezza che performance
         $('.lyrics').each((i, lyrics) => {
@@ -178,7 +192,6 @@ const editHTML = ($: CheerioAPI, chordNotation: ChordNotations) => {
             // const regSpecialChar = /[^a-zA-Z0-9]\s*,/gm
             const lyr = $(lyrics).text()
             const out = lyr.replace(reg, ',')
-            console.log(out)
             $(lyrics).text(out)
         })
     })
@@ -242,14 +255,12 @@ const removeChords = (serializedSong: any) => {
             if(v.type === 'chordLyricsPair') {
                 v.chords = ''
                 v.chord = null
-                console.log(v.lyrics)
+                // console.log(v.lyrics)
             }
             return v
         })
     })
 }
-
-//* Testare Jesus, I trust in you per ritornelli
 
 export const renderSong = (props: ParamsRenderSong) => {
     const parser = new ChordSheetJS.ChordProParser();
@@ -266,7 +277,7 @@ export const renderSong = (props: ParamsRenderSong) => {
     const $ = load(disp)
 
     const linesChorus = findLinesChorus(deserialized)
-    console.log(linesChorus)
+    //console.log(linesChorus)
     toggleShowChords($, props.showChords)
     boldenChorus($, linesChorus)
     editHTML($, props.chordNotation)

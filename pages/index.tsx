@@ -80,7 +80,7 @@ export default function Home() {
             </ImageList>
         <Divider />
         {
-          recentSongs.length > 0 && <Container>
+          recentSongs.length > 0 && <Container sx={{pb: 7}}>
             <Typography variant="h2" sx={{pt: 2, pb: 2, pl: 2}}>
                 Gli ultimi canti scelti
             </Typography>

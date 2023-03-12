@@ -8,6 +8,7 @@ import { applyDrag, Playlist } from '@/logic/redux/playlist_slice'
 import { ModalBottomSheetSong } from './bottom_sheet'
 import DragContainer from './react-smooth-dnd/Container'
 import { useAppDispatch, useAppSelector } from '@/logic/redux/store'
+import { ModalAddPlaylist } from './modals'
 
 interface PropsListSongs {
     songs: Song[]
@@ -18,6 +19,7 @@ interface PropsListSongs {
 
 export default function ListSongs(props: PropsListSongs) {
     const [songModal, setSongModal] = useState('')
+    const [showModalCreatePlaylist, setShowModalCreatePlaylist] = useState(false)
     const [filter, setFilter] = useState("")
     const localSongs = props.songs
         .filter(v => v.name.toLowerCase().includes(filter.toLowerCase()))
@@ -36,7 +38,11 @@ export default function ListSongs(props: PropsListSongs) {
                     })
                 }
             </List>
-            <ModalBottomSheetSong open={songModal !== ''} onClose={() => setSongModal('')} song_id={songModal}/>
+            <ModalBottomSheetSong open={songModal !== ''} onClose={() => setSongModal('')} song_id={songModal} openModalCreate={() => {
+                setSongModal('')
+                setShowModalCreatePlaylist(true)
+            }}/>
+            <ModalAddPlaylist open={showModalCreatePlaylist} handleClose={() => setShowModalCreatePlaylist(false)}/>
         </MuiContainer>
     )
   

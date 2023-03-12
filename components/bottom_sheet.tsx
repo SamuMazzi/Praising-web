@@ -7,6 +7,10 @@ import Typography from '@mui/material/Typography';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import Box from '@mui/material/Box';
 import ListPlaylist from './list_playlist';
+import Button from '@mui/material/Button';
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import { useState } from 'react';
+import { ModalAddPlaylist } from './modals';
 
 interface PropsModalBottomSheet {
     open: boolean
@@ -44,6 +48,7 @@ export function ModalBottomSheetPlaylist(props: PropsModalBottomSheetPlaylist) {
 
 interface PropsModalBottomSheetSong extends PropsModalBottomSheet {
     song_id: string
+    openModalCreate?: () => void
 }
 
 export function ModalBottomSheetSong(props: PropsModalBottomSheetSong) {
@@ -56,7 +61,7 @@ export function ModalBottomSheetSong(props: PropsModalBottomSheetSong) {
       >
         <Sheet.Container>
             <Sheet.Header>
-                <TitleModal onClose={props.onClose} title="Playlist"/>
+                <TitleModal onClose={props.onClose} title="Playlist" openModal={props.openModalCreate}/>
             </Sheet.Header>
             <Sheet.Content>
                 <ListPlaylist fromSongId={props.song_id}/>
@@ -71,18 +76,31 @@ export function ModalBottomSheetSong(props: PropsModalBottomSheetSong) {
 interface PropsTitleModal {
     onClose: Function
     title: string
+    openModal?: () => void
 }
 
 function TitleModal(props: PropsTitleModal) {
-    return (
-        <Box display='flex' alignItems='center' justifyContent='space-between' sx={{pt: 1}}>
-            <IconButton edge='start' onClick={() => props.onClose()} sx={{ml: 1}}>
-                <CloseRoundedIcon />
-            </IconButton>
-            <Typography textAlign='center'>
-                {props.title}
-            </Typography>
-            <Box />
-        </Box>
-    )
+  return (
+      <Box display='flex' alignItems='center' justifyContent='space-between' sx={{pt: 1}}>
+          <IconButton edge='start' onClick={() => props.onClose()} sx={{ml: 1}}>
+              <CloseRoundedIcon />
+          </IconButton>
+          <Typography textAlign='center'>
+              {props.title}
+          </Typography>
+          {
+            props.openModal ? 
+            <Button 
+              startIcon={<AddRoundedIcon />} 
+              sx={{mr: 2}} 
+              onClick={props.openModal}
+            >
+              <Typography display={{ xs: 'none', md: 'none' }}>
+                Nuova playlist
+              </Typography>
+            </Button>
+            : <Box />
+          }
+      </Box>
+  )
 }
