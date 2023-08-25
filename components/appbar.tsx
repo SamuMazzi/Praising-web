@@ -14,7 +14,6 @@ import Tooltip from "@mui/material/Tooltip";
 import { Playlist } from "@/logic/redux/playlist_slice";
 import FirstPageRoundedIcon from '@mui/icons-material/FirstPageRounded';
 import LastPageRoundedIcon from '@mui/icons-material/LastPageRounded';
-import { NextLinkComposed } from "./link_composed";
 import Routes from "@/logic/routes";
 import { useAppDispatch, useAppSelector } from "@/logic/redux/store";
 import { setChordNotation } from "@/logic/redux/settings_slice";

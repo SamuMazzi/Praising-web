@@ -15,6 +15,7 @@ import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar'
 import { filterArgomenti, filterMomenti, getLastRecentsSongs, getSingleSong } from '@/logic/local_logic'
 import Routes from '@/logic/routes'
 import ListSongs from '@/components/list_songs'
+import Link from 'next/link'
 
 
 export default function Home() {
@@ -36,7 +37,7 @@ export default function Home() {
                         style={{ width: 200 }} 
                         sx={{mx: 0.5}}>
                         <ListItemButton 
-                          LinkComponent={NextLinkComposed} 
+                          LinkComponent={Link} 
                           href={Routes.FilteredSongs + '/' + momento} 
                           key={momento} 
                           style={{ width: 150, height: 75}} 

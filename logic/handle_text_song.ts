@@ -34,15 +34,17 @@ function americanToItalianChord(completeChord: string): string {
       'sus': '4',
       'sus2': '2',
       'sus4': '4',
+      '2': '2',
+      '4': '4',
+      '6': '6',
       '7': '7',
+      '9': '9',
+      '11': '11',
+      '13': '13',
       'maj7': '7+',
       'm7': '-7',
       'm7b5': '-7b5',
-      'dim7': 'dim7',
-      '6': '6',
-      '9': '9',
-      '11': '11',
-      '13': '13'
+      'dim7': 'dim7'
     };
   
     return completeChord.split('/').map(chord => {

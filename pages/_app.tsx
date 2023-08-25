@@ -6,8 +6,22 @@ import { Provider } from 'react-redux'
 import { store } from '../logic/redux/store'
 import '../styles/globals.css'
 import Head from 'next/head'
+import { useEffect } from 'react'
 
 export default function App({ Component, pageProps }: AppProps) {
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      console.log("service worker in navigator")
+      navigator.serviceWorker.register('/service-worker.js')
+      .then(registration => {
+        console.log('Service Worker registered with scope:', registration.scope);
+      })
+      .catch(error => {
+        console.error('Service Worker registration failed:', error);
+      });
+    }
+  }, []);
+
   return (
     <>
     <Head>

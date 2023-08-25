@@ -9,14 +9,13 @@ import Box from '@mui/material/Box';
 import ListPlaylist from './list_playlist';
 import Button from '@mui/material/Button';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
-import { useState } from 'react';
-import { ModalAddPlaylist } from './modals';
 
 interface PropsModalBottomSheet {
     open: boolean
     onClose: Function
 }
-
+// TODO: Dalla versione 2.0 di react-modal-sheet dovrebbe essere possibile scrollare sia contenuto che modal
+// TODO: Rendere lo sfondo in background non cliccabile quando modal è aperto
 interface PropsModalBottomSheetPlaylist extends PropsModalBottomSheet {
     playlist_id: string | undefined
 }
@@ -30,14 +29,15 @@ export function ModalBottomSheetPlaylist(props: PropsModalBottomSheetPlaylist) {
       <Sheet isOpen={props.open} onClose={() => props.onClose()} 
         snapPoints={[0.6]}
         initialSnap={0}
-        disableDrag
       >
         <Sheet.Container>
             <Sheet.Header>
                 <TitleModal onClose={props.onClose} title={"Canzoni per " + playlist?.name}/>
             </Sheet.Header>
             <Sheet.Content>
+              <Sheet.Scroller>
                 <ListSongs songs={songs} playlist={playlist} mode='selection_playlist' />
+              </Sheet.Scroller>
             </Sheet.Content>
         </Sheet.Container>
         <Sheet.Backdrop />
@@ -57,14 +57,15 @@ export function ModalBottomSheetSong(props: PropsModalBottomSheetSong) {
       <Sheet isOpen={props.open} onClose={() => props.onClose()} 
         snapPoints={[0.6]}
         initialSnap={0}
-        disableDrag
       >
         <Sheet.Container>
             <Sheet.Header>
                 <TitleModal onClose={props.onClose} title="Playlist" openModal={props.openModalCreate}/>
             </Sheet.Header>
             <Sheet.Content>
+              <Sheet.Scroller>
                 <ListPlaylist fromSongId={props.song_id}/>
+              </Sheet.Scroller>
             </Sheet.Content>
         </Sheet.Container>
         <Sheet.Backdrop />
