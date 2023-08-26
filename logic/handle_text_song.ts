@@ -9,10 +9,12 @@ interface ParamsTranslateChord {
 
 function americanToItalianChord(completeChord: string): string {
     const chordMap: { [key: string]: string } = {
+      'Ab': 'Lab',
       'A': 'La',
       'A#': 'La#',
       'Bb': 'Sib',
       'B': 'Si',
+      'Cb': 'Dob',
       'C': 'Do',
       'C#': 'Do#',
       'Db': 'Reb',
@@ -185,7 +187,7 @@ const editHTML = ($: CheerioAPI, chordNotation: ChordNotations) => {
         if (chordNotation === 'ITALIAN') {
             translateChordsToItalian($)
         }
-        //TODO: Testare con Jesus, I trust in you e Abbracciami per ritornello
+        //TODO: Testare con Jesus, I trust in you e Abbracciami per ritornello, testa anche con Hearth of Worship (dava "undefined" nella traduzione di Ab in Lab)
         //TODO: Informarsi su come dare le info per la deserializzazione 
 
         //TODO: Magari vorrei farlo per riga e non per "sezione della riga", sia per correttezza che performance

@@ -28,6 +28,8 @@ interface PropsSongPage {
     playlist_id: string | undefined
 }
 
+//TODO: Setta automaticamente zoom in modo da fittare linee
+
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function SongPage(props: PropsSongPage) {
