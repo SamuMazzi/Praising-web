@@ -17,12 +17,12 @@ self.addEventListener('install', event => {
     );
   });
   
-  self.addEventListener('fetch', event => {
+/*  self.addEventListener('fetch', event => {  //In modalità online crea effetto loop
     event.respondWith(
       caches.match(event.request).then(response => {
         console.log(event.request)
         return response || fetch(event.request);
       })
     );
-  });
+  }); */
   

@@ -2,7 +2,6 @@ import List from '@mui/material/List'
 import { useAppSelector } from '@/logic/redux/store'
 import PlaylistTile, { SelectablePlaylistTile } from '@/components/playlist_tile'
 import { useState } from 'react'
-import { ModalBottomSheetPlaylist } from './bottom_sheet'
 import { ModalEditPlaylist } from './modals'
 
 interface PropsListPlaylist {

@@ -43,11 +43,22 @@ export default function SongPage(props: PropsSongPage) {
     const chordNotation = useAppSelector(state => state.settings.chordNotation)
 
     useEffect(() => {
+        const handleVisibilityChange = async () => {
+            if (isSupported && (released === true || released === undefined) && document.visibilityState === 'visible') {
+                await request()
+            }
+        };
+        
         updateLastRecentsSongs(song!)
+        
+        document.addEventListener('visibilitychange', handleVisibilityChange);
         request()
-        //TODO: Da finire di testare
+
         return () => {
-            release()
+            if (released === false) { //Return of useEffect get executed also on mount, this snippet prevent this
+                document.removeEventListener('visibilitychange', handleVisibilityChange);
+                release()
+            }
         };
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

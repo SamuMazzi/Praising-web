@@ -14,8 +14,7 @@ interface PropsModalBottomSheet {
     open: boolean
     onClose: Function
 }
-// TODO: Dalla versione 2.0 di react-modal-sheet dovrebbe essere possibile scrollare sia contenuto che modal
-// TODO: Rendere lo sfondo in background non cliccabile quando modal è aperto
+
 interface PropsModalBottomSheetPlaylist extends PropsModalBottomSheet {
     playlist_id: string | undefined
 }
@@ -26,10 +25,7 @@ export function ModalBottomSheetPlaylist(props: PropsModalBottomSheetPlaylist) {
 
   return (
     <>
-      <Sheet isOpen={props.open} onClose={() => props.onClose()} 
-        snapPoints={[0.6]}
-        initialSnap={0}
-      >
+      <Sheet isOpen={props.open} onClose={() => props.onClose()}>
         <Sheet.Container>
             <Sheet.Header>
                 <TitleModal onClose={props.onClose} title={"Canzoni per " + playlist?.name}/>
@@ -54,10 +50,7 @@ interface PropsModalBottomSheetSong extends PropsModalBottomSheet {
 export function ModalBottomSheetSong(props: PropsModalBottomSheetSong) {
   return (
     <>
-      <Sheet isOpen={props.open} onClose={() => props.onClose()} 
-        snapPoints={[0.6]}
-        initialSnap={0}
-      >
+      <Sheet isOpen={props.open} onClose={() => props.onClose()}>
         <Sheet.Container>
             <Sheet.Header>
                 <TitleModal onClose={props.onClose} title="Playlist" openModal={props.openModalCreate}/>

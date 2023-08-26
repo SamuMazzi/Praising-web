@@ -15,6 +15,7 @@ export default function PlaylistPage() {
             <PraisingAppBar title='Playlist'/>
             <Container sx={{py: verticalPaddingAppBar + 2}}/>
             <ListPlaylist />
+            <Container sx={{pb: 8}}/>
             <Box display='flex' justifyContent='center'>
                 <Button 
                     sx={{borderRadius: 4}} 
