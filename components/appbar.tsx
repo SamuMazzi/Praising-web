@@ -9,8 +9,6 @@ import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import IconButton from "@mui/material/IconButton";
 import { useRouter } from "next/router";
 import Box from "@mui/material/Box";
-import CircleRoundedIcon from '@mui/icons-material/CircleRounded';
-import Tooltip from "@mui/material/Tooltip";
 import { Playlist } from "@/logic/redux/playlist_slice";
 import FirstPageRoundedIcon from '@mui/icons-material/FirstPageRounded';
 import LastPageRoundedIcon from '@mui/icons-material/LastPageRounded';
@@ -82,7 +80,6 @@ interface PropsSongAppBar {
     id: string
     title: string
     transpose?: number
-    wakeLockActive: boolean
     playlist?: Playlist
 }
 
@@ -104,9 +101,6 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                     <Typography variant="h1" sx={{py: 1}} >
                         {props.title}
                     </Typography>
-                    <Tooltip title={props.wakeLockActive ? 'WakeLock attivo' : 'WakeLock disattivato'}>
-                      <CircleRoundedIcon sx={{ml: 1}} fontSize="small" color={props.wakeLockActive ? 'success' : 'error'}/>
-                    </Tooltip>
                   </Box>
                   <Box sx={{ flexGrow: 0, display: 'flex' }} alignItems="center">
                     <Typography color='primary' style={{fontWeight: 600}}>

@@ -114,6 +114,7 @@ interface ParamsRenderSong {
     fileContent: string
     showChords: boolean
     transpose?: number
+    zoomLevel?: number | undefined
     chordNotation: ChordNotations
 }
 
@@ -180,8 +181,25 @@ const rowHasLyrics = ($: CheerioAPI, el: Element) => {
     return res.length !== 0
 }
 
+const adjustZoomLevel = ($: CheerioAPI, oldZoomLevel: number) => {
+    if (typeof window === "undefined") {
+        return oldZoomLevel
+    }
+    let maxLen = 0
+    $('.row').each((i, row) => {
+        $('.lyrics').each((i, lyrics) => {
+            maxLen = Math.max($(lyrics).text().length, maxLen)
+        })
+    })
+    while (maxLen * (oldZoomLevel / 2) > window.innerWidth) {
+        oldZoomLevel--
+    }
+    return oldZoomLevel
+}
+
 const editHTML = ($: CheerioAPI, chordNotation: ChordNotations) => {
     $('.row').each((i, row) => {
+
         removeChordsFromHTML($, row)
         setSpacesBetweenChorusAndVerses($, row)
         if (chordNotation === 'ITALIAN') {
@@ -266,7 +284,12 @@ const removeChords = (serializedSong: any) => {
     })
 }
 
-export const renderSong = (props: ParamsRenderSong) => {
+interface InfoRenderSong {
+    songText: string
+    zoomLevel: number
+}
+
+export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
     const parser = new ChordSheetJS.ChordProParser();
     const song_parsed = parser.parse(props.fileContent);
     const formatterDiv = new ChordSheetJS.HtmlDivFormatter();
@@ -281,11 +304,19 @@ export const renderSong = (props: ParamsRenderSong) => {
     const $ = load(disp)
 
     const linesChorus = findLinesChorus(deserialized)
-    //console.log(linesChorus)
     toggleShowChords($, props.showChords)
     boldenChorus($, linesChorus)
     editHTML($, props.chordNotation)
-    return $.html()
+    let zoomLevel = 0
+    if(props.zoomLevel === undefined) { // First time opening the song or zoom not set
+        zoomLevel = adjustZoomLevel($, 17) //Std zoom level
+    } else {
+        zoomLevel = props.zoomLevel
+    }
+    return {
+        songText: $.html(),
+        zoomLevel: zoomLevel
+    }
 }
 
 /**

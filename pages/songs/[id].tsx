@@ -77,7 +77,7 @@ export default function SongPage(props: PropsSongPage) {
     if(error || isLoading) {
         return (
             <Container sx={{minHeight: '100vh'}}>
-                <SongAppBar id={''} title={''} wakeLockActive={!released}/>
+                <SongAppBar id={''} title={''}/>
                 {
                     isLoading ? <CircularProgress sx={{textAlign: 'center', mt: 15}}/> :
                     <Typography sx={{pt: 15}} textAlign="center">
@@ -88,12 +88,16 @@ export default function SongPage(props: PropsSongPage) {
         )
     }
 
-    const songToRender = renderSong({
+    const info = renderSong({
         fileContent: data, //props.fileContent
         showChords: showChords,
         transpose: infoSong?.transpose,
-        chordNotation: chordNotation
+        zoomLevel: infoSong?.zoom,
+        chordNotation: chordNotation,
     })
+    const songToRender: string = info.songText
+    const zoomLevel: number = info.zoomLevel //TODO: Da testare ovviamente
+    // fontsize std: lineHeigth 68, poi -4 tutte le volte
 
     return (
         <Container sx={{minHeight: '100vh'}}>
@@ -102,9 +106,9 @@ export default function SongPage(props: PropsSongPage) {
                     Questo browser non supporta il wakelock
                 </Typography>
             }
-            <SongAppBar id={song?.id || ''} title={song!.name} transpose={infoSong?.transpose} wakeLockActive={!released} playlist={playlist}/>
+            <SongAppBar id={song?.id || ''} title={song!.name} transpose={infoSong?.transpose} playlist={playlist}/>
             <Container sx={{py: 5}}/>
-            <ActionsSong song={song!} videoIsPlaying={showVideo} onPressVideo={handlePressVideo} 
+            <ActionsSong song={song!} zoomLevel={zoomLevel} videoIsPlaying={showVideo} onPressVideo={handlePressVideo} 
                 setOpenSheet={() => setOpenModalPlaylist(true)}/>
             <Container disableGutters sx={{py: 1}}>
                 <Typography style={{fontSize: infoSong?.zoom ?? 17}}>

@@ -12,12 +12,14 @@ import IconButton from '@mui/material/IconButton'
 import { InfoLocalSong, modifySong } from '@/logic/redux/info_song_slice'
 import { setShowChords } from '@/logic/redux/settings_slice'
 import Tooltip from '@mui/material/Tooltip';
+import { useEffect } from 'react';
 
 interface PropsActionSong {
     song: Song
     onPressVideo: Function
     videoIsPlaying: boolean
     setOpenSheet: Function
+    zoomLevel: number
 }
 
 const ActionIconButton = (props: any) => {
@@ -39,6 +41,12 @@ export default function ActionsSong(props: PropsActionSong) {
     const dispatch = useAppDispatch()
     const actualTranspose = infoSong?.transpose ?? 0
     const actualZoom = infoSong?.zoom ?? 17
+    useEffect(() => {
+        if(props.zoomLevel !== undefined && props.zoomLevel !== actualZoom) {
+            dispatch(modifySong({id: props.song.id, zoom: props.zoomLevel}))
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <Container disableGutters sx={{width: 30}} style={{position: 'fixed', top: 80, right: 45}}>
