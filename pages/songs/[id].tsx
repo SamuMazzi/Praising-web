@@ -28,8 +28,6 @@ interface PropsSongPage {
     playlist_id: string | undefined
 }
 
-//TODO: Setta automaticamente zoom in modo da fittare linee
-
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function SongPage(props: PropsSongPage) {
@@ -96,7 +94,7 @@ export default function SongPage(props: PropsSongPage) {
         chordNotation: chordNotation,
     })
     const songToRender: string = info.songText
-    const zoomLevel: number = info.zoomLevel //TODO: Da testare ovviamente
+    const zoomLevel: number = info.zoomLevel
     // fontsize std: lineHeigth 68, poi -4 tutte le volte
 
     return (

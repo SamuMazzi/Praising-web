@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { saveToStorage, setLocalChordNotation } from '../local_logic'
+import { getFromStorage, getLocalChordNotation, saveToStorage, setLocalChordNotation } from '../local_logic'
 
 export type ChordNotations = 'AMERICAN' | 'ITALIAN'
 
@@ -9,8 +9,8 @@ interface SettingsState {
 }
 
 const initialState: SettingsState = {
-    showChords: true,
-    chordNotation: 'AMERICAN'
+    showChords: getFromStorage('show_chords') === true,
+    chordNotation: getLocalChordNotation()
 }
 
 export const settingsSlice = createSlice({

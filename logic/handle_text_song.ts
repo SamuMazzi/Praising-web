@@ -43,10 +43,12 @@ function americanToItalianChord(completeChord: string): string {
       '9': '9',
       '11': '11',
       '13': '13',
+      '7+': '7+',
       'maj7': '7+',
       'm7': '-7',
       'm7b5': '-7b5',
-      'dim7': 'dim7'
+      'dim7': 'dim7',
+      'm9': '-9'
     };
   
     return completeChord.split('/').map(chord => {

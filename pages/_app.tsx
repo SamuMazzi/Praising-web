@@ -8,6 +8,8 @@ import '../styles/globals.css'
 import Head from 'next/head'
 import { useEffect } from 'react'
 
+// TODO: Offline https://github.com/hanford/next-offline
+
 export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     if ('serviceWorker' in navigator) {
