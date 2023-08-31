@@ -26,4 +26,26 @@ a {
 .lyrics {
     min-height: 2em;
     white-space:pre-wrap;
-} 
+}
+
+.segmentContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Adjust as needed */
+}
+  
+.shimmerSegment {
+    height: 20px; /* Set the desired height for the shimmer effect */
+    background: linear-gradient(to right, transparent 0%, #f0f0f0 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation: shimmerAnimation 1.5s infinite;
+}
+  
+@keyframes shimmerAnimation {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+}

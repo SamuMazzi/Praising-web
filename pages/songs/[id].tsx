@@ -14,9 +14,9 @@ import { renderSong } from '@/logic/handle_text_song'
 import { MessageSnackbar } from '@/components/pers_snackbar'
 import IconButton from '@mui/material/IconButton'
 import CloseRounded from '@mui/icons-material/CloseRounded'
-import { CircularProgress } from '@mui/material'
 import useSWR from 'swr'
 import { Playlist } from '@/logic/redux/playlist_slice'
+import ShimmerSegments from '@/components/shimmer_effect/shimmer_segments'
 
 SongPage.getInitialProps = async (props: any) => {
     const {id, playlist_id} = props.query
@@ -77,7 +77,9 @@ export default function SongPage(props: PropsSongPage) {
             <Container sx={{minHeight: '100vh'}}>
                 <SongAppBar id={''} title={''}/>
                 {
-                    isLoading ? <CircularProgress sx={{textAlign: 'center', mt: 15}}/> :
+                    isLoading ? <Box sx={{mt: 15}}>
+                            <ShimmerSegments numSegments={30}/>
+                        </Box> :
                     <Typography sx={{pt: 15}} textAlign="center">
                         {"C'è stato un'errore, riprovare"}
                     </Typography>

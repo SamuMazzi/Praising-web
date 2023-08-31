@@ -1,7 +1,16 @@
-import cheerio, { CheerioAPI } from 'cheerio'
+import { CheerioAPI, load } from 'cheerio'
 import axios from 'axios'
 
-interface Lettura {
+// FIXME: No second lecture
+
+interface WebStructLiturgy {
+    firstLecture: Lettura;
+    psalm: Salmo;
+    secondLecture?: Lettura;
+    gospel: Lettura;
+}
+
+export interface Lettura {
     titolo: string
     versetto: string
     content: string
@@ -15,7 +24,7 @@ interface Salmo {
 
 const fetchLiturgia = async (url: string) => {
     const { data } = await axios.get(url);
-    return cheerio.load(data);
+    return load(data);
 };
 
 const parseSalmo = ($: CheerioAPI): Salmo => {
@@ -63,13 +72,14 @@ const parseLettura = ($: CheerioAPI, lettura: string): Lettura | undefined => {
 
 export const extractLiturgia = async (url: string) => {
     const $ = await fetchLiturgia(url);
-    const firstLecture = parseLettura($, ".cci-liturgia-giorno-prima-lettura")
-    const secondaLecture = parseLettura($, ".cci-liturgia-giorno-seconda-lettura")
+    const firstLecture = parseLettura($, ".cci-liturgia-giorno-prima-lettura")!
+    const secondLecture = parseLettura($, ".cci-liturgia-giorno-seconda-lettura")
     
     const psalm = parseSalmo($)
-    const gospel = parseVangelo($, ".cci-liturgia-giorno-vangelo")
-    //const gospel = $(".cci-liturgia-giorno-vangelo").text().trim();
-    return { firstLecture, secondaLecture,psalm, gospel };
+    const gospel = parseVangelo($, ".cci-liturgia-giorno-vangelo")!
+
+    const out: WebStructLiturgy = { firstLecture, secondLecture, psalm, gospel }
+    return out;
 };
 
 export class LiturgyOfDay {
@@ -78,7 +88,7 @@ export class LiturgyOfDay {
   secondLecture?: Lettura;
   gospel: Lettura;
  
-  constructor(body: any) {
+  constructor(body: WebStructLiturgy) {
     this.firstLecture = body.firstLecture
     this.psalm = body.psalm
     this.secondLecture = body.secondLecture
