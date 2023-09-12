@@ -101,7 +101,7 @@ const translateChord = (props: ParamsTranslateChord) => {
                     }
                 }
                 let chord = Chord.parse(tmp)?.useModifier('#');
-                if(props.transpose !== undefined && props.transpose !== 0) {
+                if(props.transpose) {
                     chord = chord?.transpose(props.transpose)
                 }
                 return chord?.toString() || tmp;
@@ -116,7 +116,7 @@ interface ParamsRenderSong {
     fileContent: string
     showChords: boolean
     transpose?: number
-    zoomLevel?: number | undefined
+    fontSize?: number | undefined
     chordNotation: ChordNotations
 }
 
@@ -183,9 +183,9 @@ const rowHasLyrics = ($: CheerioAPI, el: Element) => {
     return res.length !== 0
 }
 
-const adjustZoomLevel = ($: CheerioAPI, oldZoomLevel: number) => {
+const adjustFontSize = ($: CheerioAPI, oldFontSize: number) => {
     if (typeof window === "undefined") {
-        return oldZoomLevel
+        return oldFontSize
     }
     let maxLen = 0
     $('.row').each((i, row) => {
@@ -193,10 +193,10 @@ const adjustZoomLevel = ($: CheerioAPI, oldZoomLevel: number) => {
             maxLen = Math.max($(lyrics).text().length, maxLen)
         })
     })
-    while (maxLen * (oldZoomLevel / 2) > window.innerWidth) {
-        oldZoomLevel--
+    while (maxLen * (oldFontSize / 2) > window.innerWidth) {
+        oldFontSize--
     }
-    return oldZoomLevel
+    return oldFontSize
 }
 
 const editHTML = ($: CheerioAPI, chordNotation: ChordNotations) => {
@@ -207,9 +207,8 @@ const editHTML = ($: CheerioAPI, chordNotation: ChordNotations) => {
         if (chordNotation === 'ITALIAN') {
             translateChordsToItalian($)
         }
-        //TODO: Testare con Jesus, I trust in you e Abbracciami per ritornello, testa anche con Hearth of Worship (dava "undefined" nella traduzione di Ab in Lab)
+        //TODO: Testare con Jesus, I trust in you e Abbracciami per ritornello, gloria gen, testa anche con Hearth of Worship (dava "undefined" nella traduzione di Ab in Lab)
         //TODO: Informarsi su come dare le info per la deserializzazione 
-
         //TODO: Magari vorrei farlo per riga e non per "sezione della riga", sia per correttezza che performance
         $('.lyrics').each((i, lyrics) => {
             const reg = /,\s*,/gm
@@ -260,7 +259,12 @@ const translateChordsToItalian = ($: CheerioAPI) => {
 }
 
 const normalizeChords = (serializedSong: any, transpose: number | undefined) => {
-    serializedSong.lines.map((line: any) => {
+    let capoFoundAtLine = -1
+    serializedSong.lines.map((line: any, index: number) => {
+        if (line.items.length === 1 && line.items[0].type === 'tag' && line.items[0].name.toLowerCase() === 'capo') {
+            capoFoundAtLine = index
+            transpose = transpose ?? line.items[0].value
+        }
         line.items.map((v: any) => {
             if(v.type === 'chordLyricsPair') {
                 v.chords = translateChord({
@@ -271,6 +275,9 @@ const normalizeChords = (serializedSong: any, transpose: number | undefined) => 
         })
         return line
     })
+    if (capoFoundAtLine !== -1) {
+        serializedSong.lines.splice(capoFoundAtLine, 1)  // Questo perchè la traduzione automatica degli accordi della libreria va malissimo
+    }
 }
 
 const removeChords = (serializedSong: any) => {
@@ -288,7 +295,7 @@ const removeChords = (serializedSong: any) => {
 
 interface InfoRenderSong {
     songText: string
-    zoomLevel: number
+    fontSize: number
 }
 
 export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
@@ -297,84 +304,29 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
     const formatterDiv = new ChordSheetJS.HtmlDivFormatter();
     //* Le virgole ci sono già formattando questo sopra
     const serializedSong = new ChordSheetJS.ChordSheetSerializer().serialize(song_parsed);
+    console.log("song parsed", serializedSong)
     normalizeChords(serializedSong, props.transpose)
     if (!props.showChords) {
         removeChords(serializedSong)
     }
+    console.log("song parsed2", serializedSong)
     const deserialized = new ChordSheetJS.ChordSheetSerializer().deserialize(serializedSong);
     const disp = formatterDiv.format(deserialized);
+    //console.log("songp2", disp)
     const $ = load(disp)
 
     const linesChorus = findLinesChorus(deserialized)
     toggleShowChords($, props.showChords)
     boldenChorus($, linesChorus)
     editHTML($, props.chordNotation)
-    let zoomLevel = 0
-    if(props.zoomLevel === undefined) { // First time opening the song or zoom not set
-        zoomLevel = adjustZoomLevel($, 17) //Std zoom level
+    let fontSize = 0
+    if(props.fontSize === undefined) { // First time opening the song or zoom not set
+        fontSize = adjustFontSize($, 17) //Std zoom level
     } else {
-        zoomLevel = props.zoomLevel
+        fontSize = props.fontSize
     }
     return {
         songText: $.html(),
-        zoomLevel: zoomLevel
+        fontSize: fontSize
     }
 }
-
-/**
- * let newSong = deserialized.mapLines((line) => {
-        //* Rimuovi le righe di accordi vuote
-        if (
-            line.items.every(item => item instanceof ChordSheetJS.ChordLyricsPair 
-                && item.chords.trim() === '' 
-                && (item.lyrics === null || item.lyrics?.trim() === '') )) {
-                return null;
-            }
-        //* Rimuovi le righe di Tag
-        if (line.items.every(item => item instanceof ChordSheetJS.Tag )) {
-            return null;
-        }
-                
-        return line;
-    });
- */
-
-/**
- * serializedSong.lines.map(line => {
-        if(line.items.length === 0 || (line.items.length === 1 && line.items[0].type === 'tag')) {
-            line.items = [...line.items, {
-                type: 'chordLyricsPair',
-                chords: '',
-                lyrics: ' '
-            }]
-            return line
-        }
-        line.items.map(v => {
-            if(v.type === 'chordLyricsPair') {
-                v.chords = translateChord({
-                    chord: v.chords,
-                    transpose: props.transpose
-                })
-            }
-        })
-        return line
-    })
- */
-
-/**
- * class MyRenderedSong {
-    formatter: HtmlDivFormatter
-    song_parsed: Song
-
-    constructor(fileContent: string) {
-        const parser = new ChordSheetJS.ChordProParser();
-        this.song_parsed = parser.parse(fileContent);
-        this.formatter = new ChordSheetJS.HtmlDivFormatter();
-    }
-    
-    editChords() {
-        const serializedSong = new ChordSheetJS.ChordSheetSerializer().serialize(this.song_parsed);
-
-    }
-}
- */

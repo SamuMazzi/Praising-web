@@ -1,4 +1,3 @@
-import { NextRouter } from 'next/router'
 import { ChordNotations } from './redux/settings_slice'
 import songs from './songs.config.json'
 
@@ -105,7 +104,7 @@ export const updateLastRecentsSongs = (song: Song) => {
     const limit = 7
     const recents: string[] = getFromStorage('recents') || []
     if(recents.includes(song.id)) return
-    
+
     const newRec = [song.id, ...recents]
     let out = newRec
     if(newRec.length > limit) {

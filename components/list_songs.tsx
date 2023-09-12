@@ -15,15 +15,20 @@ interface PropsListSongs {
     mode: 'normal' | 'selection_playlist'
     playlist?: Playlist
     withSearch?: boolean
+    auto_sorting?: boolean
 }
-
+/**
+ * 
+ * @param auto_sorting Default = True
+ */
 export default function ListSongs(props: PropsListSongs) {
     const [songModal, setSongModal] = useState('')
     const [showModalCreatePlaylist, setShowModalCreatePlaylist] = useState(false)
     const [filter, setFilter] = useState("")
-    const localSongs = props.songs
-        .filter(v => v.name.toLowerCase().includes(filter.toLowerCase()))
-        .sort((a,b) => ('' + a.name).localeCompare(b.name))
+    let localSongs = props.songs.filter(v => v.name.toLowerCase().includes(filter.toLowerCase()))
+    if (props.auto_sorting === undefined || props.auto_sorting === true) {
+        localSongs = localSongs.sort((a,b) => ('' + a.name).localeCompare(b.name))
+    }
 
     return (
         <MuiContainer>

@@ -82,7 +82,7 @@ interface PropsSongAppBar {
     transpose?: number
     playlist?: Playlist
 }
-
+//TODO: Add "reset transpose" on click on transpose text
 export const SongAppBar = (props: PropsSongAppBar) => {
     const router = useRouter()
     const indexInPlaylist = props.playlist?.songs.indexOf(props.id)

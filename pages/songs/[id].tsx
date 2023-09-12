@@ -17,6 +17,7 @@ import CloseRounded from '@mui/icons-material/CloseRounded'
 import useSWR from 'swr'
 import { Playlist } from '@/logic/redux/playlist_slice'
 import ShimmerSegments from '@/components/shimmer_effect/shimmer_segments'
+// import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 
 SongPage.getInitialProps = async (props: any) => {
     const {id, playlist_id} = props.query
@@ -29,6 +30,52 @@ interface PropsSongPage {
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+//TODO: Integra PDF
+/* const styles = StyleSheet.create({
+    page: {
+      flexDirection: 'row',
+      backgroundColor: '#E4E4E4'
+    },
+    section: {
+      margin: 10,
+      padding: 10,
+      flexGrow: 1
+    }
+  });
+  
+interface PropsDocumentSong {
+    textSong: string
+}
+
+const SinglePDFDocumentSong = (props: PropsDocumentSong) => (
+    <Document>
+      <Page size="A4" style={styles.page}>
+        <View style={styles.section}>
+          <Text>Section #1</Text>
+        </View>
+      </Page>
+    </Document>
+);
+
+function GetPDFSong(song_id: string) {
+    const { data, error, isLoading } = useSWR('/api/song/' + song_id, fetcher)
+    const song = getSingleSong(song_id)
+    const infoSong: InfoLocalSong | undefined = useAppSelector(state => song?.id ? state.infoSongs.infoSongs[song.id] : undefined)
+    const chordNotation = useAppSelector(state => state.settings.chordNotation)
+
+    const info = renderSong({
+        fileContent: data, //props.fileContent
+        showChords: false,
+        transpose: infoSong?.transpose,
+        fontSize: infoSong?.zoom,
+        chordNotation: chordNotation,
+    })
+    const songToRender: string = info.songText
+    const fontSize: number = info.fontSize
+
+    return <SinglePDFDocumentSong textSong={songToRender}/>
+} */
 
 export default function SongPage(props: PropsSongPage) {
     const { data, error, isLoading } = useSWR('/api/song/' + props.id, fetcher)
@@ -92,12 +139,13 @@ export default function SongPage(props: PropsSongPage) {
         fileContent: data, //props.fileContent
         showChords: showChords,
         transpose: infoSong?.transpose,
-        zoomLevel: infoSong?.zoom,
+        fontSize: infoSong?.zoom,
         chordNotation: chordNotation,
     })
     const songToRender: string = info.songText
-    const zoomLevel: number = info.zoomLevel
+    const fontSize: number = info.fontSize
     // fontsize std: lineHeigth 68, poi -4 tutte le volte
+    //TODO: Aggiungi expand/collapse su strofe e ritornelli
 
     return (
         <Container sx={{minHeight: '100vh'}}>
@@ -108,7 +156,7 @@ export default function SongPage(props: PropsSongPage) {
             }
             <SongAppBar id={song?.id || ''} title={song!.name} transpose={infoSong?.transpose} playlist={playlist}/>
             <Container sx={{py: 5}}/>
-            <ActionsSong song={song!} zoomLevel={zoomLevel} videoIsPlaying={showVideo} onPressVideo={handlePressVideo} 
+            <ActionsSong song={song!} fontSize={fontSize} videoIsPlaying={showVideo} onPressVideo={handlePressVideo} 
                 setOpenSheet={() => setOpenModalPlaylist(true)}/>
             <Container disableGutters sx={{py: 1}}>
                 <Typography style={{fontSize: infoSong?.zoom ?? 17}}>

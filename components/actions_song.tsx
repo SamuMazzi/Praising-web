@@ -19,7 +19,7 @@ interface PropsActionSong {
     onPressVideo: Function
     videoIsPlaying: boolean
     setOpenSheet: Function
-    zoomLevel: number
+    fontSize: number
 }
 
 const ActionIconButton = (props: any) => {
@@ -40,10 +40,10 @@ export default function ActionsSong(props: PropsActionSong) {
     const showChords = useAppSelector(state => state.settings.showChords)
     const dispatch = useAppDispatch()
     const actualTranspose = infoSong?.transpose ?? 0
-    const actualZoom = infoSong?.zoom ?? 17
+    const fontSize = infoSong?.zoom ?? 17
     useEffect(() => {
-        if(props.zoomLevel !== undefined && props.zoomLevel !== actualZoom) {
-            dispatch(modifySong({id: props.song.id, zoom: props.zoomLevel}))
+        if(props.fontSize !== undefined && props.fontSize !== fontSize) {
+            dispatch(modifySong({id: props.song.id, zoom: props.fontSize}))
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -73,15 +73,15 @@ export default function ActionsSong(props: PropsActionSong) {
             </ActionIconButton>
             <ActionIconButton 
                 title="+ Zoom"
-                onClick={() => dispatch(modifySong({id: props.song.id, zoom: actualZoom + 1}))}
-                color={actualZoom > 17 ? 'primary' : undefined}    
+                onClick={() => dispatch(modifySong({id: props.song.id, zoom: fontSize + 1}))}
+                color={fontSize > 17 ? 'primary' : undefined}    
             >
                 <ZoomInRoundedIcon />
             </ActionIconButton>
             <ActionIconButton 
                 title="- Zoom"
-                onClick={() => dispatch(modifySong({id: props.song.id, zoom: actualZoom - 1}))}
-                color={actualZoom < 17 ? 'primary' : undefined}
+                onClick={() => dispatch(modifySong({id: props.song.id, zoom: fontSize - 1}))}
+                color={fontSize < 17 ? 'primary' : undefined}
             >
                 <ZoomOutRoundedIcon />
             </ActionIconButton>

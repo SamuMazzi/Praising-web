@@ -20,7 +20,7 @@ interface PropsSongTile {
     song: Song
     onSecondaryAction: Function
 }
-
+//imgProps={{sx: {}}}
 export default function SongTile(props: PropsSongTile) {
   return (
     <ListItem component={NextLinkComposed} to={{pathname: Routes.Songs + '/' + props.song.id}} 
@@ -36,8 +36,10 @@ export default function SongTile(props: PropsSongTile) {
     >
         { props.song.link ?
             <ListItemAvatar>
-                <Avatar alt="Copertina" 
-                src={'https://img.youtube.com/vi/'+ props.song.link?.split('/').pop() +'/mqdefault.jpg'} />
+                <Avatar 
+                    alt="Copertina" 
+                    src={'https://img.youtube.com/vi/'+ props.song.link?.split('/').pop() +'/mqdefault.jpg'} 
+                />
             </ListItemAvatar> :
             <ListItemIcon>
                 <MusicNoteRoundedIcon />

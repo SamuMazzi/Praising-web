@@ -89,6 +89,7 @@ export default function Home() {
               songs={recentSongs}
               mode='normal'
               withSearch={false}
+              auto_sorting={false}
             />
           </Container>
         }
