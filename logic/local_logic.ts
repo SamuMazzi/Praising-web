@@ -1,3 +1,4 @@
+import { InfoLocalSong } from './redux/info_song_slice'
 import { ChordNotations } from './redux/settings_slice'
 import songs from './songs.config.json'
 
@@ -76,11 +77,6 @@ export const getLocalSongs = (): Song[] => {
     return localSongs
 }
 
-interface InfoLocalSong {
-    transpose?: number
-    scaleFactor?: number
-}
-
 export const getSingleSong = (id: string) => {
     const songs = getLocalSongs()
     let song: Song | undefined
@@ -95,7 +91,7 @@ export const getSingleSong = (id: string) => {
     const infoLocalSong: InfoLocalSong | undefined = getFromStorage('song_' + song.id)
     if(infoLocalSong) {
         song.transpose = infoLocalSong.transpose
-        song.scaleFactor = infoLocalSong.scaleFactor
+        song.scaleFactor = infoLocalSong.zoom
     }
     return song
 }
@@ -126,4 +122,8 @@ export const getLocalChordNotation = () => {
 
 export const setLocalChordNotation = (notation: ChordNotations) => {
     saveToStorage('chordNotation', notation)
+}
+
+export const getInfoSongsStorage = (): Record<string, InfoLocalSong> => {
+    return getFromStorage('info_songs') || {}
 }

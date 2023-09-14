@@ -18,6 +18,7 @@ import useSWR from 'swr'
 import { Playlist } from '@/logic/redux/playlist_slice'
 import ShimmerSegments from '@/components/shimmer_effect/shimmer_segments'
 // import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
+import { RenderActualSong } from '@/components/render_actual_song'
 
 SongPage.getInitialProps = async (props: any) => {
     const {id, playlist_id} = props.query
@@ -78,16 +79,18 @@ function GetPDFSong(song_id: string) {
 } */
 
 export default function SongPage(props: PropsSongPage) {
-    const { data, error, isLoading } = useSWR('/api/song/' + props.id, fetcher)
     const song = getSingleSong(props.id)
+    // --- Render song ---
+    const { data, error, isLoading } = useSWR('/api/song/' + props.id, fetcher)
+    const showChords = useAppSelector(state => state.settings.showChords)
+    const infoSong: InfoLocalSong | undefined = useAppSelector(state => song?.id ? state.infoSongs.infoSongs[song.id] : undefined)
+    const chordNotation = useAppSelector(state => state.settings.chordNotation)
+    // --------------------
     const playlist: Playlist | undefined = useAppSelector(state => props.playlist_id !== undefined ? state.playlist.playlist[props.playlist_id] : undefined)
     const [openModalPlaylist, setOpenModalPlaylist] = useState(false)
     const [showVideo, setShowVideo] = useState(false)
-    const infoSong: InfoLocalSong | undefined = useAppSelector(state => song?.id ? state.infoSongs.infoSongs[song.id] : undefined)
-    const showChords = useAppSelector(state => state.settings.showChords)
     const { isSupported, released, request, release } = useWakeLock({});
     const [messageSnackbar, setMessageSnackbar] = useState("")
-    const chordNotation = useAppSelector(state => state.settings.chordNotation)
 
     useEffect(() => {
         const handleVisibilityChange = async () => {
@@ -158,11 +161,7 @@ export default function SongPage(props: PropsSongPage) {
             <Container sx={{py: 5}}/>
             <ActionsSong song={song!} fontSize={fontSize} videoIsPlaying={showVideo} onPressVideo={handlePressVideo} 
                 setOpenSheet={() => setOpenModalPlaylist(true)}/>
-            <Container disableGutters sx={{py: 1}}>
-                <Typography style={{fontSize: infoSong?.zoom ?? 17}}>
-                    <div dangerouslySetInnerHTML={{__html: songToRender}} />
-                </Typography>
-            </Container>
+            <RenderActualSong fontSize={infoSong?.zoom} songHtml={songToRender}/>
             {
             showVideo && song?.link && 
             <Box 
