@@ -28,6 +28,8 @@
     "eslint": "8.47",
     "eslint-config-next": "^13.4.19",
     "fs": "^0.0.1-security",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
     "next": "^13.4.19",
     "next-pwa": "^5.6.0",
     "prop-types": "^15.8.1",

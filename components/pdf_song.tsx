@@ -1,13 +1,15 @@
 import Html from 'react-pdf-html';
 import ReactDOMServer from 'react-dom/server';
-import { Page, Text, View, Document, StyleSheet, renderToFile } from '@react-pdf/renderer';
+import { Page, Text, View, Document, PDFDownloadLink } from '@react-pdf/renderer';
 import { RenderActualSong } from './render_actual_song';
 import { Playlist } from '@/logic/redux/playlist_slice';
 import { renderSong } from '@/logic/handle_text_song';
-import { useAppSelector } from '@/logic/redux/store';
 import { InfoLocalSong } from '@/logic/redux/info_song_slice';
 import { getInfoSongsStorage, getLocalChordNotation, getSingleSong } from '@/logic/local_logic';
 import { ChordNotations } from '@/logic/redux/settings_slice';
+import { useEffect, useState } from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
+import { Typography } from '@mui/material';
 
 
 interface PropsPagePDFSong {
@@ -15,6 +17,15 @@ interface PropsPagePDFSong {
     show_chords: boolean
     chord_notation: ChordNotations
 }
+const MyDocument = () => (
+    <Document>
+      <Page>
+        <View>
+          <h1>Hello, this is your PDF!</h1>
+        </View>
+      </Page>
+    </Document>
+  );
 
 const getPagePDFSong = async (props: PropsPagePDFSong) => {
     const song = getSingleSong(props.id_song)
@@ -32,28 +43,72 @@ const getPagePDFSong = async (props: PropsPagePDFSong) => {
         chordNotation: props.chord_notation,
     })
     // TODO: Check infoSong.zoom o info.zoomLevel
-    const element = <RenderActualSong songHtml={info.songText} fontSize={infoSong?.zoom} />
-    const html = ReactDOMServer.renderToStaticMarkup(element);
+    const element = <html>
+        <body>
+            <RenderActualSong songHtml={info.songText} fontSize={infoSong?.zoom} />
+        </body>
+    </html>
+    const html = ReactDOMServer.renderToString(element);
+    console.log(html)
     return (
         <Page size='A4'>
-            <Html>{html}</Html>
+            <View>
+                <Html>{html}</Html>
+            </View>
         </Page>
     )
 }
 
-export const renderPDFPlaylist = async (playlist: Playlist) => {
+//TODO: Add space and a little bit of rounding in menu
+//TODO: ShowChords in pdf non implementato effettivamente
+
+interface PropsRenderPDFPlaylist {
+    playlist: Playlist
+    show_chords: boolean
+}
+
+const renderPDFPlaylist = async (props: PropsRenderPDFPlaylist) => {
     const chordNotation = getLocalChordNotation()
-    const pagesPDF = [] //TODO: Maybe devi mettere questo in API route
-    for (const s of playlist.songs) {
-        const pageSong = await getPagePDFSong({id_song: s, show_chords: true, chord_notation: chordNotation}) // TODO: Metti Checkbox per scelta chords
+    const pagesPDF = []
+    for (const s of props.playlist.songs) {
+        const pageSong = await getPagePDFSong({id_song: s, show_chords: props.show_chords, chord_notation: chordNotation})
         pagesPDF.push(pageSong)
     }
-    const pdf_final = (
+    return (
         <Document>
             {pagesPDF}
         </Document>
     )
-    renderToFile(pdf_final, `${__dirname}/example.pdf`);
 }
 
-// 
+
+interface PropsRenderPDFPlaylist {
+    playlist: Playlist
+    show_chords: boolean
+}
+
+export const PDFDownloadButton = (props: PropsRenderPDFPlaylist) => {
+    const [doc, setDoc] = useState<JSX.Element | null>(null)
+    
+    useEffect(() => {
+        renderPDFPlaylist(props).then((newDoc) => {
+            setDoc(newDoc)
+        })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    return (
+        <div>
+            {
+                doc === null ? <CircularProgress /> :
+                <PDFDownloadLink document={doc} fileName={"Playlist_" + props.playlist.name + ".pdf"}>
+                    {({ blob, url, loading, error }) =>
+                    <Typography>
+                        {loading ? 'Loading document...' : 'Download now!'}
+                    </Typography>
+                    }
+                </PDFDownloadLink>
+            }
+        </div>
+    );
+}
