@@ -3,9 +3,9 @@ import { NextLinkComposed } from './link_composed'
 import ListItem from '@mui/material/ListItem'
 import IconButton from '@mui/material/IconButton'
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
-import { deletePlaylist, handleSongForPlaylist, Playlist } from '@/logic/redux/playlist_slice'
+import { handleSongForPlaylist, Playlist } from '@/logic/redux/playlist_slice'
 import ListItemButton from '@mui/material/ListItemButton'
-import { useAppDispatch, useAppSelector } from '@/logic/redux/store'
+import { useAppDispatch } from '@/logic/redux/store'
 import { useState } from 'react';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';

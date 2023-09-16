@@ -3,25 +3,13 @@ import Modal from '@mui/material/Modal'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 import Button from '@mui/material/Button'
-import { useAppDispatch, useAppSelector } from '../logic/redux/store'
+import { useAppDispatch } from '../logic/redux/store'
 import TextField from '@mui/material/TextField'
 import { addPlaylist, deletePlaylist, modifyNamePlaylist, Playlist } from '@/logic/redux/playlist_slice'
-import ListItemButton from '@mui/material/ListItemButton'
-import List from '@mui/material/List'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
-import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
-import EditRoundedIcon from '@mui/icons-material/EditRounded';
-import ShareRoundedIcon from '@mui/icons-material/ShareRounded';
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
-import { RWebShare } from "react-web-share";
 import Grid from '@mui/material/Grid'
-import Routes from '@/logic/routes'
-import PersSnackbar from './pers_snackbar'
 import Checkbox from '@mui/material/Checkbox'
 import { ChordNotations } from '@/logic/redux/settings_slice'
-import CircularProgress from '@mui/material/CircularProgress'
-import { renderPDFPlaylist } from './pdf_song'
+import { PDFDownloadButton } from './pdf_song'
 
 interface GenericProps {
     open: boolean
@@ -95,7 +83,6 @@ interface PropsModalExportToPDF extends GenericProps {
 export function ModalExportToPDF(props: PropsModalExportToPDF) {
     const [showChords, setShowChords] = useState(true)
     const [chordNotation, setChordNotation] = useState<ChordNotations>('ITALIAN')
-    const [loading, setLoading] = useState(false)
 
     return <GenericModal 
         open={props.open}
@@ -126,20 +113,7 @@ export function ModalExportToPDF(props: PropsModalExportToPDF) {
                     </Box>
                 </Grid>}
                 <Grid item>
-                    {   loading ?
-                        <CircularProgress /> :
-                        <Button onClick={async () => {
-                            setLoading(true)
-                            try {
-                                await renderPDFPlaylist(props.playlist)
-                                props.handleClose()
-                            } finally {
-                                setLoading(false)
-                            }
-                        }} sx={{mt: 1}}>
-                            Scarica il tuo PDF!
-                        </Button>
-                    }
+                    <PDFDownloadButton playlist={props.playlist} show_chords={showChords}/>
                 </Grid>
             </Grid>
         }
