@@ -67,7 +67,7 @@ export function ListSongsPlaylist(props: PropsListSongsPlaylist) {
         .filter(v => v.name.toLowerCase().includes(filter.toLowerCase()))
 
     return (
-        <MuiContainer>
+        <MuiContainer sx={{pb: 3}}>
             <TypeSearch query={filter} setQuery={setFilter}/>
             <List>
                 <DragContainer dragHandleSelector='.column-drag-handle' onDrop={(e: any) => {

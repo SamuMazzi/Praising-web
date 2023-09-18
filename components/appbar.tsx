@@ -107,7 +107,7 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                         {props.transpose === 0 ? '' : props.transpose}
                     </Typography>
                     {
-                      indexInPlaylist !== undefined && props.playlist && 
+                      indexInPlaylist !== undefined && indexInPlaylist !== -1 && props.playlist && 
                       <>
                         {
                           indexInPlaylist > 0 &&
@@ -118,7 +118,7 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                           </Link>
                         }
                         {
-                          indexInPlaylist !== props.playlist!.songs.length - 2 &&
+                          indexInPlaylist <= props.playlist!.songs.length - 2 &&
                           <Link replace href={Routes.Songs + '/' + props.playlist!.songs[indexInPlaylist + 1] + '?playlist_id=' + props.playlist!.id} passHref>
                             <IconButton sx={{ mr: 2 }} LinkComponent={Link}>
                               <LastPageRoundedIcon />
