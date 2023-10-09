@@ -1,6 +1,5 @@
 import ListItemText from '@mui/material/ListItemText'
 import { Song } from '@/logic/local_logic'
-import { NextLinkComposed } from './link_composed'
 import ListItem from '@mui/material/ListItem'
 import IconButton from '@mui/material/IconButton'
 import ListItemButton from '@mui/material/ListItemButton'
@@ -10,7 +9,8 @@ import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded';
 import Draggable from './react-smooth-dnd/Draggable';
 import DragHandleRoundedIcon from '@mui/icons-material/DragHandleRounded';
 import Typography from '@mui/material/Typography'
-import Routes from '@/logic/routes'
+import RoutePaths from '@/logic/routes'
+import { Link } from 'react-router-dom'
 
 interface PropsSongTile {
     song: Song
@@ -19,7 +19,7 @@ interface PropsSongTile {
 
 export default function SongTile(props: PropsSongTile) {
   return (
-    <ListItem component={NextLinkComposed} to={{pathname: Routes.Songs + '/' + props.song.id}} 
+    <ListItem component={Link} to={{pathname: RoutePaths.Songs + '/' + props.song.id}} 
         sx={{backgroundColor: '#F2F2F2', borderRadius: 8, my: 1}}
         secondaryAction={
             <IconButton onClick={(e: any) => {
@@ -78,7 +78,7 @@ export function PlaylistSongTile(props: PropsSelectableSongTile) {
                     disableTypography
                     primary={<Typography
                         component={NextLinkComposed} 
-                        to={{pathname: Routes.Songs + '/' + props.song.id, query: { playlist_id: props.playlist.id }}} 
+                        to={{pathname: RoutePaths.Songs + '/' + props.song.id, query: { playlist_id: props.playlist.id }}} 
                     >
                         {props.song.name}
                     </Typography>}

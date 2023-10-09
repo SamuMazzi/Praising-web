@@ -6,10 +6,13 @@ import { Provider } from 'react-redux'
 import { store } from '../logic/redux/store'
 import '../styles/globals.css'
 import Head from 'next/head'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function App({ Component, pageProps }: AppProps) {
+  const [render, setRender] = useState(false);
+
   useEffect(() => {
+    setRender(true)  // To avoid re-hydration error
     if ('serviceWorker' in navigator) {
       console.log("service worker in navigator")
       navigator.serviceWorker.register('/service-worker.js')
@@ -22,7 +25,7 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   }, []);
 
-  return (
+  return render ? (
     <>
     <Head>
       <title>Praising</title>
@@ -38,5 +41,5 @@ export default function App({ Component, pageProps }: AppProps) {
       </ThemeProvider>
     </Provider>
     </>
-  )
+  ) : null
 }

@@ -1,5 +1,4 @@
 import ListItemText from '@mui/material/ListItemText'
-import { NextLinkComposed } from './link_composed'
 import ListItem from '@mui/material/ListItem'
 import IconButton from '@mui/material/IconButton'
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
@@ -13,11 +12,12 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import PersSnackbar from './pers_snackbar';
 import { ModalDeletePlaylist, ModalEditNamePlaylist, ModalExportToPDF } from './modals';
 import { RWebShare } from 'react-web-share';
-import Routes from '@/logic/routes';
+import RoutePaths from '@/logic/routes';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import ShareRoundedIcon from '@mui/icons-material/ShareRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
+import { Link } from 'react-router-dom';
 
 interface PropsPlaylistTile {
     playlist: Playlist
@@ -39,7 +39,7 @@ export default function PlaylistTile(props: PropsPlaylistTile) {
   return (
     <>
     <ListItem 
-        component={NextLinkComposed} 
+        component={Link} 
         to={{pathname: '/playlist/' + props.playlist.id}} 
         sx={{backgroundColor: '#F2F2F2', borderRadius: 8, my: 1}}
         secondaryAction={
@@ -72,7 +72,7 @@ export default function PlaylistTile(props: PropsPlaylistTile) {
         <RWebShare
             data={{
                 text: "Visualizza la playlist " + props.playlist.name + " su 'Praising'",
-                url: "https://praising.vercel.app"+ Routes.SharePlaylist +"?name="+props.playlist.name+"&songs="+props.playlist.songs.join(','),
+                url: "https://praising.vercel.app"+ RoutePaths.SharePlaylist +"?name="+props.playlist.name+"&songs="+props.playlist.songs.join(','),
                 title: "Condividi la playlist",
             }}
             sites={['facebook', 'twitter', 'whatsapp', 'telegram', 'mail', 'copy']}
@@ -83,7 +83,7 @@ export default function PlaylistTile(props: PropsPlaylistTile) {
         >
         <MenuItem onClick={() => { 
             handleClose()            
-            navigator.clipboard.writeText("https://praising.vercel.app"+ Routes.SharePlaylist +"?name="+props.playlist.name+"&songs="+props.playlist.songs.join(','))
+            navigator.clipboard.writeText("https://praising.vercel.app"+ RoutePaths.SharePlaylist +"?name="+props.playlist.name+"&songs="+props.playlist.songs.join(','))
         }}>
             <ListItemIcon>
                 <ShareRoundedIcon />

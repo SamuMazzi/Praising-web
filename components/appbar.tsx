@@ -12,12 +12,11 @@ import Box from "@mui/material/Box";
 import { Playlist } from "@/logic/redux/playlist_slice";
 import FirstPageRoundedIcon from '@mui/icons-material/FirstPageRounded';
 import LastPageRoundedIcon from '@mui/icons-material/LastPageRounded';
-import Routes from "@/logic/routes";
+import RoutePaths from "@/logic/routes";
 import { useAppDispatch, useAppSelector } from "@/logic/redux/store";
 import { setChordNotation } from "@/logic/redux/settings_slice";
 import Button from "@mui/material/Button";
-import Link from "next/link";
-
+import { Link } from "react-router-dom";
 //TODO: Implementare clide-side routing anche con useRouter
 
 interface PropsHideOnScroll {
@@ -110,8 +109,8 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                       indexInPlaylist !== undefined && props.playlist && 
                       <>
                         {
-                          indexInPlaylist > 0 &&
-                          <Link replace href={Routes.Songs + '/' + props.playlist!.songs[indexInPlaylist - 1] + '?playlist_id=' + props.playlist!.id} passHref> 
+                          indexInPlaylist > 0 && // Ho tolto passHref, forse bug
+                          <Link replace to={RoutePaths.Songs + '/' + props.playlist!.songs[indexInPlaylist - 1] + '?playlist_id=' + props.playlist!.id}> 
                             <IconButton sx={{ ml: 2, mr: 0.5 }} LinkComponent={Link} >
                               <FirstPageRoundedIcon />
                             </IconButton>
@@ -119,7 +118,7 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                         }
                         {
                           indexInPlaylist !== props.playlist!.songs.length - 2 &&
-                          <Link replace href={Routes.Songs + '/' + props.playlist!.songs[indexInPlaylist + 1] + '?playlist_id=' + props.playlist!.id} passHref>
+                          <Link replace to={RoutePaths.Songs + '/' + props.playlist!.songs[indexInPlaylist + 1] + '?playlist_id=' + props.playlist!.id}>
                             <IconButton sx={{ mr: 2 }} LinkComponent={Link}>
                               <LastPageRoundedIcon />
                             </IconButton>

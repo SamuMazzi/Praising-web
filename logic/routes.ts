@@ -1,4 +1,4 @@
-const Routes = {
+const RoutePaths = {
     Home: '/',
     Songs: '/songs',
     LetturaDelGiorno: '/lectures',
@@ -7,4 +7,4 @@ const Routes = {
     SharePlaylist: '/playlist/shared',
 }
 
-export default Routes
+export default RoutePaths

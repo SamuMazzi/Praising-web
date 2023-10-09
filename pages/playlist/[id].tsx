@@ -8,9 +8,10 @@ import { ModalBottomSheetPlaylist } from '@/components/bottom_sheet'
 import Fab from '@mui/material/Fab'
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import { Playlist } from '@/logic/redux/playlist_slice'
+import { useLoaderData } from 'react-router-dom'
 
-PlaylistPage.getInitialProps = async (props: any) => {
-    const {id} = props.query
+export const loaderSinglePlaylistPage = async (props: any) => {
+    const {id} = props.params
   
     return {id}
 }
@@ -19,7 +20,8 @@ interface PropsSongPage {
     id: string
 }
 
-export default function PlaylistPage(props: PropsSongPage) {
+export default function SinglePlaylistPage() {
+    const props: any = useLoaderData()
     const playlist: Playlist | undefined = useAppSelector(state => state.playlist.playlist[props.id])
     const songs = playlist?.songs.map(id_song => getSingleSong(id_song)!)
     const [openModal, setOpenModal] = useState(false)

@@ -1,5 +1,4 @@
-import { NextLinkComposed } from '@/components/link_composed'
-import Routes from '@/logic/routes'
+import RoutePaths from '@/logic/routes'
 import BottomNavigation from '@mui/material/BottomNavigation'
 import BottomNavigationAction from '@mui/material/BottomNavigationAction'
 import Paper from '@mui/material/Paper'
@@ -9,11 +8,12 @@ import LibraryMusicRoundedIcon from '@mui/icons-material/LibraryMusicRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded';
 import ListRoundedIcon from '@mui/icons-material/ListRounded';
+import { Link } from 'react-router-dom'
 
 export default function NavBar() {
   const router = useRouter()
   const pages = ['Home', 'Canti', 'Letture', 'Playlist']
-  const routesPages = [Routes.Home, Routes.Songs, Routes.LetturaDelGiorno, Routes.Playlist]
+  const routesPages = [RoutePaths.Home, RoutePaths.Songs, RoutePaths.LetturaDelGiorno, RoutePaths.Playlist]
   const iconsPages = [<HomeRoundedIcon key={'home'}/>, <LibraryMusicRoundedIcon key={'songss'}/>, <MenuBookRoundedIcon key={'lectures'}/>, <ListRoundedIcon key={'playl'}/>]
   const findIndexOfPage = () => {
     for(let i = routesPages.length; i >= 0; i--) {
@@ -41,7 +41,7 @@ export default function NavBar() {
               key={page} 
               label={page} 
               icon={iconsPages[index]}
-              component={NextLinkComposed}
+              component={Link}
               to={{
                 pathname: routesPages[index],
               }}

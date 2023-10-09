@@ -1,10 +1,11 @@
 import Container from '@mui/material/Container'
 import { filterArgomenti, filterMomenti, getLocalSongs } from '@/logic/local_logic'
-import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar'
+import PraisingAppBar from '@/components/appbar'
 import ListSongs from '@/components/list_songs'
+import { useLoaderData } from 'react-router-dom'
 
-FilterPage.getInitialProps = async (props: any) => {
-    const {filter} = props.query
+export const loaderFilterPage = async (props: any) => {
+    const {filter} = props.params
   
     return {filter}
 }
@@ -13,7 +14,8 @@ interface PropsFilterPage {
     filter: string
 }
 
-export default function FilterPage(props: PropsFilterPage) {
+export default function FilterPage() {
+    const props: any = useLoaderData()
     const localSongs = getLocalSongs()
         .filter(v => v.argomento?.includes(props.filter) || v.parteMessa?.includes(props.filter))
     const nameFilter = filterMomenti[props.filter] || filterArgomenti[props.filter]

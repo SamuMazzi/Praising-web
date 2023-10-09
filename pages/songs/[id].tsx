@@ -18,9 +18,10 @@ import { CircularProgress } from '@mui/material'
 import useSWR from 'swr'
 import { Playlist } from '@/logic/redux/playlist_slice'
 import { RenderActualSong } from '@/components/render_actual_song'
+import { useLoaderData } from 'react-router-dom'
 
-SongPage.getInitialProps = async (props: any) => {
-    const {id, playlist_id} = props.query
+export const loaderSongPage = async (props: any) => {
+    const {id, playlist_id} = props.params
     return {id, playlist_id}
 }
 
@@ -33,7 +34,8 @@ interface PropsSongPage {
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-export default function SongPage(props: PropsSongPage) {
+export default function SongPage() {
+    const props: any = useLoaderData()
     const song = getSingleSong(props.id)
     // --- Render song ---
     const { data, error, isLoading } = useSWR('/api/song/' + props.id, fetcher)
