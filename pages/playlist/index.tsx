@@ -1,5 +1,4 @@
 import Container from '@mui/material/Container'
-import NavBar from '@/components/navbar'
 import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar'
 import { useState } from 'react'
 import Button from '@mui/material/Button'
@@ -28,7 +27,6 @@ export default function PlaylistPage() {
                     Aggiungi playlist
                 </Button>
             </Box>
-            <NavBar />
             <ModalAddPlaylist open={openModal} handleClose={() => setOpenModal(false)} />
         </Container>
     )

@@ -7,7 +7,6 @@ import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 import Image from 'next/image'
-import NavBar from '@/components/navbar'
 import ImageList from '@mui/material/ImageList'
 import ImageListItem from '@mui/material/ImageListItem'
 import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar'
@@ -90,7 +89,6 @@ export default function Home() {
               />
             </Container>
           }
-          <NavBar />
       </Container>
     )
     

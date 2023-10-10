@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {createBrowserRouter, RouterProvider} from 'react-router-dom';
+import {createBrowserRouter, Outlet, RouterProvider} from 'react-router-dom';
 import SongsPage from './songs'
 import Lectures from './lectures'
 import PlaylistPage from './playlist'
@@ -9,6 +9,16 @@ import FilterPage, { loaderFilterPage } from './songs/filter/[filter]'
 import PlaylisSharedPage, { loaderPlaylistSharedPage } from './playlist/shared'
 import SinglePlaylistPage, { loaderSinglePlaylistPage } from './playlist/[id]'
 import Home from './home';
+import NavBar from '@/components/navbar';
+
+const NavbarWrapper = () => {
+  return (
+  <div>
+      <Outlet/>
+      <NavBar/>
+  </div>
+  )
+};
 
 export default function App() {
   const [router, setRouter] = useState<any>()
@@ -17,57 +27,63 @@ export default function App() {
     const router = createBrowserRouter([
       {
         path: "/",
-        index: true,
-        element: <Home />,
-      },
-      {
-        path: "lectures",
-        element: <Lectures />,
-      },
-      {
-        path: "songs",
+        element: <NavbarWrapper />,
         children: [
           {
+            path: "/",
             index: true,
-            element: <SongsPage />,
+            element: <Home />
           },
           {
-            path: ":id",
-            element: <SongPage />,
-            loader: loaderSongPage
+            path: "/lectures",
+            element: <Lectures />
           },
           {
-            path: "filter",
-            element: <EmptyFilterPage />,
+            path: "/songs",
             children: [
               {
-                path: ":filter",
-                element: <FilterPage />,
-                loader: loaderFilterPage
+                index: true,
+                element: <SongsPage />,
+              },
+              {
+                path: ":id",
+                element: <SongPage />,
+                loader: loaderSongPage
+              },
+              {
+                path: "filter",
+                element: <EmptyFilterPage />,
+                children: [
+                  {
+                    path: ":filter",
+                    element: <FilterPage />,
+                    loader: loaderFilterPage
+                  }
+                ]
               }
             ]
-          }
-        ]
-      },
-      {
-        path: "playlist",
-        children: [
-          {
-            index: true,
-            element: <PlaylistPage />,
           },
           {
-            path: ":id",
-            element: <SinglePlaylistPage />,
-            loader: loaderSinglePlaylistPage
+            path: "/playlist",
+            children: [
+              {
+                index: true,
+                element: <PlaylistPage />,
+              },
+              {
+                path: ":id",
+                element: <SinglePlaylistPage />,
+                loader: loaderSinglePlaylistPage
+              },
+              {
+                path: "shared",
+                element: <PlaylisSharedPage />,
+                loader: loaderPlaylistSharedPage
+              }
+            ]
           },
-          {
-            path: "shared",
-            element: <PlaylisSharedPage />,
-            loader: loaderPlaylistSharedPage
-          }
         ]
-      },
+      }
     ]);
     setRouter(router)
   }, [])

@@ -16,15 +16,15 @@ const withPWA = require('next-pwa')({
 
 module.exports = withPWA({
   reactStrictMode: true,
-  // next.js config
   async rewrites() {
     return [
+      // Redirect all paths except for specific ones
+      //TODO: Probabilmente non fa redirect
       {
-        source: '/:any*',
+        source: '/(^(?!.*\bapi\b).*$)*',
         destination: '/',
+        //permanent: false,
       },
     ];
   },
 })
-
-//module.exports = nextConfig

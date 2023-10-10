@@ -15,14 +15,22 @@ import { MessageSnackbar } from '@/components/pers_snackbar'
 import IconButton from '@mui/material/IconButton'
 import CloseRounded from '@mui/icons-material/CloseRounded'
 import { CircularProgress } from '@mui/material'
-import useSWR from 'swr'
 import { Playlist } from '@/logic/redux/playlist_slice'
 import { RenderActualSong } from '@/components/render_actual_song'
-import { useLoaderData } from 'react-router-dom'
+import { defer, useLoaderData } from 'react-router-dom'
 
 export const loaderSongPage = async (props: any) => {
     const {id, playlist_id} = props.params
-    return {id, playlist_id}
+    const song = getSingleSong(id)
+    let data = undefined
+    let error = undefined
+    try {
+        const res = await fetch('/api/song/' + id)
+        data = await res.json()
+    } catch (e) {
+        error = e
+    }
+    return defer({ song, data, playlist_id, error });
 }
 
 interface PropsSongPage {
@@ -32,13 +40,14 @@ interface PropsSongPage {
 
 //TODO: Setta automaticamente zoom in modo da fittare linee
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
-
 export default function SongPage() {
     const props: any = useLoaderData()
-    const song = getSingleSong(props.id)
+    const data = props.data  //TODO Refactor this
+    const song = props.song
+    const error = props.error
+    const isLoading = false
     // --- Render song ---
-    const { data, error, isLoading } = useSWR('/api/song/' + props.id, fetcher)
+    //const { data, error, isLoading } = useSWR('/api/song/' + props.id, fetcher)
     const showChords = useAppSelector(state => state.settings.showChords)
     const infoSong: InfoLocalSong | undefined = useAppSelector(state => song?.id ? state.infoSongs.infoSongs[song.id] : undefined)
     const chordNotation = useAppSelector(state => state.settings.chordNotation)

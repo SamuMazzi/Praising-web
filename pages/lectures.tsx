@@ -1,6 +1,5 @@
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
-import NavBar from '@/components/navbar'
 import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar'
 import useSWR from 'swr'
 import Box from '@mui/material/Box'
@@ -92,7 +91,6 @@ export default function Lectures() {
               {data?.gospel.content}
           </Typography>
         </Container>
-        <NavBar />
     </Container>
   )
   

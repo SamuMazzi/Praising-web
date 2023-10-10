@@ -76,11 +76,11 @@ export function PlaylistSongTile(props: PropsSelectableSongTile) {
             >
                 <ListItemText
                     disableTypography
-                    primary={<Typography
-                        component={NextLinkComposed} 
-                        to={{pathname: RoutePaths.Songs + '/' + props.song.id, query: { playlist_id: props.playlist.id }}} 
-                    >
-                        {props.song.name}
+                    primary={
+                    <Typography>
+                        <Link to={{pathname: RoutePaths.Songs + '/' + props.song.id, search: `?playlist_id=${props.playlist.id}`}} >
+                            {props.song.name}
+                        </Link>
                     </Typography>}
                 />
             </ListItem>
