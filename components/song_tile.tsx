@@ -11,10 +11,18 @@ import Draggable from './react-smooth-dnd/Draggable';
 import DragHandleRoundedIcon from '@mui/icons-material/DragHandleRounded';
 import Typography from '@mui/material/Typography'
 import Routes from '@/logic/routes'
-import ListItemAvatar from '@mui/material/ListItemAvatar'
-import Avatar from '@mui/material/Avatar'
 import MusicNoteRoundedIcon from '@mui/icons-material/MusicNoteRounded';
 import ListItemIcon from '@mui/material/ListItemIcon'
+
+/**
+ * 
+            <ListItemAvatar>
+                <Avatar 
+                    alt="Copertina" 
+                    src={'https://img.youtube.com/vi/'+ props.song.link?.split('/').pop() +'/mqdefault.jpg'} 
+                />
+            </ListItemAvatar> :
+ */
 
 interface PropsSongTile {
     song: Song
@@ -34,17 +42,9 @@ export default function SongTile(props: PropsSongTile) {
             </IconButton>
         }
     >
-        { props.song.link ?
-            <ListItemAvatar>
-                <Avatar 
-                    alt="Copertina" 
-                    src={'https://img.youtube.com/vi/'+ props.song.link?.split('/').pop() +'/mqdefault.jpg'} 
-                />
-            </ListItemAvatar> :
-            <ListItemIcon>
-                <MusicNoteRoundedIcon />
-            </ListItemIcon>
-        }
+        <ListItemIcon>
+            <MusicNoteRoundedIcon />
+        </ListItemIcon>
         <ListItemText
             primary={props.song.name}
         />

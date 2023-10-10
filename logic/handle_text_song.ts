@@ -277,6 +277,7 @@ const normalizeChords = (serializedSong: any, transpose: number | undefined) => 
     })
     if (capoFoundAtLine !== -1) {
         serializedSong.lines.splice(capoFoundAtLine, 1)  // Questo perchè la traduzione automatica degli accordi della libreria va malissimo
+        //Quindi togliamo la linea con il capotasto
     }
 }
 
