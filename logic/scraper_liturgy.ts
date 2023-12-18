@@ -28,62 +28,37 @@ const fetchLiturgia = async (url: string) => {
 };
 
 const parseSalmo = ($: CheerioAPI): Salmo => {
-  const versi = $(".cci-liturgia-giorno-salmo")
-    .children("p")
-    .find("br")
-    .replaceWith("\n")
-    .end()
-    .text()
+  const tag = ".cci-liturgia-giorno-dettagli-content:icontains('Salmo responsoriale')"
+  const versi = $(tag+ " > .cci-liturgia-giorno-section-content")
+    .children("p:not(:empty)").last()
+    .find("br").replaceWith("\n")
+    .end().text()
     .split("R.");
-  const titolo = $(
-    ".cci-liturgia-giorno-salmo > .cci-liturgia-giorno-section-title"
-  )
-    .find("br")
-    .replaceWith("\n")
-    .end()
-    .text()
+  const titolo = $(tag + " > .cci-liturgia-giorno-section-content")
+    .children("p:not(:empty)").first()
+    .find("br").replaceWith("\n")
+    .end().text()
     .split("\n")[1];
-  let rit = $(".cci-liturgia-giorno-ritornello-content").text();
+  let rit = $(tag + " > .cci-liturgia-giorno-section-versetto").text()
   if (rit.startsWith("R.")) {
     rit = rit.slice(2).trim();
   }
   return { titolo: titolo, rit: rit, versi: versi };
 };
 
-const parseVangelo = ($: CheerioAPI, lettura: string): Lettura | undefined => {
-  let lect = "";
-  $(lettura + " > div")
-    .children("p")
-    .find("br")
-    .replaceWith("\n")
-    .end()
-    .each((i, el) => {
-      lect += $(el).text() + "\n";
-    });
-  const lecture = lect.split("\n");
-  const titolo = lecture[0];
-  //TODO: Gestire letture alternative (forma breve/lunga)
-  const versetto = lecture[1];
-  let lett = lecture.slice(2).join("\n");
-  if (lett.trim().endsWith("Parola del Signore."))
-    lett = lett.replace("Parola del Signore.", "");
-  if (lett.trim() === "") {
-    return undefined;
-  }
-  return { titolo: titolo, versetto: versetto, content: lett.trim() };
-};
-
 const parseLettura = ($: CheerioAPI, lettura: string): Lettura | undefined => {
   let lect = "";
-  $(lettura)
+  const tag = ".cci-liturgia-giorno-dettagli-content:not(:icontains('Acclamazione al vangelo')):icontains('"+ lettura +"') > .cci-liturgia-giorno-section-content"
+  //console.log($(tag).text())
+  $(tag)
     .children("p")
     .find("br")
-    .replaceWith("\n")
+    .replaceWith("\n")  // TODO: Correggere questo
     .end()
     .each((i, el) => {
       lect += $(el).text() + "\n";
     });
-  const lecture = lect.split("\n");
+  const lecture = lect.trim().split("\n");
   const titolo = lecture[0];
   const versetto = lecture[1];
   let lett = lecture.slice(2).join("\n");
@@ -97,11 +72,11 @@ const parseLettura = ($: CheerioAPI, lettura: string): Lettura | undefined => {
 
 export const extractLiturgia = async (url: string) => {
   const $ = await fetchLiturgia(url);
-  const firstLecture = parseLettura($, ".cci-liturgia-giorno-prima-lettura")!;
-  const secondLecture = parseLettura($, ".cci-liturgia-giorno-seconda-lettura");
+  const firstLecture = parseLettura($, "Prima lettura")!;
+  const secondLecture = parseLettura($, "Seconda lettura");
 
   const psalm = parseSalmo($);
-  const gospel = parseVangelo($, ".cci-liturgia-giorno-vangelo")!;
+  const gospel = parseLettura($, "Vangelo")!;
 
   const out: WebStructLiturgy = { firstLecture, secondLecture, psalm, gospel };
   return out;

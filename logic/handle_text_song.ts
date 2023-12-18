@@ -1,116 +1,19 @@
-import ChordSheetJS, { Chord, Song } from 'chordsheetjs';
+import ChordSheetJS, { Song } from 'chordsheetjs';
 import { CheerioAPI, Element, load } from 'cheerio'
 import { ChordNotations } from './redux/settings_slice';
 
-interface ParamsTranslateChord {
-    chord: string
-    transpose?: number
-}
-
-function americanToItalianChord(completeChord: string): string {
-    const chordMap: { [key: string]: string } = {
-      'Ab': 'Lab',
-      'A': 'La',
-      'A#': 'La#',
-      'Bb': 'Sib',
-      'B': 'Si',
-      'Cb': 'Dob',
-      'C': 'Do',
-      'C#': 'Do#',
-      'Db': 'Reb',
-      'D': 'Re',
-      'D#': 'Re#',
-      'Eb': 'Mib',
-      'E': 'Mi',
-      'F': 'Fa',
-      'F#': 'Fa#',
-      'Gb': 'Solb',
-      'G': 'Sol',
-      'G#': 'Sol#'
-    };
-    const chordVariants: { [key: string]: string } = {
-      'm': '-',
-      'maj': '',
-      'dim': 'dim',
-      'aug': 'aug',
-      'sus': '4',
-      'sus2': '2',
-      'sus4': '4',
-      '2': '2',
-      '4': '4',
-      '6': '6',
-      '7': '7',
-      '9': '9',
-      '11': '11',
-      '13': '13',
-      '7+': '7+',
-      'maj7': '7+',
-      'm7': '-7',
-      'm7b5': '-7b5',
-      'dim7': 'dim7',
-      'm9': '-9'
-    };
-  
-    return completeChord.split('/').map(chord => {
-        // Split the chord into its root and variant parts
-        const root = chord.match(/[A-G]#?b?/)?.[0];
-        const variant = chord.replace(root as string, '');
-      
-        // Check if the chord has a valid root
-        if (!root) {
-          return chord;
-        }
-      
-        // Translate the root to Italian
-        const italianRoot = chordMap[root];
-      
-        // Check if the variant is a valid variant
-        if (variant && !chordVariants[variant]) {
-          return chord;
-        }
-      
-        // Translate the variant to Italian
-        const italianVariant = chordVariants[variant] || '';
-      
-        // Return the translated chord
-        return italianRoot + italianVariant;
-    }).join('/')
-}
-
-const translateChord = (props: ParamsTranslateChord) => {
-    const chordVariants: Record<string, string> = {
-        'do': 'C',
-        're': 'D',
-        'mi': 'E',
-        'fa': 'F',
-        'sol': 'G',
-        'la': 'A',
-        'si': 'B',
-    };
-
-    const out = props.chord.split('/').map(singleChord => {
-        for(const itCh of Object.keys(chordVariants)) {
-            const checkChord = singleChord.toLowerCase()
-            if (checkChord.startsWith(itCh)) {
-                let tmp = checkChord.replace(itCh, chordVariants[itCh])
-                if(tmp[1] === '-') {
-                    tmp = tmp.replace('-', 'm')
-                } else if (tmp.length > 2) {
-                    if(tmp[1] === '#' && tmp[2] === '-' || tmp[1] === 'b' && tmp[2] === '-') {
-                        tmp = tmp.replace('-', 'm')
-                    }
-                }
-                let chord = Chord.parse(tmp)?.useModifier('#');
-                if(props.transpose) {
-                    chord = chord?.transpose(props.transpose)
-                }
-                return chord?.toString() || tmp;
-            }
-        }
-        return singleChord
-    }).join('/')
-   return out
-}
+const chordVariants: { [key: string]: string } = {
+    'm': '-',
+    'maj': '',
+    'sus2': '2',
+    'sus4': '4',
+    'sus': '4',
+    'maj7': '7+',
+    'm7': '-7',
+    'm7b5': '-7b5',
+    'dim7': 'dim7',
+    'm9': '-9'
+};
 
 interface ParamsRenderSong {
     fileContent: string
@@ -127,7 +30,6 @@ const findLinesChorus = (deserialized: Song) => {
         let isChordLyricsPair = false
         if(line.items.every(item => item instanceof ChordSheetJS.ChordLyricsPair)) {
             isChordLyricsPair = true
-            //console.log(cont.toString() + ' ' + line.items.map(item => item instanceof ChordSheetJS.ChordLyricsPair && item.lyrics).join(''))
         }
         if(line.isChorus() && isChordLyricsPair) {
             linesChorus.push(cont)
@@ -158,14 +60,39 @@ const toggleShowChords = ($: CheerioAPI, showChords: boolean) => {
 const isThereLyricsInRow = ($: CheerioAPI, row: Element) => {
     if ($(row).find('.column > .lyrics').length > 0) {
         const lyricsPieces = $(row).find('.column > .lyrics').filter((i, l) => $(l).text().trim() !== '')
+        // console.log(lyricsPieces)
         return lyricsPieces.length !== 0
     }
     return false
 }
 
+/**
+ const boldenChorus = ($: CheerioAPI) => {
+    let isChorus= false
+    $('.row').each((i, row) => {
+        //TODO: Implementare qua ricerca ritornello
+        //TODO: Implementare expandable
+        const text = $(row).text()
+        console.log(text)
+        if (text.startsWith('{soc}')) {
+            isChorus = true
+        } else if (text.startsWith('{eoc}')) {
+            isChorus = false
+        }
+        if (isChorus) {
+            if (!$(row).hasClass('chorus')) {
+                $(row).addClass('chorus')
+            }
+        }
+    })
+    } 
+ */
+
 const boldenChorus = ($: CheerioAPI, linesChorus: number[]) => {
     let cont = -1
     $('.row').each((i, row) => {
+        //TODO: Implementare expandable
+        //TODO: Troppa distanza fra accordi e testo (diminuire)
         if (isThereLyricsInRow($, row)) {
             cont += 1
         }
@@ -199,23 +126,19 @@ const adjustFontSize = ($: CheerioAPI, oldFontSize: number) => {
     return oldFontSize
 }
 
-const editHTML = ($: CheerioAPI, chordNotation: ChordNotations) => {
+const editHTML = ($: CheerioAPI) => {
     $('.row').each((i, row) => {
-
         removeChordsFromHTML($, row)
         setSpacesBetweenChorusAndVerses($, row)
-        if (chordNotation === 'ITALIAN') {
-            translateChordsToItalian($)
-        }
-        //TODO: Testare con Jesus, I trust in you e Abbracciami per ritornello, gloria gen, testa anche con Hearth of Worship (dava "undefined" nella traduzione di Ab in Lab)
+        //TODO: Testare con Jesus, I trust in you e Abbracciami per ritornello
         //TODO: Informarsi su come dare le info per la deserializzazione 
         //TODO: Magari vorrei farlo per riga e non per "sezione della riga", sia per correttezza che performance
-        $('.lyrics').each((i, lyrics) => {
-            const reg = /,\s*,/gm
+        //TODO: Cambiare sus con 4
+        $('.lyrics').each((j, html_lyrics) => {
+            const lyrics = $(html_lyrics).text()
             // const regSpecialChar = /[^a-zA-Z0-9]\s*,/gm
-            const lyr = $(lyrics).text()
-            const out = lyr.replace(reg, ',')
-            $(lyrics).text(out)
+            const out = lyrics.replace(/,\s*,/gm, ',')
+            $(html_lyrics).text(out)
         })
     })
 }
@@ -244,42 +167,33 @@ const setSpacesBetweenChorusAndVerses = ($: CheerioAPI, row: Element) => {
     //* Aggiungi spazi fra chorus e verses
     if($(row).hasClass('chorus') && !$(row).next().hasClass('chorus')) {
         $(row).addClass('last-line-chorus')
+        // $(row).insertAfter('section-chorus')
+        // $(row).insertAfter('section-verse')
     }
     //* Aggiungi spazi fra chorus e verses
     if($(row).hasClass('chorus') && !$(row).prev().hasClass('chorus')) {
         $(row).addClass('first-line-chorus')
+        // $(row).insertBefore('section-chorus')
+        // $(row).insertBefore('section-verse') //TODO Ovviamente da rivedere
     }
+    if($(row).hasClass('chorus') && !$(row).prev().hasClass('chorus')) {
+        $(row).addClass('first-line-chorus')
+    }
+    // $(row).wrap
 }
 
-const translateChordsToItalian = ($: CheerioAPI) => {
-    $('.chord').each((i, chord) => {
-        const americanChord = $(chord).text()
-        $(chord).text(americanToItalianChord(americanChord))
-    })
-}
-
-const normalizeChords = (serializedSong: any, transpose: number | undefined) => {
-    let capoFoundAtLine = -1
+/* const normalizeChords = (serializedSong: any, transpose: number | undefined) => {
     serializedSong.lines.map((line: any, index: number) => {
-        if (line.items.length === 1 && line.items[0].type === 'tag' && line.items[0].name.toLowerCase() === 'capo') {
-            capoFoundAtLine = index
-            transpose = transpose ?? line.items[0].value
-        }
         line.items.map((v: any) => {
             if(v.type === 'chordLyricsPair') {
-                v.chords = translateChord({
-                    chord: v.chords,
-                    transpose: transpose
-                })
+                for (const [key, value] of Object.entries(chordVariants)) {
+                    v.chords = v.chords.replace(key, value)  //TODO: Testa
+                }
             }
         })
         return line
     })
-    if (capoFoundAtLine !== -1) {
-        serializedSong.lines.splice(capoFoundAtLine, 1)  // Questo perchè la traduzione automatica degli accordi della libreria va malissimo
-        //Quindi togliamo la linea con il capotasto
-    }
-}
+} */
 
 const removeChords = (serializedSong: any) => {
     serializedSong.lines.map((line: any) => {
@@ -287,7 +201,6 @@ const removeChords = (serializedSong: any) => {
             if(v.type === 'chordLyricsPair') {
                 v.chords = ''
                 v.chord = null
-                // console.log(v.lyrics)
             }
             return v
         })
@@ -299,35 +212,43 @@ interface InfoRenderSong {
     fontSize: number
 }
 
+/**
+ * 
+ * @returns An object with the HTML produced and the new size of the text
+ */
 export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
-    const parser = new ChordSheetJS.ChordProParser();
-    const song_parsed = parser.parse(props.fileContent);
-    const formatterDiv = new ChordSheetJS.HtmlDivFormatter();
-    //* Le virgole ci sono già formattando questo sopra
-    const serializedSong = new ChordSheetJS.ChordSheetSerializer().serialize(song_parsed);
-    console.log("song parsed", serializedSong)
-    normalizeChords(serializedSong, props.transpose)
+    let song_parsed = new ChordSheetJS.ChordProParser().parse(props.fileContent);
+    
+    song_parsed.setMetadata('chord_style', props.chordNotation)  // TODO: Ancora non funziona
+
+    // if (props.key !== undefined) song_parsed = song_parsed.setKey(props.key) // Serve per poter normalizzare bene gli accordi
+    
+    const serializedSong = new ChordSheetJS.ChordSheetSerializer().serialize(song_parsed);    
     if (!props.showChords) {
         removeChords(serializedSong)
     }
-    console.log("song parsed2", serializedSong)
-    const deserialized = new ChordSheetJS.ChordSheetSerializer().deserialize(serializedSong);
-    const disp = formatterDiv.format(deserialized);
-    //console.log("songp2", disp)
+
+    let deserialized = new ChordSheetJS.ChordSheetSerializer().deserialize(serializedSong);
+    if (deserialized.capo !== undefined && !(deserialized.capo instanceof Array)) {
+        const capo = -parseInt(deserialized.capo)
+        deserialized = deserialized.setCapo(capo)
+    }
+
+    if (props.transpose !== undefined && props.transpose !== 0) {
+        deserialized = deserialized.transpose(props.transpose)
+    }
+
+    const disp = new ChordSheetJS.HtmlDivFormatter({normalizeChords: true, renderBlankLines: false}).format(deserialized); // TODO: Provare ad utilizzare renderBlankLines
     const $ = load(disp)
 
     const linesChorus = findLinesChorus(deserialized)
     toggleShowChords($, props.showChords)
     boldenChorus($, linesChorus)
-    editHTML($, props.chordNotation)
-    let fontSize = 0
-    if(props.fontSize === undefined) { // First time opening the song or zoom not set
-        fontSize = adjustFontSize($, 17) //Std zoom level
-    } else {
-        fontSize = props.fontSize
-    }
+    editHTML($)
+    const stdZoomLevel = 17;
+    // props.fontSize is undefined when first time opening the song or zoom not set
     return {
         songText: $.html(),
-        fontSize: fontSize
+        fontSize: props.fontSize ??= adjustFontSize($, stdZoomLevel) 
     }
 }

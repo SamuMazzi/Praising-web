@@ -52,7 +52,6 @@ export const clearStorage = () => {
 export interface Song {
     name: string
     id: string
-    tonalita?: string
     link?: string
     argomento?: string[]
     parteMessa?: string[]
@@ -67,7 +66,6 @@ export const getLocalSongs = (): Song[] => {
         localSongs = songs.map(v => ({
             name: v.Nome,
             id: v.Id.toString(),
-            tonalita: v.Tonalita,
             link: v.Link,
             argomento: v.Caratteristica?.split('-'),
             parteMessa: v['Parte della messa']?.split('-'),
@@ -120,7 +118,7 @@ export const getLastRecentsSongs = () => {
 }
 
 export const getLocalChordNotation = () => {
-    const out: ChordNotations = getFromStorage('chordNotation') || 'ITALIAN'
+    const out: ChordNotations = getFromStorage('chordNotation') || 'solfege'
     return out
 }
 

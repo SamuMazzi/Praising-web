@@ -13,10 +13,10 @@ import { Playlist } from "@/logic/redux/playlist_slice";
 import FirstPageRoundedIcon from '@mui/icons-material/FirstPageRounded';
 import LastPageRoundedIcon from '@mui/icons-material/LastPageRounded';
 import Routes from "@/logic/routes";
+import Link from "next/link";
+import Button from "@mui/material/Button";
 import { useAppDispatch, useAppSelector } from "@/logic/redux/store";
 import { setChordNotation } from "@/logic/redux/settings_slice";
-import Button from "@mui/material/Button";
-import Link from "next/link";
 
 //TODO: Implementare clide-side routing anche con useRouter
 
@@ -44,7 +44,7 @@ function HideOnScroll(props: PropsHideOnScroll) {
 interface PropsAppBar {
     title: string
     backIcon?: boolean
-  }
+}
 
 export const verticalPaddingAppBar = 3
 
@@ -127,15 +127,17 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                         }
                       </>
                     }
-                    <Button onClick={() => {
-                      if (chordNotation === 'AMERICAN') {
-                        dispatch(setChordNotation('ITALIAN'))
-                      } else if (chordNotation === 'ITALIAN') {
-                        dispatch(setChordNotation('AMERICAN'))
-                      }
-                    }} style={{fontWeight: 'bold'}}>
-                      {chordNotation === 'AMERICAN' ? 'ENG' : 'ITA'}
-                    </Button>
+                    {
+                      /* <Button onClick={() => { //TODO: Non funziona ancora
+                        if (chordNotation === 'symbol') {
+                          dispatch(setChordNotation('solfege'))
+                        } else if (chordNotation === 'solfege') {
+                          dispatch(setChordNotation('symbol'))
+                        }
+                      }} style={{fontWeight: 'bold'}}>
+                        {chordNotation === 'symbol' ? 'ENG' : 'ITA'}
+                      </Button> */
+                    }
                   </Box>
                 </Toolbar>
             </AppBar>

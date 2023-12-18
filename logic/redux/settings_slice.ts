@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { getFromStorage, getLocalChordNotation, saveToStorage, setLocalChordNotation } from '../local_logic'
 
-export type ChordNotations = 'AMERICAN' | 'ITALIAN'
+export type ChordNotations = 'symbol' | 'solfege' // It refers to the chordsheetjs library
 
 interface SettingsState {
     showChords: boolean
