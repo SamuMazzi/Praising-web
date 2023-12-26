@@ -9,6 +9,16 @@ import Head from 'next/head'
 import { useEffect } from 'react'
 
 // TODO: Offline https://github.com/hanford/next-offline
+// TODO: Implement online for:
+/**
+ * - Authenticated user
+ * - Add song
+ * - Share playlist
+ * - Sessions
+ * - Download PDF with all the songs
+ * - Cache all the info about songs (?) (for example, the transpose)
+ * - Favorite songs (?)
+ */
 
 export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {

@@ -38,6 +38,14 @@ export const app_theme = createTheme({
             fontWeight: 700,
             fontSize: 18
         },
+        h3: {
+            fontWeight: 600,
+            fontSize: 17
+        },
+        h4: {
+            fontWeight: 600,
+            fontSize: 16
+        },
         h5: {
             fontWeight: 600,
             fontSize: 15

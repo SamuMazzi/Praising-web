@@ -1,8 +1,6 @@
 import { CheerioAPI, load } from "cheerio";
 import axios from "axios";
 
-// FIXME: No second lecture
-
 interface WebStructLiturgy {
   firstLecture: Lettura;
   psalm: Salmo;
@@ -30,16 +28,13 @@ const fetchLiturgia = async (url: string) => {
 const parseSalmo = ($: CheerioAPI): Salmo => {
   const tag = ".cci-liturgia-giorno-dettagli-content:icontains('Salmo responsoriale')"
   const versi = $(tag+ " > .cci-liturgia-giorno-section-content")
-    .children("p:not(:empty)").last()
+    .children("p:not(:empty)").slice(1) // Skip rit
     .find("br").replaceWith("\n")
     .end().text()
     .split("R.");
-  const titolo = $(tag + " > .cci-liturgia-giorno-section-content")
-    .children("p:not(:empty)").first()
-    .find("br").replaceWith("\n")
-    .end().text()
-    .split("\n")[1];
-  let rit = $(tag + " > .cci-liturgia-giorno-section-versetto").text()
+  const titolo = $(tag + " > .cci-liturgia-giorno-section-versetto").text()
+  let rit = $(tag + " > .cci-liturgia-giorno-section-content")
+    .children("p:not(:empty)").first().text()
   if (rit.startsWith("R.")) {
     rit = rit.slice(2).trim();
   }
@@ -53,7 +48,7 @@ const parseLettura = ($: CheerioAPI, lettura: string): Lettura | undefined => {
   $(tag)
     .children("p")
     .find("br")
-    .replaceWith("\n")  // TODO: Correggere questo
+    .replaceWith("\n")
     .end()
     .each((i, el) => {
       lect += $(el).text() + "\n";
@@ -64,6 +59,8 @@ const parseLettura = ($: CheerioAPI, lettura: string): Lettura | undefined => {
   let lett = lecture.slice(2).join("\n");
   if (lett.trim().endsWith("Parola di Dio."))
     lett = lett.replace("Parola di Dio.", "");
+  if (lett.trim().endsWith("Parola del Signore."))
+    lett = lett.replace("Parola del Signore.", "");
   if (lett.trim() === "") {
     return undefined;
   }

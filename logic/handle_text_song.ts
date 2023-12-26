@@ -70,8 +70,6 @@ const isThereLyricsInRow = ($: CheerioAPI, row: Element) => {
  const boldenChorus = ($: CheerioAPI) => {
     let isChorus= false
     $('.row').each((i, row) => {
-        //TODO: Implementare qua ricerca ritornello
-        //TODO: Implementare expandable
         const text = $(row).text()
         console.log(text)
         if (text.startsWith('{soc}')) {
@@ -92,7 +90,6 @@ const boldenChorus = ($: CheerioAPI, linesChorus: number[]) => {
     let cont = -1
     $('.row').each((i, row) => {
         //TODO: Implementare expandable
-        //TODO: Troppa distanza fra accordi e testo (diminuire)
         if (isThereLyricsInRow($, row)) {
             cont += 1
         }
@@ -110,20 +107,35 @@ const rowHasLyrics = ($: CheerioAPI, el: Element) => {
     return res.length !== 0
 }
 
+function measureText(text: string, fontSize: number) {
+    const widths = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.230999755859375,0.3,0.3,0.840625,0.6234375,0.8,0.8,0.2,0.5,0.4546875,0.5,0.684375,0.3,0.5515625,0.2109375,0.5,0.628125,0.3203125,0.6,0.6,0.6296875,0.628125,0.6359375,0.6,0.63125,0.63125,0.2140625,0.2640625,0.55625,0.7234375,0.5390625,0.525,1.0140625,0.7,0.6140625,0.8,0.7078125,0.5140625,0.5046875,0.8,0.7,0.246875,0.53125,0.6,0.5,0.8625,0.703125,0.8,0.6,0.8,0.609375,0.6,0.6,0.675,0.7,1,0.621875,0.6,0.5421875,0.4234375,0.659375,0.4234375,0.6296875,0.734375,0.3,0.6765625,0.7,0.6078125,0.6765625,0.6203125,0.3296875,0.6765625,0.640625,0.246875,0.3484375,0.6,0.246875,1.03125,0.640625,0.640625,0.7,0.6765625,0.4,0.5234375,0.4,0.640625,0.6,0.9,0.5,0.6,0.5,0.4625,0.2921875,0.4625,0.5203125]
+    const avg = 0.5736980237458884
+    return text
+      .split('')
+      .map(c => c.charCodeAt(0) < widths.length ? widths[c.charCodeAt(0)] : avg)
+      .reduce((cur, acc) => acc + cur) * fontSize
+}
+
 const adjustFontSize = ($: CheerioAPI, oldFontSize: number) => {
     if (typeof window === "undefined") {
         return oldFontSize
     }
     let maxLen = 0
-    $('.row').each((i, row) => {
-        $('.lyrics').each((i, lyrics) => {
-            maxLen = Math.max($(lyrics).text().length, maxLen)
-        })
+    let maxLenRow = ''
+    $('.row').each((i, div) => {
+        const text = $(div).text()
+        maxLen = Math.max(measureText(text, oldFontSize), maxLen)
+        if (measureText(text, oldFontSize) === maxLen) {
+            maxLenRow = text
+        }
     })
-    while (maxLen * (oldFontSize / 2) > window.innerWidth) {
-        oldFontSize--
+    let i = oldFontSize;
+    for (i = oldFontSize; i > 1; --i) {
+        if ((measureText(maxLenRow, i) < window.innerWidth)) {
+            break
+        }
     }
-    return oldFontSize
+    return i
 }
 
 const editHTML = ($: CheerioAPI) => {
@@ -131,14 +143,16 @@ const editHTML = ($: CheerioAPI) => {
         removeChordsFromHTML($, row)
         setSpacesBetweenChorusAndVerses($, row)
         //TODO: Testare con Jesus, I trust in you e Abbracciami per ritornello
-        //TODO: Informarsi su come dare le info per la deserializzazione 
         //TODO: Magari vorrei farlo per riga e non per "sezione della riga", sia per correttezza che performance
-        //TODO: Cambiare sus con 4
+        //FIXME: La#- non diventa Sib-
         $('.lyrics').each((j, html_lyrics) => {
-            const lyrics = $(html_lyrics).text()
-            // const regSpecialChar = /[^a-zA-Z0-9]\s*,/gm
-            const out = lyrics.replace(/,\s*,/gm, ',')
+            const out = $(html_lyrics).text().replace(/,\s*,/gm, ',')
             $(html_lyrics).text(out)
+        })
+        // Substitutes chords with their variants
+        $('.chord').each((j, html_chord) => {
+            const out = $(html_chord).text().replace("m", "-").replace(/sus(\d*)/gm, (match, p1) => p1 ? p1 : '4');
+            $(html_chord).text(out)
         })
     })
 }
@@ -181,19 +195,6 @@ const setSpacesBetweenChorusAndVerses = ($: CheerioAPI, row: Element) => {
     }
     // $(row).wrap
 }
-
-/* const normalizeChords = (serializedSong: any, transpose: number | undefined) => {
-    serializedSong.lines.map((line: any, index: number) => {
-        line.items.map((v: any) => {
-            if(v.type === 'chordLyricsPair') {
-                for (const [key, value] of Object.entries(chordVariants)) {
-                    v.chords = v.chords.replace(key, value)  //TODO: Testa
-                }
-            }
-        })
-        return line
-    })
-} */
 
 const removeChords = (serializedSong: any) => {
     serializedSong.lines.map((line: any) => {
@@ -238,7 +239,8 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
         deserialized = deserialized.transpose(props.transpose)
     }
 
-    const disp = new ChordSheetJS.HtmlDivFormatter({normalizeChords: true, renderBlankLines: false}).format(deserialized); // TODO: Provare ad utilizzare renderBlankLines
+    const disp = new ChordSheetJS.HtmlDivFormatter({normalizeChords: true, renderBlankLines: false}).format(deserialized); 
+    // TODO: Provare ad utilizzare renderBlankLines
     const $ = load(disp)
 
     const linesChorus = findLinesChorus(deserialized)

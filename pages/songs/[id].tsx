@@ -145,7 +145,6 @@ export default function SongPage(props: PropsSongPage) {
     const songToRender: string = info.songText
     const fontSize: number = info.fontSize
     // fontsize std: lineHeigth 68, poi -4 tutte le volte
-    //TODO: Aggiungi expand/collapse su strofe e ritornelli
 
     return (
         <Container sx={{minHeight: '100vh'}}>

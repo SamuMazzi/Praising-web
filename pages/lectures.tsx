@@ -16,6 +16,7 @@ const fetcher = (url: string) => fetch(url).then(async (res) => new LiturgyOfDay
 interface PropsSingleLecture {
   lecture: Lettura | undefined
   isLoading: boolean
+  isGospel?: boolean
 }
 
 const SingleLecture = (props: PropsSingleLecture) => {
@@ -34,6 +35,9 @@ const SingleLecture = (props: PropsSingleLecture) => {
       <Typography>
         {props.lecture?.content}
       </Typography>
+      <Typography>
+        {props.isGospel ? '\nParola del Signore.' : '\nParola di Dio.'}
+      </Typography>
     </>
   )
 }
@@ -43,7 +47,7 @@ export default function Lectures() {
   const { data, error, isLoading } = useSWR('/api/lectures/' + dataLiturgia.format('YYYYMMDD'), fetcher)
 
   return (
-    <Container sx={{minHeight: '100vh', pt: verticalPaddingAppBar*3 + 2, pb: 7}} >
+    <Container sx={{minHeight: '100vh', pt: verticalPaddingAppBar*3 + 2, pb: 7, whiteSpace: 'pre-wrap'}} >
         <PraisingAppBar title='Liturgia del giorno (beta)' />
         <Box display='flex' alignItems='center'>
           <CalendarSelectSingleDay daySelected={dataLiturgia} onChangeDate={setDataLiturgia}/>
@@ -65,7 +69,7 @@ export default function Lectures() {
           {
             data?.psalm ?
             <>
-              <Typography variant="h2" sx={{pb: 2}}>
+              <Typography variant="h4" sx={{pb: 2}} style={{fontWeight: 'normal'}}>
                   {data?.psalm.titolo}
               </Typography>
               <Typography style={{fontWeight: 'bold'}} sx={{pb: 2}}>
@@ -98,7 +102,7 @@ export default function Lectures() {
           <Typography variant="h2" sx={{pb: 2}}>
               Vangelo
           </Typography>
-          <SingleLecture isLoading={isLoading} lecture={data?.gospel}/>
+          <SingleLecture isLoading={isLoading} lecture={data?.gospel} isGospel/>
         </Container>
         <NavBar />
     </Container>

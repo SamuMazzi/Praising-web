@@ -14,9 +14,9 @@ import FirstPageRoundedIcon from '@mui/icons-material/FirstPageRounded';
 import LastPageRoundedIcon from '@mui/icons-material/LastPageRounded';
 import Routes from "@/logic/routes";
 import Link from "next/link";
-import Button from "@mui/material/Button";
 import { useAppDispatch, useAppSelector } from "@/logic/redux/store";
-import { setChordNotation } from "@/logic/redux/settings_slice";
+import Button from "@mui/material/Button";
+import { modifySong } from "@/logic/redux/info_song_slice";
 
 //TODO: Implementare clide-side routing anche con useRouter
 
@@ -82,11 +82,11 @@ interface PropsSongAppBar {
     transpose?: number
     playlist?: Playlist
 }
-//TODO: Add "reset transpose" on click on transpose text
+
 export const SongAppBar = (props: PropsSongAppBar) => {
     const router = useRouter()
     const indexInPlaylist = props.playlist?.songs.indexOf(props.id)
-    const chordNotation = useAppSelector(state => state.settings.chordNotation)
+    // const chordNotation = useAppSelector(state => state.settings.chordNotation)
     const dispatch = useAppDispatch()
     
     return (
@@ -103,9 +103,14 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                     </Typography>
                   </Box>
                   <Box sx={{ flexGrow: 0, display: 'flex' }} alignItems="center">
-                    <Typography color='primary' style={{fontWeight: 600}}>
-                        {props.transpose === 0 ? '' : props.transpose}
-                    </Typography>
+                    {
+                      props.transpose !== undefined && props.transpose !== 0 &&
+                      <Button onClick={() => dispatch(modifySong({id: props.id, transpose: 0}))} 
+                        style={{fontWeight: 600}} variant="text">
+                          {props.transpose}
+                      </Button>
+                    }
+                    
                     {
                       indexInPlaylist !== undefined && indexInPlaylist !== -1 && props.playlist && 
                       <>

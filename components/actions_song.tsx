@@ -65,7 +65,7 @@ export default function ActionsSong(props: PropsActionSong) {
                 <KeyboardArrowUpRoundedIcon />
             </ActionIconButton>
             <ActionIconButton 
-                title="-1 #"
+                title="-1 ♭"
                 onClick={() => dispatch(modifySong({id: props.song.id, transpose: actualTranspose - 1}))}
                 color={actualTranspose < 0 ? 'primary' : undefined}   
             >
