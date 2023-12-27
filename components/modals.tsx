@@ -4,7 +4,6 @@ import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 import Button from '@mui/material/Button'
 import { useAppDispatch, useAppSelector } from '../logic/redux/store'
-import Container from '@mui/material/Container'
 import TextField from '@mui/material/TextField'
 import { addPlaylist, deletePlaylist, modifyNamePlaylist, Playlist } from '@/logic/redux/playlist_slice'
 import ListItemButton from '@mui/material/ListItemButton'
@@ -18,6 +17,8 @@ import { RWebShare } from "react-web-share";
 import Grid from '@mui/material/Grid'
 import Routes from '@/logic/routes'
 import PersSnackbar from './pers_snackbar'
+import NewspaperRoundedIcon from '@mui/icons-material/NewspaperRounded';
+import Image from 'next/image'
 
 interface GenericProps {
     open: boolean
@@ -138,6 +139,55 @@ export function ModalEditPlaylist(props: PropsModalEditPlaylist) {
         }
     />
 }
+
+export function ModalNews(props: GenericProps) {
+    return <GenericModal 
+        open={props.open}
+        handleClose={props.handleClose}
+        content={
+            <>
+            <Grid container direction="column" justifyContent="center" alignItems="center">
+                <Grid item>
+                    <Box display='flex' justifyContent='center' alignItems="center">
+                        <NewspaperRoundedIcon />
+                        <Typography variant="h2" sx={{pl: 2 }}>
+                            Novità!
+                        </Typography>    
+                    </Box>
+                </Grid>
+                <Grid item sx={{py: 2}}>
+                    <Image src='/assets/undraw_illustrations/undraw_happy_news.svg' alt="Happy news" width={100} height={100}/>
+                </Grid>
+                <Grid item>
+                    <Typography>
+                        Ecco alcune importanti novità per utilizzare al meglio Praising:
+                    </Typography>
+                    <List sx={{ listStyleType: 'disc', pl: 4}}>
+                        <ListItemText sx={{ display: 'list-item' }}>
+                            <strong>Schermo sempre attivo:</strong> quando utilizzerai Praising non dovrai preoccuparti di toccare lo schermo per non farlo spegnere, ora rimarrà sempre acceso!
+                        </ListItemText>
+                        <ListItemText sx={{ display: 'list-item' }}>
+                            <strong>Playlist condivisibili:</strong> hai scelto i canti che vuoi fare e non ti va cercarli nell'elenco ogni volta? Ora puoi creare una playlist e condividerla con i tuoi amici!
+                        </ListItemText>
+                        <ListItemText sx={{ display: 'list-item' }}>
+                            <strong>Sezioni espandibili:</strong> le sezioni dei canti sono ora espandibili, così puoi scegliere quali parti visualizzare e quali no! Per farlo basta toccare la sezione che vuoi espandere.
+                        </ListItemText>
+                        <ListItemText sx={{ display: 'list-item' }}>
+                            <strong>Altre:</strong> tante altre funzionalità sono state aggiunte come trasporre i canti, ascoltare l'audio originale direttamente dalla pagina della canzone e tanto altro!
+                        </ListItemText>
+                    </List>
+                </Grid>
+                <Grid item>
+                    <Button onClick={() => props.handleClose()} variant="contained">
+                        Ho capito!
+                    </Button>
+                </Grid>
+            </Grid>
+            </>
+        }
+    />
+}
+
 
 
 const style = {

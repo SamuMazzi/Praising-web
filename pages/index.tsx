@@ -12,14 +12,18 @@ import ImageList from '@mui/material/ImageList'
 import ImageListItem from '@mui/material/ImageListItem'
 import { NextLinkComposed } from '@/components/link_composed'
 import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar'
-import { filterArgomenti, filterMomenti, getLastRecentsSongs, getSingleSong } from '@/logic/local_logic'
+import { filterArgomenti, filterMomenti, getFromStorage, getLastRecentsSongs, getSingleSong, saveToStorage } from '@/logic/local_logic'
 import Routes from '@/logic/routes'
 import ListSongs from '@/components/list_songs'
 import Link from 'next/link'
+import { useState } from 'react'
+import { ModalNews } from '@/components/modals'
 
+const NEWS_UPDATE = 'newsUpdate_0'
 
 export default function Home() {
   const recentSongs = getLastRecentsSongs().map(id => getSingleSong(id)!)
+  const [showNews, setShowNews] = useState(getFromStorage(NEWS_UPDATE) ?? true)
 
   return (
     <Container disableGutters sx={{minHeight: '100vh'}}>
@@ -94,6 +98,10 @@ export default function Home() {
           </Container>
         }
         <NavBar />
+        <ModalNews open={showNews} handleClose={() => {
+          setShowNews(false)
+          saveToStorage(NEWS_UPDATE, false)
+        }}/>
     </Container>
   )
   
