@@ -1,5 +1,5 @@
 import ChordSheetJS, { Song } from 'chordsheetjs';
-import { CheerioAPI, Element, load } from 'cheerio'
+import { Cheerio, CheerioAPI, Element, load } from 'cheerio'
 import { ChordNotations } from './redux/settings_slice';
 
 const chordVariants: { [key: string]: string } = {
@@ -89,7 +89,7 @@ const isThereLyricsInRow = ($: CheerioAPI, row: Element) => {
 const boldenChorus = ($: CheerioAPI, linesChorus: number[]) => {
     let cont = -1
     $('.row').each((i, row) => {
-        //TODO: Implementare expandable
+        //TODO: Implementare animazione expandable
         if (isThereLyricsInRow($, row)) {
             cont += 1
         }
@@ -138,13 +138,16 @@ const adjustFontSize = ($: CheerioAPI, oldFontSize: number) => {
     return i
 }
 
+//TODO: Testare con Jesus, I trust in you e Abbracciami per ritornello
+//TODO: Magari vorrei farlo per riga e non per "sezione della riga", sia per correttezza che performance
+//FIXME: La#- non diventa Sib-
 const editHTML = ($: CheerioAPI) => {
+    const out: string[] = []
+    let isChorus = false;
+    let $2 = load(`<div class=section_0></div>`, {}, true);
     $('.row').each((i, row) => {
         removeChordsFromHTML($, row)
-        setSpacesBetweenChorusAndVerses($, row)
-        //TODO: Testare con Jesus, I trust in you e Abbracciami per ritornello
-        //TODO: Magari vorrei farlo per riga e non per "sezione della riga", sia per correttezza che performance
-        //FIXME: La#- non diventa Sib-
+        const isNewChorus = $(row).hasClass('chorus')
         $('.lyrics').each((j, html_lyrics) => {
             const out = $(html_lyrics).text().replace(/,\s*,/gm, ',')
             $(html_lyrics).text(out)
@@ -154,7 +157,19 @@ const editHTML = ($: CheerioAPI) => {
             const out = $(html_chord).text().replace("m", "-").replace(/sus(\d*)/gm, (match, p1) => p1 ? p1 : '4');
             $(html_chord).text(out)
         })
+
+        if (isChorus !== isNewChorus) {
+            out.push($2.html())
+            $2 = load(`<div class=section_` + out.length + `></div>`, {}, true);
+            $2('.section_' + out.length).append($(row))
+        } else {
+            $2('.section_' + out.length).append($(row))
+        }
+        isChorus = isNewChorus;
     })
+    out.push($2.html())
+
+    return out;
 }
 
 const removeChordsFromHTML = ($: CheerioAPI, row: Element) => {
@@ -177,25 +192,6 @@ const removeChordsFromHTML = ($: CheerioAPI, row: Element) => {
     }
 }
 
-const setSpacesBetweenChorusAndVerses = ($: CheerioAPI, row: Element) => {
-    //* Aggiungi spazi fra chorus e verses
-    if($(row).hasClass('chorus') && !$(row).next().hasClass('chorus')) {
-        $(row).addClass('last-line-chorus')
-        // $(row).insertAfter('section-chorus')
-        // $(row).insertAfter('section-verse')
-    }
-    //* Aggiungi spazi fra chorus e verses
-    if($(row).hasClass('chorus') && !$(row).prev().hasClass('chorus')) {
-        $(row).addClass('first-line-chorus')
-        // $(row).insertBefore('section-chorus')
-        // $(row).insertBefore('section-verse') //TODO Ovviamente da rivedere
-    }
-    if($(row).hasClass('chorus') && !$(row).prev().hasClass('chorus')) {
-        $(row).addClass('first-line-chorus')
-    }
-    // $(row).wrap
-}
-
 const removeChords = (serializedSong: any) => {
     serializedSong.lines.map((line: any) => {
         line.items.map((v: any) => {
@@ -210,6 +206,7 @@ const removeChords = (serializedSong: any) => {
 
 interface InfoRenderSong {
     songText: string
+    sections: string[]
     fontSize: number
 }
 
@@ -240,17 +237,18 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
     }
 
     const disp = new ChordSheetJS.HtmlDivFormatter({normalizeChords: true, renderBlankLines: false}).format(deserialized); 
-    // TODO: Provare ad utilizzare renderBlankLines
     const $ = load(disp)
 
     const linesChorus = findLinesChorus(deserialized)
     toggleShowChords($, props.showChords)
     boldenChorus($, linesChorus)
-    editHTML($)
     const stdZoomLevel = 17;
+    const fontSize = props.fontSize ??= adjustFontSize($, stdZoomLevel)
+    const sections = editHTML($)
     // props.fontSize is undefined when first time opening the song or zoom not set
     return {
         songText: $.html(),
-        fontSize: props.fontSize ??= adjustFontSize($, stdZoomLevel) 
+        sections: sections,
+        fontSize:  fontSize
     }
 }

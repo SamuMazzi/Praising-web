@@ -8,12 +8,6 @@ a {
 .column {
     display: inline;
 }
-.first-line-chorus {
-    margin-top: 2em;
-} 
-.last-line-chorus {
-    margin-bottom: 2em;
-} 
 .chorus {
     font-weight: bold;
 } 
@@ -27,7 +21,19 @@ a {
     min-height: 1.5em;
     white-space:pre-wrap;
 }
+.expandable {
+    margin-top: 2em;
+    max-height: auto;
+    max-width: 700px;
+    overflow: hidden;
+    transition: max-height 0.3s ease; /*** Probably useless ***/
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
 
+.expanded {
+    max-height: 3em; /* Adjust the height as needed */
+}
 .segmentContainer {
     display: flex;
     flex-direction: column;

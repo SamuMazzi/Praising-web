@@ -17,7 +17,8 @@ import CloseRounded from '@mui/icons-material/CloseRounded'
 import useSWR from 'swr'
 import { Playlist } from '@/logic/redux/playlist_slice'
 import ShimmerSegments from '@/components/shimmer_effect/shimmer_segments'
-// import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
+
+// TODO: Add highlight of parts of text in song (also for sessions) -> take a look at transitions/modal/popover
 
 SongPage.getInitialProps = async (props: any) => {
     const {id, playlist_id} = props.query
@@ -30,52 +31,6 @@ interface PropsSongPage {
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
-
-//TODO: Integra PDF
-/* const styles = StyleSheet.create({
-    page: {
-      flexDirection: 'row',
-      backgroundColor: '#E4E4E4'
-    },
-    section: {
-      margin: 10,
-      padding: 10,
-      flexGrow: 1
-    }
-  });
-  
-interface PropsDocumentSong {
-    textSong: string
-}
-
-const SinglePDFDocumentSong = (props: PropsDocumentSong) => (
-    <Document>
-      <Page size="A4" style={styles.page}>
-        <View style={styles.section}>
-          <Text>Section #1</Text>
-        </View>
-      </Page>
-    </Document>
-);
-
-function GetPDFSong(song_id: string) {
-    const { data, error, isLoading } = useSWR('/api/song/' + song_id, fetcher)
-    const song = getSingleSong(song_id)
-    const infoSong: InfoLocalSong | undefined = useAppSelector(state => song?.id ? state.infoSongs.infoSongs[song.id] : undefined)
-    const chordNotation = useAppSelector(state => state.settings.chordNotation)
-
-    const info = renderSong({
-        fileContent: data, //props.fileContent
-        showChords: false,
-        transpose: infoSong?.transpose,
-        fontSize: infoSong?.zoom,
-        chordNotation: chordNotation,
-    })
-    const songToRender: string = info.songText
-    const fontSize: number = info.fontSize
-
-    return <SinglePDFDocumentSong textSong={songToRender}/>
-} */
 
 export default function SongPage(props: PropsSongPage) {
     const { data, error, isLoading } = useSWR('/api/song/' + props.id, fetcher)
@@ -143,6 +98,7 @@ export default function SongPage(props: PropsSongPage) {
         chordNotation: chordNotation,
     })
     const songToRender: string = info.songText
+    const sections: string[] = info.sections
     const fontSize: number = info.fontSize
     // fontsize std: lineHeigth 68, poi -4 tutte le volte
 
@@ -158,9 +114,17 @@ export default function SongPage(props: PropsSongPage) {
             <ActionsSong song={song!} fontSize={fontSize} videoIsPlaying={showVideo} onPressVideo={handlePressVideo} 
                 setOpenSheet={() => setOpenModalPlaylist(true)}/>
             <Container disableGutters sx={{py: 1}}>
-                <Typography style={{fontSize: infoSong?.zoom ?? 17}}>
+                <Typography style={{fontSize: infoSong?.zoom ?? 17}}> {/** FIXME: e font size???? */}
                     <div dangerouslySetInnerHTML={{__html: songToRender}} />
                 </Typography>
+                {
+                    
+                    sections.map((section, index) => {
+                        return (
+                            <SectionSong key={index} section={section} infoSong={infoSong}/>
+                        )
+                    })
+                }
             </Container>
             {
             showVideo && song?.link && 
@@ -185,5 +149,15 @@ export default function SongPage(props: PropsSongPage) {
             <MessageSnackbar handleClose={() => setMessageSnackbar('')} message={messageSnackbar} />
             <ModalBottomSheetSong song_id={song!.id} open={openModalPlaylist} onClose={() => setOpenModalPlaylist(false)}/>
         </Container>
+    )
+}
+
+function SectionSong(props: {section: string, infoSong: InfoLocalSong | undefined}) {
+    return (
+        <Typography style={{fontSize: props.infoSong?.zoom ?? 17}}>
+            <div className='expandable' onClick={(e) => e.currentTarget.classList.toggle("expanded")}>
+                <div dangerouslySetInnerHTML={{__html: props.section}} />
+            </div>
+        </Typography>
     )
 }
