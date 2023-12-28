@@ -9,6 +9,9 @@ import { ModalBottomSheetSong } from './bottom_sheet'
 import DragContainer from './react-smooth-dnd/Container'
 import { useAppDispatch, useAppSelector } from '@/logic/redux/store'
 import { ModalAddPlaylist } from './modals'
+import Grid from '@mui/material/Grid'
+import Typography from '@mui/material/Typography'
+import Image from 'next/image'
 
 interface PropsListSongs {
     songs: Song[]
@@ -31,6 +34,16 @@ export default function ListSongs(props: PropsListSongs) {
     }
 
     return (
+        props.songs.length === 0 ? <Grid container direction="column" alignItems="center" justifyContent="center">
+            <Grid item xs={12} sx={{pt: 4}}>
+                <Image src="assets/undraw_illustrations/undraw_more_music.svg" alt="More music" width={200} height={200}/>
+            </Grid>
+            <Grid item xs={12} sx={{pt: 2}}>
+                <Typography align='center' style={{fontWeight: 300}}>
+                    Inizia a suonare per riempire la lista
+                </Typography>
+            </Grid>
+        </Grid> :
         <MuiContainer>
             {
                 props.withSearch === undefined || props.withSearch && <TypeSearch query={filter} setQuery={setFilter}/>

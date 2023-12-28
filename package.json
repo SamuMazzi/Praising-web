@@ -1,13 +1,14 @@
 {
   "name": "web-praising",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "git clone https://github.com/SamuMazzi/ChordSheetJS.git ../chordsheetjs && yarn --cwd ../chordsheetjs install && yarn --cwd ../chordsheetjs build && npm install ../chordsheetjs && next build",
     "start": "next start",
     "lint": "next lint",
-    "analyze": "source-map-explorer 'build/static/js/*.js'"
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",

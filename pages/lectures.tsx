@@ -29,7 +29,7 @@ const SingleLecture = (props: PropsSingleLecture) => {
       <Typography>
         {props.lecture?.titolo}
       </Typography>
-      <Typography sx={{pb: 2}} style={{fontStyle: 'italic'}}>
+      <Typography sx={{pb: 2, pt: 0.5}} style={{fontStyle: 'italic'}}>
         {props.lecture?.versetto}
       </Typography>
       <Typography>

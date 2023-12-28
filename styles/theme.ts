@@ -2,6 +2,8 @@ import { createTheme } from '@mui/material/styles'
 import "@fontsource/poppins";
 import "@fontsource/poppins/800.css";
 import "@fontsource/poppins/700.css";
+import "@fontsource/poppins/400.css";
+import "@fontsource/poppins/300.css";
 
 //* https://mui.com/material-ui/icons/#component-prop
 
