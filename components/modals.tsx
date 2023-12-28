@@ -173,7 +173,10 @@ export function ModalNews(props: GenericProps) {
                             <strong>Sezioni espandibili:</strong> le sezioni dei canti sono ora espandibili, così puoi scegliere quali parti visualizzare e quali no! Per farlo basta toccare la sezione che vuoi espandere.
                         </ListItemText>
                         <ListItemText sx={{ display: 'list-item' }}>
-                            <strong>Altre:</strong>{" tante altre funzionalità sono state aggiunte come trasporre i canti, ascoltare l'audio originale direttamente dalla pagina della canzone e tanto altro!"}
+                            <strong>Altre:</strong>{" tante altre funzionalità fra cui la trasposizione degli accordi, ascoltare l'audio originale direttamente dalla pagina della canzone e tanto altro!"}
+                        </ListItemText>
+                        <ListItemText sx={{ display: 'list-item' }}>
+                            <strong>Feedback:</strong>{" qualcosa non ti piace o vuoi suggerire delle modifiche? Clicca sull'icona in alto a destra per inviarmi un messaggio!"}
                         </ListItemText>
                     </List>
                 </Grid>
