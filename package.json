@@ -7,8 +7,7 @@
     "build": "git clone https://github.com/SamuMazzi/ChordSheetJS.git ../chordsheetjs && yarn --cwd ../chordsheetjs install && yarn --cwd ../chordsheetjs build && npm install ../chordsheetjs && next build",
     "start": "next start",
     "lint": "next lint",
-    "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "prepare": "husky install"
+    "analyze": "source-map-explorer 'build/static/js/*.js'"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
@@ -43,7 +42,6 @@
   },
   "devDependencies": {
     "@next/codemod": "^14.0.4",
-    "husky": "^8.0.3",
     "prettier": "^3.0.2"
   }
 }
