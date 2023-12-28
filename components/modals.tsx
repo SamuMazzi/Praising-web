@@ -167,13 +167,13 @@ export function ModalNews(props: GenericProps) {
                             <strong>Schermo sempre attivo:</strong> quando utilizzerai Praising non dovrai preoccuparti di toccare lo schermo per non farlo spegnere, ora rimarrà sempre acceso!
                         </ListItemText>
                         <ListItemText sx={{ display: 'list-item' }}>
-                            <strong>Playlist condivisibili:</strong> hai scelto i canti che vuoi fare e non ti va cercarli nell'elenco ogni volta? Ora puoi creare una playlist e condividerla con i tuoi amici!
+                            <strong>Playlist condivisibili:</strong>{" hai scelto i canti che vuoi fare e non ti va cercarli nell'elenco ogni volta? Ora puoi creare una playlist e condividerla con i tuoi amici!"}
                         </ListItemText>
                         <ListItemText sx={{ display: 'list-item' }}>
                             <strong>Sezioni espandibili:</strong> le sezioni dei canti sono ora espandibili, così puoi scegliere quali parti visualizzare e quali no! Per farlo basta toccare la sezione che vuoi espandere.
                         </ListItemText>
                         <ListItemText sx={{ display: 'list-item' }}>
-                            <strong>Altre:</strong> tante altre funzionalità sono state aggiunte come trasporre i canti, ascoltare l'audio originale direttamente dalla pagina della canzone e tanto altro!
+                            <strong>Altre:</strong>{" tante altre funzionalità sono state aggiunte come trasporre i canti, ascoltare l'audio originale direttamente dalla pagina della canzone e tanto altro!"}
                         </ListItemText>
                     </List>
                 </Grid>
