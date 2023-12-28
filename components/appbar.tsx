@@ -17,6 +17,7 @@ import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/logic/redux/store";
 import Button from "@mui/material/Button";
 import { modifySong } from "@/logic/redux/info_song_slice";
+import InsertCommentRoundedIcon from '@mui/icons-material/InsertCommentRounded';
 
 //TODO: Implementare clide-side routing anche con useRouter
 
@@ -44,6 +45,7 @@ function HideOnScroll(props: PropsHideOnScroll) {
 interface PropsAppBar {
     title: string
     backIcon?: boolean
+    homeVersion?: boolean
 }
 
 export const verticalPaddingAppBar = 3
@@ -56,6 +58,42 @@ export default function PraisingAppBar(props: PropsAppBar) {
         <CssBaseline />
         <HideOnScroll {...props}>
             <AppBar style={{ background: "linear-gradient(to right, #F5DA81, #F0B647)" }} sx={{borderBottomLeftRadius: 24, borderBottomRightRadius: 24}}>
+              {
+                props.homeVersion ?
+                <Box sx={{display: props.backIcon ? 'none' : 'flex', justifyContent: "center"}}>
+                  <Typography variant="h1" textAlign='center' sx={{py: verticalPaddingAppBar}}>
+                    {props.title}
+                  </Typography>
+                  <IconButton edge="end" sx={{ top: "25%", right: "6%", position: "absolute" }} LinkComponent={Link} href={Routes.Feedback}>
+                    <InsertCommentRoundedIcon />
+                  </IconButton>
+                </Box> : props.backIcon ?
+                  <Toolbar>
+                    <IconButton edge="start" sx={{ mr: 2 }} onClick={() => router.back()}>
+                        <ArrowBackRoundedIcon />
+                    </IconButton>
+                    <Typography variant="h1" textAlign='center' sx={{py: verticalPaddingAppBar}}>
+                        {props.title}
+                    </Typography>
+                  </Toolbar> : 
+                  <Typography variant="h1" textAlign='center' sx={{py: verticalPaddingAppBar}}>
+                    {props.title}
+                  </Typography>                                
+              }
+              </AppBar>
+        </HideOnScroll>
+      </React.Fragment>
+    );
+}
+
+export function FilterAppBar(props: PropsAppBar) {
+  const router = useRouter()
+
+  return (
+    <React.Fragment>
+      <CssBaseline />
+      <HideOnScroll {...props}>
+          <AppBar style={{ background: "linear-gradient(to right, #F5DA81, #F0B647)" }} sx={{borderBottomLeftRadius: 24, borderBottomRightRadius: 24}}>
               {
                 props.backIcon ?
                 <Toolbar>
@@ -71,9 +109,9 @@ export default function PraisingAppBar(props: PropsAppBar) {
                 </Typography>
               }
             </AppBar>
-        </HideOnScroll>
-      </React.Fragment>
-    );
+      </HideOnScroll>
+    </React.Fragment>
+  );
 }
 
 interface PropsSongAppBar {

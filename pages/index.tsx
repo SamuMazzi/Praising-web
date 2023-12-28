@@ -27,7 +27,7 @@ export default function Home() {
 
   return (
     <Container disableGutters sx={{minHeight: '100vh'}}>
-        <PraisingAppBar title='Home'/>
+        <PraisingAppBar title='Home' homeVersion/>
         <Typography variant="h2" sx={{pt: verticalPaddingAppBar*3 + 2, pl: 2 }}>
             Parti della messa
         </Typography>

@@ -12,7 +12,7 @@ export default function PlaylistPage() {
 
     return (
         <Container sx={{minHeight: '100vh'}}>
-            <PraisingAppBar title='Playlist'/>
+            <PraisingAppBar title='Playlist' homeVersion/>
             <Container sx={{py: verticalPaddingAppBar + 2}}/>
             <ListPlaylist />
             <Container sx={{pb: 8}}/>

@@ -9,7 +9,7 @@ export default function SongsPage() {
 
     return (
         <Container>
-            <PraisingAppBar title='Canzoni'/>
+            <PraisingAppBar title='Canzoni' homeVersion/>
             <Container disableGutters sx={{pt: verticalPaddingAppBar*3 + 2, pb: 7}}>
                 <ListSongs songs={localSongs} mode='normal' withSearch/>
             </Container>

@@ -5,6 +5,7 @@ const Routes = {
     Playlist: '/playlist',
     FilteredSongs: '/songs/filter',
     SharePlaylist: '/playlist/shared',
+    Feedback: '/feedback',
 }
 
 export default Routes
