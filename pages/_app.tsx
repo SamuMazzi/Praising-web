@@ -9,8 +9,8 @@ import Head from 'next/head'
 import { useEffect } from 'react'
 
 // TODO: Offline https://github.com/hanford/next-offline
-// TODO: Implementare spazi fra accordi senza testo
-// TODO: Implementare dark mode
+// TODO: Implementare spazi fra accordi senza testo (per ora solo nelle righe intere senza testo)
+// TODO: Implementare dark mode (continua...)
 // TODO: Implement online for:
 /**
  * - Authenticated user

@@ -1,4 +1,4 @@
-import { createTheme } from '@mui/material/styles'
+import { ThemeOptions, createTheme } from '@mui/material/styles'
 import "@fontsource/poppins";
 import "@fontsource/poppins/800.css";
 import "@fontsource/poppins/700.css";
@@ -7,8 +7,9 @@ import "@fontsource/poppins/300.css";
 
 //* https://mui.com/material-ui/icons/#component-prop
 
-export const app_theme = createTheme({
+const app_theme_options: ThemeOptions = {
     palette: {
+        mode: 'light',
         primary: {
             main: '#F0B647',
             //light: '#AFC4FF',
@@ -76,4 +77,27 @@ export const app_theme = createTheme({
             }
         }
     },
-})
+};
+
+
+const light_theme_options: ThemeOptions = app_theme_options
+
+const dark_theme_options: ThemeOptions = {
+    ...app_theme_options,
+    palette: {
+        ...app_theme_options.palette,
+        mode: 'dark',
+        background: {
+            default: '#2E294E',
+        },
+    },
+    typography: {
+        ...app_theme_options.typography,
+        allVariants: {
+            ...app_theme_options.typography!.allVariants,
+            color: 'white',
+        },
+    },
+}
+
+export const app_theme = createTheme(light_theme_options)

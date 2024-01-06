@@ -160,20 +160,23 @@ export function ModalNews(props: GenericProps) {
                 </Grid>
                 <Grid item>
                     <Typography>
-                        Ecco alcune importanti novità per utilizzare al meglio Praising:
+                        Ecco alcune novità di Praising:
                     </Typography>
-                    <List sx={{ listStyleType: 'disc', pl: 4}}>
+                    <List sx={{ listStyleType: 'disc', pl: 4, py: 2, my: 1, borderRadius: 8, backgroundColor: '#F2F2F2', maxHeight: 400, overflow: 'auto'}}>
                         <ListItemText sx={{ display: 'list-item' }}>
                             <strong>Schermo sempre attivo:</strong> quando utilizzerai Praising non dovrai preoccuparti di toccare lo schermo per non farlo spegnere, ora rimarrà sempre acceso!
                         </ListItemText>
                         <ListItemText sx={{ display: 'list-item' }}>
-                            <strong>Playlist condivisibili:</strong> hai scelto i canti che vuoi fare e non ti va cercarli nell'elenco ogni volta? Ora puoi creare una playlist e condividerla con i tuoi amici!
+                            <strong>Playlist condivisibili:</strong>{" hai scelto i canti che vuoi fare e non ti va cercarli nell'elenco ogni volta? Ora puoi creare una playlist e condividerla con i tuoi amici!"}
                         </ListItemText>
                         <ListItemText sx={{ display: 'list-item' }}>
                             <strong>Sezioni espandibili:</strong> le sezioni dei canti sono ora espandibili, così puoi scegliere quali parti visualizzare e quali no! Per farlo basta toccare la sezione che vuoi espandere.
                         </ListItemText>
                         <ListItemText sx={{ display: 'list-item' }}>
-                            <strong>Altre:</strong> tante altre funzionalità sono state aggiunte come trasporre i canti, ascoltare l'audio originale direttamente dalla pagina della canzone e tanto altro!
+                            <strong>Feedback:</strong>{" qualcosa non ti piace o vuoi suggerire delle modifiche? Clicca sull'icona in alto a destra per inviarmi un messaggio!"}
+                        </ListItemText>
+                        <ListItemText sx={{ display: 'list-item' }}>
+                            <strong>Altre:</strong>{" tante altre funzionalità fra cui la trasposizione degli accordi, ascoltare l'audio originale direttamente dalla pagina della canzone e tanto altro!"}
                         </ListItemText>
                     </List>
                 </Grid>
@@ -199,6 +202,7 @@ const style = {
     bgcolor: 'background.paper',
     boxShadow: 24,
     borderRadius: 8,
+    borderColor: 'transparent',
     p: 4,
 }
 

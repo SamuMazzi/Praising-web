@@ -38,7 +38,7 @@ export default function FeedbackPage() {
             <Grid item xs={12} md={6}>
                 <TextField
                     id="outlined-controlled"
-                    label="Controlled"
+                    label=""
                     value={body}
                     sx={{ mt: 4 }}
                     multiline

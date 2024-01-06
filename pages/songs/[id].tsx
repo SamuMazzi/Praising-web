@@ -155,7 +155,14 @@ export default function SongPage(props: PropsSongPage) {
 function SectionSong(props: {section: string, infoSong: InfoLocalSong | undefined}) {
     return (
         <Typography style={{fontSize: props.infoSong?.zoom ?? 17}}>
-            <div className='expandable' onClick={(e) => e.currentTarget.classList.toggle("expanded")}>
+            <div className='expandable' onClick={(e) => {
+                const isCompressed = e.currentTarget.classList.toggle("compressed");
+                const classToPut = !isCompressed ? 'chord' : 'no-chord';
+                const classToRemove = !isCompressed ? 'no-chord' : 'chord';
+
+                const children = e.currentTarget.querySelectorAll('.' + classToRemove);
+                children.forEach(child => child.classList.replace(classToRemove, classToPut));
+            }}>
                 <div dangerouslySetInnerHTML={{__html: props.section}} />
             </div>
         </Typography>

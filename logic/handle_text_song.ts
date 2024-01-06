@@ -89,7 +89,6 @@ const isThereLyricsInRow = ($: CheerioAPI, row: Element) => {
 const boldenChorus = ($: CheerioAPI, linesChorus: number[]) => {
     let cont = -1
     $('.row').each((i, row) => {
-        //TODO: Implementare animazione expandable
         if (isThereLyricsInRow($, row)) {
             cont += 1
         }
@@ -138,26 +137,24 @@ const adjustFontSize = ($: CheerioAPI, oldFontSize: number) => {
     return i
 }
 
-//TODO: Testare con Jesus, I trust in you e Abbracciami per ritornello
-//TODO: Magari vorrei farlo per riga e non per "sezione della riga", sia per correttezza che performance
 //FIXME: La#- non diventa Sib-
 const editHTML = ($: CheerioAPI) => {
     const out: string[] = []
     let isChorus = false;
     let $2 = load(`<div class=section_0></div>`, {}, true);
+    $('.lyrics').each((j, html_lyrics) => {
+        const out = $(html_lyrics).text().replace(/,\s*,/gm, ',')
+        $(html_lyrics).text(out)
+    })
+    // Substitutes chords with their variants
+    $('.chord').each((j, html_chord) => {
+        let out = $(html_chord).text().replace("m", "-").replace(/sus(\d*)/gm, (match, p1) => p1 ? p1 : '4');
+        $(html_chord).text(out)
+    })
     $('.row').each((i, row) => {
         removeChordsFromHTML($, row)
+        // Divide in sections
         const isNewChorus = $(row).hasClass('chorus')
-        $('.lyrics').each((j, html_lyrics) => {
-            const out = $(html_lyrics).text().replace(/,\s*,/gm, ',')
-            $(html_lyrics).text(out)
-        })
-        // Substitutes chords with their variants
-        $('.chord').each((j, html_chord) => {
-            const out = $(html_chord).text().replace("m", "-").replace(/sus(\d*)/gm, (match, p1) => p1 ? p1 : '4');
-            $(html_chord).text(out)
-        })
-
         if (isChorus !== isNewChorus) {
             out.push($2.html())
             $2 = load(`<div class=section_` + out.length + `></div>`, {}, true);
@@ -172,6 +169,7 @@ const editHTML = ($: CheerioAPI) => {
     return out;
 }
 
+/* It also set spaces around chords without lyrics */
 const removeChordsFromHTML = ($: CheerioAPI, row: Element) => {
     //* Solo testo
     if($(row).children('.column').length === 1) {
@@ -188,6 +186,10 @@ const removeChordsFromHTML = ($: CheerioAPI, row: Element) => {
             if ($(lyrics).hasClass('lyrics') && !$(lyrics).hasClass('chorus')) {
                 $(lyrics).removeClass('lyrics')
             }
+        })
+        //* Put spaces around chords
+        $(row).find('.column .chord').each((index, chord) => {
+            $(chord).text(' ' + $(chord).text() + ' ')
         })
     }
 }

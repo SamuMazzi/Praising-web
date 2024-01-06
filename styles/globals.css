@@ -10,34 +10,43 @@ a {
 }
 .chorus {
     font-weight: bold;
-} 
+}
+
 .chord {
     color: #f0b647;
     font-weight: bold;
-    min-height: 1.5em;
+    height: 1.5em;
     font-style: italic;
-} 
+    white-space: pre-wrap;
+}
+.no-chord {
+    display: none;
+}
+
 .lyrics {
     min-height: 1.5em;
     white-space:pre-wrap;
 }
+
 .expandable {
     margin-top: 2em;
-    max-height: auto;
+    max-height: 30em;
     max-width: 700px;
     overflow: hidden;
-    transition: max-height 0.3s ease; /*** Probably useless ***/
+    transition: max-height 0.7s ease-out;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
 }
 
-.expanded {
-    max-height: 3em; /* Adjust the height as needed */
+.compressed {
+    max-height: 1.5em;
+    transition: max-height 0.7s cubic-bezier(0, 1.13, 1, 0.92)  /* (0.22, 1, 0.36, 1); */
 }
+
 .segmentContainer {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Adjust as needed */
+    gap: 10px;
 }
   
 .shimmerSegment {
