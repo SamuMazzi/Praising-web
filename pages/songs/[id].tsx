@@ -110,7 +110,7 @@ export default function SongPage(props: PropsSongPage) {
                 </Typography>
             }
             <SongAppBar id={song?.id || ''} title={song!.name} transpose={infoSong?.transpose} playlist={playlist}/>
-            <Container sx={{py: 5}}/>
+            <Container sx={{py: 3.5}}/>
             <ActionsSong song={song!} fontSize={fontSize} videoIsPlaying={showVideo} onPressVideo={handlePressVideo} 
                 setOpenSheet={() => setOpenModalPlaylist(true)}/>
             <Container disableGutters sx={{py: 1}}>
