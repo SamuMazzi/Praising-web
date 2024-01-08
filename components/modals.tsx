@@ -20,10 +20,63 @@ import PersSnackbar from './pers_snackbar'
 import NewspaperRoundedIcon from '@mui/icons-material/NewspaperRounded';
 import Image from 'next/image'
 import { useTheme } from '@mui/material'
+import { addActiveSession } from '@/logic/server/database'
+import { setActiveSession } from '@/logic/redux/sessions_slice'
 
 interface GenericProps {
     open: boolean
     handleClose: Function
+}
+
+interface ModalAddSongProps extends GenericProps {
+    location: [number, number]
+}
+
+export function ModalCreateSession(props: ModalAddSongProps) {
+    const [name, setName] = useState('')
+    const [error, setError] = useState("")
+    // TODO: Add "useUser"
+    const dispatch = useAppDispatch()
+
+    const handleConfirm = async () => {
+        setError("")
+        if(name === "") {
+            setError("Il nome non può essere vuoto")
+        } else if (name.length > 15) {
+            setError("Il nome deve essere più corto")
+        } else {
+            try {
+                const id_session = await addActiveSession(name, props.location)
+                dispatch(setActiveSession({id_session: id_session, name: name, owner_id: "TODO"}))
+                props.handleClose()
+            } catch (e: any) {
+                setError(e.message)
+            }
+        }
+    }
+
+    return <GenericModal 
+        open={props.open}
+        handleClose={props.handleClose}
+        content={
+            <Grid container direction='column' justifyContent='center' alignItems="center">
+                <Grid item>
+                    <Typography variant="h2" sx={{mb: 3}}>
+                        Crea una sessione
+                    </Typography>
+                </Grid>
+                <Grid item>
+                    <TextField sx={{my: 1}} label="Nome" value={name} onChange={(e) => setName(e.currentTarget.value)} helperText={error}
+                     FormHelperTextProps={{ style: { color: 'red' }}}/>
+                </Grid>
+                <Grid item>
+                    <Button onClick={handleConfirm} sx={{mt: 1}} variant="contained">
+                        Conferma
+                    </Button>
+                </Grid>
+            </Grid>
+        }
+    />
 }
 
 export function ModalAddPlaylist(props: GenericProps) {
@@ -74,10 +127,11 @@ export function ModalEditNamePlaylist(props: PropsModalEditNamePlaylist) {
                     </Typography>
                 </Grid>
                 <Grid item>
-                    <TextField sx={{my: 1}} label="Nome" value={name} onChange={(e) => setName(e.currentTarget.value)} helperText={error}/>
+                    <TextField sx={{my: 1}} label="Nome" value={name} onChange={(e) => setName(e.currentTarget.value)} helperText={error}
+                     FormHelperTextProps={{ style: { color: 'red' }}}/>
                 </Grid>
                 <Grid item>
-                    <Button onClick={handleConfirm} sx={{mt: 1}}>
+                    <Button onClick={handleConfirm} sx={{mt: 1}} variant="contained">
                         Conferma
                     </Button>
                 </Grid>
@@ -201,7 +255,7 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
+    width: 300,
     bgcolor: 'background.paper',
     boxShadow: 24,
     borderRadius: 8,

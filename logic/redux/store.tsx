@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import playlistReducer from './playlist_slice'
 import infoSongsReducer from './info_song_slice'
 import settingsReducer from './settings_slice'
+import sessionsReducer from './sessions_slice'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
         playlist: playlistReducer,
         infoSongs: infoSongsReducer,
         settings: settingsReducer,
+        sessions: sessionsReducer
     },
 })
 
