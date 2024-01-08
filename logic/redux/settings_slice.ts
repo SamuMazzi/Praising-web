@@ -6,18 +6,20 @@ export type ChordNotations = 'symbol' | 'solfege' // It refers to the chordsheet
 interface SettingsState {
     showChords: boolean
     chordNotation: ChordNotations
+    darkMode: boolean
 }
 
 const initialState: SettingsState = {
     showChords: getFromStorage('show_chords') === true,
-    chordNotation: getLocalChordNotation()
+    chordNotation: getLocalChordNotation(),
+    darkMode: getFromStorage('show_chords') === true,
 }
 
 export const settingsSlice = createSlice({
     name: 'settings',
     initialState: initialState,
     reducers: {
-        setShowChords: (state, action) => {
+        setShowChords: (state, action: PayloadAction<boolean>) => {
             state.showChords = action.payload
             saveToStorage('show_chords', action.payload)
         },
@@ -25,9 +27,13 @@ export const settingsSlice = createSlice({
             state.chordNotation = action.payload
             setLocalChordNotation(action.payload)
         },
+        setDarkMode: (state, action: PayloadAction<boolean>) => {
+            state.darkMode = action.payload
+            saveToStorage('dark_mode', action.payload)
+        },
     },
 })
 
-export const { setShowChords, setChordNotation } = settingsSlice.actions
+export const { setShowChords, setChordNotation, setDarkMode } = settingsSlice.actions
 
 export default settingsSlice.reducer

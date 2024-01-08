@@ -50,7 +50,7 @@ export default function Home() {
                             <ListItemText
                                 disableTypography
                                 primary={
-                                <Typography textAlign="center" variant="h5">
+                                <Typography textAlign="center" variant="h5" style={{color: 'black'}}>
                                   {filterMomenti[momento]}
                                 </Typography>}
                             />

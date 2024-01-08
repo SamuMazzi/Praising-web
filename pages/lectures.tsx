@@ -48,7 +48,7 @@ export default function Lectures() {
 
   return (
     <Container sx={{minHeight: '100vh', pt: verticalPaddingAppBar*3 + 2, pb: 7, whiteSpace: 'pre-wrap'}} >
-        <PraisingAppBar title='Liturgia del giorno (beta)' homeVersion/>
+        <PraisingAppBar title='Liturgia del giorno' homeVersion/>
         <Box display='flex' alignItems='center'>
           <CalendarSelectSingleDay daySelected={dataLiturgia} onChangeDate={setDataLiturgia}/>
           <Typography>

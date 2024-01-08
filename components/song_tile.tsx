@@ -32,7 +32,7 @@ interface PropsSongTile {
 export default function SongTile(props: PropsSongTile) {
   return (
     <ListItem component={NextLinkComposed} to={{pathname: Routes.Songs + '/' + props.song.id}} 
-        sx={{backgroundColor: '#F2F2F2', borderRadius: 8, my: 1}}
+        sx={{borderRadius: 8, my: 1}}
         secondaryAction={
             <IconButton onClick={(e: any) => {
                 e.preventDefault()
@@ -62,7 +62,7 @@ export function SelectableSongTile(props: PropsSelectableSongTile) {
     const dispatch = useAppDispatch()
   return (
     <ListItemButton
-        sx={{backgroundColor: '#F2F2F2', borderRadius: 8, my: 1}}
+        sx={{borderRadius: 8, my: 1}}
         selected={props.playlist.songs.includes(props.song.id)}
         onClick={() => dispatch(handleSongForPlaylist({idSong: props.song.id, id: props.playlist.id}))}
     >
@@ -82,7 +82,7 @@ export function PlaylistSongTile(props: PropsSelectableSongTile) {
     return (
         <Draggable key={props.song.id}>
             <ListItem 
-                sx={{backgroundColor: '#F2F2F2', borderRadius: 8, my: 1}}
+                sx={{borderRadius: 8, my: 1}}
                 secondaryAction={
                     <IconButton className='column-drag-handle'>
                         <DragHandleRoundedIcon />

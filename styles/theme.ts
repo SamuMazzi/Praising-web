@@ -67,6 +67,13 @@ const app_theme_options: ThemeOptions = {
                 },
             },
         },
+        MuiListItem: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: '#F2F2F2'
+                },
+            }
+        },
         MuiButton: {
             styleOverrides: {
                 contained: {
@@ -80,24 +87,34 @@ const app_theme_options: ThemeOptions = {
 };
 
 
-const light_theme_options: ThemeOptions = app_theme_options
+export const light_theme_options: ThemeOptions = app_theme_options
 
-const dark_theme_options: ThemeOptions = {
+export const dark_theme_options: ThemeOptions = {
     ...app_theme_options,
     palette: {
         ...app_theme_options.palette,
         mode: 'dark',
         background: {
-            default: '#2E294E',
+            default: '#3A3A3A',
         },
     },
     typography: {
         ...app_theme_options.typography,
         allVariants: {
-            ...app_theme_options.typography!.allVariants,
+            fontFamily: 'Poppins',
             color: 'white',
         },
     },
+    components: {
+        ...app_theme_options.components,
+        MuiListItem: {
+            ...app_theme_options.components!.MuiListItem,
+            styleOverrides: {
+                ...app_theme_options.components!.MuiListItem!.styleOverrides,
+                root: {
+                    backgroundColor: 'black'
+                },
+            }
+        },
+    }
 }
-
-export const app_theme = createTheme(light_theme_options)

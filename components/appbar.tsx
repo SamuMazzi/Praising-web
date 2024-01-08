@@ -18,6 +18,10 @@ import { useAppDispatch, useAppSelector } from "@/logic/redux/store";
 import Button from "@mui/material/Button";
 import { modifySong } from "@/logic/redux/info_song_slice";
 import InsertCommentRoundedIcon from '@mui/icons-material/InsertCommentRounded';
+import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
+import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
+import { setDarkMode } from "@/logic/redux/settings_slice";
+import { useTheme } from "@mui/material";
 
 //TODO: Implementare clide-side routing anche con useRouter
 
@@ -52,6 +56,8 @@ export const verticalPaddingAppBar = 3
 
 export default function PraisingAppBar(props: PropsAppBar) {
     const router = useRouter()
+    const darkTheme = useAppSelector(state => state.settings.darkMode)
+    const dispatch = useAppDispatch()
 
     return (
       <React.Fragment>
@@ -61,10 +67,15 @@ export default function PraisingAppBar(props: PropsAppBar) {
               {
                 props.homeVersion ?
                 <Box sx={{display: props.backIcon ? 'none' : 'flex', justifyContent: "center"}}>
-                  <Typography variant="h1" textAlign='center' sx={{py: verticalPaddingAppBar}}>
+                  <Typography variant="h1" textAlign='center' style={{color: 'black'}} sx={{py: verticalPaddingAppBar}}>
                     {props.title}
                   </Typography>
-                  <IconButton edge="end" sx={{ top: "25%", right: "6%", position: "absolute" }} LinkComponent={Link} href={Routes.Feedback}>
+                  <IconButton edge="end" sx={{ top: "25%", right: "15%", position: "absolute" }} onClick={() => dispatch(setDarkMode(!darkTheme))}>
+                  {
+                    darkTheme ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />
+                  }
+                  </IconButton>
+                  <IconButton edge="end" sx={{ top: "25%", right: "5%", position: "absolute" }} LinkComponent={Link} href={Routes.Feedback}>
                     <InsertCommentRoundedIcon />
                   </IconButton>
                 </Box> : props.backIcon ?
@@ -76,7 +87,7 @@ export default function PraisingAppBar(props: PropsAppBar) {
                         {props.title}
                     </Typography>
                   </Toolbar> : 
-                  <Typography variant="h1" textAlign='center' sx={{py: verticalPaddingAppBar}}>
+                  <Typography variant="h1" textAlign='center' style={{color: 'black'}} sx={{py: verticalPaddingAppBar}}>
                     {props.title}
                   </Typography>                                
               }
@@ -123,6 +134,7 @@ interface PropsSongAppBar {
 
 export const SongAppBar = (props: PropsSongAppBar) => {
     const router = useRouter()
+    const theme = useTheme()
     const indexInPlaylist = props.playlist?.songs.indexOf(props.id)
     // const chordNotation = useAppSelector(state => state.settings.chordNotation)
     const dispatch = useAppDispatch()
@@ -130,7 +142,7 @@ export const SongAppBar = (props: PropsSongAppBar) => {
     return (
       <React.Fragment>
         <HideOnScroll {...props}>
-            <AppBar style={{ backgroundColor: 'white', display: 'flex' }}>
+            <AppBar style={{backgroundColor: theme.palette.text.primary, display: 'flex' }}>
                 <Toolbar>
                   <IconButton edge="start" sx={{ mr: 2 }} onClick={() => router.back()}>
                       <ArrowBackRoundedIcon />
@@ -195,12 +207,13 @@ interface PropsPlaylistAppBar {
 
 export const PlaylistAppBar = (props: PropsPlaylistAppBar) => {
   const router = useRouter()
+  const theme = useTheme()
   
   return (
     <React.Fragment>
       <CssBaseline />
       <HideOnScroll {...props}>
-          <AppBar style={{ backgroundColor: 'white', display: 'flex' }}>
+          <AppBar style={{ backgroundColor: theme.palette.text.primary, display: 'flex' }}>
               <Toolbar>
                 <IconButton edge="start" sx={{ mr: 2 }} onClick={() => router.back()}>
                     <ArrowBackRoundedIcon />

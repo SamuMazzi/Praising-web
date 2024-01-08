@@ -19,6 +19,7 @@ import Routes from '@/logic/routes'
 import PersSnackbar from './pers_snackbar'
 import NewspaperRoundedIcon from '@mui/icons-material/NewspaperRounded';
 import Image from 'next/image'
+import { useTheme } from '@mui/material'
 
 interface GenericProps {
     open: boolean
@@ -141,6 +142,8 @@ export function ModalEditPlaylist(props: PropsModalEditPlaylist) {
 }
 
 export function ModalNews(props: GenericProps) {
+    const theme = useTheme()
+
     return <GenericModal 
         open={props.open}
         handleClose={props.handleClose}
@@ -162,7 +165,7 @@ export function ModalNews(props: GenericProps) {
                     <Typography>
                         Ecco alcune novità di Praising:
                     </Typography>
-                    <List sx={{ listStyleType: 'disc', pl: 4, py: 2, my: 1, borderRadius: 8, backgroundColor: '#F2F2F2', maxHeight: 400, overflow: 'auto'}}>
+                    <List sx={{ listStyleType: 'disc', pl: 4, py: 2, my: 1, borderRadius: 8, backgroundColor: theme.palette.mode === 'light' ? '#F2F2F2' : '#3A3A3A', maxHeight: 400, overflow: 'auto'}}>
                         <ListItemText sx={{ display: 'list-item' }}>
                             <strong>Schermo sempre attivo:</strong> quando utilizzerai Praising non dovrai preoccuparti di toccare lo schermo per non farlo spegnere, ora rimarrà sempre acceso!
                         </ListItemText>

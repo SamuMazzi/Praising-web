@@ -6,6 +6,7 @@ import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import { handleSongForPlaylist, Playlist } from '@/logic/redux/playlist_slice'
 import ListItemButton from '@mui/material/ListItemButton'
 import { useAppDispatch } from '@/logic/redux/store'
+import { useTheme } from '@mui/material';
 
 interface PropsPlaylistTile {
     playlist: Playlist
@@ -13,12 +14,14 @@ interface PropsPlaylistTile {
 }
 
 export default function PlaylistTile(props: PropsPlaylistTile) {
+    const theme = useTheme()
+    
   return (
     <>
     <ListItem 
         component={NextLinkComposed} 
         to={{pathname: '/playlist/' + props.playlist.id}} 
-        sx={{backgroundColor: '#F2F2F2', borderRadius: 8, my: 1}}
+        sx={{borderRadius: 8, my: 1}}
         secondaryAction={
             <IconButton onClick={(e) => {
                 e.preventDefault()
@@ -47,7 +50,7 @@ export function SelectablePlaylistTile(props: PropsSelectablePlaylistTile) {
     return (
         <>
         <ListItemButton
-            sx={{backgroundColor: '#F2F2F2', borderRadius: 8, my: 1}}
+            sx={{borderRadius: 8, my: 1}}
             selected={props.playlist.songs.includes(props.songId)}
             onClick={() => dispatch(handleSongForPlaylist({id: props.playlist.id, idSong: props.songId}))}
         >

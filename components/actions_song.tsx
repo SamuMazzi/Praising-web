@@ -14,6 +14,7 @@ import { InfoLocalSong, modifySong } from '@/logic/redux/info_song_slice'
 import { setShowChords } from '@/logic/redux/settings_slice'
 import Tooltip from '@mui/material/Tooltip';
 import { useEffect, useState } from 'react';
+import { useTheme } from '@mui/material';
 
 interface PropsActionSong {
     song: Song
@@ -25,10 +26,11 @@ interface PropsActionSong {
 
 const ActionIconButton = (props: any) => {
     const {title, children, ...propsIconButton  } = props
+    const theme = useTheme()
 
     return (
         <Tooltip title={title} placement="left">
-            <IconButton sx={{ boxShadow: 10, p: 1.5, m: 1, backgroundColor: 'white' }} {...propsIconButton}>
+            <IconButton sx={{ boxShadow: 10, p: 1.5, m: 1, backgroundColor: theme.palette.text.primary }} {...propsIconButton}>
                 {children}
             </IconButton>
         </Tooltip>
