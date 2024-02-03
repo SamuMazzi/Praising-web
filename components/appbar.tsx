@@ -17,11 +17,20 @@ import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/logic/redux/store";
 import Button from "@mui/material/Button";
 import { modifySong } from "@/logic/redux/info_song_slice";
-import InsertCommentRoundedIcon from '@mui/icons-material/InsertCommentRounded';
-import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
-import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
-import { setDarkMode } from "@/logic/redux/settings_slice";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Badge from "@mui/material/Badge";
 import { useTheme } from "@mui/material";
+import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { setChordNotation } from "@/logic/redux/settings_slice";
+import ShareIcon from '@mui/icons-material/Share';
+import { RWebShare } from "react-web-share";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { addSongToFavoriteSongs, removeSongFromFavoriteSongs } from "@/logic/redux/user_info_slice";
 
 //TODO: Implementare clide-side routing anche con useRouter
 
@@ -56,8 +65,6 @@ export const verticalPaddingAppBar = 3
 
 export default function PraisingAppBar(props: PropsAppBar) {
     const router = useRouter()
-    const darkTheme = useAppSelector(state => state.settings.darkMode)
-    const dispatch = useAppDispatch()
 
     return (
       <React.Fragment>
@@ -67,23 +74,18 @@ export default function PraisingAppBar(props: PropsAppBar) {
               {
                 props.homeVersion ?
                 <Box sx={{display: props.backIcon ? 'none' : 'flex', justifyContent: "center"}}>
-                  <Typography variant="h1" textAlign='center' style={{color: 'black'}} sx={{py: verticalPaddingAppBar}}>
+                  <Typography variant="h1" fontSize={24} textAlign='center' style={{color: 'black'}} sx={{py: verticalPaddingAppBar}}>
                     {props.title}
                   </Typography>
-                  <IconButton edge="end" sx={{ top: "25%", right: "15%", position: "absolute" }} onClick={() => dispatch(setDarkMode(!darkTheme))}>
-                  {
-                    darkTheme ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />
-                  }
-                  </IconButton>
-                  <IconButton edge="end" sx={{ top: "25%", right: "5%", position: "absolute" }} LinkComponent={Link} href={Routes.Feedback}>
-                    <InsertCommentRoundedIcon />
+                  <IconButton edge="end" style={{color: 'black'}} sx={{ top: "25%", right: "6%", position: "absolute" }} LinkComponent={Link} href={Routes.Settings}>
+                    <SettingsRoundedIcon />
                   </IconButton>
                 </Box> : props.backIcon ?
                   <Toolbar>
-                    <IconButton edge="start" sx={{ mr: 2 }} onClick={() => router.back()}>
+                    <IconButton edge="start" sx={{ mr: 2, color: 'black' }} onClick={() => router.back()}>
                         <ArrowBackRoundedIcon />
                     </IconButton>
-                    <Typography variant="h1" textAlign='center' sx={{py: verticalPaddingAppBar}}>
+                    <Typography variant="h1" textAlign='center' sx={{ color: 'black', py: verticalPaddingAppBar}}>
                         {props.title}
                     </Typography>
                   </Toolbar> : 
@@ -133,16 +135,22 @@ interface PropsSongAppBar {
 }
 
 export const SongAppBar = (props: PropsSongAppBar) => {
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const router = useRouter()
     const theme = useTheme()
     const indexInPlaylist = props.playlist?.songs.indexOf(props.id)
-    // const chordNotation = useAppSelector(state => state.settings.chordNotation)
+    const chordNotation = useAppSelector(state => state.settings.chordNotation)
+    const favoriteSongs = useAppSelector(state => state.userInfo.favoriteSongs)
     const dispatch = useAppDispatch()
+
+    const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+      setAnchorEl(event.currentTarget);
+    };
     
     return (
       <React.Fragment>
         <HideOnScroll {...props}>
-            <AppBar style={{backgroundColor: theme.palette.text.primary, display: 'flex' }}>
+            <AppBar style={{backgroundColor: theme.palette.background.default, display: 'flex' }}>
                 <Toolbar>
                   <IconButton edge="start" sx={{ mr: 2 }} onClick={() => router.back()}>
                       <ArrowBackRoundedIcon />
@@ -153,14 +161,6 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                     </Typography>
                   </Box>
                   <Box sx={{ flexGrow: 0, display: 'flex' }} alignItems="center">
-                    {
-                      props.transpose !== undefined && props.transpose !== 0 &&
-                      <Button onClick={() => dispatch(modifySong({id: props.id, transpose: 0}))} 
-                        style={{fontWeight: 600}} variant="text">
-                          {props.transpose}
-                      </Button>
-                    }
-                    
                     {
                       indexInPlaylist !== undefined && indexInPlaylist !== -1 && props.playlist && 
                       <>
@@ -182,17 +182,69 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                         }
                       </>
                     }
-                    {
-                      /* <Button onClick={() => { //TODO: Non funziona ancora
+                    <Badge badgeContent={props.transpose}
+                      overlap="circular" 
+                      invisible={props.transpose === undefined || props.transpose === 0} 
+                      color="primary"
+                      sx={{ "& .MuiBadge-badge": { fontWeight: 'bold' } }}
+                      anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                      }}
+                    >
+                      <IconButton onClick={openMenu}>
+                        <MoreVertIcon color="action" />
+                      </IconButton>
+                    </Badge>
+                    <Menu
+                      anchorEl={anchorEl}
+                      open={Boolean(anchorEl)}
+                      onClose={() => setAnchorEl(null)}
+                    >
+                      <RWebShare
+                          data={{
+                              text: "Leggi " + props.title + " su 'Praising'!",
+                              url: "https://praising.vercel.app" + Routes.Songs + "/" + props.id,
+                              title: "Condividi questa canzone",
+                          }}
+                          sites={['facebook', 'twitter', 'whatsapp', 'telegram', 'mail', 'copy']}
+                      >
+                        <MenuItem>
+                          <ListItemIcon>
+                            <ShareIcon />
+                          </ListItemIcon>
+                          <ListItemText primary='Condividi'/>
+                        </MenuItem>
+                      </RWebShare>
+                      <MenuItem onClick={() => {
+                        if (favoriteSongs.includes(props.id))
+                          dispatch(removeSongFromFavoriteSongs(props.id))
+                        else
+                          dispatch(addSongToFavoriteSongs(props.id))
+                      }}>
+                        <ListItemIcon>
+                          { favoriteSongs.includes(props.id) ? <FavoriteIcon /> : <FavoriteBorderIcon /> }
+                        </ListItemIcon>
+                        <ListItemText>Preferiti</ListItemText>
+                      </MenuItem>
+                      <MenuItem sx={{width: 200}} onClick={() => {
                         if (chordNotation === 'symbol') {
                           dispatch(setChordNotation('solfege'))
                         } else if (chordNotation === 'solfege') {
                           dispatch(setChordNotation('symbol'))
                         }
                       }} style={{fontWeight: 'bold'}}>
-                        {chordNotation === 'symbol' ? 'ENG' : 'ITA'}
-                      </Button> */
-                    }
+                        <ListItemText>Notazione</ListItemText>
+                        <Typography variant="body2" color="text.secondary" sx={{ml: 2}}>
+                          { chordNotation === 'symbol' ? 'Eng' : 'Ita' }
+                        </Typography>
+                      </MenuItem>
+                      <MenuItem onClick={() => dispatch(modifySong({id: props.id, transpose: 0}))} 
+                        style={{fontWeight: 600}}>
+                        <ListItemText primary='Transpose'/>
+                        {props.transpose || '0'}
+                      </MenuItem>
+                    </Menu>
                   </Box>
                 </Toolbar>
             </AppBar>
@@ -213,7 +265,7 @@ export const PlaylistAppBar = (props: PropsPlaylistAppBar) => {
     <React.Fragment>
       <CssBaseline />
       <HideOnScroll {...props}>
-          <AppBar style={{ backgroundColor: theme.palette.text.primary, display: 'flex' }}>
+          <AppBar style={{ backgroundColor: theme.palette.background.default, display: 'flex' }}>
               <Toolbar>
                 <IconButton edge="start" sx={{ mr: 2 }} onClick={() => router.back()}>
                     <ArrowBackRoundedIcon />

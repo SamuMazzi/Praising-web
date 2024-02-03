@@ -1,19 +1,6 @@
 import ChordSheetJS, { Song } from 'chordsheetjs';
-import { Cheerio, CheerioAPI, Element, load } from 'cheerio'
+import { CheerioAPI, Element, load } from 'cheerio'
 import { ChordNotations } from './redux/settings_slice';
-
-const chordVariants: { [key: string]: string } = {
-    'm': '-',
-    'maj': '',
-    'sus2': '2',
-    'sus4': '4',
-    'sus': '4',
-    'maj7': '7+',
-    'm7': '-7',
-    'm7b5': '-7b5',
-    'dim7': 'dim7',
-    'm9': '-9'
-};
 
 interface ParamsRenderSong {
     fileContent: string
@@ -217,13 +204,11 @@ interface InfoRenderSong {
  * @returns An object with the HTML produced and the new size of the text
  */
 export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
-    let song_parsed = new ChordSheetJS.ChordProParser().parse(props.fileContent);
-    
-    song_parsed.setMetadata('chord_style', props.chordNotation)  // TODO: Ancora non funziona
+    const song_parsed = new ChordSheetJS.ChordProParser().parse(props.fileContent);
 
     // if (props.key !== undefined) song_parsed = song_parsed.setKey(props.key) // Serve per poter normalizzare bene gli accordi
     
-    const serializedSong = new ChordSheetJS.ChordSheetSerializer().serialize(song_parsed);    
+    const serializedSong = new ChordSheetJS.ChordSheetSerializer().serialize(song_parsed);
     if (!props.showChords) {
         removeChords(serializedSong)
     }
@@ -237,6 +222,8 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
     if (props.transpose !== undefined && props.transpose !== 0) {
         deserialized = deserialized.transpose(props.transpose)
     }
+
+    deserialized.setMetadata('chord_style', props.chordNotation)
 
     const disp = new ChordSheetJS.HtmlDivFormatter({normalizeChords: true, renderBlankLines: false}).format(deserialized); 
     const $ = load(disp)

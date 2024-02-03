@@ -30,7 +30,7 @@ const app_theme_options: ThemeOptions = {
     },
     typography: {
         allVariants: {
-            color: 'black',
+            color: '#3A3A3A',
             fontFamily: 'Poppins',
         },
         h1: {
@@ -82,6 +82,15 @@ const app_theme_options: ThemeOptions = {
                     fontSize: 14
                 }
             }
+        },
+        MuiTextField: {
+            defaultProps: {
+                inputProps: {
+                    style: {
+                        color: '#3A3A3A'
+                    }
+                }
+            }
         }
     },
 };
@@ -97,6 +106,9 @@ export const dark_theme_options: ThemeOptions = {
         background: {
             default: '#3A3A3A',
         },
+        text: {
+            primary: '#F9F9F9',
+        },
     },
     typography: {
         ...app_theme_options.typography,
@@ -108,13 +120,25 @@ export const dark_theme_options: ThemeOptions = {
     components: {
         ...app_theme_options.components,
         MuiListItem: {
-            ...app_theme_options.components!.MuiListItem,
+            ...app_theme_options.components?.MuiListItem,
             styleOverrides: {
-                ...app_theme_options.components!.MuiListItem!.styleOverrides,
+                ...app_theme_options.components?.MuiListItem?.styleOverrides,
                 root: {
                     backgroundColor: 'black'
                 },
             }
         },
+        MuiTextField: {
+            ...app_theme_options.components?.MuiTextField,
+            defaultProps: {
+                ...app_theme_options.components?.MuiTextField?.defaultProps,
+                inputProps: {
+                    ...app_theme_options.components?.MuiTextField?.defaultProps?.inputProps,
+                    style: {
+                        color: '#F9F9F9'
+                    }
+                }
+            }
+        }
     }
 }

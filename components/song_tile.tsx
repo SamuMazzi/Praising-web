@@ -28,11 +28,12 @@ interface PropsSongTile {
     song: Song
     onSecondaryAction: Function
 }
-//imgProps={{sx: {}}}
+
 export default function SongTile(props: PropsSongTile) {
   return (
     <ListItem component={NextLinkComposed} to={{pathname: Routes.Songs + '/' + props.song.id}} 
         sx={{borderRadius: 8, my: 1}}
+        style={{WebkitTapHighlightColor: 'transparent'}}
         secondaryAction={
             <IconButton onClick={(e: any) => {
                 e.preventDefault()

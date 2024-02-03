@@ -12,6 +12,10 @@ import { ModalAddPlaylist } from './modals'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import Image from 'next/image'
+import Box from '@mui/material/Box'
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import IconButton from '@mui/material/IconButton'
 
 interface PropsListSongs {
     songs: Song[]
@@ -28,8 +32,11 @@ export default function ListSongs(props: PropsListSongs) {
     const [songModal, setSongModal] = useState('')
     const [showModalCreatePlaylist, setShowModalCreatePlaylist] = useState(false)
     const [filter, setFilter] = useState("")
-    let localSongs = props.songs.filter(v => v.name.toLowerCase().includes(filter.toLowerCase()))
-    if (props.auto_sorting === undefined || props.auto_sorting === true) {
+    const [showOnlyFavorites, setShowOnlyFavorites] = useState(false)
+    const favoriteSongs = useAppSelector(state => state.settings.favoriteSongs)
+    let localSongs = props.songs.filter(v => 
+        (!showOnlyFavorites || (showOnlyFavorites && favoriteSongs.includes(v.id))) && v.name.toLowerCase().includes(filter.toLowerCase()))
+    if (props.auto_sorting !== false) {
         localSongs = localSongs.sort((a,b) => ('' + a.name).localeCompare(b.name))
     }
 
@@ -46,7 +53,12 @@ export default function ListSongs(props: PropsListSongs) {
         </Grid> :
         <MuiContainer>
             {
-                props.withSearch === undefined || props.withSearch && <TypeSearch query={filter} setQuery={setFilter}/>
+                props.withSearch === undefined || props.withSearch && <Box display="flex">
+                    <TypeSearch query={filter} setQuery={setFilter}/>
+                    <IconButton sx={{ml: 1}} onClick={() => setShowOnlyFavorites(!showOnlyFavorites)}>
+                        { showOnlyFavorites ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                    </IconButton>
+                </Box>
             }
             <List>
                 {

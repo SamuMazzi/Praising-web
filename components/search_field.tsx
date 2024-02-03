@@ -1,10 +1,5 @@
-import React, { FunctionComponent, useState } from "react";
-import FormControl from "@mui/material/FormControl";
-import InputAdornment from "@mui/material/InputAdornment";
+import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
-import ClearIcon from '@mui/icons-material/Clear'
-import SearchIcon from '@mui/icons-material/Search'
-import { PropaneSharp } from "@mui/icons-material";
 
 /* const useStyles = makeStyles(() => {
   return createStyles({

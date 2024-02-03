@@ -27,20 +27,21 @@ export const filterArgomenti: Record<string, string> = {
     'Can': 'Canone'
 }
 
-export const saveToStorage = (key: string, value: any) => {
+export const saveToStorage = (key: string, value: any, type: 'localStorage' | 'sessionStorage' = 'localStorage') => {
     if (typeof window !== 'undefined') {
-        return window.localStorage.setItem(key, value !== undefined ? JSON.stringify(value) : 'null')
+        return window[type].setItem(key, value !== undefined ? JSON.stringify(value) : 'null')
     }
 }
 
-export const getFromStorage = (key: string) => {
+/** Returns the saved object, otherwise returns null */
+export const getFromStorage = (key: string, type: 'localStorage' | 'sessionStorage' = 'localStorage') => {
     if (typeof window !== 'undefined') {
-        const res = window.localStorage.getItem(key)
+        const res = window[type].getItem(key)
         if (res !== null && res !== undefined && res !== 'undefined' && res !== 'null') {
             return JSON.parse(res)
         }
-        return null
     }
+    return null
 }
 
 export const clearStorage = () => {

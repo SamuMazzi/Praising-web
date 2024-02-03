@@ -60,11 +60,11 @@ export default function Home() {
                 })
             }
         </List>
-        <Divider />
         <Typography variant="h2" sx={{pt: 2, pl: 2}}>
             Argomenti
         </Typography>
-        <ImageList style={{ width: "100%", overflow: "auto", display: "flex" }} sx={{py: 2, pl: 2}}
+        {/* https://stackoverflow.com/questions/68658249/how-to-do-react-horizontal-scroll-using-mouse-wheel */}
+        <ImageList style={{ width: "100%", overflowX: "auto", display: "flex" }} sx={{py: 2, pl: 2}}
         >
             {
                 Object.keys(filterArgomenti).map(arg => {
@@ -83,7 +83,6 @@ export default function Home() {
                 })
             }
             </ImageList>
-        <Divider />
         {
           recentSongs.length > 0 && <Container sx={{pb: 7}}>
             <Typography variant="h2" sx={{pt: 2, pb: 2, pl: 2}}>

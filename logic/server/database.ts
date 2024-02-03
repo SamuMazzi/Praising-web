@@ -1,6 +1,6 @@
 import { Playlist } from "../redux/playlist_slice";
 import app from "./firebase_config";
-import { getFirestore, collection, addDoc, getDoc, doc, getDocs, query, orderBy, startAt, endAt, setDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDoc, doc, getDocs, query, orderBy, startAt, endAt, setDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import geofire from 'geofire-common';
 
 const firestore = getFirestore(app)
@@ -132,3 +132,25 @@ export const addActiveSession = async (name: string, center: [number, number]) =
     return docRef.id
 }
 
+export const getServerProfile = async (user_id: string) => {
+    const docRef = await getDoc(doc(firestore, "users", user_id))
+    return docRef.data()
+}
+
+export const addServerFavoriteSongs = async (user_id: string, new_song: string) => {
+    await updateDoc(doc(firestore, "users", user_id), {'favoriteSongs': arrayUnion(new_song)})
+}
+
+export const removeServerFavoriteSongs = async (user_id: string, new_song: string) => {
+    await updateDoc(doc(firestore, "users", user_id), {'favoriteSongs': arrayRemove(new_song)})
+
+}
+
+export const addUserToDatabase = async (user_id: string) => {
+    await setDoc(doc(firestore, "users", user_id), {})
+}
+
+export const getUserFromDatabase = async (user_id: string) => {
+    const docRef = await getDoc(doc(firestore, "users", user_id))
+    return docRef.data();
+}

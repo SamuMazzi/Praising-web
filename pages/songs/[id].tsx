@@ -14,9 +14,13 @@ import { renderSong } from '@/logic/handle_text_song'
 import { MessageSnackbar } from '@/components/pers_snackbar'
 import IconButton from '@mui/material/IconButton'
 import CloseRounded from '@mui/icons-material/CloseRounded'
+import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import useSWR from 'swr'
 import { Playlist } from '@/logic/redux/playlist_slice'
 import ShimmerSegments from '@/components/shimmer_effect/shimmer_segments'
+import TextField from '@mui/material/TextField'
+import Fab from '@mui/material/Fab'
+import { useTheme } from '@mui/material'
 
 // TODO: Add highlight of parts of text in song (also for sessions) -> take a look at transitions/modal/popover
 
@@ -43,6 +47,8 @@ export default function SongPage(props: PropsSongPage) {
     const { isSupported, released, request, release } = useWakeLock({});
     const [messageSnackbar, setMessageSnackbar] = useState("")
     const chordNotation = useAppSelector(state => state.settings.chordNotation)
+    const [editMode, setEditMode] = useState(false)
+    const theme = useTheme()
 
     useEffect(() => {
         const handleVisibilityChange = async () => {
@@ -96,14 +102,14 @@ export default function SongPage(props: PropsSongPage) {
         transpose: infoSong?.transpose,
         fontSize: infoSong?.zoom,
         chordNotation: chordNotation,
-    })
+    }) // TODO: better handling error (even just a message in the page)
     const songToRender: string = info.songText
     const sections: string[] = info.sections
     const fontSize: number = info.fontSize
     // fontsize std: lineHeigth 68, poi -4 tutte le volte
 
     return (
-        <Container sx={{minHeight: '100vh'}}>
+        <Container sx={{minHeight: '100vh', width: '100vw'}} style={{backgroundColor: theme.palette.background.default}}>
             {
                 !isSupported && <Typography>
                     Questo browser non supporta il wakelock
@@ -111,26 +117,38 @@ export default function SongPage(props: PropsSongPage) {
             }
             <SongAppBar id={song?.id || ''} title={song!.name} transpose={infoSong?.transpose} playlist={playlist}/>
             <Container sx={{py: 3.5}}/>
-            <ActionsSong song={song!} fontSize={fontSize} videoIsPlaying={showVideo} onPressVideo={handlePressVideo} 
-                setOpenSheet={() => setOpenModalPlaylist(true)}/>
+            {
+                !editMode &&
+                <ActionsSong song={song!} fontSize={fontSize} videoIsPlaying={showVideo} onPressVideo={handlePressVideo} 
+                    setOpenSheet={() => setOpenModalPlaylist(true)} setEditMode={() => setEditMode(true)}/>
+            }
             <Container disableGutters sx={{py: 1}}>
-                <Typography style={{fontSize: infoSong?.zoom ?? 17}}> {/** FIXME: e font size???? */}
-                    <div dangerouslySetInnerHTML={{__html: songToRender}} />
-                </Typography>
                 {
-                    
-                    sections.map((section, index) => {
-                        return (
-                            <SectionSong key={index} section={section} infoSong={infoSong}/>
-                        )
-                    })
+                    editMode ? <EditableSong data={data} setEditMode={() => setEditMode(false)}/> : 
+                    <>
+                    {
+                        /**
+                         * 
+                            <Typography style={{fontSize: infoSong?.zoom ?? 17}}> // FIXME: e font size????
+                                <div dangerouslySetInnerHTML={{__html: songToRender}} />
+                            </Typography>
+                         */
+                    }
+                    {
+                        sections.map((section, index) => {
+                            return (
+                                <SectionSong key={index} section={section} infoSong={infoSong}/>
+                            )
+                        })
+                    }
+                    </>
                 }
             </Container>
             {
             showVideo && song?.link && 
             <Box 
                 style={{position: 'fixed', bottom: 20, right: 0}} 
-                sx={{px: 2, pb: 2, mr: 3, backgroundColor: 'white', borderRadius: 4, boxShadow: 12, maxWidth: '90%'}}
+                sx={{px: 2, pb: 2, mr: 3, backgroundColor: 'background.paper', borderRadius: 4, boxShadow: 12, maxWidth: '90%'}}
             >
                 <IconButton edge="start" onClick={() => setShowVideo(false)}>
                     <CloseRounded />
@@ -155,7 +173,7 @@ export default function SongPage(props: PropsSongPage) {
 function SectionSong(props: {section: string, infoSong: InfoLocalSong | undefined}) {
     return (
         <Typography style={{fontSize: props.infoSong?.zoom ?? 17}}>
-            <div className='expandable' onClick={(e) => {
+            <p className='expandable' onClick={(e) => {
                 const isCompressed = e.currentTarget.classList.toggle("compressed");
                 const classToPut = !isCompressed ? 'chord' : 'no-chord';
                 const classToRemove = !isCompressed ? 'no-chord' : 'chord';
@@ -163,8 +181,40 @@ function SectionSong(props: {section: string, infoSong: InfoLocalSong | undefine
                 const children = e.currentTarget.querySelectorAll('.' + classToRemove);
                 children.forEach(child => child.classList.replace(classToRemove, classToPut));
             }}>
-                <div dangerouslySetInnerHTML={{__html: props.section}} />
-            </div>
+                <p dangerouslySetInnerHTML={{__html: props.section}} />
+            </p>
         </Typography>
+    )
+}
+
+function EditableSong(props: {data: string, setEditMode: Function}) {
+    const [data, setData] = useState(props.data)
+    const theme = useTheme()
+    // TODO: Ora va aggiunto upload canzone modificata e check se canzone modificata ad ogni apertura file (si potrebbe tenere un indice per ogni profilo utente per ridurre letture)
+    return (
+        <>
+            <TextField
+                // style={{textAlign: 'left'}}
+                fullWidth
+                multiline
+                value={data}
+                onChange={(e) => setData(e.target.value)}
+                rows={data.split('\n').length}
+                sx={{my: 2}}
+                InputProps={{
+                    style: { color: theme.palette.mode === 'dark' ? 'white' : 'black' }
+                }}
+            />
+            <Fab style={{
+                margin: 0,
+                top: 'auto',
+                right: 20,
+                bottom: 20,
+                left: 'auto',
+                position: 'fixed',
+            }} color="primary" aria-label="Confirm" onClick={() => props.setEditMode()}>
+                <CheckRoundedIcon />
+            </Fab>
+        </>
     )
 }

@@ -8,13 +8,14 @@ import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded';
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import IconButton from '@mui/material/IconButton'
 import { InfoLocalSong, modifySong } from '@/logic/redux/info_song_slice'
 import { setShowChords } from '@/logic/redux/settings_slice'
 import Tooltip from '@mui/material/Tooltip';
 import { useEffect, useState } from 'react';
-import { useTheme } from '@mui/material';
+import Slide from '@mui/material/Slide';
 
 interface PropsActionSong {
     song: Song
@@ -22,24 +23,36 @@ interface PropsActionSong {
     videoIsPlaying: boolean
     setOpenSheet: Function
     fontSize: number
+    setEditMode: Function
 }
 
 const ActionIconButton = (props: any) => {
-    const {title, children, ...propsIconButton  } = props
-    const theme = useTheme()
+    const {title, children, index, visible, ...propsIconButton  } = props
+
+    if (!index) {  // Refactor this
+        return (
+            <Tooltip title={title} placement="left">
+                <IconButton sx={{ boxShadow: 10, p: 1.5, m: 1, backgroundColor: 'background.paper'}} {...propsIconButton}>
+                    {children}
+                </IconButton>
+            </Tooltip>
+        )
+    }
 
     return (
-        <Tooltip title={title} placement="left">
-            <IconButton sx={{ boxShadow: 10, p: 1.5, m: 1, backgroundColor: theme.palette.text.primary }} {...propsIconButton}>
-                {children}
-            </IconButton>
-        </Tooltip>
+        <Slide direction="left" in={visible} timeout={index*0.7*110 + (visible ? 0 : -100)} appear mountOnEnter>
+            <Tooltip title={title} placement="left">
+                <IconButton sx={{ boxShadow: 10, p: 1.5, m: 1, backgroundColor: 'background.paper'}} {...propsIconButton}>
+                    {children}
+                </IconButton>
+            </Tooltip>
+        </Slide>
     )
 
 }
 
 export default function ActionsSong(props: PropsActionSong) {
-    const [menuExpanded, setMenuExpanded] = useState(false)  // TODO: Add animation (CSS)
+    const [menuExpanded, setMenuExpanded] = useState(false)
     const infoSong: InfoLocalSong | undefined = useAppSelector(state => state.infoSongs.infoSongs[props.song.id])
     const showChords = useAppSelector(state => state.settings.showChords)
     const dispatch = useAppDispatch()
@@ -61,57 +74,73 @@ export default function ActionsSong(props: PropsActionSong) {
             >
                 <MenuRoundedIcon />
             </ActionIconButton>
-            {
-                menuExpanded && <>
-                <ActionIconButton 
-                    color={showChords ? 'primary' : undefined}   
-                    onClick={() => dispatch(setShowChords(!showChords))}
-                    title="Mostra accordi"
-                >
-                    <LyricsRoundedIcon />
-                </ActionIconButton>
-                <ActionIconButton 
-                    title="+1 #"
-                    onClick={() => dispatch(modifySong({id: props.song.id, transpose: actualTranspose + 1}))}
-                    color={actualTranspose > 0 ? 'primary' : undefined}   
-                >
-                    <KeyboardArrowUpRoundedIcon />
-                </ActionIconButton>
-                <ActionIconButton 
-                    title="-1 ♭"
-                    onClick={() => dispatch(modifySong({id: props.song.id, transpose: actualTranspose - 1}))}
-                    color={actualTranspose < 0 ? 'primary' : undefined}   
-                >
-                    <KeyboardArrowDownRoundedIcon />
-                </ActionIconButton>
-                <ActionIconButton 
-                    title="+ Zoom"
-                    onClick={() => dispatch(modifySong({id: props.song.id, zoom: fontSize + 1}))}
-                    color={fontSize > 17 ? 'primary' : undefined}    
-                >
-                    <ZoomInRoundedIcon />
-                </ActionIconButton>
-                <ActionIconButton 
-                    title="- Zoom"
-                    onClick={() => dispatch(modifySong({id: props.song.id, zoom: fontSize - 1}))}
-                    color={fontSize < 17 ? 'primary' : undefined}
-                >
-                    <ZoomOutRoundedIcon />
-                </ActionIconButton>
-                <ActionIconButton 
-                    title="Riproduci video"
-                    onClick={() => props.onPressVideo()}
-                    color={props.videoIsPlaying ? 'primary' : undefined}  
-                >
-                    <PlayArrowRoundedIcon />
-                </ActionIconButton>
-                <ActionIconButton 
-                    title="Aggiungi a playlist"
-                    onClick={() => props.setOpenSheet()}>
-                    <PlaylistAddRoundedIcon />
-                </ActionIconButton>
-                </>
-            }
+            <ActionIconButton 
+                color={showChords ? 'primary' : undefined}   
+                onClick={() => dispatch(setShowChords(!showChords))}
+                title="Mostra accordi"
+                index={1}
+                visible={menuExpanded}
+            >
+                <LyricsRoundedIcon />
+            </ActionIconButton>
+            <ActionIconButton 
+                title="+1 #"
+                onClick={() => dispatch(modifySong({id: props.song.id, transpose: actualTranspose + 1}))}
+                color={actualTranspose > 0 ? 'primary' : undefined}   
+                index={2}
+                visible={menuExpanded}
+            >
+                <KeyboardArrowUpRoundedIcon />
+            </ActionIconButton>
+            <ActionIconButton 
+                title="-1 ♭"
+                onClick={() => dispatch(modifySong({id: props.song.id, transpose: actualTranspose - 1}))}
+                color={actualTranspose < 0 ? 'primary' : undefined}   
+                index={3}
+                visible={menuExpanded}
+            >
+                <KeyboardArrowDownRoundedIcon />
+            </ActionIconButton>
+            <ActionIconButton
+                title="+ Zoom"
+                onClick={() => dispatch(modifySong({id: props.song.id, zoom: fontSize + 1}))}
+                color={fontSize > 17 ? 'primary' : undefined}  
+                index={4}
+                visible={menuExpanded}  
+            >
+                <ZoomInRoundedIcon />
+            </ActionIconButton>
+            <ActionIconButton 
+                title="- Zoom"
+                onClick={() => dispatch(modifySong({id: props.song.id, zoom: fontSize - 1}))}
+                color={fontSize < 17 ? 'primary' : undefined}
+                index={5}
+                visible={menuExpanded}
+            >
+                <ZoomOutRoundedIcon />
+            </ActionIconButton>
+            <ActionIconButton 
+                title="Riproduci video"
+                onClick={() => props.onPressVideo()}
+                color={props.videoIsPlaying ? 'primary' : undefined}
+                index={6}
+                visible={menuExpanded}
+            >
+                <PlayArrowRoundedIcon />
+            </ActionIconButton>
+            <ActionIconButton 
+                title="Aggiungi a playlist"
+                onClick={() => props.setOpenSheet()}
+                index={7}
+                visible={menuExpanded}
+            >
+                <PlaylistAddRoundedIcon />
+            </ActionIconButton>
+            { /* <ActionIconButton 
+                title="Modifica la canzone"
+                onClick={() => props.setEditMode()}>
+                <EditRoundedIcon />
+            </ActionIconButton> */ }
         </Container>
     )
   

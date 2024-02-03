@@ -6,16 +6,13 @@ import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import { handleSongForPlaylist, Playlist } from '@/logic/redux/playlist_slice'
 import ListItemButton from '@mui/material/ListItemButton'
 import { useAppDispatch } from '@/logic/redux/store'
-import { useTheme } from '@mui/material';
 
 interface PropsPlaylistTile {
     playlist: Playlist
     onOptionsClick: Function
 }
 
-export default function PlaylistTile(props: PropsPlaylistTile) {
-    const theme = useTheme()
-    
+export default function PlaylistTile(props: PropsPlaylistTile) {    
   return (
     <>
     <ListItem 
@@ -47,6 +44,7 @@ interface PropsSelectablePlaylistTile {
 
 export function SelectablePlaylistTile(props: PropsSelectablePlaylistTile) {
     const dispatch = useAppDispatch()
+    // TODO: Should change color
     return (
         <>
         <ListItemButton
