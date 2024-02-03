@@ -18,10 +18,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 if (typeof window !== 'undefined') {
   // const analytics = getAnalytics(app);
-  const env = process.env.NODE_ENV
+  /* const env = process.env.NODE_ENV
   if(env == "development"){
     self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
-  }
+  } */
   const appCheck = initializeAppCheck(app, {
     provider: new ReCaptchaV3Provider('6LeQJl0pAAAAACbI7G1iJSbZb2G1mBUsiSJOmS_v'),
     isTokenAutoRefreshEnabled: true
