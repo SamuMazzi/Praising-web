@@ -41,11 +41,11 @@
     "sharp": "^0.33.0",
     "smooth-dnd": "^0.12.1",
     "swr": "^2.0.3",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "husky": "^9.0.10"
   },
   "devDependencies": {
     "@next/codemod": "^14.0.4",
-    "husky": "^9.0.10",
     "prettier": "^3.0.2"
   }
 }
