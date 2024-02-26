@@ -1,4 +1,4 @@
-import ChordSheetJS, { Song } from 'chordsheetjs';
+import ChordSheetJS, { Song } from '@samumazzi/chordsheetjs';
 import { CheerioAPI, Element, load } from 'cheerio'
 import { ChordNotations } from './redux/settings_slice';
 
