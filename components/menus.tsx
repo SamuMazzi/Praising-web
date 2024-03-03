@@ -1,0 +1,78 @@
+import React, { useState } from "react";
+import { useRouter } from "next/router";
+import { Playlist, deletePlaylist } from "@/logic/redux/playlist_slice";
+import Routes from "@/logic/routes";
+import { useAppDispatch, useAppSelector } from "@/logic/redux/store";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import ShareIcon from '@mui/icons-material/Share';
+import { RWebShare } from "react-web-share";
+import PersSnackbar from "./pers_snackbar";
+import { ModalEditNamePlaylist } from "./modals";
+import { saveToStorage } from "@/logic/local_logic";
+
+interface PropsMenuPlaylist {
+    anchorEl: HTMLElement | null
+    setAnchorEl: Function
+    playlist_id: string
+    back_on_delete?: boolean
+}
+  
+export const MenuPlaylist = (props: PropsMenuPlaylist) => {
+    const playlist: Playlist | undefined = useAppSelector(state => state.playlist.playlist[props.playlist_id])
+    const [openEdit, setOpenEdit] = useState(false)
+    const [snackbar, openSnackbar ] = useState(false)
+    const [message, setMessage ] = useState("")
+    const router = useRouter()
+    const dispatch = useAppDispatch()
+
+    const closeMenu = () => props.setAnchorEl(null)
+  
+    return (
+      <Menu
+        anchorEl={props.anchorEl}
+        open={Boolean(props.anchorEl)}
+        onClose={() =>  { openSnackbar(false); closeMenu(); }}
+      >
+        <RWebShare
+            data={{
+                text: "Leggi " + playlist.name + " su 'Praising'!",
+                url: Routes.Base + Routes.SharePlaylist +"?name="+playlist?.name+"&songs="+playlist?.songs.join(','),
+                title: "Condividi questa canzone",
+            }}
+            sites={['facebook', 'whatsapp', 'telegram', 'mail', 'copy']}
+            onClick={() => { setMessage('Link copiato'); openSnackbar(true); }}
+        >
+          <MenuItem>
+            <ListItemIcon>
+              <ShareIcon />
+            </ListItemIcon>
+            <ListItemText primary='Condividi'/>
+          </MenuItem>
+        </RWebShare>
+        <MenuItem onClick={() => { setOpenEdit(true) }}>
+            <ListItemIcon>
+              <EditRoundedIcon />
+            </ListItemIcon>
+            <ListItemText primary='Modifica il nome'/>
+        </MenuItem>
+        <MenuItem onClick={() => {
+            saveToStorage('deleting_playlist', playlist!.id, "sessionStorage")
+            dispatch(deletePlaylist(playlist!.id))
+            if (props.back_on_delete) router.replace(Routes.Playlist)
+        }}>
+            <ListItemIcon >
+              <DeleteRoundedIcon />
+            </ListItemIcon>
+            <ListItemText primary='Elimina'/>
+        </MenuItem>
+        <ModalEditNamePlaylist open={openEdit} handleClose={() => { setOpenEdit(false); closeMenu(); }} playlist={playlist}/>
+        <PersSnackbar open={snackbar} handleClose={() => openSnackbar(false)} message={message}/>
+      </Menu>
+    )
+  
+  }

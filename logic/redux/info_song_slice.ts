@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { getFromStorage, saveToStorage } from '../local_logic'
 
+const INFO_SONGS_KEY = 'info_songs'
+
 export interface InfoLocalSong {
     transpose?: number
     zoom?: number
@@ -11,7 +13,7 @@ interface BoxInfoSongsState {
 }
 
 const initialState: BoxInfoSongsState = {
-    infoSongs: getFromStorage('info_songs') || {}
+    infoSongs: getFromStorage(INFO_SONGS_KEY) || {}
 }
 
 interface PayloadModifySong {
@@ -21,7 +23,7 @@ interface PayloadModifySong {
 }
 
 export const infoSongsSlice = createSlice({
-    name: 'info_songs',
+    name: INFO_SONGS_KEY,
     initialState: initialState,
     reducers: {
         modifySong: (state, action: PayloadAction<PayloadModifySong>) => {
@@ -33,7 +35,7 @@ export const infoSongsSlice = createSlice({
                     zoom: action.payload.zoom ?? state.infoSongs[idS]?.zoom
                 }
             }
-            saveToStorage('info_songs', state.infoSongs)
+            saveToStorage(INFO_SONGS_KEY, state.infoSongs)
         },
     },
 })

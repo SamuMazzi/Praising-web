@@ -1,7 +1,5 @@
 import Container from '@mui/material/Container'
-import NavBar from '@/components/navbar'
 import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar'
-import { useState } from 'react'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
@@ -15,6 +13,7 @@ import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import Routes from "@/logic/routes";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/logic/redux/store";
+import VolunteerActivismRoundedIcon from '@mui/icons-material/VolunteerActivismRounded';
 
 export default function SettingsPage() {
     const darkTheme = useAppSelector(state => state.settings.darkMode)
@@ -49,7 +48,15 @@ export default function SettingsPage() {
                     <ListItemIcon>
                         <InsertCommentRoundedIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Feedback" />
+                        <ListItemText primary="Feedback" />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding sx={{borderBottomRightRadius: borderRadius, borderBottomLeftRadius: borderRadius}}>
+                    <ListItemButton LinkComponent={Link} href={Routes.Contribute}>
+                    <ListItemIcon>
+                        <VolunteerActivismRoundedIcon />
+                    </ListItemIcon>
+                        <ListItemText primary="Contribuisci" />
                     </ListItemButton>
                 </ListItem>
             </List>

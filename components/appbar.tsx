@@ -15,7 +15,6 @@ import LastPageRoundedIcon from '@mui/icons-material/LastPageRounded';
 import Routes from "@/logic/routes";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/logic/redux/store";
-import Button from "@mui/material/Button";
 import { modifySong } from "@/logic/redux/info_song_slice";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -31,6 +30,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import { RWebShare } from "react-web-share";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { addSongToFavoriteSongs, removeSongFromFavoriteSongs } from "@/logic/redux/user_info_slice";
+import { MenuPlaylist } from "./menus";
 
 //TODO: Implementare clide-side routing anche con useRouter
 
@@ -204,7 +204,7 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                       <RWebShare
                           data={{
                               text: "Leggi " + props.title + " su 'Praising'!",
-                              url: "https://praising.vercel.app" + Routes.Songs + "/" + props.id,
+                              url: Routes.Base + Routes.Songs + "/" + props.id,
                               title: "Condividi questa canzone",
                           }}
                           sites={['facebook', 'twitter', 'whatsapp', 'telegram', 'mail', 'copy']}
@@ -254,12 +254,18 @@ export const SongAppBar = (props: PropsSongAppBar) => {
 }
 
 interface PropsPlaylistAppBar {
-  title: string
+  playlist_id: string
 }
 
 export const PlaylistAppBar = (props: PropsPlaylistAppBar) => {
+  const playlist: Playlist | undefined = useAppSelector(state => state.playlist.playlist[props.playlist_id])
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const router = useRouter()
   const theme = useTheme()
+
+  const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
   
   return (
     <React.Fragment>
@@ -270,9 +276,22 @@ export const PlaylistAppBar = (props: PropsPlaylistAppBar) => {
                 <IconButton edge="start" sx={{ mr: 2 }} onClick={() => router.back()}>
                     <ArrowBackRoundedIcon />
                 </IconButton>
-                <Typography variant="h1" sx={{py: 1}} >
-                    {props.title}
-                </Typography>
+                <Box sx={{ flexGrow: 1, display: 'flex' }} alignItems="center">
+                  <Typography variant="h1" sx={{py: 1}} >
+                      {playlist.name}
+                  </Typography>
+                </Box>
+                <Box sx={{ flexGrow: 0, display: 'flex' }} alignItems="center">
+                    <IconButton onClick={openMenu}>
+                      <MoreVertIcon color="action" />
+                    </IconButton>
+                    <MenuPlaylist 
+                      anchorEl={anchorEl} 
+                      setAnchorEl={setAnchorEl} 
+                      playlist_id={props.playlist_id} 
+                      back_on_delete
+                    />
+                  </Box>
               </Toolbar>
           </AppBar>
       </HideOnScroll>

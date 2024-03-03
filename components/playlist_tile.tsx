@@ -6,24 +6,30 @@ import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import { handleSongForPlaylist, Playlist } from '@/logic/redux/playlist_slice'
 import ListItemButton from '@mui/material/ListItemButton'
 import { useAppDispatch } from '@/logic/redux/store'
+import Routes from '@/logic/routes';
+import { MenuPlaylist } from './menus';
+import React from 'react';
 
 interface PropsPlaylistTile {
     playlist: Playlist
-    onOptionsClick: Function
 }
 
-export default function PlaylistTile(props: PropsPlaylistTile) {    
+export default function PlaylistTile(props: PropsPlaylistTile) {   
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  
+  const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    setAnchorEl(event.currentTarget);
+  };
+
   return (
     <>
     <ListItem 
         component={NextLinkComposed} 
-        to={{pathname: '/playlist/' + props.playlist.id}} 
+        to={{pathname: Routes.Playlist + '/' + props.playlist.id}} 
         sx={{borderRadius: 8, my: 1}}
         secondaryAction={
-            <IconButton onClick={(e) => {
-                e.preventDefault()
-                props.onOptionsClick()
-            }}>
+            <IconButton onClick={openMenu}>
                 <MoreVertRoundedIcon />
             </IconButton>
         }
@@ -32,6 +38,7 @@ export default function PlaylistTile(props: PropsPlaylistTile) {
             primary={props.playlist.name}
         />
     </ListItem>
+    <MenuPlaylist anchorEl={anchorEl} setAnchorEl={setAnchorEl} playlist_id={props.playlist.id}/>
     </>
   )
   

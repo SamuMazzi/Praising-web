@@ -1,8 +1,6 @@
 import List from '@mui/material/List'
 import { useAppSelector } from '@/logic/redux/store'
 import PlaylistTile, { SelectablePlaylistTile } from '@/components/playlist_tile'
-import { useState } from 'react'
-import { ModalEditPlaylist } from './modals'
 import Image from 'next/image'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
@@ -13,7 +11,6 @@ interface PropsListPlaylist {
 
 export default function ListPlaylist(props: PropsListPlaylist) {
     const all_playlists = useAppSelector(state => state.playlist.playlist)
-    const [playlistModal, setPlaylistModal ] = useState<string | undefined>()
 
     return (
         <List sx={{px: 2}}>
@@ -35,20 +32,13 @@ export default function ListPlaylist(props: PropsListPlaylist) {
                     const playlist = all_playlists[id_p]
                     return (
                         !props.fromSongId ? 
-                        <PlaylistTile key={playlist.id} 
-                            playlist={playlist} 
-                            onOptionsClick={() => setPlaylistModal(id_p)}
-                        /> : 
+                        <PlaylistTile key={playlist.id} playlist={playlist}/> : 
                         <SelectablePlaylistTile key={playlist.id} 
                             playlist={playlist} 
                             songId={props.fromSongId}
                         />
                     )
                 })
-            }
-            {
-                !props.fromSongId &&
-                <ModalEditPlaylist open={playlistModal !== undefined} handleClose={() => setPlaylistModal(undefined)} playlist_id={playlistModal ?? ''}/>
             }
         </List>
     )

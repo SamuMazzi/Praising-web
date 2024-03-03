@@ -114,14 +114,14 @@ function SignCard() {
                 <Grid container direction="column" justifyContent="center" alignItems="center">
                     <Grid item sx={{mb: 1}}>
                         <Typography variant="h3" sx={{textAlign: 'center'}}>
-                            {!loading && authUser ? 'Welcome!' : "Entra su Praising!"}
+                            {!loading && authUser?.email ? 'Welcome!' : "Entra su Praising!"}
                         </Typography>
                     </Grid>
                     <Grid item sx={{pb: 6, pt: 3}}>
                         <Image src="assets/undraw_illustrations/undraw_access_account.svg" alt="Compose music" width="230" height="230"/>
                     </Grid>
                     {
-                        !loading ? authUser !== null ? <InfoUser authUser={authUser}/> :
+                        !loading ? authUser !== null && authUser?.email !== null ? <InfoUser authUser={authUser}/> :
                     <>
                     <Grid item sx={{mb: 2}}>
                         <TextField 

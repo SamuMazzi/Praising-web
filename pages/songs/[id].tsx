@@ -102,8 +102,19 @@ export default function SongPage(props: PropsSongPage) {
         transpose: infoSong?.transpose,
         fontSize: infoSong?.zoom,
         chordNotation: chordNotation,
-    }) // TODO: better handling error (even just a message in the page)
-    const songToRender: string = info.songText
+    })
+
+    if (info.error) {
+        return (
+            <Container sx={{minHeight: '100vh'}}>
+                <SongAppBar id={''} title={''}/>
+                <Typography sx={{pt: 15}} textAlign="center">
+                    {info.error}
+                </Typography>
+            </Container>
+        )
+    }
+
     const sections: string[] = info.sections
     const fontSize: number = info.fontSize
     // fontsize std: lineHeigth 68, poi -4 tutte le volte

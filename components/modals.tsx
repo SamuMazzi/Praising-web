@@ -3,20 +3,12 @@ import Modal from '@mui/material/Modal'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 import Button from '@mui/material/Button'
-import { useAppDispatch, useAppSelector } from '../logic/redux/store'
+import { useAppDispatch } from '../logic/redux/store'
 import TextField from '@mui/material/TextField'
-import { addPlaylist, deletePlaylist, modifyNamePlaylist, Playlist } from '@/logic/redux/playlist_slice'
-import ListItemButton from '@mui/material/ListItemButton'
+import { addPlaylist, modifyNamePlaylist, Playlist } from '@/logic/redux/playlist_slice'
 import List from '@mui/material/List'
-import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import EditRoundedIcon from '@mui/icons-material/EditRounded';
-import ShareRoundedIcon from '@mui/icons-material/ShareRounded';
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
-import { RWebShare } from "react-web-share";
 import Grid from '@mui/material/Grid'
-import Routes from '@/logic/routes'
-import PersSnackbar from './pers_snackbar'
 import NewspaperRoundedIcon from '@mui/icons-material/NewspaperRounded';
 import Image from 'next/image'
 import { useTheme } from '@mui/material'
@@ -136,61 +128,6 @@ export function ModalEditNamePlaylist(props: PropsModalEditNamePlaylist) {
                     </Button>
                 </Grid>
             </Grid>
-        }
-    />
-}
-
-interface PropsModalEditPlaylist extends GenericProps {
-    playlist_id: string
-}
-
-export function ModalEditPlaylist(props: PropsModalEditPlaylist) {
-    const [openEdit, setOpenEdit] = useState(false)
-    const dispatch = useAppDispatch()
-    const playlist: Playlist | undefined = useAppSelector(state => state.playlist.playlist[props.playlist_id])
-    const [message, setMessage ] = useState("")
-
-    return <GenericModal 
-        open={props.open}
-        handleClose={props.handleClose}
-        content={
-            <>
-            <List>
-                <ListItemButton onClick={() => setOpenEdit(true)}>
-                    <ListItemIcon>
-                        <EditRoundedIcon />
-                    </ListItemIcon>
-                    <ListItemText primary='Modifica nome'/>
-                </ListItemButton>
-                <RWebShare
-                    data={{
-                        text: "Visualizza la playlist " + playlist?.name + " su 'Praising'",
-                        url: "https://praising.vercel.app"+ Routes.SharePlaylist +"?name="+playlist?.name+"&songs="+playlist?.songs.join(','),
-                        title: "Condividi la playlist",
-                    }}
-                    sites={['facebook', 'twitter', 'whatsapp', 'telegram', 'mail', 'copy']}
-                    onClick={() => setMessage('Link copiato')}
-                >
-                <ListItemButton>
-                    <ListItemIcon>
-                        <ShareRoundedIcon />
-                    </ListItemIcon>
-                    <ListItemText primary='Condividi'/>
-                </ListItemButton>
-                </RWebShare>
-                <ListItemButton onClick={() => {
-                    dispatch(deletePlaylist(playlist!.id))
-                    props.handleClose()
-                }}>
-                    <ListItemIcon>
-                        <DeleteRoundedIcon />
-                    </ListItemIcon>
-                    <ListItemText primary='Elimina'/>
-                </ListItemButton>
-            </List>
-            <PersSnackbar open={message !== ""} handleClose={() => setMessage("")} message={message}/>
-            <ModalEditNamePlaylist open={openEdit} handleClose={() => setOpenEdit(false)} playlist={playlist}/>
-            </>
         }
     />
 }

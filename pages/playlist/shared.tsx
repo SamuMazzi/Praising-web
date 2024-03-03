@@ -13,7 +13,7 @@ PlaylisSharedPage.getInitialProps = async (context: any) => {
 
 interface PropsPlaylistSharedPage {
     name: string
-    songs: string[] 
+    songs: string[] | string
 }
 
 export default function PlaylisSharedPage(props: PropsPlaylistSharedPage) {
@@ -22,10 +22,10 @@ export default function PlaylisSharedPage(props: PropsPlaylistSharedPage) {
 
     useEffect(() => {
         if(props.name && props.songs) {
-            dispatch(copyPlaylist({name: props.name, songs: props.songs}))
+            const songs = typeof props.songs === 'string' ? props.songs.split(',') : props.songs
+            dispatch(copyPlaylist({name: props.name, songs: songs}))
         }
         router.replace(Routes.Playlist)
-        //TODO: Testa se va bene replace
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

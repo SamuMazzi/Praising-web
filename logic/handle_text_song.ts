@@ -194,9 +194,10 @@ const removeChords = (serializedSong: any) => {
 }
 
 interface InfoRenderSong {
-    songText: string
+    // songText: string
     sections: string[]
     fontSize: number
+    error?: string
 }
 
 /**
@@ -204,40 +205,48 @@ interface InfoRenderSong {
  * @returns An object with the HTML produced and the new size of the text
  */
 export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
-    const song_parsed = new ChordSheetJS.ChordProParser().parse(props.fileContent);
-
-    // if (props.key !== undefined) song_parsed = song_parsed.setKey(props.key) // Serve per poter normalizzare bene gli accordi
+    try {
+        const song_parsed = new ChordSheetJS.ChordProParser().parse(props.fileContent);
     
-    const serializedSong = new ChordSheetJS.ChordSheetSerializer().serialize(song_parsed);
-    if (!props.showChords) {
-        removeChords(serializedSong)
-    }
-
-    let deserialized = new ChordSheetJS.ChordSheetSerializer().deserialize(serializedSong);
-    if (deserialized.capo !== undefined && !(deserialized.capo instanceof Array)) {
-        const capo = -parseInt(deserialized.capo)
-        deserialized = deserialized.setCapo(capo)
-    }
-
-    if (props.transpose !== undefined && props.transpose !== 0) {
-        deserialized = deserialized.transpose(props.transpose)
-    }
-
-    deserialized.setMetadata('chord_style', props.chordNotation)
-
-    const disp = new ChordSheetJS.HtmlDivFormatter({normalizeChords: true, renderBlankLines: false}).format(deserialized); 
-    const $ = load(disp)
-
-    const linesChorus = findLinesChorus(deserialized)
-    toggleShowChords($, props.showChords)
-    boldenChorus($, linesChorus)
-    const stdZoomLevel = 17;
-    const fontSize = props.fontSize ??= adjustFontSize($, stdZoomLevel)
-    const sections = editHTML($)
-    // props.fontSize is undefined when first time opening the song or zoom not set
-    return {
-        songText: $.html(),
-        sections: sections,
-        fontSize:  fontSize
+        // if (props.key !== undefined) song_parsed = song_parsed.setKey(props.key) // Serve per poter normalizzare bene gli accordi
+        
+        const serializedSong = new ChordSheetJS.ChordSheetSerializer().serialize(song_parsed);
+        if (!props.showChords) {
+            removeChords(serializedSong)
+        }
+    
+        let deserialized = new ChordSheetJS.ChordSheetSerializer().deserialize(serializedSong);
+        if (deserialized.capo !== undefined && !(deserialized.capo instanceof Array)) {
+            const capo = -parseInt(deserialized.capo)
+            deserialized = deserialized.setCapo(capo)
+        }
+    
+        if (props.transpose !== undefined && props.transpose !== 0) {
+            deserialized = deserialized.transpose(props.transpose)
+        }
+    
+        deserialized.setMetadata('chord_style', props.chordNotation)
+    
+        const disp = new ChordSheetJS.HtmlDivFormatter({normalizeChords: true, renderBlankLines: false}).format(deserialized); 
+        const $ = load(disp)
+    
+        const linesChorus = findLinesChorus(deserialized)
+        toggleShowChords($, props.showChords)
+        boldenChorus($, linesChorus)
+        const stdZoomLevel = 17;
+        const fontSize = props.fontSize ??= adjustFontSize($, stdZoomLevel)
+        const sections = editHTML($)
+        // props.fontSize is undefined when first time opening the song or zoom not set
+        return {
+            // songText: $.html(),
+            sections: sections,
+            fontSize:  fontSize
+        }
+    } catch {
+        return {
+            sections: [],
+            fontSize: 17,
+            error: "C'è stato un errore nel leggere il file, riprovare"
+        }
     }
 }

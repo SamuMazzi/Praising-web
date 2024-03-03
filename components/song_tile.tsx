@@ -80,6 +80,7 @@ interface PropsSelectableSongTile {
 }
 
 export function PlaylistSongTile(props: PropsSelectableSongTile) {
+    // FIXME: Sometimes it throws "TypeError: Illegal invocation"
     return (
         <Draggable key={props.song.id}>
             <ListItem 
