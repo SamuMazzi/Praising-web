@@ -1,4 +1,4 @@
-import ChordSheetJS, { Song } from '@samumazzi/chordsheetjs';
+import ChordSheetJS, { Song } from 'chordsheetjs';
 import { CheerioAPI, Element, load } from 'cheerio'
 import { ChordNotations } from './redux/settings_slice';
 
@@ -125,7 +125,7 @@ const adjustFontSize = ($: CheerioAPI, oldFontSize: number) => {
 }
 
 //FIXME: La#- non diventa Sib-
-const editHTML = ($: CheerioAPI) => {
+const editHTML = ($: CheerioAPI, chordNotation: ChordNotations) => {
     const out: string[] = []
     let isChorus = false;
     let $2 = load(`<div class=section_0></div>`, {}, true);
@@ -135,7 +135,15 @@ const editHTML = ($: CheerioAPI) => {
     })
     // Substitutes chords with their variants
     $('.chord').each((j, html_chord) => {
-        let out = $(html_chord).text().replace("m", "-").replace(/sus(\d*)/gm, (match, p1) => p1 ? p1 : '4');
+        let out = $(html_chord).text()
+        if (chordNotation === 'symbol') {
+            // TODO: Finish to fix maj thing
+            out = out
+                .replace("ma", "+")
+                .replace("maj", "+")
+                .replace("m", "-")
+                .replace(/sus(\d*)/gm, (match, p1) => p1 ? p1 : '4');
+        }
         $(html_chord).text(out)
     })
     $('.row').each((i, row) => {
@@ -227,7 +235,7 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
     
         deserialized.setMetadata('chord_style', props.chordNotation)
     
-        const disp = new ChordSheetJS.HtmlDivFormatter({normalizeChords: true, renderBlankLines: false}).format(deserialized); 
+        const disp = new ChordSheetJS.HtmlDivFormatter({renderBlankLines: false}).format(deserialized); 
         const $ = load(disp)
     
         const linesChorus = findLinesChorus(deserialized)
@@ -235,14 +243,14 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
         boldenChorus($, linesChorus)
         const stdZoomLevel = 17;
         const fontSize = props.fontSize ??= adjustFontSize($, stdZoomLevel)
-        const sections = editHTML($)
+        const sections = editHTML($, props.chordNotation)
         // props.fontSize is undefined when first time opening the song or zoom not set
         return {
             // songText: $.html(),
             sections: sections,
             fontSize:  fontSize
         }
-    } catch {
+    } catch (error) {
         return {
             sections: [],
             fontSize: 17,

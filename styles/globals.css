@@ -36,8 +36,8 @@ a {
 
 .expandable {
     margin-top: 2em;
-    max-height: 30em;
-    max-width: 700px;
+    max-height: 60em;
+    max-width: 800px;
     overflow: hidden;
     transition: max-height 0.7s ease-out;
     cursor: pointer;
@@ -46,7 +46,7 @@ a {
 
 .compressed {
     max-height: 2.5em;
-    transition: max-height 0.7s cubic-bezier(0, 1.13, 1, 0.92)  /* (0.22, 1, 0.36, 1); */
+    transition: max-height 0.7s cubic-bezier(0, 1.13, 1, 0.92)
 }
 
 .segmentContainer {

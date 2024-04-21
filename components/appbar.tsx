@@ -207,7 +207,7 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                               url: Routes.Base + Routes.Songs + "/" + props.id,
                               title: "Condividi questa canzone",
                           }}
-                          sites={['facebook', 'twitter', 'whatsapp', 'telegram', 'mail', 'copy']}
+                          sites={['facebook', 'whatsapp', 'telegram', 'mail', 'copy']}
                       >
                         <MenuItem>
                           <ListItemIcon>
