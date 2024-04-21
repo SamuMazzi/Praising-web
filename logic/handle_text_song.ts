@@ -214,6 +214,8 @@ interface InfoRenderSong {
  */
 export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
     try {
+        // This is because of a probable ChordSheetJS bug which renders "null" text at the end of the song if there's a blank line (i.e. with "Chiamati per nome")
+        props.fileContent = props.fileContent.replace(/\n$/, '');
         const song_parsed = new ChordSheetJS.ChordProParser().parse(props.fileContent);
     
         // if (props.key !== undefined) song_parsed = song_parsed.setKey(props.key) // Serve per poter normalizzare bene gli accordi
@@ -235,7 +237,7 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
     
         deserialized.setMetadata('chord_style', props.chordNotation)
     
-        const disp = new ChordSheetJS.HtmlDivFormatter({normalizeChords: true, renderBlankLines: false}).format(deserialized); 
+        const disp = new ChordSheetJS.HtmlDivFormatter({normalizeChords: true, renderBlankLines: false}).format(deserialized);
         const $ = load(disp)
     
         const linesChorus = findLinesChorus(deserialized)
