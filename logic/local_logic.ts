@@ -101,8 +101,12 @@ export const getSingleSong = (id: string) => {
 
 export const updateLastRecentsSongs = (song: Song) => {
     const limit = 7
-    const recents: string[] = getFromStorage('recents') || []
-    if(recents.includes(song.id)) return
+    let recents: string[] = getFromStorage('recents') || []
+    if(recents.includes(song.id) && recents[0] == song.id) return
+    else if (recents.includes(song.id) && recents[0] != song.id) {
+        // Song exists but it's not the first one
+        recents = recents.filter(v => v !== song.id)
+    }
 
     const newRec = [song.id, ...recents]
     let out = newRec

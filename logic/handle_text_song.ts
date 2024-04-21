@@ -136,7 +136,7 @@ const editHTML = ($: CheerioAPI, chordNotation: ChordNotations) => {
     // Substitutes chords with their variants
     $('.chord').each((j, html_chord) => {
         let out = $(html_chord).text()
-        if (chordNotation === 'symbol') {
+        if (chordNotation === 'solfege') {
             // TODO: Finish to fix maj thing
             out = out
                 .replace("ma", "+")
@@ -235,7 +235,7 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
     
         deserialized.setMetadata('chord_style', props.chordNotation)
     
-        const disp = new ChordSheetJS.HtmlDivFormatter({renderBlankLines: false}).format(deserialized); 
+        const disp = new ChordSheetJS.HtmlDivFormatter({normalizeChords: true, renderBlankLines: false}).format(deserialized); 
         const $ = load(disp)
     
         const linesChorus = findLinesChorus(deserialized)
