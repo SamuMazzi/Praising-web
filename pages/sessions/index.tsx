@@ -31,6 +31,8 @@ function ListSessions(props: ListSessionsProps) {
 
     useEffect(() => {
         getActiveSessionsBasedOnPosition()
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return <List>

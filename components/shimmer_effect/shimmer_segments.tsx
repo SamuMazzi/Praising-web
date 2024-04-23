@@ -14,6 +14,7 @@ const ShimmerSegments = (props: PropsShimmerSegments) => {
       Math.floor(Math.random() * (maxSegmentLength - minSegmentLength + 1)) + minSegmentLength
     );
     setSegmentLengths(lengths);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

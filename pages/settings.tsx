@@ -14,6 +14,8 @@ import Routes from "@/logic/routes";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/logic/redux/store";
 import VolunteerActivismRoundedIcon from '@mui/icons-material/VolunteerActivismRounded';
+import SdStorageRoundedIcon from '@mui/icons-material/SdStorageRounded';
+import { clearStorage } from '@/logic/local_logic'
 
 export default function SettingsPage() {
     const darkTheme = useAppSelector(state => state.settings.darkMode)
@@ -43,7 +45,7 @@ export default function SettingsPage() {
                         <ListItemText primary="Tema" />
                     </ListItemButton>
                 </ListItem>
-                <ListItem disablePadding sx={{borderBottomRightRadius: borderRadius, borderBottomLeftRadius: borderRadius}}>
+                <ListItem disablePadding>
                     <ListItemButton LinkComponent={Link} href={Routes.Feedback}>
                     <ListItemIcon>
                         <InsertCommentRoundedIcon />
@@ -51,7 +53,7 @@ export default function SettingsPage() {
                         <ListItemText primary="Feedback" />
                     </ListItemButton>
                 </ListItem>
-                <ListItem disablePadding sx={{borderBottomRightRadius: borderRadius, borderBottomLeftRadius: borderRadius}}>
+                <ListItem disablePadding>
                     <ListItemButton LinkComponent={Link} href={Routes.Contribute}>
                     <ListItemIcon>
                         <VolunteerActivismRoundedIcon />
@@ -59,7 +61,16 @@ export default function SettingsPage() {
                         <ListItemText primary="Contribuisci" />
                     </ListItemButton>
                 </ListItem>
+                <ListItem disablePadding sx={{borderBottomRightRadius: borderRadius, borderBottomLeftRadius: borderRadius}}>
+                    <ListItemButton onClick={() => clearStorage()}>
+                    <ListItemIcon>
+                        <SdStorageRoundedIcon />
+                    </ListItemIcon>
+                        <ListItemText primary="Elimina cache" secondary="Eliminerai tutti i dati presenti su questo dispositivo" />
+                    </ListItemButton>
+                </ListItem>
             </List>
+            <p>Versione: 0.2.3</p>
         </Container>
     )
   
