@@ -148,6 +148,7 @@ const editHTML = ($: CheerioAPI, chordNotation: ChordNotations) => {
     })
     $('.row').each((i, row) => {
         removeChordsFromHTML($, row)
+        removeNullsFromHTML($, row)
         // Divide in sections
         const isNewChorus = $(row).hasClass('chorus')
         if (isChorus !== isNewChorus) {
@@ -185,6 +186,17 @@ const removeChordsFromHTML = ($: CheerioAPI, row: Element) => {
         //* Put spaces around chords
         $(row).find('.column .chord').each((index, chord) => {
             $(chord).text(' ' + $(chord).text() + ' ')
+        })
+    }
+}
+
+/** This is because of a bug in ChordSheetJS */
+const removeNullsFromHTML = ($: CheerioAPI, row: Element) => {
+    if($(row).children('.label').length >= 1) {
+        $(row).find('.label').each((index, label) => {
+            if($(label).text() === 'null') {
+                $(label).text('')
+            }
         })
     }
 }

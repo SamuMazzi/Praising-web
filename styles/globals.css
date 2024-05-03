@@ -36,7 +36,7 @@ a {
 
 .expandable {
     margin-top: 2em;
-    max-height: 60em;
+    max-height: 80em;
     max-width: 800px;
     overflow: hidden;
     transition: max-height 0.7s ease-out;

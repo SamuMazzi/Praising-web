@@ -8,7 +8,6 @@ import '../styles/globals.css'
 import { useEffect, useState } from 'react'
 import { AuthContextProvider } from '@/logic/context/auth_context'
 
-// FIXME: Fix why it gives null when double blank line or final blank line
 // TODO: Offline https://github.com/hanford/next-offline
 // TODO: Implementare spazi fra accordi senza testo (per ora solo nelle righe intere senza testo, cerca canzoni con cui testare, sicuro "Mi perdo nel tuo amore")
 // TODO: Implement online for:

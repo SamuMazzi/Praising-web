@@ -35,7 +35,7 @@ export default function ListSongs(props: PropsListSongs) {
     const [showOnlyFavorites, setShowOnlyFavorites] = useState(false)
     const favoriteSongs = useAppSelector(state => state.userInfo.favoriteSongs)
     let localSongs = props.songs.filter(v => 
-        (!showOnlyFavorites || (showOnlyFavorites && favoriteSongs.includes(v.id))) && v.name.toLowerCase().includes(filter.toLowerCase()))
+        (!showOnlyFavorites || (showOnlyFavorites && favoriteSongs.includes(v.id))) && v.name.replace(/[^a-zA-Z0-9 ]/g, "").toLowerCase().includes(filter.toLowerCase()))
     if (props.auto_sorting !== false) {
         localSongs = localSongs.sort((a,b) => ('' + a.name).localeCompare(b.name))
     }
