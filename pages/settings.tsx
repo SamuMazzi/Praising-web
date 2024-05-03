@@ -13,7 +13,7 @@ import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import Routes from "@/logic/routes";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/logic/redux/store";
-import VolunteerActivismRoundedIcon from '@mui/icons-material/VolunteerActivismRounded';
+// import VolunteerActivismRoundedIcon from '@mui/icons-material/VolunteerActivismRounded';
 import SdStorageRoundedIcon from '@mui/icons-material/SdStorageRounded';
 import { clearStorage } from '@/logic/local_logic'
 
@@ -53,14 +53,14 @@ export default function SettingsPage() {
                         <ListItemText primary="Feedback" />
                     </ListItemButton>
                 </ListItem>
-                <ListItem disablePadding>
+                {/*<ListItem disablePadding>
                     <ListItemButton LinkComponent={Link} href={Routes.Contribute}>
                     <ListItemIcon>
                         <VolunteerActivismRoundedIcon />
                     </ListItemIcon>
                         <ListItemText primary="Contribuisci" />
                     </ListItemButton>
-                </ListItem>
+                    </ListItem>*/}
                 <ListItem disablePadding sx={{borderBottomRightRadius: borderRadius, borderBottomLeftRadius: borderRadius}}>
                     <ListItemButton onClick={() => clearStorage()}>
                     <ListItemIcon>
