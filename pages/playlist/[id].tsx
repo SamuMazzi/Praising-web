@@ -44,6 +44,7 @@ export default function PlaylistPage(props: PropsSongPage) {
             <PlaylistAppBar playlist_id={playlist.id}/>
             <Container sx={{py: 5}}/>
             <ListSongsPlaylist songs={songs} playlist_id={playlist.id} />
+            <Container sx={{py: 2}}/> {/* Padding necessario per il Fab */}
             <Fab variant="extended" onClick={() => setOpenModal(true)} color='primary' style={{position: 'fixed', bottom: 20}}>
                 <AddRoundedIcon sx={{ mr: 1 }} />
                 Aggiungi dei canti

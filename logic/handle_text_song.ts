@@ -137,7 +137,6 @@ const editHTML = ($: CheerioAPI, chordNotation: ChordNotations) => {
     $('.chord').each((j, html_chord) => {
         let out = $(html_chord).text()
         if (chordNotation === 'solfege') {
-            // TODO: Finish to fix maj thing
             out = out
                 .replace("ma", "+")
                 .replace("maj", "+")
@@ -264,11 +263,11 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
             sections: sections,
             fontSize:  fontSize
         }
-    } catch (error) {
+    } catch (error: any) {
         return {
             sections: [],
             fontSize: 17,
-            error: "C'è stato un errore nel leggere il file, riprovare"
+            error: "C'è stato un errore nel leggere il file, riprovare.\n" + error.message
         }
     }
 }
