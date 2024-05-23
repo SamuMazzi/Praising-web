@@ -9,6 +9,10 @@ interface PropsListPlaylist {
     fromSongId?: string
 }
 
+/**
+ * List of songs displayed in the playlist page.
+ * If there are no playlists, a message with an image is displayed.
+ */
 export default function ListPlaylist(props: PropsListPlaylist) {
     const all_playlists = useAppSelector(state => state.playlist.playlist)
 

@@ -1,4 +1,4 @@
-import Sheet from 'react-modal-sheet';
+import { Sheet } from 'react-modal-sheet';
 import ListSongs from './list_songs';
 import { getLocalSongs } from '@/logic/local_logic';
 import { useAppSelector } from '@/logic/redux/store';
@@ -20,6 +20,9 @@ interface PropsModalBottomSheetPlaylist extends PropsModalBottomSheet {
     playlist_id: string | undefined
 }
 
+/**
+ * This is used to show all the songs that can be added to a playlist, from the same playlist page
+ */
 export function ModalBottomSheetPlaylist(props: PropsModalBottomSheetPlaylist) {
     const songs = getLocalSongs()
     const playlist = useAppSelector(state => state.playlist.playlist[props.playlist_id!])
@@ -33,7 +36,7 @@ export function ModalBottomSheetPlaylist(props: PropsModalBottomSheetPlaylist) {
           </Sheet.Header>
           <Sheet.Content className={theme.palette.mode}>
             <Sheet.Scroller>
-              <ListSongs songs={songs} playlist={playlist} mode='selection_playlist' />
+              <ListSongs songs={songs} playlist={playlist} mode='selection_playlist' withSearch/>
             </Sheet.Scroller>
           </Sheet.Content>
       </Sheet.Container>

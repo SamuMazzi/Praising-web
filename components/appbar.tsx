@@ -203,7 +203,7 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                     >
                       <RWebShare
                           data={{
-                              text: "Leggi " + props.title + " su 'Praising'!",
+                              text: "Visualizza la canzone " + props.title + " su 'Praising'!",
                               url: Routes.Base + Routes.Songs + "/" + props.id,
                               title: "Condividi questa canzone",
                           }}

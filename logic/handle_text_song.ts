@@ -147,7 +147,6 @@ const editHTML = ($: CheerioAPI, chordNotation: ChordNotations) => {
     })
     $('.row').each((i, row) => {
         removeChordsFromHTML($, row)
-        removeNullsFromHTML($, row)
         // Divide in sections
         const isNewChorus = $(row).hasClass('chorus')
         if (isChorus !== isNewChorus) {
@@ -189,17 +188,6 @@ const removeChordsFromHTML = ($: CheerioAPI, row: Element) => {
     }
 }
 
-/** This is because of a bug in ChordSheetJS */
-const removeNullsFromHTML = ($: CheerioAPI, row: Element) => {
-    if($(row).children('.label').length >= 1) {
-        $(row).find('.label').each((index, label) => {
-            if($(label).text() === 'null') {
-                $(label).text('')
-            }
-        })
-    }
-}
-
 const removeChords = (serializedSong: any) => {
     serializedSong.lines.map((line: any) => {
         line.items.map((v: any) => {
@@ -237,7 +225,7 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
         }
     
         let deserialized = new ChordSheetJS.ChordSheetSerializer().deserialize(serializedSong);
-        if (deserialized.capo !== undefined && !(deserialized.capo instanceof Array)) {
+        if (deserialized.capo !== null && !(deserialized.capo instanceof Array)) {
             const capo = -parseInt(deserialized.capo)
             deserialized = deserialized.setCapo(capo)
         }

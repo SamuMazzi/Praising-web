@@ -34,8 +34,16 @@ export default function ListSongs(props: PropsListSongs) {
     const [filter, setFilter] = useState("")
     const [showOnlyFavorites, setShowOnlyFavorites] = useState(false)
     const favoriteSongs = useAppSelector(state => state.userInfo.favoriteSongs)
-    let localSongs = props.songs.filter(v => 
-        (!showOnlyFavorites || (showOnlyFavorites && favoriteSongs.includes(v.id))) && v.name.replace(/[^a-zA-Z0-9 ]/g, "").toLowerCase().includes(filter.toLowerCase()))
+    
+    const filterSong = (v: Song) => {
+        const favorite_part = (!showOnlyFavorites || (showOnlyFavorites && favoriteSongs.includes(v.id))) 
+        const name_to_filter = v.name.replace(/[^a-zA-Z0-9 ]/g, "").toLowerCase()
+        const author_to_filter = v.author.replace(/[^a-zA-Z0-9 ]/g, "").toLowerCase()
+        const fit_in_filter = (name_to_filter + " " +  author_to_filter).includes(filter.toLowerCase())
+        return favorite_part && fit_in_filter
+    }
+    
+    let localSongs = props.songs.filter(filterSong)
     if (props.auto_sorting !== false) {
         localSongs = localSongs.sort((a,b) => ('' + a.name).localeCompare(b.name))
     }

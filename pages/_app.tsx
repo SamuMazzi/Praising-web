@@ -52,7 +52,6 @@ export default function App({ Component, pageProps }: AppProps) {
       />
     </Head>
     <Provider store={store}>
-      <CssBaseline />
       <ThemedComponent Component={Component} pageProps={pageProps}/>
     </Provider>
     </>
@@ -64,6 +63,7 @@ function ThemedComponent({ Component, pageProps }: any) {
   
   return (
     <ThemeProvider theme={createTheme(darkMode ? dark_theme_options : light_theme_options)}>
+      <CssBaseline />
       <AuthContextProvider>
         <Component {...pageProps} />
       </AuthContextProvider>

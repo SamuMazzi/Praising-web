@@ -9,6 +9,7 @@ import { useAppDispatch } from '@/logic/redux/store'
 import Routes from '@/logic/routes';
 import { MenuPlaylist } from './menus';
 import React from 'react';
+import { useTheme, alpha } from '@mui/material';
 
 interface PropsPlaylistTile {
     playlist: Playlist
@@ -51,13 +52,16 @@ interface PropsSelectablePlaylistTile {
 
 export function SelectablePlaylistTile(props: PropsSelectablePlaylistTile) {
     const dispatch = useAppDispatch()
-    // TODO: Should change color
+    const theme = useTheme()
+    const selected = props.playlist.songs.includes(props.songId)
+
     return (
         <>
         <ListItemButton
             sx={{borderRadius: 8, my: 1}}
-            selected={props.playlist.songs.includes(props.songId)}
+            selected={selected}
             onClick={() => dispatch(handleSongForPlaylist({id: props.playlist.id, idSong: props.songId}))}
+            style={{backgroundColor: selected ? alpha(theme.palette.primary.main, 0.4) : theme.palette.divider, WebkitTapHighlightColor: 'transparent'}}
         >
             <ListItemText
                 primary={props.playlist.name}

@@ -5,6 +5,7 @@
     "Caratteristica": "Ado-Ingl",
     "Parte della messa": "Com",
     "Link": "https://youtu.be/XtwIT8JjddM",
+    "Autore": "M. Redman",
     "Id": 1
   },
   {
@@ -13,6 +14,7 @@
     "Caratteristica": "Ado",
     "Parte della messa": "Com",
     "Link": "https://youtu.be/p_1wjiL4PGE",
+    "Autore": "RnS",
     "Id": 2
   },
   {
@@ -21,6 +23,7 @@
     "Caratteristica": "Ado",
     "Parte della messa": "Com",
     "Link": "https://youtu.be/5_cxhf5ISeg",
+    "Autore": "Lenny LeBlanc",
     "Id": 3
   },
   {
@@ -29,6 +32,7 @@
     "Caratteristica": "",
     "Parte della messa": "Ingr-Fin",
     "Link": "https://youtu.be/FNomwQWxZeI",
+    "Autore": "RnS",
     "Id": 4
   },
   {
@@ -37,6 +41,7 @@
     "Caratteristica": "",
     "Parte della messa": "Fin",
     "Link": "https://youtu.be/HIo9UboLt1c",
+    "Autore": "Daniele Ricci",
     "Id": 5
   },
   {
@@ -45,6 +50,7 @@
     "Caratteristica": "Alt",
     "Parte della messa": "Fin",
     "Link": "https://youtu.be/sDFxtIcld2A",
+    "Autore": "Ecco Perchè Canto",
     "Id": 6
   },
   {
@@ -53,6 +59,7 @@
     "Caratteristica": "Can",
     "Parte della messa": "",
     "Link": "https://youtu.be/R1UOt3kMkF4",
+    "Autore": "Taizè",
     "Id": 7
   },
   {
@@ -61,14 +68,16 @@
     "Caratteristica": "Ado",
     "Parte della messa": "Com",
     "Link": "https://youtu.be/nBx3-jKsoz0",
+    "Autore": "RnS",
     "Id": 8
   },
   {
-    "Nome": "Agnello di Dio (Buttazzo)",
+    "Nome": "Agnello di Dio",
     "Nome file": "Agnello di Dio (Buttazzo).crd",
     "Caratteristica": "",
     "Parte della messa": "Agn",
     "Link": "https://youtu.be/HsswpBzH1p4",
+    "Autore": "F. Buttazzo",
     "Id": 9
   },
   {
@@ -77,14 +86,16 @@
     "Caratteristica": "",
     "Parte della messa": "Agn",
     "Link": "https://youtu.be/9o_Tr-MWgdU",
+    "Autore": "Gen Rosso",
     "Id": 10
   },
   {
-    "Nome": "Agnus dei (M. Governatori)",
+    "Nome": "Agnus dei",
     "Nome file": "Agnus dei (M. Governatori).crd",
     "Caratteristica": "",
     "Parte della messa": "Agn",
     "Link": "",
+    "Autore": "M. Governatori",
     "Id": 11
   },
   {
@@ -93,6 +104,7 @@
     "Caratteristica": "Ado",
     "Parte della messa": "Com",
     "Link": "https://youtu.be/tMsjZLOYZ1g",
+    "Autore": "Morning Star Music",
     "Id": 12
   },
   {
@@ -101,6 +113,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/zJsLcwScEDA",
+    "Autore": "Rend Collective",
     "Id": 13
   },
   {
@@ -109,6 +122,7 @@
     "Caratteristica": "",
     "Parte della messa": "All",
     "Link": "https://youtu.be/7V8fqv25uqw",
+    "Autore": "Catholic Christian Music",
     "Id": 14
   },
   {
@@ -117,6 +131,7 @@
     "Caratteristica": "",
     "Parte della messa": "All",
     "Link": "https://youtu.be/y7FaOH42GUo",
+    "Autore": "RnS",
     "Id": 15
   },
   {
@@ -125,6 +140,7 @@
     "Caratteristica": "",
     "Parte della messa": "All",
     "Link": "",
+    "Autore": "P. Barani",
     "Id": 16
   },
   {
@@ -133,6 +149,7 @@
     "Caratteristica": "",
     "Parte della messa": "All",
     "Link": "https://youtu.be/8mq20xAEdc4",
+    "Autore": "A.M. Galliano, D. Semprini",
     "Id": 17
   },
   {
@@ -141,6 +158,7 @@
     "Caratteristica": "",
     "Parte della messa": "All",
     "Link": "https://youtu.be/6ol9QL9heeA",
+    "Autore": "Stefano Puri",
     "Id": 18
   },
   {
@@ -149,6 +167,7 @@
     "Caratteristica": "",
     "Parte della messa": "All",
     "Link": "https://youtu.be/KQl_GQzrBKU",
+    "Autore": "S. Varnavà, A. Costa",
     "Id": 19
   },
   {
@@ -157,14 +176,16 @@
     "Caratteristica": "",
     "Parte della messa": "All",
     "Link": "https://youtu.be/YZSMFrWuXxo",
+    "Autore": "Gen Verde",
     "Id": 20
   },
   {
-    "Nome": "Alleluia, Saguatti",
+    "Nome": "Alleluia",
     "Nome file": "Alleluia, Saguatti.crd",
     "Caratteristica": "",
     "Parte della messa": "All",
     "Link": "",
+    "Autore": "Saguatti",
     "Id": 21
   },
   {
@@ -173,6 +194,7 @@
     "Caratteristica": "",
     "Parte della messa": "All",
     "Link": "https://youtu.be/77Ft25VCnI4",
+    "Autore": "Balduzzi, Casucci, Aquero",
     "Id": 22
   },
   {
@@ -181,6 +203,7 @@
     "Caratteristica": "",
     "Parte della messa": "Ingr-Com",
     "Link": "https://youtu.be/ABbrXiYkKsQ",
+    "Autore": "M. Frisina",
     "Id": 23
   },
   {
@@ -189,14 +212,16 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/scGfZD0uZcI",
+    "Autore": "RnS",
     "Id": 24
   },
   {
-    "Nome": "Alzati! (RnS)",
+    "Nome": "Alzati!",
     "Nome file": "Alzati! (RnS).crd",
     "Caratteristica": "",
     "Parte della messa": "Ingr",
     "Link": "https://youtu.be/fRZdovHEsGU",
+    "Autore": "RnS",
     "Id": 25
   },
   {
@@ -205,6 +230,7 @@
     "Caratteristica": "",
     "Parte della messa": "Ingr-Com",
     "Link": "https://youtu.be/G5yO0U1ZlBs",
+    "Autore": "",
     "Id": 26
   },
   {
@@ -213,6 +239,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "",
+    "Autore": "RnS",
     "Id": 27
   },
   {
@@ -221,6 +248,7 @@
     "Caratteristica": "Mar",
     "Parte della messa": "Ingr-Fin-Com",
     "Link": "https://youtu.be/Qrd_BDTylv4",
+    "Autore": "Balduzzi, Casucci, Aquero",
     "Id": 28
   },
   {
@@ -229,6 +257,7 @@
     "Caratteristica": "Mar",
     "Parte della messa": "Ingr-Fin",
     "Link": "https://youtu.be/LlcIkVQ-TpI",
+    "Autore": "RnS",
     "Id": 29
   },
   {
@@ -237,6 +266,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/qtvQNzPHn-w",
+    "Autore": "Phil Wickham",
     "Id": 30
   },
   {
@@ -245,6 +275,7 @@
     "Caratteristica": "",
     "Parte della messa": "Fin",
     "Link": "https://youtu.be/NXIdgsV1VC0",
+    "Autore": "RnS",
     "Id": 31
   },
   {
@@ -253,6 +284,7 @@
     "Caratteristica": "",
     "Parte della messa": "Off",
     "Link": "https://youtu.be/PhOGjXrc9G8",
+    "Autore": "Daniele Ricci",
     "Id": 32
   },
   {
@@ -261,14 +293,16 @@
     "Caratteristica": "Benedizione",
     "Parte della messa": "Com",
     "Link": "https://youtu.be/U9-oSJ8Pd2U",
+    "Autore": "Servi di Gesù",
     "Id": 33
   },
   {
-    "Nome": "Bless the Lord (Taizè)",
+    "Nome": "Bless the Lord",
     "Nome file": "Bless the Lord (Taizè).crd",
     "Caratteristica": "Can",
     "Parte della messa": "",
     "Link": "https://youtu.be/t4Svh-9ohg4",
+    "Autore": "Taizè",
     "Id": 34
   },
   {
@@ -277,6 +311,7 @@
     "Caratteristica": "Can",
     "Parte della messa": "",
     "Link": "https://youtu.be/RPNzZwBYZrc",
+    "Autore": "Taizè",
     "Id": 35
   },
   {
@@ -285,6 +320,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/DzMuYwZyOmk",
+    "Autore": "Franciscan Friars of the Renewal",
     "Id": 36
   },
   {
@@ -293,6 +329,7 @@
     "Caratteristica": "",
     "Parte della messa": "Ingr",
     "Link": "https://youtu.be/QMXoNuhqQLE",
+    "Autore": "A.M. Galliano, D. Semprini",
     "Id": 37
   },
   {
@@ -301,6 +338,7 @@
     "Caratteristica": "",
     "Parte della messa": "Ingr",
     "Link": "https://youtu.be/siPZhI3eSR4",
+    "Autore": "RnS",
     "Id": 38
   },
   {
@@ -309,6 +347,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/bop37VByRu0",
+    "Autore": "Inno Marcia Francescana",
     "Id": 39
   },
   {
@@ -317,6 +356,7 @@
     "Caratteristica": "",
     "Parte della messa": "Com",
     "Link": "https://youtu.be/U9CSP1gXXGM",
+    "Autore": "M. Frisina",
     "Id": 40
   },
   {
@@ -325,6 +365,7 @@
     "Caratteristica": "",
     "Parte della messa": "Ingr",
     "Link": "https://youtu.be/EUG6KnGxpcc",
+    "Autore": "Gen Verde",
     "Id": 41
   },
   {
@@ -333,6 +374,7 @@
     "Caratteristica": "",
     "Parte della messa": "Com",
     "Link": "https://youtu.be/EIjlfrUgTXg",
+    "Autore": "Gen Rosso, Gen Verde",
     "Id": 42
   },
   {
@@ -341,6 +383,7 @@
     "Caratteristica": "Avv",
     "Parte della messa": "Ingr",
     "Link": "https://youtu.be/eFKH1aggk6I",
+    "Autore": "Gen Verde",
     "Id": 43
   },
   {
@@ -349,6 +392,7 @@
     "Caratteristica": "",
     "Parte della messa": "Com",
     "Link": "https://youtu.be/tBsxniQvL5M",
+    "Autore": "",
     "Id": 44
   },
   {
@@ -357,6 +401,7 @@
     "Caratteristica": "",
     "Parte della messa": "Ingr-Com",
     "Link": "https://youtu.be/rs-cOyy-5MQ",
+    "Autore": "RnS",
     "Id": 45
   },
   {
@@ -365,6 +410,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/rjsjRvayn48",
+    "Autore": "RnS",
     "Id": 46
   },
   {
@@ -373,6 +419,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/UTbw3gOlwzE",
+    "Autore": "Gen Verde",
     "Id": 47
   },
   {
@@ -381,6 +428,7 @@
     "Caratteristica": "",
     "Parte della messa": "Com",
     "Link": "https://youtu.be/KOSXHmMwJQI",
+    "Autore": "D. Vezzani",
     "Id": 48
   },
   {
@@ -389,6 +437,7 @@
     "Caratteristica": "Pas",
     "Parte della messa": "Ingr",
     "Link": "https://youtu.be/hQ8Y11c3LCs",
+    "Autore": "RnS",
     "Id": 49
   },
   {
@@ -397,6 +446,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/ZTsBQ4OVxMA",
+    "Autore": "RnS",
     "Id": 50
   },
   {
@@ -405,6 +455,7 @@
     "Caratteristica": "Avv-Qua",
     "Parte della messa": "Ingr",
     "Link": "https://youtu.be/0M8ntXzrDTg",
+    "Autore": "Balduzzi, Casucci, Aquero",
     "Id": 51
   },
   {
@@ -413,6 +464,7 @@
     "Caratteristica": "",
     "Parte della messa": "Com",
     "Link": "https://youtu.be/T5gGDtW9l2Y",
+    "Autore": "J. A. Romero, M. Gandara",
     "Id": 52
   },
   {
@@ -421,6 +473,7 @@
     "Caratteristica": "",
     "Parte della messa": "Fin",
     "Link": "https://youtu.be/VK8gxGH1pDQ",
+    "Autore": "M. Monnetti",
     "Id": 53
   },
   {
@@ -429,6 +482,7 @@
     "Caratteristica": "Ado",
     "Parte della messa": "",
     "Link": "https://youtu.be/hlTny87LIq8",
+    "Autore": "RnS",
     "Id": 54
   },
   {
@@ -437,6 +491,7 @@
     "Caratteristica": "Can-Ado",
     "Parte della messa": "",
     "Link": "https://youtu.be/s619JQyE6lQ",
+    "Autore": "RnS",
     "Id": 55
   },
   {
@@ -445,6 +500,7 @@
     "Caratteristica": "",
     "Parte della messa": "S",
     "Link": "https://youtu.be/0-WMVDh_cg0",
+    "Autore": "Gen Rosso, Gen Verde",
     "Id": 56
   },
   {
@@ -453,6 +509,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/2ads4Lmwhvg",
+    "Autore": "RnS",
     "Id": 57
   },
   {
@@ -461,6 +518,7 @@
     "Caratteristica": "Can",
     "Parte della messa": "",
     "Link": "https://youtu.be/-1lEvbddHD8",
+    "Autore": "Javier Gacìas",
     "Id": 58
   },
   {
@@ -469,6 +527,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/BKo1N7aTIJQ",
+    "Autore": "J. M. Benjamin, R. Ortolani",
     "Id": 59
   },
   {
@@ -477,6 +536,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/eHNi1hj2JHw",
+    "Autore": "Figli del divino amore",
     "Id": 60
   },
   {
@@ -485,6 +545,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/BCpMT4wHHuo",
+    "Autore": "Gen Verde",
     "Id": 61
   },
   {
@@ -493,6 +554,7 @@
     "Caratteristica": "Pas",
     "Parte della messa": "",
     "Link": "https://youtu.be/IBObKrD9Esw",
+    "Autore": "Gen Verde",
     "Id": 62
   },
   {
@@ -501,6 +563,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/yzO9xulYLkM",
+    "Autore": "",
     "Id": 63
   },
   {
@@ -509,6 +572,7 @@
     "Caratteristica": "",
     "Parte della messa": "Off",
     "Link": "https://youtu.be/QwFHlSLBmMQ",
+    "Autore": "Gen Verde",
     "Id": 64
   },
   {
@@ -517,6 +581,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/V3D9ZTdNmr8",
+    "Autore": "M. Mammoli",
     "Id": 65
   },
   {
@@ -525,6 +590,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/ju1S_NceXXk",
+    "Autore": "RnS",
     "Id": 66
   },
   {
@@ -533,6 +599,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/AWePGSeapVo",
+    "Autore": "Kiko Arguello",
     "Id": 67
   },
   {
@@ -541,6 +608,7 @@
     "Caratteristica": "",
     "Parte della messa": "Com",
     "Link": "https://youtu.be/-LcDsumHaKc",
+    "Autore": "RnS",
     "Id": 68
   },
   {
@@ -549,6 +617,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/F881DVFZr8g",
+    "Autore": "Hillsong United",
     "Id": 69
   },
   {
@@ -557,6 +626,7 @@
     "Caratteristica": "",
     "Parte della messa": "Off",
     "Link": "https://youtu.be/hF9namOkLoE",
+    "Autore": "F. Buttazzo",
     "Id": 70
   },
   {
@@ -565,6 +635,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/qsZ3gwW_sFc",
+    "Autore": "RnS",
     "Id": 71
   },
   {
@@ -573,6 +644,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/RK4NyLnmyt8",
+    "Autore": "RnS",
     "Id": 72
   },
   {
@@ -581,30 +653,34 @@
     "Caratteristica": "Nat",
     "Parte della messa": "",
     "Link": "https://youtu.be/d92JPa-_kgw",
+    "Autore": "James Chadwick",
     "Id": 73
   },
   {
-    "Nome": "Gloria (L. Mariano)",
+    "Nome": "Gloria",
     "Nome file": "Gloria (L. Mariano).crd",
     "Caratteristica": "",
     "Parte della messa": "G",
     "Link": "https://youtu.be/KewJv-uYGLk",
+    "Autore": "L. Mariano",
     "Id": 74
   },
   {
-    "Nome": "Gloria (Ricci)",
+    "Nome": "Gloria",
     "Nome file": "Gloria (Ricci).crd",
     "Caratteristica": "",
     "Parte della messa": "G",
     "Link": "https://youtu.be/sR-33eK_9MQ",
+    "Autore": "D. Ricci",
     "Id": 75
   },
   {
-    "Nome": "Gloria a Dio (Vescogni)",
+    "Nome": "Gloria a Dio",
     "Nome file": "Gloria a Dio (Vescogni).crd",
     "Caratteristica": "",
     "Parte della messa": "G",
     "Link": "https://youtu.be/cnMgbNxsCMQ",
+    "Autore": "L. Vescogni",
     "Id": 76
   },
   {
@@ -613,14 +689,16 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/SjieRQRQjN8",
+    "Autore": "E. Olivero, M. Tabasso",
     "Id": 77
   },
   {
-    "Nome": "Gloria (Gen Verde)",
+    "Nome": "Gloria",
     "Nome file": "Gloria (Gen Verde).crd",
     "Caratteristica": "",
     "Parte della messa": "G",
     "Link": "https://youtu.be/x3fC99pHv6k",
+    "Autore": "Gen Verde",
     "Id": 78
   },
   {
@@ -629,6 +707,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/TgnVX0NjbwU",
+    "Autore": "RnS",
     "Id": 79
   },
   {
@@ -637,6 +716,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/Pv3o9k7J048",
+    "Autore": "Servi di Gesù",
     "Id": 80
   },
   {
@@ -645,14 +725,16 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "",
+    "Autore": "J. Finch",
     "Id": 81
   },
   {
-    "Nome": "Heart of worship",
+    "Nome": "The heart of worship",
     "Nome file": "Heart of worship.crd",
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/P-Zp586pvZg",
+    "Autore": "M. Redman",
     "Id": 82
   },
   {
@@ -661,6 +743,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "",
+    "Autore": "",
     "Id": 83
   },
   {
@@ -669,6 +752,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/KBD18rsVJHk",
+    "Autore": "C. Tomlin",
     "Id": 84
   },
   {
@@ -677,6 +761,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/7G3IFp3Ckiw",
+    "Autore": "The Vigil Project",
     "Id": 85
   },
   {
@@ -685,6 +770,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/8B3fa0mjXQ4",
+    "Autore": "D. Crowder",
     "Id": 86
   },
   {
@@ -693,6 +779,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/lw9CcLGjouM",
+    "Autore": "Don Moen",
     "Id": 87
   },
   {
@@ -701,6 +788,7 @@
     "Caratteristica": "",
     "Parte della messa": "Fin",
     "Link": "https://youtu.be/vvNPrbSAW8Y",
+    "Autore": "RnS",
     "Id": 88
   },
   {
@@ -709,6 +797,7 @@
     "Caratteristica": "",
     "Parte della messa": "Fin",
     "Link": "https://youtu.be/Vz2OZMG19V4",
+    "Autore": "Fra F. Russo",
     "Id": 89
   },
   {
@@ -717,6 +806,7 @@
     "Caratteristica": "Can",
     "Parte della messa": "",
     "Link": "https://youtu.be/q5ijnURqKm0",
+    "Autore": "Taizè",
     "Id": 90
   },
   {
@@ -725,6 +815,7 @@
     "Caratteristica": "",
     "Parte della messa": "Fin",
     "Link": "https://youtu.be/ra7DIpJC0Rk",
+    "Autore": "RnS",
     "Id": 91
   },
   {
@@ -733,6 +824,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/1LEj4LPCcgM",
+    "Autore": "The Vigil Project",
     "Id": 92
   },
   {
@@ -741,6 +833,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/CpE16RIIRno",
+    "Autore": "D. Vezzani",
     "Id": 93
   },
   {
@@ -749,6 +842,7 @@
     "Caratteristica": "SS",
     "Parte della messa": "Ingr",
     "Link": "https://youtu.be/e2SaOERsN0E",
+    "Autore": "RnS",
     "Id": 94
   },
   {
@@ -757,6 +851,7 @@
     "Caratteristica": "Matr",
     "Parte della messa": "Ingr",
     "Link": "https://youtu.be/amu-_m4wRKM",
+    "Autore": "S. Gardi",
     "Id": 95
   },
   {
@@ -765,6 +860,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/K3jD3EWiRdg",
+    "Autore": "M. Frisina",
     "Id": 96
   },
   {
@@ -773,6 +869,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "",
+    "Autore": "Taizè",
     "Id": 97
   },
   {
@@ -780,15 +877,17 @@
     "Nome file": "Jesus, I trust in you.crd",
     "Caratteristica": "Ingl",
     "Parte della messa": "",
-    "Link": "",
+    "Link": "https://youtu.be/stmyMilN3LY",
+    "Autore": "The Vigil Project",
     "Id": 98
   },
   {
-    "Nome": "Kyrie eleison (Chemin neuf)",
+    "Nome": "Kyrie eleison",
     "Nome file": "Kyrie eleison (Chemin neuf).crd",
     "Caratteristica": "Can",
     "Parte della messa": "",
     "Link": "",
+    "Autore": "Chemin Neuf",
     "Id": 99
   },
   {
@@ -797,14 +896,16 @@
     "Caratteristica": "Can",
     "Parte della messa": "",
     "Link": "https://youtu.be/lbb-kaurSW0",
+    "Autore": "Taizè",
     "Id": 100
   },
   {
-    "Nome": "Laudato sii (Forza venite gente)",
+    "Nome": "Laudato sii",
     "Nome file": "Laudato sii (Forza venite gente).crd",
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/eqiclGmQB0I",
+    "Autore": "Forza venite gente",
     "Id": 101
   },
   {
@@ -813,6 +914,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/AM3gwOcCaqg",
+    "Autore": "G. Cento",
     "Id": 102
   },
   {
@@ -821,6 +923,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/L4_S02vZpRY",
+    "Autore": "P. Comi",
     "Id": 103
   },
   {
@@ -829,6 +932,7 @@
     "Caratteristica": "Can",
     "Parte della messa": "",
     "Link": "",
+    "Autore": "",
     "Id": 104
   },
   {
@@ -837,6 +941,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/KBSpL8BlRkI",
+    "Autore": "The Vigil Project, J. Finch",
     "Id": 105
   },
   {
@@ -845,6 +950,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "",
+    "Autore": "",
     "Id": 106
   },
   {
@@ -853,6 +959,7 @@
     "Caratteristica": "",
     "Parte della messa": "Fin",
     "Link": "https://youtu.be/fsdt3_akU_0",
+    "Autore": "RnS",
     "Id": 107
   },
   {
@@ -861,6 +968,7 @@
     "Caratteristica": "",
     "Parte della messa": "Fin",
     "Link": "https://youtu.be/p4he2yrMMiY",
+    "Autore": "",
     "Id": 108
   },
   {
@@ -869,6 +977,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/pmiTkVD4ETo",
+    "Autore": "The Vigil Project",
     "Id": 109
   },
   {
@@ -877,6 +986,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/FHMjhz8aHTw",
+    "Autore": "Hillsong United",
     "Id": 110
   },
   {
@@ -885,14 +995,16 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/LuvfMDhTyMA",
+    "Autore": "M. Maher",
     "Id": 111
   },
   {
-    "Nome": "Luce (RnS)",
+    "Nome": "Luce",
     "Nome file": "Luce (RnS).crd",
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/avl7jQAynsE",
+    "Autore": "RnS",
     "Id": 112
   },
   {
@@ -901,6 +1013,7 @@
     "Caratteristica": "",
     "Parte della messa": "Ingr",
     "Link": "https://youtu.be/G5l6sgJB5C0",
+    "Autore": "C. Giordano, Fra G. M. Becchimanzi",
     "Id": 113
   },
   {
@@ -909,6 +1022,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/_L3icvZYlyg",
+    "Autore": "Reale",
     "Id": 114
   },
   {
@@ -917,6 +1031,7 @@
     "Caratteristica": "Avv",
     "Parte della messa": "",
     "Link": "https://youtu.be/q8T6n2HNCvk",
+    "Autore": "RnS",
     "Id": 115
   },
   {
@@ -925,22 +1040,25 @@
     "Caratteristica": "Mar",
     "Parte della messa": "",
     "Link": "https://youtu.be/qRUfHJYqx-8",
+    "Autore": "M. C. Bizzeti",
     "Id": 116
   },
   {
-    "Nome": "Magnificat (Taizè)",
+    "Nome": "Magnificat",
     "Nome file": "Magnificat (Taizè).crd",
     "Caratteristica": "Mar-Can",
     "Parte della messa": "",
     "Link": "https://youtu.be/X-6k6qTOMvE",
+    "Autore": "Taizè",
     "Id": 117
   },
   {
-    "Nome": "Magnificat (G. Mezzadri)",
+    "Nome": "Magnificat",
     "Nome file": "Magnificat (G. Mezzadri).crd",
     "Caratteristica": "Mar",
     "Parte della messa": "",
     "Link": "",
+    "Autore": "G. Mezzadri",
     "Id": 118
   },
   {
@@ -949,6 +1067,7 @@
     "Caratteristica": "SS",
     "Parte della messa": "",
     "Link": "https://youtu.be/8a2IEWzOfRE",
+    "Autore": "RnS",
     "Id": 119
   },
   {
@@ -957,6 +1076,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/FexZCiC8SJw",
+    "Autore": "F. Colombo",
     "Id": 120
   },
   {
@@ -964,7 +1084,8 @@
     "Nome file": "Maria tu sei.crd",
     "Caratteristica": "Mar",
     "Parte della messa": "",
-    "Link": "",
+    "Link": "https://youtu.be/kSh9l3orEd0",
+    "Autore": "Gen Rosso",
     "Id": 121
   },
   {
@@ -973,6 +1094,7 @@
     "Caratteristica": "Mar",
     "Parte della messa": "",
     "Link": "https://youtu.be/FqNmiwd_MmQ",
+    "Autore": "Gen Verde",
     "Id": 122
   },
   {
@@ -981,6 +1103,7 @@
     "Caratteristica": "",
     "Parte della messa": "Com",
     "Link": "https://youtu.be/G1W5YH06dW8",
+    "Autore": "RnS",
     "Id": 123
   },
   {
@@ -989,6 +1112,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/3UOIvA4ED4U",
+    "Autore": "RnS",
     "Id": 124
   },
   {
@@ -997,6 +1121,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/AW2LEU5v8VA",
+    "Autore": "Hillsong Worship",
     "Id": 125
   },
   {
@@ -1005,6 +1130,7 @@
     "Caratteristica": "Can",
     "Parte della messa": "",
     "Link": "https://youtu.be/7C9gx5PWsvs",
+    "Autore": "Taizè",
     "Id": 126
   },
   {
@@ -1013,6 +1139,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/rHTrxeqkizs",
+    "Autore": "Hillsong Worship",
     "Id": 127
   },
   {
@@ -1021,6 +1148,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/wlvDxwThqok",
+    "Autore": "Rend Collective",
     "Id": 128
   },
   {
@@ -1029,6 +1157,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/MTbJK2Cu-xk",
+    "Autore": "Gen Verde",
     "Id": 129
   },
   {
@@ -1037,6 +1166,7 @@
     "Caratteristica": "",
     "Parte della messa": "Off",
     "Link": "https://youtu.be/TwNTHThR-Fw",
+    "Autore": "Don Moen",
     "Id": 130
   },
   {
@@ -1045,6 +1175,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/Mp_WGS8fm5Y",
+    "Autore": "D. Machetta",
     "Id": 131
   },
   {
@@ -1053,6 +1184,7 @@
     "Caratteristica": "Can",
     "Parte della messa": "",
     "Link": "https://youtu.be/bzU-fLq1M1c",
+    "Autore": "Taizè",
     "Id": 132
   },
   {
@@ -1061,6 +1193,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/JVUTkxrOfGQ",
+    "Autore": "RnS",
     "Id": 133
   },
   {
@@ -1069,6 +1202,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/6GGFb6LcX3U",
+    "Autore": "Hillsong United",
     "Id": 134
   },
   {
@@ -1077,6 +1211,7 @@
     "Caratteristica": "",
     "Parte della messa": "Off",
     "Link": "https://youtu.be/sT1ueZpSuxo",
+    "Autore": "Gen Verde",
     "Id": 135
   },
   {
@@ -1085,6 +1220,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/pfhg_vBOpg8",
+    "Autore": "Maranathà! Music",
     "Id": 136
   },
   {
@@ -1093,6 +1229,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/yAJnHGoo44E",
+    "Autore": "Hillsong Worship",
     "Id": 137
   },
   {
@@ -1101,6 +1238,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/idQ1n3cdgfo",
+    "Autore": "M. W. Smith",
     "Id": 138
   },
   {
@@ -1109,6 +1247,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/X8Zt8ZcXbrs",
+    "Autore": "RnS",
     "Id": 139
   },
   {
@@ -1117,6 +1256,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/NJpt1hSYf2o",
+    "Autore": "Chris Tomlin",
     "Id": 140
   },
   {
@@ -1125,6 +1265,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/Ga9OYuovxio",
+    "Autore": "Gen Rosso, Gen Verde",
     "Id": 141
   },
   {
@@ -1132,7 +1273,8 @@
     "Nome file": "Pane di vita sei.crd",
     "Caratteristica": "",
     "Parte della messa": "Com",
-    "Link": "https://youtu.be/ok2wAQrsaxg",
+    "Link": "https://youtu.be/vn6zfzsIaJQ",
+    "Autore": "F. Marranzino",
     "Id": 142
   },
   {
@@ -1140,7 +1282,8 @@
     "Nome file": "Parabola del seminatore.crd",
     "Caratteristica": "",
     "Parte della messa": "",
-    "Link": "",
+    "Link": "https://youtu.be/1KY9eM9eAJs",
+    "Autore": "Reale",
     "Id": 143
   },
   {
@@ -1149,6 +1292,7 @@
     "Caratteristica": "",
     "Parte della messa": "Ingr",
     "Link": "https://youtu.be/LGP3L88t9NU",
+    "Autore": "RnS",
     "Id": 144
   },
   {
@@ -1157,6 +1301,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/uKoh-AZlio8",
+    "Autore": "The Vigil Project, J. Finch",
     "Id": 145
   },
   {
@@ -1165,6 +1310,7 @@
     "Caratteristica": "",
     "Parte della messa": "S",
     "Link": "",
+    "Autore": "A. Guidetti",
     "Id": 146
   },
   {
@@ -1172,7 +1318,8 @@
     "Nome file": "Preghiera semplice.crd",
     "Caratteristica": "",
     "Parte della messa": "",
-    "Link": "https://youtu.be/eoY18aBUALo",
+    "Link": "https://youtu.be/_nRv3l0NmNI",
+    "Autore": "Gen Verde",
     "Id": 147
   },
   {
@@ -1181,6 +1328,7 @@
     "Caratteristica": "",
     "Parte della messa": "Fin",
     "Link": "https://youtu.be/URlNOhVEw64",
+    "Autore": "D. Scarpa, F. Buttazzo",
     "Id": 148
   },
   {
@@ -1189,6 +1337,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/bmy-_duKQhc",
+    "Autore": "G. Parisi",
     "Id": 149
   },
   {
@@ -1197,6 +1346,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/wPWJXmxDWdM",
+    "Autore": "A. Cospito",
     "Id": 150
   },
   {
@@ -1205,6 +1355,7 @@
     "Caratteristica": "",
     "Parte della messa": "Ingr",
     "Link": "https://youtu.be/ziMp2mip_Ck",
+    "Autore": "RnS",
     "Id": 151
   },
   {
@@ -1213,6 +1364,7 @@
     "Caratteristica": "",
     "Parte della messa": "Ingr",
     "Link": "https://youtu.be/ofZhUXJ6EE8",
+    "Autore": "RnS",
     "Id": 152
   },
   {
@@ -1220,7 +1372,8 @@
     "Nome file": "Quando guardo alla Tua santità.crd",
     "Caratteristica": "Ado",
     "Parte della messa": "",
-    "Link": "https://youtu.be/DHtm5RETxvE",
+    "Link": "https://youtu.be/yNx36z0wBAU",
+    "Autore": "RnS",
     "Id": 153
   },
   {
@@ -1229,6 +1382,7 @@
     "Caratteristica": "",
     "Parte della messa": "S",
     "Link": "",
+    "Autore": "A. Guidetti",
     "Id": 154
   },
   {
@@ -1237,6 +1391,7 @@
     "Caratteristica": "Can",
     "Parte della messa": "",
     "Link": "https://youtu.be/RbEr0lW60z8",
+    "Autore": "Taizè",
     "Id": 155
   },
   {
@@ -1245,6 +1400,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/1oU-F5CMais",
+    "Autore": "RnS",
     "Id": 156
   },
   {
@@ -1253,6 +1409,7 @@
     "Caratteristica": "",
     "Parte della messa": "Com",
     "Link": "https://youtu.be/9zbbr_GHXSo",
+    "Autore": "RnS",
     "Id": 157
   },
   {
@@ -1261,6 +1418,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/qN7IX3-Z0wo",
+    "Autore": "A. De Luca",
     "Id": 158
   },
   {
@@ -1268,7 +1426,8 @@
     "Nome file": "Resto con te.crd",
     "Caratteristica": "Pas",
     "Parte della messa": "Com",
-    "Link": "https://youtu.be/7kHBQfBAPB8",
+    "Link": "https://youtu.be/LMR6tkSNaak",
+    "Autore": "Gen Verde",
     "Id": 159
   },
   {
@@ -1277,6 +1436,7 @@
     "Caratteristica": "Pas",
     "Parte della messa": "",
     "Link": "https://youtu.be/URN7MADiv9Y",
+    "Autore": "Gen Rosso",
     "Id": 160
   },
   {
@@ -1284,7 +1444,8 @@
     "Nome file": "Salve Regina.crd",
     "Caratteristica": "Mar",
     "Parte della messa": "",
-    "Link": "https://youtu.be/URN7MADiv9Y",
+    "Link": "https://youtu.be/9pu4ZMbKnHc",
+    "Autore": "Gen Verde",
     "Id": 161
   },
   {
@@ -1292,7 +1453,8 @@
     "Nome file": "Santo Spirito.crd",
     "Caratteristica": "SS",
     "Parte della messa": "",
-    "Link": "",
+    "Link": "https://youtu.be/iyV88wm1aa0",
+    "Autore": "RnS",
     "Id": 162
   },
   {
@@ -1301,30 +1463,34 @@
     "Caratteristica": "",
     "Parte della messa": "San",
     "Link": "",
+    "Autore": "",
     "Id": 163
   },
   {
-    "Nome": "Santo, Come fuoco vivo",
+    "Nome": "Santo (Come fuoco vivo)",
     "Nome file": "Santo, Come fuoco vivo.crd",
     "Caratteristica": "",
     "Parte della messa": "San",
-    "Link": "https://youtu.be/qoeNoKmndWk",
+    "Link": "https://youtu.be/mLXQU4V4KmM",
+    "Autore": "Gen Rosso, Gen Verde",
     "Id": 164
   },
   {
-    "Nome": "Santo, Gen",
+    "Nome": "Santo (Noi veniamo a Te)",
     "Nome file": "Santo, Gen.crd",
     "Caratteristica": "",
     "Parte della messa": "San",
-    "Link": "https://youtu.be/qoeNoKmndWk",
+    "Link": "https://youtu.be/xZRhewauj_U",
+    "Autore": "Gen Rosso",
     "Id": 165
   },
   {
-    "Nome": "Santo, Mistero pasquale",
+    "Nome": "Santo (Mistero pasquale)",
     "Nome file": "Santo, Mistero pasquale.crd",
     "Caratteristica": "",
     "Parte della messa": "San",
-    "Link": "https://youtu.be/4Arj6y7-Qbc",
+    "Link": "https://youtu.be/1Tj4sPBGXvE",
+    "Autore": "Gen Verde",
     "Id": 166
   },
   {
@@ -1333,6 +1499,7 @@
     "Caratteristica": "",
     "Parte della messa": "Off",
     "Link": "https://youtu.be/4o5KIQ2JXIw",
+    "Autore": "Gen Rosso, Gen Verde",
     "Id": 167
   },
   {
@@ -1341,6 +1508,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/MGIRPEti2Is",
+    "Autore": "RnS",
     "Id": 168
   },
   {
@@ -1349,6 +1517,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/OLHqI2azmyQ",
+    "Autore": "RnS",
     "Id": 169
   },
   {
@@ -1357,6 +1526,7 @@
     "Caratteristica": "",
     "Parte della messa": "Off",
     "Link": "https://youtu.be/nJYq0OsOho0",
+    "Autore": "Gen Verde",
     "Id": 170
   },
   {
@@ -1364,7 +1534,8 @@
     "Nome file": "Servo per amore.crd",
     "Caratteristica": "",
     "Parte della messa": "Off",
-    "Link": "https://youtu.be/b5ayqLFCFOc",
+    "Link": "https://youtu.be/b5ayqLFRnSCFOc",
+    "Autore": "Servi di Gesù",
     "Id": 171
   },
   {
@@ -1373,6 +1544,7 @@
     "Caratteristica": "",
     "Parte della messa": "Ingr",
     "Link": "https://youtu.be/CcreHAyx2bw",
+    "Autore": "P. Comi",
     "Id": 172
   },
   {
@@ -1381,6 +1553,7 @@
     "Caratteristica": "",
     "Parte della messa": "Fin",
     "Link": "https://youtu.be/SKbmLRrNE8k",
+    "Autore": "RnS",
     "Id": 173
   },
   {
@@ -1389,6 +1562,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/Ks7HY4gob2A",
+    "Autore": "L. Stassen-Benjamin",
     "Id": 174
   },
   {
@@ -1397,6 +1571,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/GfVd5x9W1Xc",
+    "Autore": "Hillsong Worship",
     "Id": 175
   },
   {
@@ -1405,6 +1580,7 @@
     "Caratteristica": "Ado",
     "Parte della messa": "Com",
     "Link": "https://youtu.be/s6F0EgxUCok",
+    "Autore": "RnS",
     "Id": 176
   },
   {
@@ -1412,7 +1588,8 @@
     "Nome file": "Sopra ogni cosa.crd",
     "Caratteristica": "",
     "Parte della messa": "Com",
-    "Link": "https://youtu.be/5_cxhf5ISeg",
+    "Link": "https://youtu.be/5_cxhf5RnSISeg",
+    "Autore": "Lenny LeBlanc",
     "Id": 177
   },
   {
@@ -1421,14 +1598,16 @@
     "Caratteristica": "SS",
     "Parte della messa": "",
     "Link": "https://youtu.be/Bb2WHAiP5SM",
+    "Autore": "RnS",
     "Id": 178
   },
   {
-    "Nome": "Stringimi",
+    "Nome": "Stringimi (Above All)",
     "Nome file": "Stringimi.crd",
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/5_cxhf5ISeg",
+    "Autore": "Lenny LeBlanc",
     "Id": 179
   },
   {
@@ -1436,7 +1615,8 @@
     "Nome file": "Su questo altare.crd",
     "Caratteristica": "",
     "Parte della messa": "Off",
-    "Link": "https://youtu.be/N2ekMpMXmKk",
+    "Link": "https://youtu.be/kae3VGdTZ1g",
+    "Autore": "P. Auricchio",
     "Id": 180
   },
   {
@@ -1445,6 +1625,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "",
+    "Autore": "",
     "Id": 181
   },
   {
@@ -1453,6 +1634,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/FtUNQpu2b7Q",
+    "Autore": "Hillsong Worship",
     "Id": 182
   },
   {
@@ -1461,6 +1643,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/GM0WNeJA-b0",
+    "Autore": "RnS",
     "Id": 183
   },
   {
@@ -1469,6 +1652,7 @@
     "Caratteristica": "Nat",
     "Parte della messa": "",
     "Link": "https://youtu.be/THoF5snnSvE",
+    "Autore": "A. M. de' Liguori",
     "Id": 184
   },
   {
@@ -1477,6 +1661,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "",
+    "Autore": "",
     "Id": 185
   },
   {
@@ -1485,6 +1670,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/BP3yu_6NLBU",
+    "Autore": "Eman",
     "Id": 186
   },
   {
@@ -1493,6 +1679,7 @@
     "Caratteristica": "",
     "Parte della messa": "Com",
     "Link": "https://youtu.be/Ja3R5ULIXzA",
+    "Autore": "RnS",
     "Id": 187
   },
   {
@@ -1501,6 +1688,7 @@
     "Caratteristica": "Ado",
     "Parte della messa": "",
     "Link": "https://youtu.be/oiyUvBMCYWw",
+    "Autore": "S. Sciacca",
     "Id": 188
   },
   {
@@ -1509,6 +1697,7 @@
     "Caratteristica": "Ado",
     "Parte della messa": "",
     "Link": "https://youtu.be/-EtAY6ADJzo",
+    "Autore": "RnS",
     "Id": 189
   },
   {
@@ -1517,6 +1706,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/RbEjtKf3Yr8",
+    "Autore": "Don P. Spoladore",
     "Id": 190
   },
   {
@@ -1525,6 +1715,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/rz0Rvwlt1Mo",
+    "Autore": "Nuovi Orizzonti",
     "Id": 191
   },
   {
@@ -1533,6 +1724,7 @@
     "Caratteristica": "Can",
     "Parte della messa": "",
     "Link": "https://youtu.be/G2o27qpvfUc",
+    "Autore": "Taizè",
     "Id": 192
   },
   {
@@ -1541,6 +1733,7 @@
     "Caratteristica": "Avv",
     "Parte della messa": "",
     "Link": "https://youtu.be/xRi1GDoaQu4",
+    "Autore": "Z. Kodàly",
     "Id": 193
   },
   {
@@ -1549,6 +1742,7 @@
     "Caratteristica": "",
     "Parte della messa": "Com",
     "Link": "https://youtu.be/QErFrdcT4RA",
+    "Autore": "M. Brusati, M. Versaci",
     "Id": 194
   },
   {
@@ -1557,6 +1751,7 @@
     "Caratteristica": "Matr",
     "Parte della messa": "",
     "Link": "https://youtu.be/O803xnhxDE8",
+    "Autore": "Kiko Arguello",
     "Id": 195
   },
   {
@@ -1565,6 +1760,7 @@
     "Caratteristica": "",
     "Parte della messa": "Fin",
     "Link": "https://youtu.be/PjfHP5-SsF8",
+    "Autore": "Gen Rosso",
     "Id": 196
   },
   {
@@ -1573,6 +1769,7 @@
     "Caratteristica": "SS",
     "Parte della messa": "",
     "Link": "https://youtu.be/fXvakwxO5Do",
+    "Autore": "Figli del divino amore",
     "Id": 197
   },
   {
@@ -1581,6 +1778,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/JLW-MjJyzGI",
+    "Autore": "RnS",
     "Id": 198
   },
   {
@@ -1589,6 +1787,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/JLW-MjJyzGI",
+    "Autore": "RnS",
     "Id": 199
   },
   {
@@ -1597,6 +1796,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/iJCV_2H9xD0",
+    "Autore": "Leeland",
     "Id": 200
   },
   {
@@ -1605,6 +1805,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/WP0LcrQzkfo",
+    "Autore": "Hillsong Worship, Delirious?",
     "Id": 201
   },
   {
@@ -1612,7 +1813,8 @@
     "Nome file": "When the saints go marching in.crd",
     "Caratteristica": "Ingl",
     "Parte della messa": "",
-    "Link": "https://youtu.be/wyLjbMBpGDA",
+    "Link": "https://youtu.be/5K1Th64YGCs",
+    "Autore": "A. Rieu",
     "Id": 202
   },
   {
@@ -1621,6 +1823,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/YvIB_veig5s",
+    "Autore": "C. Tomlin",
     "Id": 203
   },
   {
@@ -1629,6 +1832,7 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/jwpsDJOyl0o",
+    "Autore": "M. Maher",
     "Id": 204
   },
   {
@@ -1637,6 +1841,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/NGlQmGymo60",
+    "Autore": "P. Sequeri",
     "Id": 205
   },
   {
@@ -1645,6 +1850,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/_Z7cXaTEaCI",
+    "Autore": "G. Meregalli",
     "Id": 206
   },
   {
@@ -1652,15 +1858,17 @@
     "Nome file": "Canto dell'acqua.crd",
     "Caratteristica": "",
     "Parte della messa": "",
-    "Link": "https://youtu.be/WCge3HuU97Y",
+    "Link": "https://youtu.be/zo-eKLdgvj4",
+    "Autore": "Gen Verde",
     "Id": 207
   },
   {
-    "Nome": "Gloria (Giombini)",
+    "Nome": "Gloria",
     "Nome file": "Gloria (Giombini).crd",
     "Caratteristica": "",
     "Parte della messa": "G",
     "Link": "https://youtu.be/kiX3CgdHcAc",
+    "Autore": "M. Giombini, RnS",
     "Id": 208
   },
   {
@@ -1668,7 +1876,8 @@
     "Nome file": "Oggi in cielo è festa.crd",
     "Caratteristica": "Matr",
     "Parte della messa": "",
-    "Link": "https://youtu.be/iDPJPuKkn3Q",
+    "Link": "https://youtu.be/QAka9cslvu0",
+    "Autore": "L. Montagna",
     "Id": 209
   },
   {
@@ -1676,7 +1885,8 @@
     "Nome file": "Alleluia, celebrate il Signore.crd",
     "Caratteristica": "",
     "Parte della messa": "All",
-    "Link": "https://youtu.be/QpCttrjB5zI",
+    "Link": "https://youtu.be/s1lweDg46gs",
+    "Autore": "F. Cioffi",
     "Id": 210
   },
   {
@@ -1685,6 +1895,7 @@
     "Caratteristica": "Nat",
     "Parte della messa": "",
     "Link": "https://youtu.be/3QHynuRJnZE",
+    "Autore": "",
     "Id": 211
   },
   {
@@ -1693,14 +1904,16 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/Kb0xeMIMosE",
+    "Autore": "",
     "Id": 212
   },
   {
-    "Nome": "Santo, Vescogni",
+    "Nome": "Santo",
     "Nome file": "Santo, Vescogni.crd",
     "Caratteristica": "",
     "Parte della messa": "San",
     "Link": "https://youtu.be/nxMG3NLpCCI",
+    "Autore": "L. Vescogni",
     "Id": 213
   },
   {
@@ -1709,6 +1922,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/M24IfMH1PhU",
+    "Autore": "U. Veronesi",
     "Id": 214
   },
   {
@@ -1717,6 +1931,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/QNzbG3nKCt4",
+    "Autore": "RnS",
     "Id": 215
   },
   {
@@ -1725,6 +1940,7 @@
     "Caratteristica": "Ado",
     "Parte della messa": "",
     "Link": "https://youtu.be/AEoHVwlGT7E",
+    "Autore": "Reale",
     "Id": 216
   },
   {
@@ -1733,6 +1949,7 @@
     "Caratteristica": "Ado",
     "Parte della messa": "",
     "Link": "https://youtu.be/HRAt2pdugE0",
+    "Autore": "Kantiere Kairòs",
     "Id": 217
   },
   {
@@ -1741,6 +1958,7 @@
     "Caratteristica": "Ado",
     "Parte della messa": "",
     "Link": "https://youtu.be/KJ1OGOLfFy8",
+    "Autore": "SDV Worship",
     "Id": 218
   },
   {
@@ -1749,6 +1967,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/49flLCRKb3A",
+    "Autore": "Gen Verde",
     "Id": 219
   },
   {
@@ -1757,6 +1976,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/7zW9DglgHdk",
+    "Autore": "SDV Worship",
     "Id": 220
   },
   {
@@ -1765,6 +1985,7 @@
     "Caratteristica": "",
     "Parte della messa": "",
     "Link": "https://youtu.be/W41QOKI20qE",
+    "Autore": "M. Frisina",
     "Id": 221
   },
   {
@@ -1773,6 +1994,16 @@
     "Caratteristica": "Ingl",
     "Parte della messa": "",
     "Link": "https://youtu.be/6AwM2JkbXzM",
+    "Autore": "The Vigil Project",
     "Id": 222
+  },
+  {
+    "Nome": "Resta accanto a me",
+    "Nome file": "Resta accanto a me.crd",
+    "Caratteristica": "",
+    "Parte della messa": "",
+    "Link": "https://youtu.be/hq8Fi74GLHw",
+    "Autore": "Gen Verde",
+    "Id": 223
   }
 ]

@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography'
 import Routes from '@/logic/routes'
 import MusicNoteRoundedIcon from '@mui/icons-material/MusicNoteRounded';
 import ListItemIcon from '@mui/material/ListItemIcon'
+import { useTheme, alpha } from '@mui/material'
 
 /**
  * 
@@ -48,6 +49,7 @@ export default function SongTile(props: PropsSongTile) {
         </ListItemIcon>
         <ListItemText
             primary={props.song.name}
+            secondary={props.song.author}
         />
     </ListItem>
   )
@@ -61,17 +63,21 @@ interface PropsSelectableSongTile {
 
 export function SelectableSongTile(props: PropsSelectableSongTile) {
     const dispatch = useAppDispatch()
-  return (
-    <ListItemButton
-        sx={{borderRadius: 8, my: 1}}
-        selected={props.playlist.songs.includes(props.song.id)}
-        onClick={() => dispatch(handleSongForPlaylist({idSong: props.song.id, id: props.playlist.id}))}
-    >
-        <ListItemText
-            primary={props.song.name}
-        />
-    </ListItemButton>
-  )
+    const theme = useTheme()
+    const selected = props.playlist.songs.includes(props.song.id)
+
+    return (
+        <ListItemButton
+            sx={{borderRadius: 8, my: 1}}
+            selected={selected}
+            onClick={() => dispatch(handleSongForPlaylist({idSong: props.song.id, id: props.playlist.id}))}
+            style={{backgroundColor: selected ? alpha(theme.palette.primary.main, 0.4) : theme.palette.divider, WebkitTapHighlightColor: 'transparent'}}
+        >
+            <ListItemText
+                primary={props.song.name}
+            />
+        </ListItemButton>
+    )
 }
 
 interface PropsSelectableSongTile {
