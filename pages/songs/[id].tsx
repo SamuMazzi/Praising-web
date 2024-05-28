@@ -34,7 +34,7 @@ interface PropsSongPage {
     playlist_id: string | undefined
 }
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+const fetcher = (url: string) => fetch(url).then((res) => res.json()).catch((err) => console.log(err));
 
 export default function SongPage(props: PropsSongPage) {
     const { data, error, isLoading } = useSWR('/api/song/' + props.id, fetcher)

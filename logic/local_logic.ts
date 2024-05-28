@@ -52,6 +52,7 @@ export const clearStorage = () => {
 
 export interface Song {
     name: string
+    nameFile: string
     author: string
     id: string
     link?: string
@@ -67,6 +68,7 @@ export const getLocalSongs = (): Song[] => {
     if (localSongs.length === 0) {
         localSongs = songs.map(v => ({
             name: v.Nome,
+            nameFile: v["Nome file"],
             author: v.Autore ?? "",
             id: v.Id.toString(),
             link: v.Link,

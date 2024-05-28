@@ -14,6 +14,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const dirRelativeToPublicFolder = 'accordi'
     const dir = path.resolve('./public', dirRelativeToPublicFolder);
-    const fileContents = await fs.readFile(dir + '/' + song.name + '.crd', 'utf8');
+    const fileContents = await fs.readFile(dir + '/' + song.nameFile, 'utf8');
     res.status(200).json(fileContents);
 }
