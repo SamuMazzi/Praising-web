@@ -156,7 +156,7 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                       <ArrowBackRoundedIcon />
                   </IconButton>
                   <Box sx={{ flexGrow: 1, display: 'flex' }} alignItems="center">
-                    <Typography variant="h1" sx={{py: 1}} >
+                    <Typography variant="h1" sx={{py: 1, maxLines: 2}} >
                         {props.title}
                     </Typography>
                   </Box>

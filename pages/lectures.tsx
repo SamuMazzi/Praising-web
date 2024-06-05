@@ -11,7 +11,14 @@ import 'dayjs/locale/it';
 import { Lettura, LiturgyOfDay } from '@/logic/scraper_liturgy'
 import ShimmerSegments from '@/components/shimmer_effect/shimmer_segments'
 
-const fetcher = (url: string) => fetch(url).then(async (res) => new LiturgyOfDay(await res.json()));
+const fetcher = (url: string) => fetch(url).then(async (res) => {
+  if (res.status === 200)
+    return new LiturgyOfDay(await res.json())
+  if (res.status === 500) {
+    const msg = JSON.parse((await res.text()))["error"]
+    throw Error(msg)
+  }
+});
 
 interface PropsSingleLecture {
   lecture: Lettura | undefined
@@ -45,6 +52,20 @@ const SingleLecture = (props: PropsSingleLecture) => {
 export default function Lectures() {
   const [dataLiturgia, setDataLiturgia] = useState(dayjs())
   const { data, error, isLoading } = useSWR('/api/lectures/' + dataLiturgia.format('YYYYMMDD'), fetcher)
+
+  if (error) {
+    return (
+      <Container sx={{minHeight: '100vh', pt: verticalPaddingAppBar*3 + 2, pb: 7, whiteSpace: 'pre-wrap'}} >
+          <PraisingAppBar title='Liturgia del giorno' homeVersion/>
+          <Box display='flex' alignItems='center' justifyContent="center">
+            <Typography>
+              {error.message}
+            </Typography>
+          </Box>
+        <NavBar />
+      </Container>
+    )
+  }
 
   return (
     <Container sx={{minHeight: '100vh', pt: verticalPaddingAppBar*3 + 2, pb: 7, whiteSpace: 'pre-wrap'}} >

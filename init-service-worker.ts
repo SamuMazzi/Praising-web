@@ -21,5 +21,15 @@ const serwist = new Serwist({
   navigationPreload: true,
   runtimeCaching: defaultCache,
 });
+serwist.addToPrecacheList(["/accordi/"])
 
+/*
+const urlsToCache = ["/", "app.js", "styles.css", "logo.svg"];
+serwist.addEventListener("install", (event) => {
+   let cacheUrls = async () => {
+      const cache = await caches.open("pwa-assets");
+      return cache.addAll(urlsToCache);
+   };
+   event.waitUntil(cacheUrls());
+});*/
 serwist.addEventListeners();

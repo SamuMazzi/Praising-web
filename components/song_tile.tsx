@@ -75,6 +75,7 @@ export function SelectableSongTile(props: PropsSelectableSongTile) {
         >
             <ListItemText
                 primary={props.song.name}
+                secondary={props.song.author}
             />
         </ListItemButton>
     )
@@ -97,15 +98,14 @@ export function PlaylistSongTile(props: PropsSelectableSongTile) {
                     </IconButton>
                 }
             >
-                <ListItemText
-                    disableTypography
-                    primary={<Typography
-                        component={NextLinkComposed} 
-                        to={{pathname: Routes.Songs + '/' + props.song.id, query: { playlist_id: props.playlist.id }}} 
-                    >
-                        {props.song.name}
-                    </Typography>}
-                />
+                <ListItemButton
+                    component={NextLinkComposed} to={{pathname: Routes.Songs + '/' + props.song.id, query: { playlist_id: props.playlist.id }}}
+                >
+                    <ListItemText
+                        primary={props.song.name}
+                        secondary={props.song.author}
+                    />
+                </ListItemButton>
             </ListItem>
         </Draggable>
             
