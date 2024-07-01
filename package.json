@@ -46,6 +46,6 @@
     "@next/codemod": "^14.0.4",
     "husky": "^9.0.11",
     "prettier": "^3.0.2",
-    "serwist": "^9.0.2"
+    "serwist": "^9.0.3"
   }
 }
