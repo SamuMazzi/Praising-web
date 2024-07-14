@@ -126,7 +126,7 @@ const adjustFontSize = ($: CheerioAPI, oldFontSize: number) => {
 
 //FIXME: La#- non diventa Sib-
 const editHTML = ($: CheerioAPI, chordNotation: ChordNotations) => {
-    const out: string[] = []
+    const sections: string[] = []
     let isChorus = false;
     let $2 = load(`<div class=section_0></div>`, {}, true);
     $('.lyrics').each((j, html_lyrics) => {
@@ -150,20 +150,20 @@ const editHTML = ($: CheerioAPI, chordNotation: ChordNotations) => {
         // Divide in sections
         const isNewChorus = $(row).hasClass('chorus')
         if (isChorus !== isNewChorus) {
-            out.push($2.html())
-            $2 = load(`<div class=section_` + out.length + `></div>`, {}, true);
-            $2('.section_' + out.length).append($(row))
-        } else {
-            $2('.section_' + out.length).append($(row))
+            sections.push($2.html())
+            $2 = load(`<div class=section_` + sections.length + `></div>`, {}, true);
         }
+        $2('.section_' + sections.length).append($(row))
         isChorus = isNewChorus;
     })
-    out.push($2.html())
+    sections.push($2.html())
 
-    return out;
+    return sections;
 }
 
-/* It also set spaces around chords without lyrics */
+/**
+ * It also set spaces around chords without lyrics
+ */
 const removeChordsFromHTML = ($: CheerioAPI, row: Element) => {
     //* Solo testo
     if($(row).children('.column').length === 1) {
@@ -214,6 +214,13 @@ interface InfoRenderSong {
 export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
     try {
         // This is because of a probable ChordSheetJS bug which renders "null" text at the end of the song if there's a blank line (i.e. with "Chiamati per nome")
+        if (props.fileContent.trim() === "") {
+            return {
+                sections: [],
+                fontSize: 17,
+                error: "Il file è vuoto."
+            }
+        }
         props.fileContent = props.fileContent.replace(/\n$/, '');
         const song_parsed = new ChordSheetJS.ChordProParser().parse(props.fileContent);
     
@@ -252,6 +259,7 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
             fontSize:  fontSize
         }
     } catch (error: any) {
+        console.error(error)
         return {
             sections: [],
             fontSize: 17,
