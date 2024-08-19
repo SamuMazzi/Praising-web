@@ -7,6 +7,7 @@ import { store, useAppSelector } from '../logic/redux/store'
 import '../styles/globals.css'       
 import { useEffect, useState } from 'react'
 import { AuthContextProvider } from '@/logic/context/auth_context'
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 // TODO: Fix ritornelli in grassetto in come un fiume d'acqua viva (problema quando hai riga di soli accordi)
 // TODO: Offline https://github.com/hanford/next-offline
@@ -67,6 +68,7 @@ function ThemedComponent({ Component, pageProps }: any) {
       <CssBaseline />
       <AuthContextProvider>
         <Component {...pageProps} />
+        <SpeedInsights />
       </AuthContextProvider>
     </ThemeProvider>
   )

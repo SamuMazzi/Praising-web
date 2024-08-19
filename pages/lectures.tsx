@@ -11,6 +11,8 @@ import 'dayjs/locale/it';
 import { Lettura, LiturgyOfDay } from '@/logic/scraper_liturgy'
 import ShimmerSegments from '@/components/shimmer_effect/shimmer_segments'
 
+// TODO: 19 agosto 2024 check because it give some "formatting" error
+
 const fetcher = (url: string) => fetch(url).then(async (res) => {
   if (res.status === 200)
     return new LiturgyOfDay(await res.json())

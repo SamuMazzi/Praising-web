@@ -31,6 +31,12 @@ export const MenuPlaylist = (props: PropsMenuPlaylist) => {
     const dispatch = useAppDispatch()
 
     const closeMenu = () => props.setAnchorEl(null)
+
+    const getSongsParameter = () => {
+      if (playlist?.songs.length === 0) return ""
+    
+      return "&songs="+encodeURIComponent(playlist?.songs.join(','))
+    }
   
     return (
       <Menu
@@ -41,9 +47,8 @@ export const MenuPlaylist = (props: PropsMenuPlaylist) => {
         <RWebShare
             data={{
                 text: "Visualizza la playlist " + playlist.name + " su 'Praising'!",
-                url: Routes.Base + Routes.SharePlaylist +"?name="+playlist?.name+"&songs="+playlist?.songs.join(','),
+                url: Routes.Base + Routes.SharePlaylist + "?name=" + encodeURIComponent(playlist?.name) + getSongsParameter(),
                 title: "Condividi questa playlist",
-                // TODO: URL encoding of name
             }}
             sites={['facebook', 'whatsapp', 'telegram', 'mail', 'copy']}
             onClick={() => { setMessage('Link copiato'); openSnackbar(true); }}

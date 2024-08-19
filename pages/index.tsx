@@ -17,6 +17,9 @@ import { useState } from 'react'
 import { ModalNews } from '@/components/modals'
 
 const NEWS_UPDATE = 'newsUpdate_0'
+// TODO: Swiper for arguments and parts 
+// https://codesandbox.io/p/devbox/swiper-react-effect-coverflow-6pxf4v?file=%2Fsrc%2FApp.jsx%3A26%2C22
+// https://swiperjs.com/react#effects
 
 export default function Home() {
   const recentSongs = getLastRecentsSongs().map(id => getSingleSong(id)!)

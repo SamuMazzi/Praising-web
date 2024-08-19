@@ -25,7 +25,7 @@ export default function PlaylisSharedPage(props: PropsPlaylistSharedPage) {
         if(props.name && props.songs) {
             const songs = typeof props.songs === 'string' ? props.songs.split(',') : props.songs
             for (const playlist of Object.values(all_playlists)) {
-                if (playlist.name === props.name && [...playlist.songs].sort().join(',')=== songs.sort().join(',')) {
+                if (playlist.name === props.name && [...playlist.songs].sort().join(',') === songs.sort().join(',')) {
                     // If the playlist is already present, we don't copy it
                     router.replace(Routes.Playlist)
                     return

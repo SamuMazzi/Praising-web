@@ -1,5 +1,5 @@
-import ChordSheetJS, { Song } from 'chordsheetjs';
-import { CheerioAPI, Element, load } from 'cheerio'
+import ChordSheetJS, { Song, Key } from 'chordsheetjs';
+import * as cheerio from 'cheerio';
 import { ChordNotations } from './redux/settings_slice';
 
 interface ParamsRenderSong {
@@ -30,7 +30,7 @@ const findLinesChorus = (deserialized: Song) => {
     return linesChorus
 }
 
-const toggleShowChords = ($: CheerioAPI, showChords: boolean) => {
+const toggleShowChords = ($: cheerio.CheerioAPI, showChords: boolean) => {
     $('.chord').each((i, chord) => {
         if(!showChords) {
             if ($(chord).hasClass('chord')) {
@@ -44,7 +44,7 @@ const toggleShowChords = ($: CheerioAPI, showChords: boolean) => {
     })
 }
 
-const isThereLyricsInRow = ($: CheerioAPI, row: Element) => {
+const isThereLyricsInRow = ($: cheerio.CheerioAPI, row: any) => {
     if ($(row).find('.column > .lyrics').length > 0) {
         const lyricsPieces = $(row).find('.column > .lyrics').filter((i, l) => $(l).text().trim() !== '')
         // console.log(lyricsPieces)
@@ -73,7 +73,7 @@ const isThereLyricsInRow = ($: CheerioAPI, row: Element) => {
     } 
  */
 
-const boldenChorus = ($: CheerioAPI, linesChorus: number[]) => {
+const boldenChorus = ($: cheerio.CheerioAPI, linesChorus: number[]) => {
     let cont = -1
     $('.row').each((i, row) => {
         if (isThereLyricsInRow($, row)) {
@@ -88,7 +88,7 @@ const boldenChorus = ($: CheerioAPI, linesChorus: number[]) => {
     })
 }
 
-const rowHasLyrics = ($: CheerioAPI, el: Element) => {
+const rowHasLyrics = ($: cheerio.CheerioAPI, el: any) => {
     const res = $(el).children('.column').filter((i, e) => $(e).children('.lyrics').text().trim() !== '')
     return res.length !== 0
 }
@@ -102,7 +102,7 @@ function measureText(text: string, fontSize: number) {
       .reduce((cur, acc) => acc + cur, 0) * fontSize
 }
 
-const adjustFontSize = ($: CheerioAPI, oldFontSize: number) => {
+const adjustFontSize = ($: cheerio.CheerioAPI, oldFontSize: number) => {
     if (typeof window === "undefined") {
         return oldFontSize
     }
@@ -125,10 +125,10 @@ const adjustFontSize = ($: CheerioAPI, oldFontSize: number) => {
 }
 
 //FIXME: La#- non diventa Sib-
-const editHTML = ($: CheerioAPI, chordNotation: ChordNotations) => {
+const editHTML = ($: cheerio.CheerioAPI, chordNotation: ChordNotations) => {
     const sections: string[] = []
     let isChorus = false;
-    let $2 = load(`<div class=section_0></div>`, {}, true);
+    let $2 = cheerio.load(`<div class=section_0></div>`, {}, true);
     $('.lyrics').each((j, html_lyrics) => {
         const out = $(html_lyrics).text().replace(/,\s*,/gm, ',')
         $(html_lyrics).text(out)
@@ -151,7 +151,7 @@ const editHTML = ($: CheerioAPI, chordNotation: ChordNotations) => {
         const isNewChorus = $(row).hasClass('chorus')
         if (isChorus !== isNewChorus) {
             sections.push($2.html())
-            $2 = load(`<div class=section_` + sections.length + `></div>`, {}, true);
+            $2 = cheerio.load(`<div class=section_` + sections.length + `></div>`, {}, true);
         }
         $2('.section_' + sections.length).append($(row))
         isChorus = isNewChorus;
@@ -164,7 +164,7 @@ const editHTML = ($: CheerioAPI, chordNotation: ChordNotations) => {
 /**
  * It also set spaces around chords without lyrics
  */
-const removeChordsFromHTML = ($: CheerioAPI, row: Element) => {
+const removeChordsFromHTML = ($: cheerio.CheerioAPI, row: any) => {
     //* Solo testo
     if($(row).children('.column').length === 1) {
         $(row).find('.column .chord').each((index, lyrics) => {
@@ -225,26 +225,31 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
         const song_parsed = new ChordSheetJS.ChordProParser().parse(props.fileContent);
     
         // if (props.key !== undefined) song_parsed = song_parsed.setKey(props.key) // Serve per poter normalizzare bene gli accordi
-        
+
         const serializedSong = new ChordSheetJS.ChordSheetSerializer().serialize(song_parsed);
         if (!props.showChords) {
             removeChords(serializedSong)
         }
     
         let deserialized = new ChordSheetJS.ChordSheetSerializer().deserialize(serializedSong);
-        if (deserialized.capo !== null && !(deserialized.capo instanceof Array)) {
+        if (deserialized.capo !== undefined && deserialized.capo !== null && !(deserialized.capo instanceof Array)) {
             const capo = -parseInt(deserialized.capo)
             deserialized = deserialized.setCapo(capo)
         }
-    
+        
         if (props.transpose !== undefined && props.transpose !== 0) {
             deserialized = deserialized.transpose(props.transpose)
         }
+
+
+        // This is needed because it seems like the normalization is different between major and minor keys (and we want always the major-like one)
+        const majorRootKey = Key.parseOrFail(deserialized.key).toMajor()
+        deserialized = deserialized.setKey(majorRootKey.toString())
     
         deserialized.setMetadata('chord_style', props.chordNotation)
     
         const disp = new ChordSheetJS.HtmlDivFormatter({normalizeChords: true, renderBlankLines: false}).format(deserialized);
-        const $ = load(disp)
+        const $ = cheerio.load(disp)
     
         const linesChorus = findLinesChorus(deserialized)
         toggleShowChords($, props.showChords)

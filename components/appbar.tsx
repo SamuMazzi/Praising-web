@@ -32,8 +32,6 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { addSongToFavoriteSongs, removeSongFromFavoriteSongs } from "@/logic/redux/user_info_slice";
 import { MenuPlaylist } from "./menus";
 
-//TODO: Implementare clide-side routing anche con useRouter
-
 interface PropsHideOnScroll {
     window?: () => Window;
     children: React.ReactElement;
