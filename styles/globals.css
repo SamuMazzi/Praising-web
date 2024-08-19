@@ -10,9 +10,10 @@ a {
 }
 .row {
     display: flex;
+    width: 200px;
 }
 .column {
-    display: inline;
+    display: inline-block;
 }
 .chorus {
     font-weight: bold;
@@ -23,7 +24,7 @@ a {
     font-weight: bold;
     height: 1.5em;
     font-style: italic;
-    white-space: pre-wrap;
+    white-space: pre;
 }
 .no-chord {
     display: none;
@@ -31,11 +32,11 @@ a {
 
 .lyrics {
     min-height: 1.5em;
-    white-space:pre-wrap;
+    white-space: pre;
 }
 
 .expandable {
-    margin-top: 2em;
+    margin-top: 1.5rem;
     max-height: 80em;
     max-width: 800px;
     overflow: hidden;

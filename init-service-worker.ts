@@ -14,6 +14,7 @@ declare global {
 
 declare const self: ServiceWorkerGlobalScope;
 
+// TODO: I don't think it's working
 const additionalPrecacheEntries: (string | PrecacheEntry)[] = [
   {url: "/pages/_app.js", revision: "1"}, 
   {url: "/pages/_document.js", revision: "1"}, 

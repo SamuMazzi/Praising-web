@@ -8,8 +8,8 @@ import '../styles/globals.css'
 import { useEffect, useState } from 'react'
 import { AuthContextProvider } from '@/logic/context/auth_context'
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { itIT } from '@mui/x-date-pickers/locales';
 
-// TODO: Fix ritornelli in grassetto in come un fiume d'acqua viva (problema quando hai riga di soli accordi)
 // TODO: Offline https://github.com/hanford/next-offline
 // TODO: Implementare spazi fra accordi senza testo (per ora solo nelle righe intere senza testo, cerca canzoni con cui testare, sicuro "Mi perdo nel tuo amore")
 // TODO: Implement online for:
@@ -64,7 +64,7 @@ function ThemedComponent({ Component, pageProps }: any) {
   const darkMode = useAppSelector(state => state.settings.darkMode)
   
   return (
-    <ThemeProvider theme={createTheme(darkMode ? dark_theme_options : light_theme_options)}>
+    <ThemeProvider theme={createTheme(darkMode ? dark_theme_options : light_theme_options, itIT)}>
       <CssBaseline />
       <AuthContextProvider>
         <Component {...pageProps} />

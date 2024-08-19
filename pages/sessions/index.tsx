@@ -3,7 +3,7 @@ import NavBar from '@/components/navbar'
 import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar'
 import { useEffect, useState } from 'react'
 import Button from '@mui/material/Button'
-import { ModalAddPlaylist, ModalCreateSession } from '@/components/modals'
+import { ModalCreateSession } from '@/components/modals'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { getActiveSessions } from '@/logic/server/database'
@@ -14,6 +14,7 @@ import ListItemText from '@mui/material/ListItemText'
 
 // TODO: Il nuovo concept potrebbe essere che semplicemente tu tieni un "pallino" che ti dice se sei in una sessione o meno e se sei tu il proprietario o meno
 // cosi da poter fare un "join" o un "leave" della sessione quando vuoi, e puoi vedere/fare le modifiche ai testi dei canti
+
 
 interface ListSessionsProps {
     center: [number, number]

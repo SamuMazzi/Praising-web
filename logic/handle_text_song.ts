@@ -124,7 +124,6 @@ const adjustFontSize = ($: cheerio.CheerioAPI, oldFontSize: number) => {
     return i
 }
 
-//FIXME: La#- non diventa Sib-
 const editHTML = ($: cheerio.CheerioAPI, chordNotation: ChordNotations) => {
     const sections: string[] = []
     let isChorus = false;
