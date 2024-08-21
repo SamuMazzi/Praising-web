@@ -133,7 +133,7 @@ export default function SongPage(props: PropsSongPage) {
                 <ActionsSong song={song!} fontSize={fontSize} videoIsPlaying={showVideo} onPressVideo={handlePressVideo} 
                     setOpenSheet={() => setOpenModalPlaylist(true)} setEditMode={() => setEditMode(true)}/>
             }
-            <Container disableGutters sx={{py: 1}}>
+            <Container id="songDiv" disableGutters sx={{py: 1}}>
                 {
                     editMode ? <EditableSong data={data} setEditMode={() => setEditMode(false)}/> : 
                     <>

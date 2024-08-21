@@ -52,7 +52,7 @@ const ActionIconButton = (props: any) => {
 }
 
 export default function ActionsSong(props: PropsActionSong) {
-    const [menuExpanded, setMenuExpanded] = useState(false)
+    const [menuExpanded, setMenuExpanded] = useState(true)
     const infoSong: InfoLocalSong | undefined = useAppSelector(state => state.infoSongs.infoSongs[props.song.id])
     const showChords = useAppSelector(state => state.settings.showChords)
     const dispatch = useAppDispatch()
@@ -66,8 +66,10 @@ export default function ActionsSong(props: PropsActionSong) {
     }, [])
 
     return (
-        <Container disableGutters sx={{width: 30}} style={{position: 'fixed', top: 70, right: 45}}>
-            <ActionIconButton 
+        <Container disableGutters sx={{width: 30}} style={{position: 'fixed', top: 70, right: 45, overflow: "inherit !important"}}>
+            {/* overflow property is only needed for the tutorial */}
+            <ActionIconButton
+                id="menuButton"
                 color={menuExpanded ? 'primary' : undefined}   
                 onClick={() => setMenuExpanded(!menuExpanded)}
                 title="Mostra menu"
@@ -75,6 +77,7 @@ export default function ActionsSong(props: PropsActionSong) {
                 <MenuRoundedIcon />
             </ActionIconButton>
             <ActionIconButton 
+                id="chordsButton"
                 color={showChords ? 'primary' : undefined}   
                 onClick={() => dispatch(setShowChords(!showChords))}
                 title="Mostra accordi"
@@ -83,7 +86,8 @@ export default function ActionsSong(props: PropsActionSong) {
             >
                 <LyricsRoundedIcon />
             </ActionIconButton>
-            <ActionIconButton 
+            <ActionIconButton
+                id="transposeUpButton"
                 title="+1 #"
                 onClick={() => dispatch(modifySong({id: props.song.id, transpose: actualTranspose + 1}))}
                 color={actualTranspose > 0 ? 'primary' : undefined}   
@@ -93,6 +97,7 @@ export default function ActionsSong(props: PropsActionSong) {
                 <KeyboardArrowUpRoundedIcon />
             </ActionIconButton>
             <ActionIconButton 
+                id="transposeDownButton"
                 title="-1 ♭"
                 onClick={() => dispatch(modifySong({id: props.song.id, transpose: actualTranspose - 1}))}
                 color={actualTranspose < 0 ? 'primary' : undefined}   
@@ -102,6 +107,7 @@ export default function ActionsSong(props: PropsActionSong) {
                 <KeyboardArrowDownRoundedIcon />
             </ActionIconButton>
             <ActionIconButton
+                id="zoomInButton"
                 title="+ Zoom"
                 onClick={() => dispatch(modifySong({id: props.song.id, zoom: fontSize + 1}))}
                 color={fontSize > 17 ? 'primary' : undefined}  
@@ -110,7 +116,8 @@ export default function ActionsSong(props: PropsActionSong) {
             >
                 <ZoomInRoundedIcon />
             </ActionIconButton>
-            <ActionIconButton 
+            <ActionIconButton
+                id="zoomOutButton"
                 title="- Zoom"
                 onClick={() => dispatch(modifySong({id: props.song.id, zoom: fontSize - 1}))}
                 color={fontSize < 17 ? 'primary' : undefined}
@@ -119,7 +126,8 @@ export default function ActionsSong(props: PropsActionSong) {
             >
                 <ZoomOutRoundedIcon />
             </ActionIconButton>
-            <ActionIconButton 
+            <ActionIconButton
+                id="playButton"
                 title="Riproduci video"
                 onClick={() => props.onPressVideo()}
                 color={props.videoIsPlaying ? 'primary' : undefined}
@@ -128,7 +136,8 @@ export default function ActionsSong(props: PropsActionSong) {
             >
                 <PlayArrowRoundedIcon />
             </ActionIconButton>
-            <ActionIconButton 
+            <ActionIconButton
+                id="playlistButton"
                 title="Aggiungi a playlist"
                 onClick={() => props.setOpenSheet()}
                 index={7}

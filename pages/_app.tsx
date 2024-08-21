@@ -9,11 +9,20 @@ import { useEffect, useState } from 'react'
 import { AuthContextProvider } from '@/logic/context/auth_context'
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { itIT } from '@mui/x-date-pickers/locales';
-
+/**
+ * Priorities:
+ * 1. Offline
+ * 2. bugs (?)
+ * 2a. Transition pages
+ * 3. Edit song
+ * 4. Tutorial (finish)
+ * 5. PDF (finish)
+ */
 // TODO: Offline https://github.com/hanford/next-offline
+// TODO: Implementare modo per evitare reload della canzone se già caricata (a volte succede inaspettatamente)
 // TODO: Implementare spazi fra accordi senza testo (per ora solo nelle righe intere senza testo, cerca canzoni con cui testare, sicuro "Mi perdo nel tuo amore")
-// TODO: Implement online for:
 import Head from 'next/head'
+// TODO: Implement online for:
 /**
  * Priorities:
  * B

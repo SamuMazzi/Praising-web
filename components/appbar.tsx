@@ -27,10 +27,14 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { setChordNotation } from "@/logic/redux/settings_slice";
 import ShareIcon from '@mui/icons-material/Share';
+import PrintIcon from '@mui/icons-material/PrintRounded';
 import { RWebShare } from "react-web-share";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { addSongToFavoriteSongs, removeSongFromFavoriteSongs } from "@/logic/redux/user_info_slice";
 import { MenuPlaylist } from "./menus";
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import { SOLFEGE, SYMBOL } from 'chordsheetjs';
 
 interface PropsHideOnScroll {
     window?: () => Window;
@@ -141,6 +145,47 @@ export const SongAppBar = (props: PropsSongAppBar) => {
     const favoriteSongs = useAppSelector(state => state.userInfo.favoriteSongs)
     const dispatch = useAppDispatch()
 
+    const printDocument = () => {
+      const input = document.getElementById('songDiv');
+      if (input === null) {
+          // setMessageSnackbar('Errore durante la stampa')
+          return
+      }
+      html2canvas(input, {backgroundColor: theme.palette.background.default})
+        .then((canvas) => {
+          const imgData = canvas.toDataURL('image/png');
+          const pdf = new jsPDF("p", "mm", "a4");
+          const imgWidth = 210;  // width of regular a4 paper 
+          const pageHeight = 295; // height of regular a4 paper
+          const imgHeight = canvas.height * imgWidth / canvas.width;
+          let heightLeft = imgHeight;
+          let position = 12;
+
+          pdf.setFillColor(theme.palette.background.default);
+          pdf.rect(0, 0, 210, 300, 'F');
+          pdf.addImage(imgData, 'PNG', 5, position, imgWidth, imgHeight);
+          // pdf.addFont("poppins", "poppins", "normal");
+          pdf.setFontSize(25);
+          pdf.setTextColor(theme.palette.text.primary);
+          pdf.setFont("Helvetica", "bold");
+          pdf.text(props.title, 105, 10, {align: 'center'});
+          pdf.setFont("Helvetica", "italic");
+          pdf.setFontSize(15);
+          pdf.text("Praising", 105, 18, {align: 'center'});
+          heightLeft -= pageHeight;
+    
+          while (heightLeft >= 0) {
+            position += heightLeft - imgHeight; // top padding for other pages
+            pdf.addPage();
+            pdf.setFillColor(theme.palette.background.default);
+            pdf.rect(0, 0, 210, 300, 'F');
+            pdf.addImage(imgData, 'PNG', 5, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+          }
+          pdf.save(props.title + ".pdf");
+        });
+    }
+
     const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
       setAnchorEl(event.currentTarget);
     };
@@ -225,16 +270,22 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                         </ListItemIcon>
                         <ListItemText>Preferiti</ListItemText>
                       </MenuItem>
+                      <MenuItem onClick={printDocument}>
+                          <ListItemIcon>
+                            <PrintIcon />
+                          </ListItemIcon>
+                        <ListItemText primary='Stampa (beta)'/>
+                      </MenuItem>
                       <MenuItem sx={{width: 200}} onClick={() => {
-                        if (chordNotation === 'symbol') {
-                          dispatch(setChordNotation('solfege'))
-                        } else if (chordNotation === 'solfege') {
-                          dispatch(setChordNotation('symbol'))
+                        if (chordNotation === SYMBOL) {
+                          dispatch(setChordNotation(SOLFEGE))
+                        } else if (chordNotation === SOLFEGE) {
+                          dispatch(setChordNotation(SYMBOL))
                         }
                       }} style={{fontWeight: 'bold'}}>
                         <ListItemText>Notazione</ListItemText>
                         <Typography variant="body2" color="text.secondary" sx={{ml: 2}}>
-                          { chordNotation === 'symbol' ? 'Eng' : 'Ita' }
+                          { chordNotation === SYMBOL ? 'Eng' : 'Ita' }
                         </Typography>
                       </MenuItem>
                       <MenuItem onClick={() => dispatch(modifySong({id: props.id, transpose: 0}))} 

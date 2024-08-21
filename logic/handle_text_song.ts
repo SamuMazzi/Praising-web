@@ -1,4 +1,4 @@
-import ChordSheetJS, { Song, Key } from 'chordsheetjs';
+import ChordSheetJS, { Song, Key, SYMBOL } from 'chordsheetjs';
 import * as cheerio from 'cheerio';
 import { ChordNotations } from './redux/settings_slice';
 
@@ -244,9 +244,13 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
         // This is needed because it seems like the normalization is different between major and minor keys (and we want always the major-like one)
         const majorRootKey = Key.parseOrFail(deserialized.key).toMajor()
         deserialized = deserialized.setKey(majorRootKey.toString())
+        if (props.chordNotation === SYMBOL) {
+            // FIXME: Don't why there's this actually big problem
+            deserialized = deserialized.transpose(4)
+        }
     
         deserialized.setMetadata('chord_style', props.chordNotation)
-    
+
         const disp = new ChordSheetJS.HtmlDivFormatter({normalizeChords: true, renderBlankLines: false}).format(deserialized);
         const $ = cheerio.load(disp)
     
