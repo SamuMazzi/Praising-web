@@ -36,5 +36,8 @@ yarn-error.log*
 next-env.d.ts
 
 public/*.js
-!public/service-worker.js
 package-lock.json
+
+#serwist
+public/sw*
+public/swe-worker*

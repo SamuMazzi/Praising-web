@@ -1,6 +1,13 @@
+import argparse
 import os
 import re
-from shutil import copyfile  # For error handling in case of existing files
+
+parser = argparse.ArgumentParser(
+                prog='Helper script Praising',
+                description='Contains some utility functions to help with Praising project')
+
+parser.add_argument('--chords-to-text', dest="chords_to_text", type=bool, default=False, help="This option will populate the folder 'text_chords' with all the lyrics of the chords file without chords")
+parser.add_argument('--fix-service-worker', dest="fix_service_worker", type=bool, default=False, help="This option will fix the service worker file to escape apostrophes in the name of the song")
 
 def modify_and_write_files(source_dir, target_dir):
     """
@@ -36,4 +43,26 @@ def modify_and_write_files(source_dir, target_dir):
             except IOError as e:
                 print(f"Error processing '{filename}': {e}")
 
-modify_and_write_files("public/accordi/", "text_chords/")
+def fix_service_worker_name_chord_files(input_file):
+    """Reads an input file, replaces occurrences of "'/accordi/<name_song>.crd'" with escaped apostrophes, and writes the modified content back to the file."""
+
+    with open(input_file, 'r+') as file:
+        content = file.read()
+
+        # Regular expression to match the pattern with potential apostrophes in <name_song>
+        pattern = r"/accordi/[^']*((?<!\\)')[^']*.crd"
+
+        # Replace occurrences of the pattern, escaping apostrophes within <name_song>
+        modified_content = re.sub(pattern, lambda match: match.group(0).replace("'", r"\'"), content)
+
+        # Write the modified content back to the file
+        file.seek(0)
+        file.write(modified_content)
+        file.truncate()
+
+if __name__ == "__main__":
+    args = parser.parse_args()
+    if args.chords_to_text:
+        modify_and_write_files("public/accordi/", "text_chords/")
+    if args.fix_service_worker:
+        fix_service_worker_name_chord_files("public/sw.js")

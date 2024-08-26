@@ -6,7 +6,7 @@ import Button from '@mui/material/Button'
 import { ModalCreateSession } from '@/components/modals'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { getActiveSessions } from '@/logic/server/database'
+// import { getActiveSessions } from '@/logic/server/database'
 import List from '@mui/material/List'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemButton from '@mui/material/ListItemButton'
@@ -26,8 +26,8 @@ function ListSessions(props: ListSessionsProps) {
     const getActiveSessionsBasedOnPosition = async () => {
         // Find places within 500m of current position
         const radiusInM = 500;
-        const newSessions = await getActiveSessions(props.center, radiusInM);
-        setSessions(newSessions);
+        // const newSessions = await getActiveSessions(props.center, radiusInM);
+        // setSessions(newSessions);
     }
 
     useEffect(() => {

@@ -1,7 +1,7 @@
 import { Playlist } from "../redux/playlist_slice";
 import app from "./firebase_config";
 import { getFirestore, collection, addDoc, getDoc, doc, getDocs, query, orderBy, startAt, endAt, setDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
-import geofire from 'geofire-common';
+// import geofire from 'geofire-common';
 
 const firestore = getFirestore(app)
 
@@ -70,7 +70,7 @@ export const getSinglePlaylist = async (id_playlist: string) => {
 }
 
 
-
+/*
 export const getActiveSessions = async (center: [number, number], radius_meters: number) => {
     // Each item in 'bounds' represents a startAt/endAt pair. We have to issue
     // a separate query for each pair. There can be up to 9 pairs of bounds
@@ -131,6 +131,7 @@ export const addActiveSession = async (name: string, center: [number, number]) =
     const docRef = await addDoc(collection(firestore, "sessions"), serverSession);
     return docRef.id
 }
+*/
 
 export const getServerProfile = async (user_id: string) => {
     const docRef = await getDoc(doc(firestore, "users", user_id))

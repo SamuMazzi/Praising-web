@@ -12,8 +12,8 @@ import Grid from '@mui/material/Grid'
 import NewspaperRoundedIcon from '@mui/icons-material/NewspaperRounded';
 import Image from 'next/image'
 import { useTheme } from '@mui/material'
-import { addActiveSession } from '@/logic/server/database'
-import { setActiveSession } from '@/logic/redux/sessions_slice'
+// import { addActiveSession } from '@/logic/server/database'
+// import { setActiveSession } from '@/logic/redux/sessions_slice'
 
 interface GenericProps {
     open: boolean
@@ -38,8 +38,8 @@ export function ModalCreateSession(props: ModalAddSongProps) {
             setError("Il nome deve essere più corto")
         } else {
             try {
-                const id_session = await addActiveSession(name, props.location)
-                dispatch(setActiveSession({id_session: id_session, name: name, owner_id: "TODO"}))
+                // const id_session = await addActiveSession(name, props.location)
+                // dispatch(setActiveSession({id_session: id_session, name: name, owner_id: "TODO"}))
                 props.handleClose()
             } catch (e: any) {
                 setError(e.message)
