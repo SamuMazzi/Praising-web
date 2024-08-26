@@ -36,10 +36,10 @@ const SingleLecture = (props: PropsSingleLecture) => {
   return (
     <>
       <Typography>
-        {props.lecture?.titolo}
+        {props.lecture?.title}
       </Typography>
       <Typography sx={{pb: 2, pt: 0.5}} style={{fontStyle: 'italic'}}>
-        {props.lecture?.versetto}
+        {props.lecture?.verse}
       </Typography>
       <Typography>
         {props.lecture?.content}
@@ -72,12 +72,7 @@ export default function Lectures() {
   return (
     <Container sx={{minHeight: '100vh', pt: verticalPaddingAppBar*3 + 2, pb: 7, whiteSpace: 'pre-wrap'}} >
         <PraisingAppBar title='Liturgia del giorno' homeVersion/>
-        <Box display='flex' alignItems='center'>
-          <CalendarSelectSingleDay daySelected={dataLiturgia} onChangeDate={setDataLiturgia}/>
-          <Typography>
-            {dataLiturgia.locale('it').format('dddd D MMMM YYYY')}
-          </Typography>
-        </Box>
+        <CalendarSelectSingleDay daySelected={dataLiturgia} onChangeDate={setDataLiturgia}/>
         <Container sx={{py: 2}}>
           <Typography variant="h2" sx={{pb: 2}}>
               Prima lettura
@@ -93,13 +88,13 @@ export default function Lectures() {
             data?.psalm ?
             <>
               <Typography variant="h4" sx={{pb: 2}} style={{fontWeight: 'normal'}}>
-                  {data?.psalm.titolo}
+                  {data?.psalm.title}
               </Typography>
               <Typography style={{fontWeight: 'bold'}} sx={{pb: 2}}>
-                  R. {data?.psalm.rit}
+                  R. {data?.psalm.chorus}
               </Typography>
               {
-                data?.psalm.versi.map((verso) => {
+                data?.psalm.verses.map((verso) => {
                   if (verso.trim() !== '') {
                     return (
                       <Typography key={verso} sx={{pb: 1}}>

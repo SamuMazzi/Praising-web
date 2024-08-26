@@ -1,6 +1,4 @@
-import { useState } from 'react';
 import { Dayjs } from 'dayjs';
-import IconButton from '@mui/material/IconButton';
 import EventIcon from '@mui/icons-material/Event';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -13,51 +11,25 @@ interface PropsCalendarSelectSingleDay {
 }
 
 export function CalendarSelectSingleDay(props: PropsCalendarSelectSingleDay) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleClick = (event: any) => {
-    setIsOpen((isOpen) => !isOpen);
-    setAnchorEl(event.currentTarget);
-  }
-
   const handleDaySelected = (newDate: Dayjs) => {
     props.onChangeDate(newDate)
   }
 
   return (
-    <LocalizationProvider adapterLocale='it' dateAdapter={AdapterDayjs}>
+    (<LocalizationProvider adapterLocale='it' dateAdapter={AdapterDayjs}>
       <DatePicker
-        value={props.daySelected}        
+        sx={{ml: 3}}
+        value={props.daySelected}
         onChange={(newValue) => {
           if(newValue !== null) {
             handleDaySelected(newValue);
           }
         }}
-        PopperProps={{
-          placement: "bottom-end",
-          anchorEl: anchorEl
+        slots={{
+          openPickerIcon: EventIcon
         }}
-        open={isOpen}
-        onClose={() => setIsOpen(false)}
-        renderInput={({
-          ref,
-          inputProps,
-          disabled,
-          onChange,
-          value,
-          ...other
-        }) => (
-          <div ref={ref} style={{
-            display: 'flex',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-          }}>
-            <IconButton onClick={handleClick}>
-              <EventIcon fontSize="large"/>
-            </IconButton>
-          </div>)}
-      />
-    </LocalizationProvider>
+        format="dddd D MMMM YYYY"
+        />
+    </LocalizationProvider>)
   );
 }
