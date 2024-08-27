@@ -21,10 +21,10 @@ import ShimmerSegments from '@/components/shimmer_effect/shimmer_segments'
 import TextField from '@mui/material/TextField'
 import Fab from '@mui/material/Fab'
 import { useTheme } from '@mui/material'
-import LinearProgress from '@mui/material/LinearProgress'
+// import LinearProgress from '@mui/material/LinearProgress'
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
-import { renderToString } from 'react-dom/server';
+// import { renderToString } from 'react-dom/server';
 import Head from 'next/head'
 
 // TODO: Add highlight of parts of text in song (also for sessions) -> take a look at transitions/modal/popover
