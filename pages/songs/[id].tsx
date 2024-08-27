@@ -1,6 +1,6 @@
 import Container from '@mui/material/Container'
 import { SongAppBar } from '@/components/appbar'
-import { getSingleSong, updateLastRecentsSongs } from '@/logic/local_logic'
+import { getFromStorage, getSingleSong, saveToStorage, updateLastRecentsSongs } from '@/logic/local_logic'
 import ActionsSong from '@/components/actions_song'
 import { ModalBottomSheetSong } from '@/components/bottom_sheet'
 import { useEffect, useState } from 'react'
@@ -21,6 +21,11 @@ import ShimmerSegments from '@/components/shimmer_effect/shimmer_segments'
 import TextField from '@mui/material/TextField'
 import Fab from '@mui/material/Fab'
 import { useTheme } from '@mui/material'
+import LinearProgress from '@mui/material/LinearProgress'
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+import { renderToString } from 'react-dom/server';
+import Head from 'next/head'
 
 // TODO: Add highlight of parts of text in song (also for sessions) -> take a look at transitions/modal/popover
 
@@ -35,6 +40,36 @@ interface PropsSongPage {
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json()).catch((err) => console.log(err));
+
+
+const driverObj = driver({
+    // TODO: Sistema progress
+    nextBtnText: 'Avanti',
+    prevBtnText: 'Indietro',
+    // doneBtnText: '✕',
+    showProgress: true,
+    disableActiveInteraction: true,
+    /* onPopoverRender: (popover, { config, state }) => {
+        const index = state.activeIndex ?? 0
+        const len = config.steps?.length ?? 1
+        const firstButton = <LinearProgress variant="determinate" sx={{width: 20}} value={index/len} />
+        popover.footer.innerHTML = renderToString(firstButton);
+    }, */
+    progressText: "{{current}} di {{total}}",
+    steps: [
+      { popover: { title: 'Tutorial', description: 'Ecco un paio di informazioni per usare al meglio Praising.' } },
+      { element: 'div #menuButton', popover: { title: 'Funzionalità', description: 'Premendo questo pulsante puoi sbloccare molte funzionalità di Praising.' } },
+      { element: 'div #chordsButton', popover: { title: 'Accordi', description: 'Mostra o nascondi gli accordi' } },
+      { element: 'div #transposeUpButton', popover: { title: 'Trasporta', description: 'Trasporta gli accordi in altre tonalità' } },
+      { element: 'div #zoomInButton', popover: { title: 'Zoom', description: 'Ingrandisci o rimpicciolisci i caratteri' } },
+      { element: 'div #playButton', popover: { title: 'Ascolta la canzone', description: 'Ascolta la canzone direttamente da Youtube (se possibile).' } },
+      { element: 'div #playlistButton', popover: { title: 'Playlist', description: 'Aggiungi la canzone ad una playlist.' } },
+      { popover: { title: 'Schermo', description: 'Grazie a Praising lo schermo non si spegnerà mai automaticamente mentre sei su una canzone.' } },
+      { popover: { title: 'Buon divertimento!', description: ':)' } },
+    ]
+});
+
+const TUTORIAL_SHOWN = 'tutorialShown_0'
 
 export default function SongPage(props: PropsSongPage) {
     const { data, error, isLoading } = useSWR('/api/song/' + props.id, fetcher)
@@ -51,6 +86,10 @@ export default function SongPage(props: PropsSongPage) {
     const theme = useTheme()
 
     useEffect(() => {
+        if (getFromStorage(TUTORIAL_SHOWN) ?? false) {
+            saveToStorage(TUTORIAL_SHOWN, true)
+            driverObj.drive();
+        }
         const handleVisibilityChange = async () => {
             if (isSupported && (released === true || released === undefined) && document.visibilityState === 'visible') {
                 await request()
@@ -120,6 +159,14 @@ export default function SongPage(props: PropsSongPage) {
     // fontsize std: lineHeigth 68, poi -4 tutte le volte
 
     return (
+        <>
+        <Head>
+            <title>{song?.name} - Praising</title>
+            <meta property="og:title" content={"Praising - " + song?.name} key="title" />
+            <meta name="og:description" content={"Guarda gli accordi della canto " + song?.name}/>
+            <meta name="og:keywords" content={song?.name + ", accordi, " + song?.author + ", canzoniere, chords" }/>
+        </Head>
+        <main>
         <Container sx={{minHeight: '100vh', width: '100vw'}} style={{backgroundColor: theme.palette.background.default}}>
             {
                 !isSupported && <Typography>
@@ -131,7 +178,7 @@ export default function SongPage(props: PropsSongPage) {
             {
                 !editMode &&
                 <ActionsSong song={song!} fontSize={fontSize} videoIsPlaying={showVideo} onPressVideo={handlePressVideo} 
-                    setOpenSheet={() => setOpenModalPlaylist(true)} setEditMode={() => setEditMode(true)}/>
+                setOpenSheet={() => setOpenModalPlaylist(true)} setEditMode={() => setEditMode(true)}/>
             }
             <Container id="songDiv" disableGutters sx={{py: 1}}>
                 {
@@ -140,10 +187,10 @@ export default function SongPage(props: PropsSongPage) {
                     {
                         /**
                          * 
-                            <Typography style={{fontSize: infoSong?.zoom ?? 17}}> // FIXME: e font size????
-                                <div dangerouslySetInnerHTML={{__html: songToRender}} />
-                            </Typography>
-                         */
+                        <Typography style={{fontSize: infoSong?.zoom ?? 17}}> // FIXME: e font size????
+                        <div dangerouslySetInnerHTML={{__html: songToRender}} />
+                        </Typography>
+                        */
                     }
                     {
                         sections.map((section, index) => {
@@ -156,11 +203,11 @@ export default function SongPage(props: PropsSongPage) {
                 }
             </Container>
             {
-            showVideo && song?.link && 
-            <Box 
+                showVideo && song?.link && 
+                <Box 
                 style={{position: 'fixed', bottom: 20, right: 0}} 
                 sx={{px: 2, pb: 2, mr: 3, backgroundColor: 'background.paper', borderRadius: 4, boxShadow: 12, maxWidth: '90%'}}
-            >
+                >
                 <IconButton edge="start" onClick={() => setShowVideo(false)}>
                     <CloseRounded />
                 </IconButton>
@@ -172,12 +219,14 @@ export default function SongPage(props: PropsSongPage) {
                                 autoplay: 1,
                             },
                         }}
-                    />
+                        />
             </Box>
             }
             <MessageSnackbar handleClose={() => setMessageSnackbar('')} message={messageSnackbar} />
             <ModalBottomSheetSong song_id={song!.id} open={openModalPlaylist} onClose={() => setOpenModalPlaylist(false)}/>
         </Container>
+        </main>
+        </>
     )
 }
 
