@@ -1,5 +1,6 @@
 {
   "name": "web-praising",
+  "description": "Praising è la tua web-app per visualizzare testi e accordi dei canti cristiani più famosi.",
   "version": "0.4.2",
   "private": true,
   "scripts": {

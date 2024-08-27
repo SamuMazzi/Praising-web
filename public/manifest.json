@@ -7,6 +7,7 @@
     "id": "/",
     "name": "Praising",
     "short_name": "Praising",
+    "description": "Praising è la tua web-app per visualizzare testi e accordi dei canti cristiani più famosi.",
     "icons": [
         {
             "src": "/icon-192x192.png",
@@ -27,6 +28,50 @@
             "src": "/icon-512x512.png",
             "sizes": "512x512",
             "type": "image/png"
+        }
+    ],
+    "screenshots": [
+        {
+         "src": "/assets/pwa/home_pc.png",
+          "sizes": "1850x1084",
+          "type": "image/png",
+          "form_factor": "wide",
+          "label": "Home"
+        },
+        {
+            "src": "/assets/pwa/single_song_pc.png",
+            "sizes": "1850x1084",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Canzone"
+        },
+        {
+            "src": "/assets/pwa/playlist_pc.png",
+            "sizes": "1850x1084",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Playlist"
+        },
+        {
+            "src": "/assets/pwa/home_smartphone.png",
+            "sizes": "1080x2012",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Home"
+        },
+        {
+            "src": "/assets/pwa/single_song_smartphone.png",
+            "sizes": "1080x2012",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Canzone"
+        },
+        {
+            "src": "/assets/pwa/playlist_smartphone.png",
+            "sizes": "1080x2012",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Playlist"
         }
     ]
 }

@@ -29,7 +29,7 @@ export default function Document() {
 
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Praising" />
-        <meta property="og:description" content="I tuoi accordi per canti cristiani" />
+        <meta property="og:description" content="Praising è la tua web-app per visualizzare testi e accordi dei canti cristiani più famosi." />
         <meta property="og:site_name" content="Praising" />
         <meta property="og:url" content="https://praising.vercel.app" />
         <meta property="og:image" content="https://praising.vercel.app/icons/apple-touch-icon.png" />
