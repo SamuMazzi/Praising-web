@@ -86,7 +86,8 @@ export default function SongPage(props: PropsSongPage) {
     const theme = useTheme()
 
     useEffect(() => {
-        if (getFromStorage(TUTORIAL_SHOWN) ?? false) {
+        const tutorial_not_shown = !(getFromStorage(TUTORIAL_SHOWN) ?? false)
+        if (tutorial_not_shown) {
             saveToStorage(TUTORIAL_SHOWN, true)
             driverObj.drive();
         }
