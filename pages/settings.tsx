@@ -16,6 +16,7 @@ import { useAppDispatch, useAppSelector } from "@/logic/redux/store";
 // import VolunteerActivismRoundedIcon from '@mui/icons-material/VolunteerActivismRounded';
 import SdStorageRoundedIcon from '@mui/icons-material/SdStorageRounded';
 import { clearStorage } from '@/logic/local_logic'
+import InstallPWA from '@/components/install_pwa_btn'
 
 export default function SettingsPage() {
     const darkTheme = useAppSelector(state => state.settings.darkMode)
@@ -61,6 +62,9 @@ export default function SettingsPage() {
                         <ListItemText primary="Contribuisci" />
                     </ListItemButton>
                     </ListItem>*/}
+                <ListItem disablePadding>
+                    <InstallPWA />
+                </ListItem>
                 <ListItem disablePadding sx={{borderBottomRightRadius: borderRadius, borderBottomLeftRadius: borderRadius}}>
                     <ListItemButton onClick={() => clearStorage()}>
                     <ListItemIcon>
@@ -70,7 +74,7 @@ export default function SettingsPage() {
                     </ListItemButton>
                 </ListItem>
             </List>
-            <p>Versione: 0.4.2</p>
+            <p>Versione: 0.4.3</p>
         </Container>
     )
   
