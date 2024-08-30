@@ -241,12 +241,14 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
         }
 
 
-        // This is needed because it seems like the normalization is different between major and minor keys (and we want always the major-like one)
-        const majorRootKey = Key.parseOrFail(deserialized.key).toMajor()
-        deserialized = deserialized.setKey(majorRootKey.toString())
-        if (props.chordNotation === SYMBOL) {
-            // FIXME: Don't why there's this actually big problem
-            deserialized = deserialized.transpose(4)
+        if (deserialized.key !== null) {
+            // This is needed because it seems like the normalization is different between major and minor keys (and we want always the major-like one)
+            const majorRootKey = Key.parseOrFail(deserialized.key).toMajor()
+            deserialized = deserialized.setKey(majorRootKey.toString())
+            if (props.chordNotation === SYMBOL) {
+                // FIXME: Don't why there's this actually big problem
+                deserialized = deserialized.transpose(4)
+            }
         }
     
         deserialized.setMetadata('chord_style', props.chordNotation)

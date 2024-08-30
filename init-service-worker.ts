@@ -1,6 +1,7 @@
 import type { PrecacheEntry, SerwistGlobalConfig, RuntimeCaching } from "serwist";
 import { Serwist, StaleWhileRevalidate } from "serwist";
 import { getLocalSongs } from "./logic/local_logic";
+import info_revision_pages from "./info_revision.json";
 
 // This declares the value of `injectionPoint` to TypeScript.
 // `injectionPoint` is the string that will be replaced by the
@@ -14,15 +15,10 @@ declare global {
 
 declare const self: ServiceWorkerGlobalScope;
 
-const additionalPrecacheEntries: (string | PrecacheEntry)[] = [
-  {url: "/lectures", revision: "2"},
-  {url: "/songs", revision: "2"},
-  {url: "/", revision: "2"},
-  {url: "/playlist", revision: "2"},
-  {url: "/feedback", revision: "2"},
-  {url: "/contribute", revision: "2"},
-  {url: "/settings", revision: "2"},
-]
+const additionalPrecacheEntries: (string | PrecacheEntry)[] = info_revision_pages.map((page) => {
+  return {url: "/" + page.voice, revision: page.hash}
+})
+
 const cachingStrategies: RuntimeCaching[] = [
   {
     matcher: ({ request, url }) => url.pathname.startsWith("/api/song/"),

@@ -36,6 +36,118 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { SOLFEGE, SYMBOL } from 'chordsheetjs';
 
+
+const PAGE_WIDTH = 210;  // width of regular a4 paper
+const PAGE_HEIGHT = 295; // height of regular a4 paper
+
+// This is really useful in the case we'll ever want to split a song in multiple pages (in case it's too long)
+/*
+interface ColorObj {
+  r: string,
+  g: string,
+  b: string,
+  a: string
+}
+
+function analyzeLyricsImageCrop(imageData: string, width: number, height: number) {  
+  // If the original image is already shorter than the cropped height, no cropping is needed
+  if (height <= PAGE_HEIGHT) {
+    return {
+      isCropped: false,
+      suggestedCropHeight: height,
+      message: "No cropping needed. Image already fits A4 format."
+    };
+  }
+  
+  let lastTextLine = -1;
+  
+  // Start checking from the bottom of the image
+  for (let y = height - 1; y >= 0; y--) {
+    let isLineSameColor = true;
+    const baseColor = getPixelColor(imageData, 0, y, width);
+    
+    for (let x = 1; x < width; x++) {
+      const pixelColor = getPixelColor(imageData, x, y, width);
+      if (!areColorsEqual(baseColor, pixelColor)) {
+        isLineSameColor = false;
+        break;
+      }
+    }
+    
+    // If we find a line that's not all the same color, it means we've hit text
+    if (!isLineSameColor) {
+      lastTextLine = y;
+      break;
+    }
+  }
+  
+  // If we didn't find any text, the image can be cropped to ideal A4 size
+  if (lastTextLine === -1) {
+    return {
+      isCropped: height > PAGE_HEIGHT,
+      suggestedCropHeight: PAGE_HEIGHT,
+      message: "No lyrics detected. Image can be cropped to ideal A4 size."
+    };
+  }
+  
+  // Calculate the suggested crop height
+  const suggestedCropHeight = Math.min(height, lastTextLine + 1);
+  
+  // Check if the suggested crop height is less than the ideal A4 height
+  if (suggestedCropHeight < PAGE_HEIGHT) {
+    return {
+      isCropped: true,
+      suggestedCropHeight: suggestedCropHeight,
+      message: "Lyrics detected. Crop to " + suggestedCropHeight + " pixels height to avoid intersecting lyrics. Note: This will result in an image shorter than ideal A4 format."
+    };
+  } else {
+    return {
+      isCropped: height > PAGE_HEIGHT,
+      suggestedCropHeight: PAGE_HEIGHT,
+      message: "Lyrics detected, but can crop to ideal A4 size without intersecting lyrics."
+    };
+  }
+}
+
+function getPixelColor(imageData: string, x: number, y: number, width: number) {
+  const index = (y * width + x) * 4;
+  return {
+    r: imageData[index],
+    g: imageData[index + 1],
+    b: imageData[index + 2],
+    a: imageData[index + 3]
+  };
+}
+
+function areColorsEqual(color1: ColorObj, color2: ColorObj) {
+  return color1.r === color2.r && 
+         color1.g === color2.g && 
+         color1.b === color2.b && 
+         color1.a === color2.a;
+}
+
+function splitSongInPages(pdf, canvas) {
+  const originalHeight = canvas.height * PAGE_WIDTH / canvas.width;
+  const result = analyzeLyricsImageCrop(imgData, imgWidth, originalHeight);
+  let imgHeight = result.suggestedCropHeight;
+
+  pdf.setFillColor(theme.palette.background.default);
+  pdf.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT + x_offset, 'F');
+  pdf.addImage(imgData, 'PNG', x_offset, y_position, imgWidth, imgHeight);
+  let heightLeft = originalHeight - imgHeight;
+
+  while (heightLeft > 0) {
+    y_position += heightLeft - imgHeight; // top padding for other pages
+    pdf.addPage();
+    pdf.setFillColor(theme.palette.background.default);
+    pdf.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT + x_offset, 'F');
+    pdf.addImage(imgData, 'PNG', x_offset, y_position, imgWidth, imgHeight);
+    heightLeft -= PAGE_HEIGHT;
+  }
+  pdf.save(props.title + ".pdf");
+}
+*/
+
 interface PropsHideOnScroll {
     window?: () => Window;
     children: React.ReactElement;
@@ -155,33 +267,25 @@ export const SongAppBar = (props: PropsSongAppBar) => {
         .then((canvas) => {
           const imgData = canvas.toDataURL('image/png');
           const pdf = new jsPDF("p", "mm", "a4");
-          const imgWidth = 210;  // width of regular a4 paper 
-          const pageHeight = 295; // height of regular a4 paper
-          const imgHeight = canvas.height * imgWidth / canvas.width;
-          let heightLeft = imgHeight;
-          let position = 12;
-
+          const x_offset = 5;
+          const y_offset = 12;  // 
+          const imgWidth = PAGE_WIDTH - x_offset;
+          const imgHeight = (canvas.height * PAGE_WIDTH / canvas.width) - y_offset;
+          
+          // FIXME: "So will I" is cropped
           pdf.setFillColor(theme.palette.background.default);
-          pdf.rect(0, 0, 210, 300, 'F');
-          pdf.addImage(imgData, 'PNG', 5, position, imgWidth, imgHeight);
+          pdf.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT + x_offset, 'F');
+          pdf.addImage(imgData, 'PNG', x_offset, y_offset, imgWidth, imgHeight);
+          // Title ------------------------------
           // pdf.addFont("poppins", "poppins", "normal");
-          pdf.setFontSize(25);
           pdf.setTextColor(theme.palette.text.primary);
+          pdf.setFontSize(25);
           pdf.setFont("Helvetica", "bold");
           pdf.text(props.title, 105, 10, {align: 'center'});
-          pdf.setFont("Helvetica", "italic");
           pdf.setFontSize(15);
+          pdf.setFont("Helvetica", "italic");
           pdf.text("Praising", 105, 18, {align: 'center'});
-          heightLeft -= pageHeight;
-    
-          while (heightLeft >= 0) {
-            position += heightLeft - imgHeight; // top padding for other pages
-            pdf.addPage();
-            pdf.setFillColor(theme.palette.background.default);
-            pdf.rect(0, 0, 210, 300, 'F');
-            pdf.addImage(imgData, 'PNG', 5, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-          }
+          // ------------------------------------
           pdf.save(props.title + ".pdf");
         });
     }

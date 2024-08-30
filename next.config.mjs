@@ -8,7 +8,7 @@ const withSerwist = withSerwistInit({
   swDest: "public/sw.js",
   reloadOnOnline: true,
   register: false,  // This is done in _app.tsx
-  // disable: process.env.NODE_ENV === 'development',
+  disable: process.env.NODE_ENV === 'development',
 });
 
 export default withSerwist({
