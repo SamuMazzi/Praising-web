@@ -89,16 +89,17 @@ self.addEventListener("install", (e) => {
       const cacheNames = await caches.keys();
       const cachess = await Promise.all(
         cacheNames.map(async (cacheName) => {
-          console.log("Opening cache", cacheName);
+          // console.log("Opening cache", cacheName);
           return caches.open(cacheName);
         }),
       );
       console.log("Installing service worker");
-      console.log("Opened caches", cachess);
+      // console.log("Opened caches", cachess);
       for (let i = 0; i < cachess.length; i++) {
         const cache = cachess[i];
         const k = await cache.keys()
-        console.log(i, k)
+        // TODO: Fix this -> way too many things are cached
+        // console.log(i, k)
       }
     })(),
   );

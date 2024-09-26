@@ -1,7 +1,7 @@
 {
   "name": "web-praising",
   "description": "Praising è la tua web-app per visualizzare testi e accordi dei canti cristiani più famosi.",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -23,7 +23,7 @@
     "@vercel/speed-insights": "^1.0.12",
     "axios": "^1.7.2",
     "cheerio": "^1.0.0",
-    "chordsheetjs": "^10.1.0",
+    "chordsheetjs": "^10.3.0",
     "dayjs": "^1.11.7",
     "driver.js": "^1.3.1",
     "firebase": "^10.12.1",

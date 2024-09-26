@@ -156,7 +156,7 @@ export function ModalNews(props: GenericProps) {
                     <Typography>
                         Ecco alcune novità di Praising:
                     </Typography>
-                    <List sx={{ listStyleType: 'disc', pl: 4, py: 2, my: 1, borderRadius: 8, backgroundColor: theme.palette.mode === 'light' ? '#F2F2F2' : '#3A3A3A', maxHeight: 400, overflow: 'auto'}}>
+                    <List sx={{ listStyleType: 'disc', pl: 4, py: 2, my: 1, borderRadius: 8, backgroundColor: theme.palette.mode === 'light' ? '#F2F2F2' : '#3A3A3A', maxHeight: { xs: 250, sm: 400 }, overflow: 'auto'}}>
                         <ListItemText sx={{ display: 'list-item' }}>
                             <strong>Schermo sempre attivo:</strong> quando utilizzerai Praising non dovrai preoccuparti di toccare lo schermo per non farlo spegnere, ora rimarrà sempre acceso!
                         </ListItemText>
@@ -193,6 +193,8 @@ const style = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 400,
+    maxWidth: '90%',
+    maxHeight: '85%',
     bgcolor: 'background.paper',
     boxShadow: 24,
     borderRadius: 8,

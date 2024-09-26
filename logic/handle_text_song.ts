@@ -1,4 +1,4 @@
-import ChordSheetJS, { Song, Key, SYMBOL } from 'chordsheetjs';
+import ChordSheetJS, { Song, Key, SYMBOL, SOLFEGE } from 'chordsheetjs';
 import * as cheerio from 'cheerio';
 import { ChordNotations } from './redux/settings_slice';
 
@@ -231,6 +231,13 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
         }
     
         let deserialized = new ChordSheetJS.ChordSheetSerializer().deserialize(serializedSong);
+        /*const majorRootKey = Key.parseOrFail(deserialized.key).toMajor()
+        if (props.chordNotation === SYMBOL) {
+            deserialized = deserialized.setKey(majorRootKey.toChordSymbolString(majorRootKey))
+        } else if (props.chordNotation === SOLFEGE) {
+            deserialized = deserialized.setKey(majorRootKey.toChordSolfegeString(majorRootKey))
+        }*/
+
         if (deserialized.capo !== undefined && deserialized.capo !== null && !(deserialized.capo instanceof Array)) {
             const capo = -parseInt(deserialized.capo)
             deserialized = deserialized.setCapo(capo)
@@ -239,15 +246,24 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
         if (props.transpose !== undefined && props.transpose !== 0) {
             deserialized = deserialized.transpose(props.transpose)
         }
-
+        // console.log("key", deserialized.key)
 
         if (deserialized.key !== null) {
             // This is needed because it seems like the normalization is different between major and minor keys (and we want always the major-like one)
             const majorRootKey = Key.parseOrFail(deserialized.key).toMajor()
-            deserialized = deserialized.setKey(majorRootKey.toString())
+
+            // FIXME: Don't why there's this actually big problem, it can't really change chords from ita to eng
+            /*
             if (props.chordNotation === SYMBOL) {
-                // FIXME: Don't why there's this actually big problem
-                deserialized = deserialized.transpose(4)
+                deserialized = deserialized.transpose(-1, {normalizeChordSuffix: true})
+            }*/
+
+            const diesis_notes = ["C", "G", "D", "A", "E", "B", "F#", "C#", 
+                "Do", "Sol", "Re", "La", "Mi", "Si", "Fa#", "Do#"]
+            if (diesis_notes.includes(majorRootKey.toString())) {
+                deserialized = deserialized.useModifier("#")
+            } else {
+                deserialized = deserialized.useModifier("b")
             }
         }
     
