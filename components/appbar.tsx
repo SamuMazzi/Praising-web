@@ -32,13 +32,9 @@ import { RWebShare } from "react-web-share";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { addSongToFavoriteSongs, removeSongFromFavoriteSongs } from "@/logic/redux/user_info_slice";
 import { MenuPlaylist } from "./menus";
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 import { SOLFEGE, SYMBOL } from 'chordsheetjs';
+import { printDocument } from "@/logic/song_to_pdf";
 
-
-const PAGE_WIDTH = 210;  // width of regular a4 paper
-const PAGE_HEIGHT = 295; // height of regular a4 paper
 
 // This is really useful in the case we'll ever want to split a song in multiple pages (in case it's too long)
 /*
@@ -257,39 +253,6 @@ export const SongAppBar = (props: PropsSongAppBar) => {
     const favoriteSongs = useAppSelector(state => state.userInfo.favoriteSongs)
     const dispatch = useAppDispatch()
 
-    const printDocument = () => {
-      const input = document.getElementById('songDiv');
-      if (input === null) {
-          // setMessageSnackbar('Errore durante la stampa')
-          return
-      }
-      html2canvas(input, {backgroundColor: theme.palette.background.default})
-        .then((canvas) => {
-          const imgData = canvas.toDataURL('image/png');
-          const pdf = new jsPDF("p", "mm", "a4");
-          const x_offset = 5;
-          const y_offset = 12;  // 
-          const imgWidth = PAGE_WIDTH - x_offset;
-          const imgHeight = (canvas.height * PAGE_WIDTH / canvas.width) - y_offset;
-          
-          // FIXME: "So will I" is cropped
-          pdf.setFillColor(theme.palette.background.default);
-          pdf.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT + x_offset, 'F');
-          pdf.addImage(imgData, 'PNG', x_offset, y_offset, imgWidth, imgHeight);
-          // Title ------------------------------
-          // pdf.addFont("poppins", "poppins", "normal");
-          pdf.setTextColor(theme.palette.text.primary);
-          pdf.setFontSize(25);
-          pdf.setFont("Helvetica", "bold");
-          pdf.text(props.title, 105, 10, {align: 'center'});
-          pdf.setFontSize(15);
-          pdf.setFont("Helvetica", "italic");
-          pdf.text("Praising", 105, 18, {align: 'center'});
-          // ------------------------------------
-          pdf.save(props.title + ".pdf");
-        });
-    }
-
     const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
       setAnchorEl(event.currentTarget);
     };
@@ -374,7 +337,11 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                         </ListItemIcon>
                         <ListItemText>Preferiti</ListItemText>
                       </MenuItem>
-                      <MenuItem onClick={printDocument}>
+                      <MenuItem onClick={() => printDocument("songDiv", {
+                        background_color: theme.palette.background.default,
+                        text_color: theme.palette.text.primary,
+                        title: props.title
+                      })}>
                           <ListItemIcon>
                             <PrintIcon />
                           </ListItemIcon>

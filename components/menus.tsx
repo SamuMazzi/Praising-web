@@ -14,6 +14,10 @@ import { RWebShare } from "react-web-share";
 import PersSnackbar from "./pers_snackbar";
 import { ModalEditNamePlaylist } from "./modals";
 import { saveToStorage } from "@/logic/local_logic";
+import PrintIcon from '@mui/icons-material/PrintRounded';
+import { useTheme } from "@mui/material";
+import { playlistToPdf } from "@/logic/song_to_pdf";
+import { ChordNotations } from "@/logic/redux/settings_slice";
 
 interface PropsMenuPlaylist {
     anchorEl: HTMLElement | null
@@ -24,11 +28,13 @@ interface PropsMenuPlaylist {
   
 export const MenuPlaylist = (props: PropsMenuPlaylist) => {
     const playlist: Playlist | undefined = useAppSelector(state => state.playlist.playlist[props.playlist_id])
+    const chord_notation: ChordNotations = useAppSelector(state => state.settings.chordNotation)
     const [openEdit, setOpenEdit] = useState(false)
     const [snackbar, openSnackbar ] = useState(false)
     const [message, setMessage ] = useState("")
     const router = useRouter()
     const dispatch = useAppDispatch()
+    const theme = useTheme()
 
     const closeMenu = () => props.setAnchorEl(null)
 
@@ -65,6 +71,19 @@ export const MenuPlaylist = (props: PropsMenuPlaylist) => {
               <EditRoundedIcon />
             </ListItemIcon>
             <ListItemText primary='Modifica il nome'/>
+        </MenuItem>
+        <MenuItem onClick={async () => {
+          await playlistToPdf(playlist.name, {
+            background_color: theme.palette.background.default,
+            text_color: theme.palette.text.primary,
+            chord_notation: chord_notation,
+            songs: playlist.songs
+          })
+        }}>
+            <ListItemIcon>
+              <PrintIcon />
+            </ListItemIcon>
+          <ListItemText primary='Stampa (beta)'/>
         </MenuItem>
         <MenuItem onClick={() => {
             saveToStorage('deleting_playlist', playlist!.id, "sessionStorage")

@@ -26,6 +26,7 @@ import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 // import { renderToString } from 'react-dom/server';
 import Head from 'next/head'
+import { SongDiv } from '@/components/song_div'
 
 // TODO: Add highlight of parts of text in song (also for sessions) -> take a look at transitions/modal/popover
 
@@ -72,7 +73,7 @@ const driverObj = driver({
 const TUTORIAL_SHOWN = 'tutorialShown_0'
 
 export default function SongPage(props: PropsSongPage) {
-    const { data, error, isLoading } = useSWR('/api/song/' + props.id, fetcher)
+    const { data, error, isLoading } = useSWR('/api/song/' + encodeURIComponent(props.id), fetcher)
     const song = getSingleSong(props.id)
     const playlist: Playlist | undefined = useAppSelector(state => props.playlist_id !== undefined ? state.playlist.playlist[props.playlist_id] : undefined)
     const [openModalPlaylist, setOpenModalPlaylist] = useState(false)
@@ -181,26 +182,11 @@ export default function SongPage(props: PropsSongPage) {
                 <ActionsSong song={song!} fontSize={fontSize} videoIsPlaying={showVideo} onPressVideo={handlePressVideo} 
                 setOpenSheet={() => setOpenModalPlaylist(true)} setEditMode={() => setEditMode(true)}/>
             }
-            <Container id="songDiv" disableGutters sx={{py: 1}}>
+            <Container disableGutters sx={{py: 1}}>
                 {
-                    editMode ? <EditableSong data={data} setEditMode={() => setEditMode(false)}/> : 
-                    <>
-                    {
-                        /**
-                         * 
-                        <Typography style={{fontSize: infoSong?.zoom ?? 17}}> // FIXME: e font size????
-                        <div dangerouslySetInnerHTML={{__html: songToRender}} />
-                        </Typography>
-                        */
-                    }
-                    {
-                        sections.map((section, index) => {
-                            return (
-                                <SectionSong key={index} section={section} infoSong={infoSong}/>
-                            )
-                        })
-                    }
-                    </>
+                    editMode ? 
+                    <EditableSong data={data} setEditMode={() => setEditMode(false)}/> :
+                    <SongDiv sections={sections} infoSong={infoSong}/>
                 }
             </Container>
             {
@@ -228,23 +214,6 @@ export default function SongPage(props: PropsSongPage) {
         </Container>
         </main>
         </>
-    )
-}
-
-function SectionSong(props: {section: string, infoSong: InfoLocalSong | undefined}) {
-    return (
-        <Typography style={{fontSize: props.infoSong?.zoom ?? 17}}>
-            <p className='expandable' onClick={(e) => {
-                const isCompressed = e.currentTarget.classList.toggle("compressed");
-                const classToPut = !isCompressed ? 'chord' : 'no-chord';
-                const classToRemove = !isCompressed ? 'no-chord' : 'chord';
-
-                const children = e.currentTarget.querySelectorAll('.' + classToRemove);
-                children.forEach(child => child.classList.replace(classToRemove, classToPut));
-            }}>
-                <p dangerouslySetInnerHTML={{__html: props.section}} />
-            </p>
-        </Typography>
     )
 }
 

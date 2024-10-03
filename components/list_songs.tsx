@@ -39,7 +39,9 @@ export default function ListSongs(props: PropsListSongs) {
         const favorite_part = (!showOnlyFavorites || (showOnlyFavorites && favoriteSongs.includes(v.id))) 
         const name_to_filter = v.name.replace(/[^a-zA-Z0-9 ]/g, "").toLowerCase()
         const author_to_filter = v.author.replace(/[^a-zA-Z0-9 ]/g, "").toLowerCase()
-        const fit_in_filter = (name_to_filter + " " +  author_to_filter).includes(filter.toLowerCase())
+        const fit_in_filter = (name_to_filter + " " +  author_to_filter).includes(
+            filter.replace(/[^a-zA-Z0-9 ]/g, "").toLowerCase()  // This replace is needed to avoid special characters... it could be handled better
+        )
         return favorite_part && fit_in_filter
     }
     
