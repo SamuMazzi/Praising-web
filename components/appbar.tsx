@@ -337,10 +337,10 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                         </ListItemIcon>
                         <ListItemText>Preferiti</ListItemText>
                       </MenuItem>
-                      <MenuItem onClick={() => printDocument("songDiv", {
+                      <MenuItem onClick={() => printDocument(props.id, {
                         background_color: theme.palette.background.default,
                         text_color: theme.palette.text.primary,
-                        title: props.title
+                        chord_notation: chordNotation
                       })}>
                           <ListItemIcon>
                             <PrintIcon />

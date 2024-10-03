@@ -199,7 +199,7 @@ const removeChords = (serializedSong: any) => {
     })
 }
 
-interface InfoRenderSong {
+export interface InfoRenderSong {
     // songText: string
     sections: string[]
     fontSize: number

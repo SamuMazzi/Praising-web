@@ -16,7 +16,7 @@ import { itIT } from '@mui/x-date-pickers/locales';
  * 2a. Transition pages
  * 3. Edit song
  * 4. Tutorial (finish)
- * 5. PDF (finish) -> songs playlist
+ * 5. PDF (finish)
  */
 // TODO: Offline https://github.com/hanford/next-offline
 // TODO: Implementare modo per evitare reload della canzone se già caricata (a volte succede inaspettatamente)
@@ -31,7 +31,6 @@ import Head from 'next/head'
  * - Modify song WIP  
  * C
  * - Sessions
- * - Download PDF with all the songs
  */
 
 export default function App({ Component, pageProps }: AppProps) {
