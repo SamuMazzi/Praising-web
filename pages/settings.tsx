@@ -77,5 +77,4 @@ export default function SettingsPage() {
             <p>Versione: 0.4.7</p>
         </Container>
     )
-  
 }

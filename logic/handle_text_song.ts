@@ -1,4 +1,4 @@
-import ChordSheetJS, { Song, Key, SYMBOL, SOLFEGE } from 'chordsheetjs';
+import ChordSheetJS, { Song, Key, SOLFEGE } from 'chordsheetjs';
 import * as cheerio from 'cheerio';
 import { ChordNotations } from './redux/settings_slice';
 
@@ -9,6 +9,13 @@ interface ParamsRenderSong {
     fontSize?: number | undefined
     chordNotation: ChordNotations
 }
+
+const CHORUS_CSS = "chorus"
+const CHORD_CSS = "chord"
+const COLUMN_CSS = "column"
+const LYRICS_CSS = "lyrics"
+const ROW_CSS = "row"
+const SECTION_CSS = "section"
 
 const findLinesChorus = (deserialized: Song) => {
     const linesChorus: number[] = []
@@ -30,27 +37,19 @@ const findLinesChorus = (deserialized: Song) => {
     return linesChorus
 }
 
+/** Needed to remove the space that .chord css selecter would take */
 const toggleShowChords = ($: cheerio.CheerioAPI, showChords: boolean) => {
-    $('.chord').each((i, chord) => {
+    $(`.${CHORD_CSS}`).each((i, chord) => {
         if(!showChords) {
-            if ($(chord).hasClass('chord')) {
-                $(chord).removeClass('chord')
+            if ($(chord).hasClass(CHORD_CSS)) {
+                $(chord).removeClass(CHORD_CSS)
             }
         } else {
-            if (!$(chord).hasClass('chord')) {
-                $(chord).addClass('chord')
+            if (!$(chord).hasClass(CHORD_CSS)) {
+                $(chord).addClass(CHORD_CSS)
             }
         }
     })
-}
-
-const isThereLyricsInRow = ($: cheerio.CheerioAPI, row: any) => {
-    if ($(row).find('.column > .lyrics').length > 0) {
-        const lyricsPieces = $(row).find('.column > .lyrics').filter((i, l) => $(l).text().trim() !== '')
-        // console.log(lyricsPieces)
-        return lyricsPieces.length !== 0
-    }
-    return false
 }
 
 /**
@@ -75,22 +74,22 @@ const isThereLyricsInRow = ($: cheerio.CheerioAPI, row: any) => {
 
 const boldenChorus = ($: cheerio.CheerioAPI, linesChorus: number[]) => {
     let cont = -1
-    $('.row').each((i, row) => {
-        if (isThereLyricsInRow($, row)) {
+    $(`.${ROW_CSS}`).each((i, row) => {
+        if (rowHasLyrics($, row)) {
             cont += 1
         }
         //* Se è Chorus        
         if(linesChorus.includes(cont)) {
-            if (!$(row).hasClass('chorus')) {
-                $(row).addClass('chorus')
+            if (!$(row).hasClass(CHORUS_CSS)) {
+                $(row).addClass(CHORUS_CSS)
             }
         }
     })
 }
 
-const rowHasLyrics = ($: cheerio.CheerioAPI, el: any) => {
-    const res = $(el).children('.column').filter((i, e) => $(e).children('.lyrics').text().trim() !== '')
-    return res.length !== 0
+const rowHasLyrics = ($: cheerio.CheerioAPI, row: any) => {
+    const lyricsPieces = $(row).find(`.${COLUMN_CSS} > .${LYRICS_CSS}`).filter((i, l) => $(l).text().trim() !== '')
+    return lyricsPieces.length !== 0
 }
 
 function measureText(text: string, fontSize: number) {
@@ -108,10 +107,11 @@ const adjustFontSize = ($: cheerio.CheerioAPI, oldFontSize: number) => {
     }
     let maxLen = 0
     let maxLenRow = ''
-    $('.row').each((i, div) => {
+    $(`.${ROW_CSS}`).each((i, div) => {
         const text = $(div).text()
-        maxLen = Math.max(measureText(text, oldFontSize), maxLen)
-        if (measureText(text, oldFontSize) === maxLen) {
+        const len_text = measureText(text, oldFontSize)
+        maxLen = Math.max(len_text, maxLen)
+        if (len_text === maxLen) {
             maxLenRow = text
         }
     })
@@ -127,15 +127,15 @@ const adjustFontSize = ($: cheerio.CheerioAPI, oldFontSize: number) => {
 const editHTML = ($: cheerio.CheerioAPI, chordNotation: ChordNotations) => {
     const sections: string[] = []
     let isChorus = false;
-    let $2 = cheerio.load(`<div class=section_0></div>`, {}, true);
-    $('.lyrics').each((j, html_lyrics) => {
+    let $2 = cheerio.load(`<div class=${SECTION_CSS}_0></div>`, {}, true);
+    $(`.${LYRICS_CSS}`).each((j, html_lyrics) => {
         const out = $(html_lyrics).text().replace(/,\s*,/gm, ',')
         $(html_lyrics).text(out)
     })
     // Substitutes chords with their variants
-    $('.chord').each((j, html_chord) => {
+    $(`.${CHORD_CSS}`).each((j, html_chord) => {
         let out = $(html_chord).text()
-        if (chordNotation === 'solfege') {
+        if (chordNotation === SOLFEGE) {
             out = out
                 .replace("ma", "+")
                 .replace("maj", "+")
@@ -144,15 +144,15 @@ const editHTML = ($: cheerio.CheerioAPI, chordNotation: ChordNotations) => {
         }
         $(html_chord).text(out)
     })
-    $('.row').each((i, row) => {
-        removeChordsFromHTML($, row)
+    $(`.${ROW_CSS}`).each((i, row) => {
+        internalEditTML($, row)
         // Divide in sections
-        const isNewChorus = $(row).hasClass('chorus')
+        const isNewChorus = $(row).hasClass(CHORUS_CSS)
         if (isChorus !== isNewChorus) {
             sections.push($2.html())
-            $2 = cheerio.load(`<div class=section_` + sections.length + `></div>`, {}, true);
+            $2 = cheerio.load(`<div class=${SECTION_CSS}_${sections.length}></div>`, {}, true);
         }
-        $2('.section_' + sections.length).append($(row))
+        $2(`.${SECTION_CSS}_${sections.length}`).append($(row))
         isChorus = isNewChorus;
     })
     sections.push($2.html())
@@ -161,27 +161,38 @@ const editHTML = ($: cheerio.CheerioAPI, chordNotation: ChordNotations) => {
 }
 
 /**
- * It also set spaces around chords without lyrics
+ * It does several things:
+ * 
+ * - It removes chords from the HTML if the user doesn't want to see them
+ * - It sets spaces around chords without lyrics
+ * - Fix bug in ChordSheetJS: if there's an empty chord with only whitespace lyrics, it renders an empty <div>
  */
-const removeChordsFromHTML = ($: cheerio.CheerioAPI, row: any) => {
-    //* Solo testo
-    if($(row).children('.column').length === 1) {
-        $(row).find('.column .chord').each((index, lyrics) => {
-            if ($(lyrics).hasClass('chord') && !$(lyrics).hasClass('chorus')) {
-                $(lyrics).removeClass('chord')
+const internalEditTML = ($: cheerio.CheerioAPI, row: any) => {
+    // TODO: Understand better the purpose of this function
+
+    //* Only lyrics
+    if($(row).children(`.${COLUMN_CSS}`).length === 1) {
+        $(row).find(`.${COLUMN_CSS} .${CHORD_CSS}`).each((index, lyrics) => {
+            if ($(lyrics).hasClass(CHORD_CSS) && !$(lyrics).hasClass(CHORUS_CSS)) {
+                $(lyrics).removeClass(CHORD_CSS)
             }
         })
     }
 
-    //* Solo accordi
+    //* Bug in ChordSheetJS: if there's an empty chord with only whitespace lyrics, it renders an empty <div>
+    $(row).find(`.${COLUMN_CSS}:not(:has(.${CHORD_CSS})) > .${LYRICS_CSS}`).each((index, lyrics) => {
+        if ($(lyrics).text() === '') $(lyrics).text(' ')
+    })
+
+    //* Only chords
     if(!rowHasLyrics($, row)) {
-        $(row).find('.column .lyrics').each((index, lyrics) => {
-            if ($(lyrics).hasClass('lyrics') && !$(lyrics).hasClass('chorus')) {
-                $(lyrics).removeClass('lyrics')
+        $(row).find(`.${COLUMN_CSS} .${LYRICS_CSS}`).each((index, lyrics) => {
+            if ($(lyrics).hasClass(LYRICS_CSS) && !$(lyrics).hasClass(CHORUS_CSS)) {
+                $(lyrics).removeClass(LYRICS_CSS)
             }
         })
         //* Put spaces around chords
-        $(row).find('.column .chord').each((index, chord) => {
+        $(row).find(`.${COLUMN_CSS} .${CHORD_CSS}`).each((index, chord) => {
             $(chord).text(' ' + $(chord).text() + ' ')
         })
     }
@@ -193,6 +204,10 @@ const removeChords = (serializedSong: any) => {
             if(v.type === 'chordLyricsPair') {
                 v.chords = ''
                 v.chord = null
+                if (v.lyrics === ' ') {
+                    v.chords = ' '
+                    v.lyrics = ' '  // FIXME Somehow it doesn't consider whitespace as a valid lyrics -> probably error in Formatter
+                }
             }
             return v
         })
@@ -200,7 +215,6 @@ const removeChords = (serializedSong: any) => {
 }
 
 export interface InfoRenderSong {
-    // songText: string
     sections: string[]
     fontSize: number
     error?: string
@@ -268,6 +282,9 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
         }
     
         deserialized.setMetadata('chord_style', props.chordNotation)
+        
+        // Print all the lyrics and chords in song
+        console.log("Lyrics and chords:", deserialized.bodyLines[1])
 
         const disp = new ChordSheetJS.HtmlDivFormatter({normalizeChords: true, renderBlankLines: false}).format(deserialized);
         const $ = cheerio.load(disp)

@@ -10,7 +10,6 @@ a {
 }
 .row {
     display: flex;
-    width: 200px;
 }
 .column {
     display: inline-block;
@@ -38,7 +37,7 @@ a {
 .expandable {
     margin-top: 1.5rem;
     max-height: 80em;
-    max-width: 900px;
+    width: fit-content;
     overflow: hidden;
     transition: max-height 0.7s ease-out;
     cursor: pointer;

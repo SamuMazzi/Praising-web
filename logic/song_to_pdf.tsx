@@ -5,6 +5,7 @@ import ReactDOMServer from "react-dom/server";
 import { SongDiv } from "@/components/song_div";
 import { getSingleSong, Song } from "./local_logic";
 import { ChordNotations } from "./redux/settings_slice";
+import { Typography } from "@mui/material";
 
 
 const PAGE_WIDTH = 210;  // width of regular a4 paper
@@ -54,7 +55,7 @@ const addSongToPdf = async (pdf: jsPDF, input: HTMLElement, props: InfoRendering
     pdf.addPage();
     pdf.setFillColor(props.background_color);
     pdf.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT + x_offset, 'F');
-    pdf.addImage(imgData, 'PNG', x_offset, y_offset, imgWidth, Math.min(PAGE_HEIGHT - y_offset, imgHeight));
+    pdf.addImage(imgData, 'PNG', x_offset, y_offset, imgWidth, imgHeight);
 }
 
 function PagePDFSong(props: {song: Song | undefined, info: InfoRenderSong}) {
@@ -63,12 +64,12 @@ function PagePDFSong(props: {song: Song | undefined, info: InfoRenderSong}) {
     }
 
     return (
-        <div>
+        <>
             <p style={{fontSize: 40, fontWeight: "bold", lineHeight: 1}}>{props.song.name}</p>
             {/* FIXME: Fix spacing */}
             {/* <p style={{fontSize: 25, fontStyle: "italic", lineHeight: 1}}>Praising</p> */}
             <SongDiv sections={props.info.sections} infoSong={props.song}/>
-        </div>
+        </>
     )
 }
   

@@ -13,10 +13,12 @@ import { itIT } from '@mui/x-date-pickers/locales';
  * Priorities:
  * 1. Offline
  * 2. bugs (?)
+ * Improve expandable sections UX or rather remove them if too difficult to use
+ * Implement "x" in search field, to delete all text
  * 2a. Transition pages
  * 3. Edit song
  * 4. Tutorial (finish)
- * 5. PDF (finish)
+ * 5. PDF (finish) -> more songs in same page for playlists
  */
 // TODO: Offline https://github.com/hanford/next-offline
 // TODO: Implementare modo per evitare reload della canzone se già caricata (a volte succede inaspettatamente)
@@ -26,7 +28,7 @@ import Head from 'next/head'
 /**
  * Priorities:
  * B
- * - Share playlist (playlist usually privates, when you share it, you actually make a copy and create a separate voice on shared_playlists -> no much sense)
+ * - Share playlist -> you simply save the playlist on playlist collection (with user as owner), until it's private you don't even check online if there are modifications
  * - Add song
  * - Modify song WIP  
  * C
