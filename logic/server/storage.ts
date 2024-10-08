@@ -1,15 +1,27 @@
-import app from "./firebase_config";
-import { getStorage, ref, getDownloadURL, uploadString } from "firebase/storage";
+import app from './firebase_config';
+import {
+  getStorage,
+  ref,
+  getDownloadURL,
+  uploadString
+} from 'firebase/storage';
 
-const storage = getStorage(app)
+const storage = getStorage(app);
 
-export const addModifiedSong = async (name_file: string, content_file: string, user_id: string) => {
-    const pathReference = ref(storage, user_id + '/' + name_file);
-    await uploadString(pathReference, content_file)
-}
+export const addModifiedSong = async (
+  nameFile: string,
+  contentFile: string,
+  userId: string
+): Promise<void> => {
+  const pathReference = ref(storage, userId + '/' + nameFile);
+  await uploadString(pathReference, contentFile);
+};
 
-export const getModifiedSong = async (name_file: string, user_id: string) => {
-    const pathReference = ref(storage, user_id + '/' + name_file);
-    const contentFile = await getDownloadURL(pathReference)
-    return contentFile
-}
+export const getModifiedSong = async (
+  nameFile: string,
+  userId: string
+): Promise<string> => {
+  const pathReference = ref(storage, userId + '/' + nameFile);
+  const contentFile = await getDownloadURL(pathReference);
+  return contentFile;
+};

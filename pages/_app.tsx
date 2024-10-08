@@ -1,12 +1,12 @@
-import type { AppProps } from 'next/app'
-import { ThemeProvider, createTheme } from '@mui/material/styles'
-import CssBaseline from '@mui/material/CssBaseline'
-import { dark_theme_options, light_theme_options } from '../styles/theme'
-import { Provider } from 'react-redux'
-import { store, useAppSelector } from '../logic/redux/store'
-import '../styles/globals.css'       
-import { useEffect, useState } from 'react'
-import { AuthContextProvider } from '@/logic/context/auth_context'
+import type { AppProps } from 'next/app';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { darkThemeOptions, lightThemeOptions } from '../styles/theme';
+import { Provider } from 'react-redux';
+import { store, useAppSelector } from '../logic/redux/store';
+import '../styles/globals.css';
+import React, { useEffect, useState } from 'react';
+import { AuthContextProvider } from '@/logic/context/auth_context';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { itIT } from '@mui/x-date-pickers/locales';
 /**
@@ -23,31 +23,35 @@ import { itIT } from '@mui/x-date-pickers/locales';
 // TODO: Offline https://github.com/hanford/next-offline
 // TODO: Implementare modo per evitare reload della canzone se già caricata (a volte succede inaspettatamente)
 // TODO: Implementare spazi fra accordi senza testo (per ora solo nelle righe intere senza testo, cerca canzoni con cui testare, sicuro "Mi perdo nel tuo amore")
-import Head from 'next/head'
+import Head from 'next/head';
 // TODO: Implement online for:
 /**
  * Priorities:
  * B
  * - Share playlist -> you simply save the playlist on playlist collection (with user as owner), until it's private you don't even check online if there are modifications
  * - Add song
- * - Modify song WIP  
+ * - Modify song WIP
  * C
  * - Sessions
  */
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }: AppProps): JSX.Element {
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
-    if ("serviceWorker" in navigator && window.serwist !== undefined) {
-      console.log("service worker in navigator")
-      window.serwist.register()
-      .then(registration => {
-        if (registration === undefined) return;
-        console.log('Service Worker registered with scope:', registration.scope);
-      })
-      .catch(error => {
-        console.error('Service Worker registration failed:', error);
-      });
+    if ('serviceWorker' in navigator && window.serwist !== undefined) {
+      console.log('service worker in navigator');
+      window.serwist
+        .register()
+        .then((registration) => {
+          if (registration === undefined) return;
+          console.log(
+            'Service Worker registered with scope:',
+            registration.scope
+          );
+        })
+        .catch((error) => {
+          console.error('Service Worker registration failed:', error);
+        });
     }
     setMounted(true);
   }, []);
@@ -57,30 +61,32 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <>
-    <Head>
-      <title>Praising</title>
-      <meta
-        name='viewport'
-        content='minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover'
-      />
-    </Head>
-    <Provider store={store}>
-      <ThemedComponent Component={Component} pageProps={pageProps}/>
-    </Provider>
+      <Head>
+        <title>Praising</title>
+        <meta
+          name="viewport"
+          content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
+        />
+      </Head>
+      <Provider store={store}>
+        <ThemedComponent Component={Component} pageProps={pageProps} />
+      </Provider>
     </>
-  )
+  );
 }
 
-function ThemedComponent({ Component, pageProps }: any) {
-  const darkMode = useAppSelector(state => state.settings.darkMode)
-  
+function ThemedComponent({ Component, pageProps }: any): JSX.Element {
+  const darkMode = useAppSelector((state) => state.settings.darkMode);
+
   return (
-    <ThemeProvider theme={createTheme(darkMode ? dark_theme_options : light_theme_options, itIT)}>
+    <ThemeProvider
+      theme={createTheme(darkMode ? darkThemeOptions : lightThemeOptions, itIT)}
+    >
       <CssBaseline />
       <AuthContextProvider>
         <Component {...pageProps} />
         <SpeedInsights />
       </AuthContextProvider>
     </ThemeProvider>
-  )
+  );
 }

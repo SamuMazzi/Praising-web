@@ -10,35 +10,48 @@ import ListPlaylist from './list_playlist';
 import Button from '@mui/material/Button';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import { useTheme } from '@mui/material';
+import React from 'react';
 
 interface PropsModalBottomSheet {
-    open: boolean
-    onClose: Function
+  open: boolean;
+  onClose: () => void;
 }
 
 interface PropsModalBottomSheetPlaylist extends PropsModalBottomSheet {
-    playlist_id: string | undefined
+  playlistId: string;
 }
 
 /**
  * This is used to show all the songs that can be added to a playlist, from the same playlist page
  */
-export function ModalBottomSheetPlaylist(props: PropsModalBottomSheetPlaylist) {
-    const songs = getLocalSongs()
-    const playlist = useAppSelector(state => state.playlist.playlist[props.playlist_id!])
-    const theme = useTheme()
+export function ModalBottomSheetPlaylist(
+  props: PropsModalBottomSheetPlaylist
+): JSX.Element {
+  const songs = getLocalSongs();
+  const playlist = useAppSelector(
+    (state) => state.playlist.playlist[props.playlistId]
+  );
+  const theme = useTheme();
 
   return (
-    <Sheet isOpen={props.open} onClose={() => props.onClose()}>
+    <Sheet isOpen={props.open} onClose={props.onClose}>
       <Sheet.Container>
-          <Sheet.Header>
-              <TitleModal onClose={props.onClose} title={"Canzoni per " + playlist?.name}/>
-          </Sheet.Header>
-          <Sheet.Content className={theme.palette.mode}>
-            <Sheet.Scroller>
-              <ListSongs songs={songs} playlist={playlist} mode='selection_playlist' withSearch/>
-            </Sheet.Scroller>
-          </Sheet.Content>
+        <Sheet.Header>
+          <TitleModal
+            onClose={props.onClose}
+            title={'Canzoni per ' + playlist?.name}
+          />
+        </Sheet.Header>
+        <Sheet.Content className={theme.palette.mode}>
+          <Sheet.Scroller>
+            <ListSongs
+              songs={songs}
+              playlist={playlist}
+              mode="selection_playlist"
+              withSearch
+            />
+          </Sheet.Scroller>
+        </Sheet.Content>
       </Sheet.Container>
       <Sheet.Backdrop />
     </Sheet>
@@ -46,25 +59,31 @@ export function ModalBottomSheetPlaylist(props: PropsModalBottomSheetPlaylist) {
 }
 
 interface PropsModalBottomSheetSong extends PropsModalBottomSheet {
-    song_id: string
-    openModalCreate?: () => void
+  songId: string;
+  openModalCreate?: () => void;
 }
 
-export function ModalBottomSheetSong(props: PropsModalBottomSheetSong) {
-  const theme = useTheme()
+export function ModalBottomSheetSong(
+  props: PropsModalBottomSheetSong
+): JSX.Element {
+  const theme = useTheme();
 
   return (
     <>
-      <Sheet isOpen={props.open} onClose={() => props.onClose()}>
+      <Sheet isOpen={props.open} onClose={props.onClose}>
         <Sheet.Container>
-            <Sheet.Header>
-                <TitleModal onClose={props.onClose} title="Playlist" openModal={props.openModalCreate}/>
-            </Sheet.Header>
-            <Sheet.Content className={theme.palette.mode}>
-              <Sheet.Scroller>
-                <ListPlaylist fromSongId={props.song_id}/>
-              </Sheet.Scroller>
-            </Sheet.Content>
+          <Sheet.Header>
+            <TitleModal
+              onClose={props.onClose}
+              title="Playlist"
+              openModal={props.openModalCreate}
+            />
+          </Sheet.Header>
+          <Sheet.Content className={theme.palette.mode}>
+            <Sheet.Scroller>
+              <ListPlaylist fromSongId={props.songId} />
+            </Sheet.Scroller>
+          </Sheet.Content>
         </Sheet.Container>
         <Sheet.Backdrop />
       </Sheet>
@@ -73,36 +92,43 @@ export function ModalBottomSheetSong(props: PropsModalBottomSheetSong) {
 }
 
 interface PropsTitleModal {
-    onClose: Function
-    title: string
-    openModal?: () => void
+  onClose: () => void;
+  title: string;
+  openModal?: () => void;
 }
 
-function TitleModal(props: PropsTitleModal) {
-  const theme = useTheme()
-  
+function TitleModal(props: PropsTitleModal): JSX.Element {
+  const theme = useTheme();
+
   return (
-      <Box display='flex' alignItems='center' justifyContent='space-between' 
-        sx={{pt: 1, backgroundColor: theme.palette.background.default, borderTopLeftRadius: 8, borderTopRightRadius: 8}}>
-          <IconButton edge='start' onClick={() => props.onClose()} sx={{ml: 1}}>
-              <CloseRoundedIcon />
-          </IconButton>
-          <Typography textAlign='center'>
-              {props.title}
+    <Box
+      display="flex"
+      alignItems="center"
+      justifyContent="space-between"
+      sx={{
+        pt: 1,
+        backgroundColor: theme.palette.background.default,
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8
+      }}
+    >
+      <IconButton edge="start" onClick={props.onClose} sx={{ ml: 1 }}>
+        <CloseRoundedIcon />
+      </IconButton>
+      <Typography textAlign="center">{props.title}</Typography>
+      {props.openModal !== undefined ? (
+        <Button
+          startIcon={<AddRoundedIcon />}
+          sx={{ mr: 2 }}
+          onClick={props.openModal}
+        >
+          <Typography display={{ xs: 'none', md: 'none' }}>
+            Nuova playlist
           </Typography>
-          {
-            props.openModal ? 
-            <Button 
-              startIcon={<AddRoundedIcon />} 
-              sx={{mr: 2}} 
-              onClick={props.openModal}
-            >
-              <Typography display={{ xs: 'none', md: 'none' }}>
-                Nuova playlist
-              </Typography>
-            </Button>
-            : <Box />
-          }
-      </Box>
-  )
+        </Button>
+      ) : (
+        <Box />
+      )}
+    </Box>
+  );
 }

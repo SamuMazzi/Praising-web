@@ -1,0 +1,10 @@
+node_modules
+/.next/
+/build
+/pages/api/
+.next
+next-env.d.ts
+yarn.lock
+public
+package-lock.json
+init-service-worker.ts

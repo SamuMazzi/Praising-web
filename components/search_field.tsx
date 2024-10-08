@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import TextField from "@mui/material/TextField";
+import React from 'react';
+import TextField from '@mui/material/TextField';
 
 /* const useStyles = makeStyles(() => {
   return createStyles({
@@ -35,23 +35,30 @@ import TextField from "@mui/material/TextField";
  */
 
 interface PropsTypeSearch {
-    query: string
-    setQuery: (arg0: string) => void
+  query: string;
+  setQuery: (arg0: string) => void;
 }
 
-export default function TypeSearch(props: PropsTypeSearch) {
-  const [showClearIcon, setShowClearIcon] = useState("none");
+export default function TypeSearch(props: PropsTypeSearch): JSX.Element {
+  /* const [showClearIcon, setShowClearIcon] = useState('none');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setShowClearIcon(event.target.value === "" ? "none" : "flex");
+    setShowClearIcon(event.target.value === '' ? 'none' : 'flex');
   };
 
   const handleClick = (): void => {
     //* Clear the search input
-    console.log("clicked the clear icon...");
-  };
+    console.log('clicked the clear icon...');
+  }; */
 
   return (
-    <TextField label="Cerca" type="search" value={props.query} onChange={(e) => props.setQuery(e.currentTarget.value)}/>
+    <TextField
+      label="Cerca"
+      type="search"
+      value={props.query}
+      onChange={(e) => {
+        props.setQuery(e.currentTarget.value);
+      }}
+    />
   );
-};
+}

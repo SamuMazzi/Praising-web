@@ -1,7 +1,11 @@
-import type { PrecacheEntry, SerwistGlobalConfig, RuntimeCaching } from "serwist";
-import { Serwist, StaleWhileRevalidate } from "serwist";
-import { getLocalSongs } from "./logic/local_logic";
-import info_revision_pages from "./info_revision.json";
+import type {
+  PrecacheEntry,
+  SerwistGlobalConfig,
+  RuntimeCaching
+} from 'serwist';
+import { Serwist, StaleWhileRevalidate } from 'serwist';
+import { getLocalSongs } from './logic/local_logic';
+import info_revision_pages from './info_revision.json';
 
 // This declares the value of `injectionPoint` to TypeScript.
 // `injectionPoint` is the string that will be replaced by the
@@ -9,26 +13,27 @@ import info_revision_pages from "./info_revision.json";
 // `"self.__SW_MANIFEST"`.
 declare global {
   interface WorkerGlobalScope extends SerwistGlobalConfig {
-    __SW_MANIFEST: (PrecacheEntry | string)[] | undefined;
+    __SW_MANIFEST: Array<PrecacheEntry | string> | undefined;
   }
 }
 
 declare const self: ServiceWorkerGlobalScope;
 
-const additionalPrecacheEntries: (string | PrecacheEntry)[] = info_revision_pages.map((page) => {
-  return {url: "/" + page.voice, revision: page.hash}
-})
+const additionalPrecacheEntries: Array<string | PrecacheEntry> =
+  info_revision_pages.map((page) => {
+    return { url: '/' + page.voice, revision: page.hash };
+  });
 
 const cachingStrategies: RuntimeCaching[] = [
   {
-    matcher: ({ request, url }) => url.pathname.startsWith("/api/song/"),
+    matcher: ({ request, url }) => url.pathname.startsWith('/api/song/'),
     handler: new StaleWhileRevalidate({
-      cacheName: "songs-v1",
-    }),
+      cacheName: 'songs-v1'
+    })
   },
   {
     matcher: /.*/i,
-    handler: new StaleWhileRevalidate(),
+    handler: new StaleWhileRevalidate()
   }
 ];
 
@@ -46,11 +51,13 @@ const serwist = new Serwist({
   navigationPreload: true,
   runtimeCaching: cachingStrategies,
   fallbacks: {
-    entries: [{
-      matcher: ({ request }) => request.url.startsWith("/lectures"),
-      url: "/offline",
-    }]
-  ,}
+    entries: [
+      {
+        matcher: ({ request }) => request.url.startsWith('/lectures'),
+        url: '/offline'
+      }
+    ]
+  }
 });
 /*
 self.addEventListener("fetch", (event) => {
@@ -79,29 +86,31 @@ self.addEventListener("fetch", (event) => {
   }
 }); */
 
-self.addEventListener("install", (e) => {
+self.addEventListener('install', (e) => {
   e.waitUntil(
     (async () => {
-      const cache_songs = await caches.open("songs-v1");
-      const contentToCache = getLocalSongs().map(song => "/api/song/" + song.id)
-      cache_songs.addAll(contentToCache)
+      const cache_songs = await caches.open('songs-v1');
+      const contentToCache = getLocalSongs().map(
+        (song) => '/api/song/' + song.id
+      );
+      cache_songs.addAll(contentToCache);
       // ---------------------------------
       const cacheNames = await caches.keys();
       const cachess = await Promise.all(
         cacheNames.map(async (cacheName) => {
           // console.log("Opening cache", cacheName);
-          return caches.open(cacheName);
-        }),
+          return await caches.open(cacheName);
+        })
       );
-      console.log("Installing service worker");
+      console.log('Installing service worker');
       // console.log("Opened caches", cachess);
       for (let i = 0; i < cachess.length; i++) {
         const cache = cachess[i];
-        const k = await cache.keys()
+        const k = await cache.keys();
         // TODO: Fix this -> way too many things are cached
         // console.log(i, k)
       }
-    })(),
+    })()
   );
 });
 /*

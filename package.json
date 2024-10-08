@@ -7,9 +7,13 @@
     "dev": "next dev",
     "build": "next build && python3 script.py --fix-service-worker=True",
     "start": "next start",
-    "lint": "next lint",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "deploy": "python3 script.py --generate-revisions=True && vercel build --prod && vercel --prebuilt --prod"
+    "deploy": "python3 script.py --generate-revisions=True && vercel build --prod && vercel --prebuilt --prod",
+    "lint:next": "next lint --fix",
+    "lint:fix": "eslint --fix --ext .ts,.js,.jsx .",
+    "lint:check": "eslint --ext .ts,.js,.jsx .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
@@ -40,17 +44,25 @@
     "react-youtube": "^10.1.0",
     "sharp": "^0.33.0",
     "smooth-dnd": "^0.12.1",
-    "swr": "^2.0.3",
-    "typescript": "^5.2.2"
+    "swr": "^2.0.3"
   },
   "devDependencies": {
+    "@next/eslint-plugin-next": "^14.2.14",
     "@types/node": "^22.5.0",
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.3.0",
-    "eslint": "^8.56.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "eslint": "^8.57.1",
     "eslint-config-next": "^14.0.4",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-standard-with-typescript": "^43.0.1",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-n": "^16.6.2",
+    "eslint-plugin-promise": "^6.6.0",
+    "eslint-plugin-react": "^7.37.1",
     "husky": "^9.0.11",
-    "prettier": "^3.0.2",
-    "serwist": "^9.0.3"
+    "prettier": "3.3.3",
+    "serwist": "^9.0.3",
+    "typescript": "^5.6.2"
   }
 }

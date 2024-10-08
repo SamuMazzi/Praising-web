@@ -1,74 +1,94 @@
-import { Playlist } from "../redux/playlist_slice";
-import app from "./firebase_config";
-import { getFirestore, collection, addDoc, getDoc, doc, getDocs, query, orderBy, startAt, endAt, setDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+import { type Playlist } from '../redux/playlist_slice';
+import app from './firebase_config';
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDoc,
+  doc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  type DocumentData
+} from 'firebase/firestore';
 // import geofire from 'geofire-common';
 
-const firestore = getFirestore(app)
+const firestore = getFirestore(app);
+const USERS_COLLECTION = 'users';
 
 interface OnlinePlaylist {
-    name: string
-    songs: string[]
-    notes?: string
-    owner: string
+  name: string;
+  songs: string[];
+  notes?: string;
+  owner: string;
 }
 
-// TODO: When you share it you want to decide if copying it or just accessing it. In the first case another playlist will be created 
+// TODO: When you share it you want to decide if copying it or just accessing it. In the first case another playlist will be created
 // but it will be personal, in the second case the playlist will be kept in sync with the original but it won't be editable
 
-export const addPlaylist = async (name: string, songs: string[]) => {
-    const onlinePlaylist: OnlinePlaylist = {
-        name: name,
-        songs: songs,
-        owner: "" //TODO: Add personal id
-    }
-    const docRef = await addDoc(collection(firestore, "playlists"), onlinePlaylist)
-    const out: Playlist = {
-        id: docRef.id,
-        name: name,
-        songs: songs
-    }
-    return out
-}
+export const addPlaylist = async (
+  name: string,
+  songs: string[]
+): Promise<Playlist> => {
+  const onlinePlaylist: OnlinePlaylist = {
+    name,
+    songs,
+    owner: '' // TODO: Add personal id
+  };
+  const docRef = await addDoc(
+    collection(firestore, 'playlists'),
+    onlinePlaylist
+  );
+  const out: Playlist = {
+    id: docRef.id,
+    name,
+    songs
+  };
+  return out;
+};
 
-export const getMyPlaylists = async (name: string, songs: string[]) => {
-    //TODO: Add personal id and implement everything
-    const docRef = await getDoc(doc(firestore, "users", "id"))
-    const out: Playlist = {
-        id: docRef.id,
-        name: name,
-        songs: songs
-    }
-    return out
-}
+export const getMyPlaylists = async (
+  name: string,
+  songs: string[]
+): Promise<Playlist> => {
+  // TODO: Add personal id and implement everything
+  const docRef = await getDoc(doc(firestore, USERS_COLLECTION, 'id'));
+  const out: Playlist = {
+    id: docRef.id,
+    name,
+    songs
+  };
+  return out;
+};
 
 /**
- * Get all the playlists that have been shared with me 
+ * Get all the playlists that have been shared with me
  */
-export const getPersonalPlaylists = async (name: string, songs: string[]) => {
-    const onlinePlaylist: OnlinePlaylist = {
-        name: name,
-        songs: songs,
-        owner: "" //TODO: Add personal id
-    }
-    const docRef = await getDoc(doc(firestore, "users", "persona-id"))
-    const out: Playlist = {
-        id: docRef.id,
-        name: name,
-        songs: songs
-    }
-    return out
-}
+export const getPersonalPlaylists = async (
+  name: string,
+  songs: string[]
+): Promise<Playlist> => {
+  const docRef = await getDoc(doc(firestore, USERS_COLLECTION, 'persona-id'));
+  const out: Playlist = {
+    id: docRef.id,
+    name,
+    songs
+  };
+  return out;
+};
 
-export const getSinglePlaylist = async (id_playlist: string) => {
-    const docRef = await getDoc(doc(firestore, "playlists", id_playlist))
-    const out: Playlist = {
-        id: docRef.id,
-        name: docRef.get("name"),
-        songs: docRef.get("songs")
-    }
-    return out
-}
-
+export const getSinglePlaylist = async (
+  idPlaylist: string
+): Promise<Playlist> => {
+  const docRef = await getDoc(doc(firestore, 'playlists', idPlaylist));
+  const out: Playlist = {
+    id: docRef.id,
+    name: docRef.get('name'),
+    songs: docRef.get('songs')
+  };
+  return out;
+};
 
 /*
 export const getActiveSessions = async (center: [number, number], radius_meters: number) => {
@@ -133,25 +153,38 @@ export const addActiveSession = async (name: string, center: [number, number]) =
 }
 */
 
-export const getServerProfile = async (user_id: string) => {
-    const docRef = await getDoc(doc(firestore, "users", user_id))
-    return docRef.data()
-}
+export const getServerProfile = async (
+  userId: string
+): Promise<DocumentData | undefined> => {
+  const docRef = await getDoc(doc(firestore, USERS_COLLECTION, userId));
+  return docRef.data();
+};
 
-export const addServerFavoriteSongs = async (user_id: string, new_song: string) => {
-    await updateDoc(doc(firestore, "users", user_id), {'favoriteSongs': arrayUnion(new_song)})
-}
+export const addServerFavoriteSongs = async (
+  userId: string,
+  newSong: string
+): Promise<void> => {
+  await updateDoc(doc(firestore, USERS_COLLECTION, userId), {
+    favoriteSongs: arrayUnion(newSong)
+  });
+};
 
-export const removeServerFavoriteSongs = async (user_id: string, new_song: string) => {
-    await updateDoc(doc(firestore, "users", user_id), {'favoriteSongs': arrayRemove(new_song)})
+export const removeServerFavoriteSongs = async (
+  userId: string,
+  newSong: string
+): Promise<void> => {
+  await updateDoc(doc(firestore, USERS_COLLECTION, userId), {
+    favoriteSongs: arrayRemove(newSong)
+  });
+};
 
-}
+export const addUserToDatabase = async (userId: string): Promise<void> => {
+  await setDoc(doc(firestore, USERS_COLLECTION, userId), {});
+};
 
-export const addUserToDatabase = async (user_id: string) => {
-    await setDoc(doc(firestore, "users", user_id), {})
-}
-
-export const getUserFromDatabase = async (user_id: string) => {
-    const docRef = await getDoc(doc(firestore, "users", user_id))
-    return docRef.data();
-}
+export const getUserFromDatabase = async (
+  userId: string
+): Promise<DocumentData | undefined> => {
+  const docRef = await getDoc(doc(firestore, USERS_COLLECTION, userId));
+  return docRef.data();
+};
