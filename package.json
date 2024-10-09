@@ -1,7 +1,7 @@
 {
   "name": "web-praising",
   "description": "Praising è la tua web-app per visualizzare testi e accordi dei canti cristiani più famosi.",
-  "version": "0.4.7",
+  "version": "0.4.9",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -12,6 +12,7 @@
     "lint:next": "next lint --fix",
     "lint:fix": "eslint --fix --ext .ts,.js,.jsx .",
     "lint:check": "eslint --ext .ts,.js,.jsx .",
+    "linter": "npm run lint:check && npm run lint:next",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

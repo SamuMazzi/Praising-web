@@ -34,18 +34,33 @@ a {
   white-space: pre;
 }
 
-.expandable {
+/* .expandable {
   margin-top: 1.5rem;
-  max-height: 80em;
-  width: fit-content;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  transition: clip-path 0.5s ease-in-out;
   overflow: hidden;
-  transition: max-height 0.7s ease-out;
+  width: fit-content;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
 
 .compressed {
-  max-height: 2.5em;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 30%, 0% 30%);
+  transition: clip-path 0.5s ease-in-out;
+} */
+
+.expandable {
+  margin-top: 1.2rem;
+  max-height: 80em;
+  transition: max-height 0.7s ease-out;
+  width: fit-content;
+  overflow: hidden;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.compressed {
+  max-height: 2.55rem;
   transition: max-height 0.7s cubic-bezier(0, 1.13, 1, 0.92);
 }
 
@@ -53,6 +68,25 @@ a {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.arrow-down-compressed {
+  animation: MoveUpDown 1.5s 2 linear;
+  opacity: 60%;
+}
+
+@keyframes MoveUpDown {
+  0% {
+    animation-timing-function: ease-out;
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px); /* -100px */
+  }
+  100% {
+    animation-timing-function: ease-in;
+    transform: translateY(0px);
+  }
 }
 
 .shimmerSegment {

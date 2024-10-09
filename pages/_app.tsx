@@ -13,8 +13,6 @@ import { itIT } from '@mui/x-date-pickers/locales';
  * Priorities:
  * 1. Offline
  * 2. bugs (?)
- * Improve expandable sections UX or rather remove them if too difficult to use
- * Implement "x" in search field, to delete all text
  * 2a. Transition pages
  * 3. Edit song
  * 4. Tutorial (finish)

@@ -33,6 +33,7 @@ import 'driver.js/dist/driver.css';
 import Head from 'next/head';
 import { SongDiv } from '@/components/song_div';
 import assert from 'assert';
+// import { addModifiedSong } from '@/logic/server/storage';
 
 // TODO: Add highlight of parts of text in song (also for sessions) -> take a look at transitions/modal/popover
 
@@ -201,8 +202,6 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
 
   // if(props.fileContent === undefined || props.song === undefined) {
   if (error !== undefined || isLoading) {
-    console.log(isLoading);
-    console.error(error);
     return (
       <Container sx={{ minHeight: '100vh' }}>
         <SongAppBar id={''} title={''} />
@@ -265,6 +264,7 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
       </Head>
       <main>
         <Container
+          disableGutters
           sx={{ minHeight: '100vh', width: '100vw' }}
           style={{ backgroundColor: theme.palette.background.default }}
         >
@@ -367,6 +367,12 @@ function EditableSong(props: {
   const [data, setData] = useState(props.data);
   const theme = useTheme();
   // TODO: Ora va aggiunto upload canzone modificata e check se canzone modificata ad ogni apertura file (si potrebbe tenere un indice per ogni profilo utente per ridurre letture)
+
+  const handleSave = (): void => {
+    // addModifiedSong();
+    props.setEditMode();
+  };
+
   return (
     <>
       <TextField
@@ -394,7 +400,7 @@ function EditableSong(props: {
         }}
         color="primary"
         aria-label="Confirm"
-        onClick={props.setEditMode}
+        onClick={handleSave}
       >
         <CheckRoundedIcon />
       </Fab>

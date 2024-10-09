@@ -27,9 +27,10 @@ interface PropsActionSong {
 }
 
 const ActionIconButton = (props: any): JSX.Element => {
-  const { title, children, index, visible, ...propsIconButton } = props;
+  const { title, children, index, visible, onClick, ...propsIconButton } =
+    props;
 
-  if (index !== undefined) {
+  if (index === undefined) {
     // Refactor this
     return (
       <Tooltip title={title} placement="left">
@@ -39,6 +40,12 @@ const ActionIconButton = (props: any): JSX.Element => {
             p: 1.5,
             m: 1,
             backgroundColor: 'background.paper'
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (onClick !== undefined) {
+              onClick();
+            }
           }}
           {...propsIconButton}
         >
@@ -63,6 +70,12 @@ const ActionIconButton = (props: any): JSX.Element => {
             p: 1.5,
             m: 1,
             backgroundColor: 'background.paper'
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (onClick !== undefined) {
+              onClick();
+            }
           }}
           {...propsIconButton}
         >

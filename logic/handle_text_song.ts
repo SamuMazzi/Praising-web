@@ -220,10 +220,13 @@ const internalEditTML = ($: cheerio.CheerioAPI, row: any): void => {
   }
 
   //* Bug in ChordSheetJS: if there's an empty chord with only whitespace lyrics, it renders an empty <div>
+  // :has(.no-chord) doesn't work, so this is actually a non-optimal solution, but it should never give any kind of error
   $(row)
-    .find(`.${COLUMN_CSS}:not(:has(.${CHORD_CSS})) > .${LYRICS_CSS}`)
+    .find(`.${COLUMN_CSS} > .${LYRICS_CSS}`)
     .each((index, lyrics) => {
-      if ($(lyrics).text() === '') $(lyrics).text(' ');
+      if ($(lyrics).text() === '') {
+        $(lyrics).text(' ');
+      }
     });
 
   //* Only chords
