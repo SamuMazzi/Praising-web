@@ -8,20 +8,28 @@ import {
 
 const storage = getStorage(app);
 
-export const addModifiedSong = async (
+const CUSTOM_SONGS_FOLDER = 'songs';
+
+export const addModifiedSongToServerStorage = async (
   nameFile: string,
   contentFile: string,
-  userId: string
+  songId: string
 ): Promise<void> => {
-  const pathReference = ref(storage, userId + '/' + nameFile);
+  const pathReference = ref(
+    storage,
+    `${CUSTOM_SONGS_FOLDER}/${songId}/${nameFile}`
+  );
   await uploadString(pathReference, contentFile);
 };
 
-export const getModifiedSong = async (
+export const getVersionSong = async (
   nameFile: string,
-  userId: string
+  songId: string
 ): Promise<string> => {
-  const pathReference = ref(storage, userId + '/' + nameFile);
+  const pathReference = ref(
+    storage,
+    `${CUSTOM_SONGS_FOLDER}/${songId}/${nameFile}`
+  );
   const contentFile = await getDownloadURL(pathReference);
   return contentFile;
 };

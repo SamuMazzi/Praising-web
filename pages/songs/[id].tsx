@@ -21,7 +21,6 @@ import { MessageSnackbar } from '@/components/pers_snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseRounded from '@mui/icons-material/CloseRounded';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
-import useSWR from 'swr';
 import { type Playlist } from '@/logic/redux/playlist_slice';
 import ShimmerSegments from '@/components/shimmer_effect/shimmer_segments';
 import TextField from '@mui/material/TextField';
@@ -34,10 +33,12 @@ import 'driver.js/dist/driver.css';
 import Head from 'next/head';
 import { SongDiv } from '@/components/song_div';
 import assert from 'assert';
-// import { addModifiedSong } from '@/logic/server/storage';
+import { addModifiedSongToServerStorage } from '@/logic/server/storage';
+import { addEditedSongToDatabase } from '@/logic/server/database';
+import { randomUUID } from 'crypto';
+import useFirebaseAuth from '@/logic/hooks/use_auth';
+import useContentSong from '@/logic/hooks/use_content_song';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
-
-// TODO: Add highlight of parts of text in song (also for sessions) -> take a look at transitions/modal/popover
 
 SongPage.getInitialProps = async (props: any) => {
   const { id, playlistId } = props.query;
@@ -48,13 +49,6 @@ interface PropsSongPage {
   id: string;
   playlistId: string | undefined;
 }
-
-const fetcher = async (url: string): Promise<void> =>
-  await fetch(url)
-    .then(async (res) => await res.json())
-    .catch((err) => {
-      console.log(err);
-    });
 
 const driverObj = driver({
   // TODO: Sistema progress
@@ -136,10 +130,9 @@ const driverObj = driver({
 const TUTORIAL_SHOWN = 'tutorialShown_0';
 
 export default function SongPage(props: PropsSongPage): JSX.Element {
-  const { data, error, isLoading } = useSWR(
-    '/api/song/' + encodeURIComponent(props.id),
-    fetcher
-  );
+  const { content, versions, fetchSong, loadingContent, error } =
+    useContentSong(props.id);
+  const [versionSong, setVersionSong] = useState<number>(-1); // Index of the selected version of the song
   const song = getSingleSong(props.id);
   const playlist: Playlist | undefined = useAppSelector((state) =>
     props.playlistId !== undefined
@@ -194,6 +187,17 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
     };
   }, []);
 
+  const callbackSetVersionSong = (index: number): void => {
+    if (index === versionSong) return;
+    setVersionSong(index);
+
+    if (index === -1) {
+      void fetchSong();
+    } else {
+      void fetchSong(versions[index].nameFileStorage);
+    }
+  };
+
   const handlePressVideo = (): void => {
     if (song?.link !== undefined) {
       setShowVideo((old) => !old);
@@ -203,11 +207,14 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
   };
 
   // if(props.fileContent === undefined || props.song === undefined) {
-  if (error !== undefined || isLoading) {
+  if (error !== '' || loadingContent) {
+    if (error !== '') {
+      console.error(error);
+    }
     return (
       <Container sx={{ minHeight: '100vh' }}>
         <SongAppBar id={''} title={''} />
-        {isLoading ? (
+        {loadingContent ? (
           <Box sx={{ mt: 15 }}>
             <ShimmerSegments numSegments={30} />
           </Box>
@@ -221,7 +228,7 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
   }
 
   const info = renderSong({
-    fileContent: data as unknown as string, // props.fileContent
+    fileContent: content,
     showChords,
     transpose: infoSong?.transpose,
     fontSize: infoSong?.zoom,
@@ -278,13 +285,16 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
             title={song.name}
             transpose={infoSong?.transpose}
             playlist={playlist}
+            setVersionSong={callbackSetVersionSong}
+            versions={versions}
+            selectedIndexVersion={versionSong}
           />
           <Container sx={{ py: 3.5 }} />
           <Container disableGutters sx={{ py: 1 }}>
             {editMode ? (
               <EditableSong
                 songId={song.id}
-                data={data as unknown as string}
+                data={content}
                 setEditMode={() => {
                   setEditMode(false);
                 }}
@@ -298,11 +308,15 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
               song={song}
               fontSize={fontSize}
               videoIsPlaying={showVideo}
+              versionSong={
+                versionSong !== -1 ? versions[versionSong] : undefined
+              }
               onPressVideo={handlePressVideo}
               setOpenSheet={() => {
                 setOpenModalPlaylist(true);
               }}
               setEditMode={() => {
+                // TODO: Check if user is logged in, otherwise let user go there
                 setEditMode(true);
               }}
             />
@@ -439,16 +453,23 @@ const YoutubeVideoBox = (props: {
   );
 };
 
-function EditableSong(props: {
+const EditableSong = (props: {
+  songId: string;
   data: string;
   setEditMode: () => void;
-}): JSX.Element {
+}): JSX.Element => {
+  const { authUser, loading } = useFirebaseAuth();
   const [data, setData] = useState(props.data);
   const theme = useTheme();
-  // TODO: Ora va aggiunto upload canzone modificata e check se canzone modificata ad ogni apertura file (si potrebbe tenere un indice per ogni profilo utente per ridurre letture)
 
-  const handleSave = (): void => {
-    // addModifiedSong();
+  const handleSave = async (): Promise<void> => {
+    if (authUser === null || loading) {
+      // TODO: Implement error handling for loading === true
+      return;
+    }
+    const nameFile = randomUUID() + '.crd';
+    await addEditedSongToDatabase(authUser.uid, props.songId, nameFile);
+    await addModifiedSongToServerStorage(nameFile, props.data, props.songId);
     props.setEditMode();
   };
 
@@ -463,11 +484,28 @@ function EditableSong(props: {
           setData(e.target.value);
         }}
         rows={data.split('\n').length}
-        sx={{ my: 2 }}
+        sx={{ mt: 2, mb: 10 }}
         InputProps={{
           style: { color: theme.palette.mode === 'dark' ? 'white' : 'black' }
         }}
       />
+      <Fab
+        size="medium"
+        style={{
+          margin: 0,
+          top: 'auto',
+          right: 90,
+          bottom: 22.5,
+          left: 'auto',
+          position: 'fixed'
+        }}
+        color="warning"
+        onClick={() => {
+          props.setEditMode();
+        }}
+      >
+        <CloseRounded />
+      </Fab>
       <Fab
         style={{
           margin: 0,
@@ -479,10 +517,12 @@ function EditableSong(props: {
         }}
         color="primary"
         aria-label="Confirm"
-        onClick={handleSave}
+        onClick={() => {
+          void handleSave();
+        }}
       >
         <CheckRoundedIcon />
       </Fab>
     </>
   );
-}
+};

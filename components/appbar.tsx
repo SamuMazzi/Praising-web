@@ -37,6 +37,8 @@ import {
 import { MenuPlaylist } from './menus';
 import { SOLFEGE, SYMBOL } from 'chordsheetjs';
 import { printDocument } from '@/logic/song_to_pdf';
+import { type CustomSongInfo } from '@/logic/server/database';
+import assert from 'assert';
 
 // This is really useful in the case we'll ever want to split a song in multiple pages (in case it's too long)
 /*
@@ -292,7 +294,63 @@ export function FilterAppBar(props: PropsAppBar): JSX.Element {
   );
 }
 
-interface PropsSongAppBar {
+interface PropsMenuItemVersions {
+  selectedIndexVersion?: number;
+  setVersionSong?: (index: number) => void;
+  versions?: CustomSongInfo[];
+}
+
+function MenuItemVersions(props: PropsMenuItemVersions): JSX.Element {
+  if (
+    props.setVersionSong === undefined ||
+    props.versions === undefined ||
+    props.selectedIndexVersion === undefined
+  )
+    return <></>;
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>): void => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = (): void => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <div>
+      <MenuItem onClick={handleClick}>Versioni</MenuItem>
+      <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+        <MenuItem
+          key={'version-song-base'}
+          onClick={() => {
+            assert(props.setVersionSong !== undefined);
+            props.setVersionSong(-1);
+            handleClose();
+          }}
+          selected={props.selectedIndexVersion === -1}
+        >
+          {'Versione base'}
+        </MenuItem>
+        {props.versions.map((version, index) => (
+          <MenuItem
+            key={'version-song ' + index}
+            onClick={() => {
+              assert(props.setVersionSong !== undefined);
+              props.setVersionSong(index);
+              handleClose();
+            }}
+            selected={index === props.selectedIndexVersion}
+          >
+            {'Versione ' + (index + 1)}
+          </MenuItem>
+        ))}
+      </Menu>
+    </div>
+  );
+}
+
+interface PropsSongAppBar extends PropsMenuItemVersions {
   id: string;
   title: string;
   transpose?: number;
@@ -481,6 +539,7 @@ export const SongAppBar = (props: PropsSongAppBar): JSX.Element => {
                   <ListItemText primary="Transpose" />
                   {props.transpose ?? '0'}
                 </MenuItem>
+                <MenuItemVersions />
               </Menu>
             </Box>
           </Toolbar>

@@ -8,7 +8,7 @@ import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded';
-// import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import IconButton from '@mui/material/IconButton';
 import { type InfoLocalSong, modifySong } from '@/logic/redux/info_song_slice';
@@ -16,9 +16,12 @@ import { setShowChords } from '@/logic/redux/settings_slice';
 import Tooltip from '@mui/material/Tooltip';
 import React, { useEffect, useState } from 'react';
 import Slide from '@mui/material/Slide';
+import { type CustomSongInfo } from '@/logic/server/database';
+import useFirebaseAuth from '@/logic/hooks/use_auth';
 
 interface PropsActionSong {
   song: Song;
+  versionSong?: CustomSongInfo;
   onPressVideo: () => void;
   videoIsPlaying: boolean;
   setOpenSheet: () => void;
@@ -88,6 +91,7 @@ const ActionIconButton = (props: any): JSX.Element => {
 
 export default function ActionsSong(props: PropsActionSong): JSX.Element {
   const [menuExpanded, setMenuExpanded] = useState(true);
+  const { authUser } = useFirebaseAuth();
   const infoSong: InfoLocalSong | undefined = useAppSelector(
     (state) => state.infoSongs.infoSongs[props.song.id]
   );
@@ -100,6 +104,73 @@ export default function ActionsSong(props: PropsActionSong): JSX.Element {
       dispatch(modifySong({ id: props.song.id, zoom: props.fontSize }));
     }
   }, []);
+  const canEdit = false; // props.versionSong === undefined || props.versionSong.author === authUser?.uid;
+
+  const actionsInfo = [
+    {
+      id: 'chordsButton',
+      title: 'Mostra accordi',
+      onClick: () => dispatch(setShowChords(!showChords)),
+      color: showChords ? 'primary' : undefined,
+      icon: <LyricsRoundedIcon />
+    },
+    {
+      id: 'transposeUpButton',
+      title: '+1 #',
+      onClick: () =>
+        dispatch(
+          modifySong({ id: props.song.id, transpose: actualTranspose + 1 })
+        ),
+      color: actualTranspose > 0 ? 'primary' : undefined,
+      icon: <KeyboardArrowUpRoundedIcon />
+    },
+    {
+      id: 'transposeDownButton',
+      title: '-1 ♭',
+      onClick: () =>
+        dispatch(
+          modifySong({ id: props.song.id, transpose: actualTranspose - 1 })
+        ),
+      color: actualTranspose < 0 ? 'primary' : undefined,
+      icon: <KeyboardArrowDownRoundedIcon />
+    },
+    {
+      id: 'zoomInButton',
+      title: '+ Zoom',
+      onClick: () =>
+        dispatch(modifySong({ id: props.song.id, zoom: fontSize + 1 })),
+      color: fontSize > 17 ? 'primary' : undefined,
+      icon: <ZoomInRoundedIcon />
+    },
+    {
+      id: 'zoomOutButton',
+      title: '- Zoom',
+      onClick: () =>
+        dispatch(modifySong({ id: props.song.id, zoom: fontSize - 1 })),
+      color: fontSize < 17 ? 'primary' : undefined,
+      icon: <ZoomOutRoundedIcon />
+    },
+    {
+      id: 'playButton',
+      title: 'Riproduci video',
+      onClick: props.onPressVideo,
+      color: props.videoIsPlaying ? 'primary' : undefined,
+      icon: <PlayArrowRoundedIcon />
+    },
+    {
+      id: 'playlistButton',
+      title: 'Aggiungi a playlist',
+      onClick: props.setOpenSheet,
+      icon: <PlaylistAddRoundedIcon />
+    },
+    {
+      id: 'editSong',
+      title: 'Modifica la canzone',
+      onClick: props.setEditMode,
+      icon: <EditRoundedIcon />,
+      visible: canEdit && menuExpanded
+    }
+  ];
 
   return (
     <Container
@@ -123,92 +194,19 @@ export default function ActionsSong(props: PropsActionSong): JSX.Element {
       >
         <MenuRoundedIcon />
       </ActionIconButton>
-      <ActionIconButton
-        id="chordsButton"
-        color={showChords ? 'primary' : undefined}
-        onClick={() => dispatch(setShowChords(!showChords))}
-        title="Mostra accordi"
-        index={1}
-        visible={menuExpanded}
-      >
-        <LyricsRoundedIcon />
-      </ActionIconButton>
-      <ActionIconButton
-        id="transposeUpButton"
-        title="+1 #"
-        onClick={() =>
-          dispatch(
-            modifySong({ id: props.song.id, transpose: actualTranspose + 1 })
-          )
-        }
-        color={actualTranspose > 0 ? 'primary' : undefined}
-        index={2}
-        visible={menuExpanded}
-      >
-        <KeyboardArrowUpRoundedIcon />
-      </ActionIconButton>
-      <ActionIconButton
-        id="transposeDownButton"
-        title="-1 ♭"
-        onClick={() =>
-          dispatch(
-            modifySong({ id: props.song.id, transpose: actualTranspose - 1 })
-          )
-        }
-        color={actualTranspose < 0 ? 'primary' : undefined}
-        index={3}
-        visible={menuExpanded}
-      >
-        <KeyboardArrowDownRoundedIcon />
-      </ActionIconButton>
-      <ActionIconButton
-        id="zoomInButton"
-        title="+ Zoom"
-        onClick={() =>
-          dispatch(modifySong({ id: props.song.id, zoom: fontSize + 1 }))
-        }
-        color={fontSize > 17 ? 'primary' : undefined}
-        index={4}
-        visible={menuExpanded}
-      >
-        <ZoomInRoundedIcon />
-      </ActionIconButton>
-      <ActionIconButton
-        id="zoomOutButton"
-        title="- Zoom"
-        onClick={() =>
-          dispatch(modifySong({ id: props.song.id, zoom: fontSize - 1 }))
-        }
-        color={fontSize < 17 ? 'primary' : undefined}
-        index={5}
-        visible={menuExpanded}
-      >
-        <ZoomOutRoundedIcon />
-      </ActionIconButton>
-      <ActionIconButton
-        id="playButton"
-        title="Riproduci video"
-        onClick={props.onPressVideo}
-        color={props.videoIsPlaying ? 'primary' : undefined}
-        index={6}
-        visible={menuExpanded}
-      >
-        <PlayArrowRoundedIcon />
-      </ActionIconButton>
-      <ActionIconButton
-        id="playlistButton"
-        title="Aggiungi a playlist"
-        onClick={props.setOpenSheet}
-        index={7}
-        visible={menuExpanded}
-      >
-        <PlaylistAddRoundedIcon />
-      </ActionIconButton>
-      {/* <ActionIconButton 
-                title="Modifica la canzone"
-                onClick={() => props.setEditMode()}>
-                <EditRoundedIcon />
-            </ActionIconButton> */}
+      {actionsInfo.map((action, index) => (
+        <ActionIconButton
+          key={index}
+          id={action.id}
+          title={action.title}
+          onClick={action.onClick}
+          color={action.color}
+          index={index + 1}
+          visible={action.visible ?? menuExpanded}
+        >
+          {action.icon}
+        </ActionIconButton>
+      ))}
     </Container>
   );
 }

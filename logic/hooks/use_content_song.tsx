@@ -1,32 +1,84 @@
 import { useEffect, useState } from 'react';
-import { getSingleSong } from '../local_logic';
+import { type CustomSongInfo, getSongInfoVersions } from '../server/database';
+import { getVersionSong } from '../server/storage';
 
-export default function useContentSong(
-  id_song: string
-): [string, boolean, string] {
-  //const { data, error, isLoading } = useSWR('/api/song/' + props.id, fetcher)
+const fetcher = async (url: string): Promise<any> => {
+  try {
+    const res = await fetch(url);
+    const out = await res.json();
+    return out;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export default function useContentSong(idSong: string): {
+  content: string;
+  versions: CustomSongInfo[];
+  loadingVersions: boolean;
+  loadingContent: boolean;
+  error: string;
+  fetchSong: (nameFileVersion?: string) => Promise<void>;
+} {
   const [data, setData] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [loadingContent, setLoadingContent] = useState(true);
+  const [loadingVersions, setLoadingVersions] = useState(true);
   const [error, setError] = useState('');
+  const [versions, setVersions] = useState<CustomSongInfo[]>([]);
 
-  const song = getSingleSong(id_song);
+  /**
+   * Collections:
+   *   Collection      Document     Collection    Document
+   * - custom_songs -> song_id_1 -> version_1  -> {name_file_storage: string, creation_time: timestamp, last_modified: timestamp, author: string, rates?: number}
+   *                   song_id_2
+   *                   ...
+   *
+   *
+   */
 
-  async function fetchFile() {
+  async function fetchVersions(): Promise<void> {
     try {
-      const response = await fetch('/accordi/' + song?.name + '.crd');
-      const content = await response.text();
+      const songsLoaded = (await getSongInfoVersions(idSong)).sort(
+        (a, b) => b.creationTime.seconds - a.creationTime.seconds
+      ); // TODO: If this is the correct order or opposite
+      setVersions(songsLoaded);
+    } catch (e: any) {
+      setError(e as string);
+    } finally {
+      setLoadingVersions(false);
+    }
+  }
+
+  async function fetchSong(nameFileVersion?: string): Promise<void> {
+    setLoadingContent(true);
+    setError('');
+    try {
+      let content = '';
+      if (nameFileVersion !== undefined) {
+        content = await getVersionSong(nameFileVersion, idSong);
+      } else {
+        content = await fetcher(`/api/song/${encodeURIComponent(idSong)}`);
+      }
       setData(content);
     } catch (e: any) {
-      setError(e);
+      setError(e as string);
     } finally {
-      setLoading(false);
+      setLoadingContent(false);
     }
   }
 
   useEffect(() => {
-    fetchFile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // void fetchVersions();
+    void fetchSong();
   }, []);
 
-  return [data, loading, error];
+  return {
+    content: data,
+    versions,
+    loadingContent,
+    loadingVersions,
+    error,
+    fetchSong
+  };
 }

@@ -10,12 +10,15 @@ import {
   updateDoc,
   arrayUnion,
   arrayRemove,
-  type DocumentData
+  Timestamp,
+  getDocs
 } from 'firebase/firestore';
 // import geofire from 'geofire-common';
 
 const firestore = getFirestore(app);
 const USERS_COLLECTION = 'users';
+const CUSTOM_SONGS_COLLECTION = 'songs';
+const VERSIONS_CUSTOM_SONGS_COLLECTION = 'songs';
 
 interface OnlinePlaylist {
   name: string;
@@ -153,13 +156,6 @@ export const addActiveSession = async (name: string, center: [number, number]) =
 }
 */
 
-export const getServerProfile = async (
-  userId: string
-): Promise<DocumentData | undefined> => {
-  const docRef = await getDoc(doc(firestore, USERS_COLLECTION, userId));
-  return docRef.data();
-};
-
 export const addServerFavoriteSongs = async (
   userId: string,
   newSong: string
@@ -182,9 +178,61 @@ export const addUserToDatabase = async (userId: string): Promise<void> => {
   await setDoc(doc(firestore, USERS_COLLECTION, userId), {});
 };
 
+interface UserDatabase {
+  favoriteSongs?: string[];
+  playlists?: string[];
+  ownedSongs?: string[];
+}
+
 export const getUserFromDatabase = async (
   userId: string
-): Promise<DocumentData | undefined> => {
+): Promise<UserDatabase | undefined> => {
   const docRef = await getDoc(doc(firestore, USERS_COLLECTION, userId));
-  return docRef.data();
+  return docRef.data() as UserDatabase;
+};
+
+export const addEditedSongToDatabase = async (
+  userId: string,
+  newSongId: string,
+  nameFile: string
+): Promise<void> => {
+  const newSongDocRef = await addDoc(
+    collection(
+      firestore,
+      CUSTOM_SONGS_COLLECTION,
+      newSongId,
+      VERSIONS_CUSTOM_SONGS_COLLECTION
+    ),
+    {
+      nameFileStorage: nameFile,
+      creationTime: Timestamp.now(),
+      lastModified: Timestamp.now(),
+      author: userId
+    }
+  );
+  await updateDoc(doc(firestore, USERS_COLLECTION, userId), {
+    ownedSongs: arrayUnion(newSongDocRef.path)
+  });
+};
+
+export interface CustomSongInfo {
+  nameFileStorage: string;
+  creationTime: Timestamp;
+  lastModified: Timestamp;
+  author: string;
+  rates?: number;
+}
+
+export const getSongInfoVersions = async (
+  songId: string
+): Promise<CustomSongInfo[]> => {
+  const refDocs = await getDocs(
+    collection(
+      firestore,
+      CUSTOM_SONGS_COLLECTION,
+      songId,
+      VERSIONS_CUSTOM_SONGS_COLLECTION
+    )
+  );
+  return refDocs.docs.map((doc) => doc.data() as CustomSongInfo);
 };
