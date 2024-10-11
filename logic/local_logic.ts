@@ -102,14 +102,8 @@ interface InfoLocalSong {
 
 export const getSingleSong = (id: string): Song | undefined => {
   const songs = getLocalSongs();
-  let song: Song | undefined;
+  const song: Song | undefined = songs.find((v) => v.id === id);
 
-  for (const s of songs) {
-    if (s.id === id) {
-      song = s;
-      break;
-    }
-  }
   if (song === undefined) return;
   const infoLocalSong: InfoLocalSong | null = getFromStorage('song_' + song.id);
   if (infoLocalSong !== null) {

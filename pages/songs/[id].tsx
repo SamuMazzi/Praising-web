@@ -4,6 +4,7 @@ import {
   getFromStorage,
   getSingleSong,
   saveToStorage,
+  type Song,
   updateLastRecentsSongs
 } from '@/logic/local_logic';
 import ActionsSong from '@/components/actions_song';
@@ -34,6 +35,7 @@ import Head from 'next/head';
 import { SongDiv } from '@/components/song_div';
 import assert from 'assert';
 // import { addModifiedSong } from '@/logic/server/storage';
+import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 
 // TODO: Add highlight of parts of text in song (also for sessions) -> take a look at transitions/modal/popover
 
@@ -278,6 +280,19 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
             playlist={playlist}
           />
           <Container sx={{ py: 3.5 }} />
+          <Container disableGutters sx={{ py: 1 }}>
+            {editMode ? (
+              <EditableSong
+                songId={song.id}
+                data={data as unknown as string}
+                setEditMode={() => {
+                  setEditMode(false);
+                }}
+              />
+            ) : (
+              <SongDiv sections={sections} infoSong={infoSong} />
+            )}
+          </Container>
           {!editMode && (
             <ActionsSong
               song={song}
@@ -292,55 +307,15 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
               }}
             />
           )}
-          <Container disableGutters sx={{ py: 1 }}>
-            {editMode ? (
-              <EditableSong
-                data={data as unknown as string}
-                setEditMode={() => {
-                  setEditMode(false);
-                }}
-              />
-            ) : (
-              <SongDiv sections={sections} infoSong={infoSong} />
-            )}
-          </Container>
           {showVideo && song.link !== undefined && (
-            <Box
-              style={{ position: 'fixed', bottom: 20, right: 0 }}
-              sx={{
-                px: 2,
-                pb: 2,
-                mr: 3,
-                backgroundColor: 'background.paper',
-                borderRadius: 4,
-                boxShadow: 12,
-                maxWidth: '90%'
+            <YoutubeVideoBox
+              song={song}
+              closeVideo={() => {
+                setShowVideo(false);
               }}
-            >
-              <IconButton
-                edge="start"
-                onClick={() => {
-                  setShowVideo(false);
-                }}
-              >
-                <CloseRounded />
-              </IconButton>
-              <YouTube
-                videoId={song?.link?.split('youtu.be/')[1]}
-                opts={{
-                  width:
-                    typeof window !== 'undefined'
-                      ? window.screen.availWidth < 700
-                        ? (window.screen.availWidth * (4 / 5)).toString()
-                        : '640'
-                      : '640',
-                  playerVars: {
-                    autoplay: 1
-                  }
-                }}
-              />
-            </Box>
+            />
           )}
+
           <MessageSnackbar
             handleClose={() => {
               setMessageSnackbar('');
@@ -359,6 +334,110 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
     </>
   );
 }
+
+const YoutubeVideoBox = (props: {
+  song: Song;
+  closeVideo: () => void;
+}): JSX.Element => {
+  const [minimized, setMinimized] = useState(false);
+
+  return (
+    <Box
+      className="box-video"
+      style={{
+        position: 'fixed',
+        bottom: 20,
+        right: 0,
+        transition: 'height 0.5s cubic-bezier(0.5, 0, 0.4, 1)'
+      }}
+      sx={{
+        px: 2,
+        pb: 2,
+        pt: minimized ? 1.2 : 0,
+        mr: 3,
+        backgroundColor: 'background.paper',
+        borderRadius: 4,
+        boxShadow: 12,
+        width: { xs: '90%', sm: '80%', md: 672 },
+        height: 420
+      }}
+    >
+      <Box
+        style={{ display: 'flex' }}
+        sx={{
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: '100%'
+        }}
+      >
+        <IconButton edge="start" onClick={props.closeVideo}>
+          <CloseRounded />
+        </IconButton>
+        <Typography
+          className="title-video"
+          style={{ display: 'none' }}
+          sx={{ px: 2 }}
+        >
+          {props.song.name}
+        </Typography>
+        <IconButton
+          edge="end"
+          onClick={() => {
+            const newStateMinimized = !minimized;
+            const boxVideo = document.getElementsByClassName(
+              'box-video'
+            )[0] as HTMLElement | null;
+            if (boxVideo !== null) {
+              boxVideo.classList.toggle('minimized-video', newStateMinimized);
+              boxVideo.style.height = newStateMinimized ? '60px' : '420px';
+            }
+            document
+              .querySelector('.title-video')
+              ?.setAttribute(
+                'style',
+                'display: ' + (newStateMinimized ? 'block' : 'none')
+              );
+            const playerNode = document.getElementsByClassName(
+              'video-player'
+            )[0] as HTMLElement | null;
+            if (playerNode !== null) {
+              playerNode.style.display = newStateMinimized ? 'none' : 'block';
+            }
+            const iconNode = document.getElementsByClassName(
+              'icon-minimize-video'
+            )[0] as HTMLElement | null;
+            if (iconNode !== null) {
+              iconNode.style.transform = newStateMinimized
+                ? 'rotate(180deg)'
+                : '';
+            }
+            setMinimized(newStateMinimized);
+          }}
+        >
+          <KeyboardArrowDownRoundedIcon
+            className="icon-minimize-video"
+            style={{ transition: 'transform 0.6s ease' }}
+          />
+        </IconButton>
+      </Box>
+      <YouTube
+        className="video-player"
+        videoId={props.song.link?.split('youtu.be/')[1]}
+        opts={{
+          width:
+            typeof window !== 'undefined'
+              ? window.screen.availWidth < 700
+                ? (window.screen.availWidth * (4 / 5)).toString()
+                : '640'
+              : '640',
+          playerVars: {
+            autoplay: 1
+          }
+        }}
+      />
+    </Box>
+  );
+};
 
 function EditableSong(props: {
   data: string;
