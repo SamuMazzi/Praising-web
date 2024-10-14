@@ -21,6 +21,8 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import IconButton from '@mui/material/IconButton';
 import assert from 'assert';
 
+const AVOID_SPECIAL_CHARACTERS = /[^a-zA-Z0-9 ]/g;
+
 interface PropsListSongs {
   songs: Song[];
   mode: 'normal' | 'selection_playlist';
@@ -42,10 +44,14 @@ export default function ListSongs(props: PropsListSongs): JSX.Element {
   const filterSong = (v: Song): boolean => {
     const favoritePart =
       !showOnlyFavorites || (showOnlyFavorites && favoriteSongs.includes(v.id));
-    const nameToFilter = v.name.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase();
-    const authorToFilter = v.author.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase();
+    const nameToFilter = v.name
+      .replace(AVOID_SPECIAL_CHARACTERS, '')
+      .toLowerCase();
+    const authorToFilter = v.author
+      .replace(AVOID_SPECIAL_CHARACTERS, '')
+      .toLowerCase();
     const fitInFilter = (nameToFilter + ' ' + authorToFilter).includes(
-      filter.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase() // This replace is needed to avoid special characters... it could be handled better
+      filter.replace(AVOID_SPECIAL_CHARACTERS, '').toLowerCase() // This replace is needed to avoid special characters... it could be handled better
     );
     return favoritePart && fitInFilter;
   };

@@ -1,10 +1,5 @@
 import app from './firebase_config';
-import {
-  getStorage,
-  ref,
-  getDownloadURL,
-  uploadString
-} from 'firebase/storage';
+import { getStorage, ref, uploadString, getBlob } from 'firebase/storage';
 
 const storage = getStorage(app);
 
@@ -30,6 +25,6 @@ export const getVersionSong = async (
     storage,
     `${CUSTOM_SONGS_FOLDER}/${songId}/${nameFile}`
   );
-  const contentFile = await getDownloadURL(pathReference);
-  return contentFile;
+  const content = await getBlob(pathReference);
+  return await content.text();
 };

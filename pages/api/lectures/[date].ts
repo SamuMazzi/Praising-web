@@ -1,5 +1,4 @@
 import { extractLiturgia } from '@/logic/scraper_liturgy';
-import { AxiosError } from 'axios';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(
@@ -13,12 +12,11 @@ export default async function handler(
     const out = await extractLiturgia(url);
     res.status(200).json(out);
   } catch (e: any) {
-    if (e instanceof AxiosError) {
-      if (e.code === 'EAI_AGAIN') {
-        res.status(500).json({ error: 'Errore di connessione' });
-        return;
-      }
-    }
+    // TODO: This was used with axios, now find a way to handle this error
+    /* if (e.code === 'EAI_AGAIN') {
+      res.status(500).json({ error: 'Errore di connessione' });
+      return;
+    } */
     res.status(500).json({ error: e.message });
   }
 }

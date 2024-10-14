@@ -29,13 +29,15 @@ import { useTheme } from '@mui/material';
 // import LinearProgress from '@mui/material/LinearProgress'
 import { driver } from 'driver.js';
 import 'driver.js/dist/driver.css';
-// import { renderToString } from 'react-dom/server';
 import Head from 'next/head';
 import { SongDiv } from '@/components/song_div';
 import assert from 'assert';
 import { addModifiedSongToServerStorage } from '@/logic/server/storage';
-import { addEditedSongToDatabase } from '@/logic/server/database';
-import { randomUUID } from 'crypto';
+import {
+  addEditedSongToDatabase,
+  editEditedSongToDatabase
+} from '@/logic/server/database';
+import { v4 } from 'uuid';
 import useFirebaseAuth from '@/logic/hooks/use_auth';
 import useContentSong from '@/logic/hooks/use_content_song';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
@@ -206,7 +208,6 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
     }
   };
 
-  // if(props.fileContent === undefined || props.song === undefined) {
   if (error !== '' || loadingContent) {
     if (error !== '') {
       console.error(error);
@@ -298,6 +299,14 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
                 setEditMode={() => {
                   setEditMode(false);
                 }}
+                existingVersion={
+                  versionSong !== -1
+                    ? {
+                        nameFile: versions[versionSong].nameFileStorage,
+                        refDatabase: versions[versionSong].refDatabase
+                      }
+                    : undefined
+                }
               />
             ) : (
               <SongDiv sections={sections} infoSong={infoSong} />
@@ -316,7 +325,6 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
                 setOpenModalPlaylist(true);
               }}
               setEditMode={() => {
-                // TODO: Check if user is logged in, otherwise let user go there
                 setEditMode(true);
               }}
             />
@@ -453,10 +461,16 @@ const YoutubeVideoBox = (props: {
   );
 };
 
+interface PropsExistingVersion {
+  nameFile: string;
+  refDatabase: string;
+}
+
 const EditableSong = (props: {
   songId: string;
   data: string;
   setEditMode: () => void;
+  existingVersion?: PropsExistingVersion;
 }): JSX.Element => {
   const { authUser, loading } = useFirebaseAuth();
   const [data, setData] = useState(props.data);
@@ -467,8 +481,15 @@ const EditableSong = (props: {
       // TODO: Implement error handling for loading === true
       return;
     }
-    const nameFile = randomUUID() + '.crd';
-    await addEditedSongToDatabase(authUser.uid, props.songId, nameFile);
+    const nameFile = props.existingVersion?.nameFile ?? `${v4()}.crd`;
+    if (props.existingVersion === undefined) {
+      await addEditedSongToDatabase(authUser.uid, props.songId, nameFile);
+    } else {
+      await editEditedSongToDatabase(
+        props.songId,
+        props.existingVersion.refDatabase
+      );
+    }
     await addModifiedSongToServerStorage(nameFile, props.data, props.songId);
     props.setEditMode();
   };
@@ -476,7 +497,6 @@ const EditableSong = (props: {
   return (
     <>
       <TextField
-        // style={{textAlign: 'left'}}
         fullWidth
         multiline
         value={data}

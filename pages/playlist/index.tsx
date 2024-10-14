@@ -24,7 +24,7 @@ export default function PlaylistPage(): JSX.Element {
         />
         <meta
           name="og:keywords"
-          content={'accordi, canzoniere, chords, cristiani, testi, playlist'}
+          content="accordi, canzoniere, chords, cristiani, testi, playlist"
         />
       </Head>
       <main>

@@ -1,10 +1,12 @@
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { InfoRenderSong, renderSong } from './handle_text_song';
+import { type InfoRenderSong, renderSong } from './handle_text_song';
 import ReactDOMServer from 'react-dom/server';
 import { SongDiv } from '@/components/song_div';
-import { getSingleSong, Song } from './local_logic';
-import { ChordNotations } from './redux/settings_slice';
+import { getSingleSong, type Song } from './local_logic';
+import { type ChordNotations } from './redux/settings_slice';
+import React from 'react';
+import { fetcher } from './hooks/use_content_song';
 
 const PAGE_WIDTH = 210; // width of regular a4 paper
 const PAGE_HEIGHT = 295; // height of regular a4 paper
@@ -19,24 +21,32 @@ interface DataInfo extends InfoRendering {
   songs: string[];
 }
 
-export const printDocument = async (id_song: string, props: InfoRendering) => {
-  const song = getSingleSong(id_song);
-  if (!song) {
+export const printDocument = async (
+  idSong: string,
+  props: InfoRendering
+): Promise<void> => {
+  const song = getSingleSong(idSong);
+  if (song === undefined) {
     return;
   }
+  // eslint-disable-next-line new-cap
   const pdf = new jsPDF('p', 'mm', 'a4');
 
-  await createSinglePageSong(pdf, id_song, props);
+  await createSinglePageSong(pdf, idSong, props);
   pdf.deletePage(1); // To fix the first empty page
   pdf.save('Praising - ' + song.name + '.pdf');
 };
 
-export const playlistToPdf = async (title: string, data: DataInfo) => {
+export const playlistToPdf = async (
+  title: string,
+  data: DataInfo
+): Promise<void> => {
+  // eslint-disable-next-line new-cap
   const pdf = new jsPDF();
 
-  const futures = data.songs.map((id_song) =>
-    createSinglePageSong(pdf, id_song, data)
-  );
+  const futures = data.songs.map(async (idSong) => {
+    await createSinglePageSong(pdf, idSong, data);
+  });
   // TODO: Maybe order is not preserved
   await Promise.all(futures);
 
@@ -48,23 +58,26 @@ const addSongToPdf = async (
   pdf: jsPDF,
   input: HTMLElement,
   props: InfoRendering
-) => {
+): Promise<void> => {
   const canvas = await html2canvas(input, {
     backgroundColor: props.backgroundColor
   });
   const imgData = canvas.toDataURL('image/png');
-  const x_offset = 5;
-  const y_offset = 5;
-  const imgWidth = PAGE_WIDTH - x_offset;
+  const X_OFFSET = 5;
+  const Y_OFFSET = 5;
+  const imgWidth = PAGE_WIDTH - X_OFFSET;
   const imgHeight = (canvas.height * PAGE_WIDTH) / canvas.width;
 
   pdf.addPage();
   pdf.setFillColor(props.backgroundColor);
-  pdf.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT + x_offset, 'F');
-  pdf.addImage(imgData, 'PNG', x_offset, y_offset, imgWidth, imgHeight);
+  pdf.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT + X_OFFSET, 'F');
+  pdf.addImage(imgData, 'PNG', X_OFFSET, Y_OFFSET, imgWidth, imgHeight);
 };
 
-function PagePDFSong(props: { song: Song | undefined; info: InfoRenderSong }) {
+function PagePDFSong(props: {
+  song: Song | undefined;
+  info: InfoRenderSong;
+}): JSX.Element {
   if (props.song === undefined) {
     return <div></div>;
   }
@@ -84,14 +97,15 @@ function PagePDFSong(props: { song: Song | undefined; info: InfoRenderSong }) {
 const createSinglePageSong = async (
   pdf: jsPDF,
   id: string,
-  info_rendering: InfoRendering
-) => {
-  const data = await (
-    await fetch('/api/song/' + encodeURIComponent(id))
-  ).json();
+  infoRendering: InfoRendering
+): Promise<void> => {
+  const data = (await fetcher(`/api/song/${encodeURIComponent(id)}`)) as
+    | string
+    | undefined
+    | null;
   const song = getSingleSong(id);
 
-  if (!data) {
+  if (data === undefined || data === null || song === undefined) {
     return;
   }
   const info = renderSong({
@@ -99,7 +113,7 @@ const createSinglePageSong = async (
     showChords: true,
     transpose: song?.transpose,
     fontSize: song?.scaleFactor,
-    chordNotation: info_rendering.chordNotation
+    chordNotation: infoRendering.chordNotation
   });
   const html = ReactDOMServer.renderToString(
     <PagePDFSong song={song} info={info} />
@@ -109,7 +123,7 @@ const createSinglePageSong = async (
   document.body.appendChild(container);
 
   try {
-    await addSongToPdf(pdf, container, info_rendering);
+    await addSongToPdf(pdf, container, infoRendering);
   } finally {
     // Clean up: remove the temporary container
     document.body.removeChild(container);

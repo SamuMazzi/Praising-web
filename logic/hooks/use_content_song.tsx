@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { type CustomSongInfo, getSongInfoVersions } from '../server/database';
 import { getVersionSong } from '../server/storage';
+import { getFromStorage } from '../local_logic';
 
-const fetcher = async (url: string): Promise<any> => {
+export const fetcher = async (url: string): Promise<any> => {
   try {
     const res = await fetch(url);
     const out = await res.json();
@@ -69,7 +70,9 @@ export default function useContentSong(idSong: string): {
   }
 
   useEffect(() => {
-    // void fetchVersions();
+    if (getFromStorage('debug_admin') !== null) {
+      void fetchVersions();
+    }
     void fetchSong();
   }, []);
 

@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@/logic/redux/store';
-import { type Song } from '@/logic/local_logic';
+import { getFromStorage, type Song } from '@/logic/local_logic';
 import Container from '@mui/material/Container';
 import LyricsRoundedIcon from '@mui/icons-material/LyricsRounded';
 import ZoomInRoundedIcon from '@mui/icons-material/ZoomInRounded';
@@ -18,6 +18,7 @@ import React, { useEffect, useState } from 'react';
 import Slide from '@mui/material/Slide';
 import { type CustomSongInfo } from '@/logic/server/database';
 import useFirebaseAuth from '@/logic/hooks/use_auth';
+import { ModalCreateAccountForThisAction } from './modals';
 
 interface PropsActionSong {
   song: Song;
@@ -90,8 +91,9 @@ const ActionIconButton = (props: any): JSX.Element => {
 };
 
 export default function ActionsSong(props: PropsActionSong): JSX.Element {
+  const [openModal, setOpenModal] = useState(false);
   const [menuExpanded, setMenuExpanded] = useState(true);
-  const { authUser } = useFirebaseAuth();
+  const { authUser, loading } = useFirebaseAuth();
   const infoSong: InfoLocalSong | undefined = useAppSelector(
     (state) => state.infoSongs.infoSongs[props.song.id]
   );
@@ -104,7 +106,7 @@ export default function ActionsSong(props: PropsActionSong): JSX.Element {
       dispatch(modifySong({ id: props.song.id, zoom: props.fontSize }));
     }
   }, []);
-  const canEdit = false; // props.versionSong === undefined || props.versionSong.author === authUser?.uid;
+  const canEdit = getFromStorage('debug_admin') !== null; // props.versionSong === undefined || props.versionSong.author === authUser?.uid;
 
   const actionsInfo = [
     {
@@ -166,7 +168,16 @@ export default function ActionsSong(props: PropsActionSong): JSX.Element {
     {
       id: 'editSong',
       title: 'Modifica la canzone',
-      onClick: props.setEditMode,
+      onClick: () => {
+        if (loading) {
+          return;
+        }
+        if (authUser?.email === null) {
+          setOpenModal(true);
+          return;
+        }
+        props.setEditMode();
+      },
       icon: <EditRoundedIcon />,
       visible: canEdit && menuExpanded
     }
@@ -207,6 +218,14 @@ export default function ActionsSong(props: PropsActionSong): JSX.Element {
           {action.icon}
         </ActionIconButton>
       ))}
+      <ModalCreateAccountForThisAction
+        title="Registrati"
+        message="Per poter modificare questa canzone devi prima registrarti"
+        open={openModal}
+        handleClose={(): void => {
+          setOpenModal(false);
+        }}
+      />
     </Container>
   );
 }

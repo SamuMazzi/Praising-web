@@ -4,8 +4,10 @@ import type {
   RuntimeCaching
 } from 'serwist';
 import { Serwist, StaleWhileRevalidate } from 'serwist';
-import { getLocalSongs } from './logic/local_logic';
-import info_revision_pages from './info_revision.json';
+import { defaultCache } from '@serwist/next/worker';
+
+// Beacause of too many requests to the server, the automatic caching of _everything_ has been disabled.
+// Sooner or later get information on how to cache everything only on pwa installation and whenever pwa gets opened (to check if there are any updates)
 
 // This declares the value of `injectionPoint` to TypeScript.
 // `injectionPoint` is the string that will be replaced by the
@@ -18,11 +20,6 @@ declare global {
 }
 
 declare const self: ServiceWorkerGlobalScope;
-
-const additionalPrecacheEntries: Array<string | PrecacheEntry> =
-  info_revision_pages.map((page) => {
-    return { url: '/' + page.voice, revision: page.hash };
-  });
 
 const cachingStrategies: RuntimeCaching[] = [
   {
@@ -41,7 +38,7 @@ const cachingStrategies: RuntimeCaching[] = [
 
 const serwist = new Serwist({
   // All assets and "accordi" are automatically cached by default.
-  precacheEntries: additionalPrecacheEntries.concat(self.__SW_MANIFEST || []),
+  precacheEntries: self.__SW_MANIFEST, // additionalPrecacheEntries.concat(that self sw manifest || []),
   precacheOptions: {
     ignoreURLParametersMatching: [/.*/],
     cleanupOutdatedCaches: true
@@ -49,15 +46,15 @@ const serwist = new Serwist({
   skipWaiting: true,
   clientsClaim: true,
   navigationPreload: true,
-  runtimeCaching: cachingStrategies,
-  fallbacks: {
+  runtimeCaching: defaultCache // cachingStrategies,
+  /* fallbacks: {
     entries: [
       {
         matcher: ({ request }) => request.url.startsWith('/lectures'),
         url: '/offline'
       }
     ]
-  }
+  } */
 });
 /*
 self.addEventListener("fetch", (event) => {
@@ -86,6 +83,12 @@ self.addEventListener("fetch", (event) => {
   }
 }); */
 
+/* // LAST WORKING VERSION
+const additionalPrecacheEntries: Array<string | PrecacheEntry> =
+  info_revision_pages.map((page) => {
+    return { url: '/' + page.voice, revision: page.hash };
+  });
+
 self.addEventListener('install', (e) => {
   e.waitUntil(
     (async () => {
@@ -113,6 +116,8 @@ self.addEventListener('install', (e) => {
     })()
   );
 });
+*/
+
 /*
 const putInCache = async (request: Request, response: Response) => {
   const cache = await caches.open("v1");

@@ -13,9 +13,12 @@ import {
 import List from '@mui/material/List';
 import ListItemText from '@mui/material/ListItemText';
 import Grid from '@mui/material/Grid';
+import Grid2 from '@mui/material/Grid2';
 import NewspaperRoundedIcon from '@mui/icons-material/NewspaperRounded';
 import Image from 'next/image';
 import { useTheme } from '@mui/material';
+import { useRouter } from 'next/router';
+import Routes from '@/logic/routes';
 // import { addActiveSession } from '@/logic/server/database'
 // import { setActiveSession } from '@/logic/redux/sessions_slice'
 
@@ -91,6 +94,64 @@ export function ModalCreateSession(props: ModalAddSongProps): JSX.Element {
             </Button>
           </Grid>
         </Grid>
+      }
+    />
+  );
+}
+
+interface PropsModalCreateAccountForThisAction extends GenericProps {
+  title: string;
+  message: string;
+}
+
+export function ModalCreateAccountForThisAction(
+  props: PropsModalCreateAccountForThisAction
+): JSX.Element {
+  const router = useRouter();
+  const handleConfirm = async (): Promise<void> => {
+    void router.push(Routes.Login);
+  };
+
+  return (
+    <GenericModal
+      open={props.open}
+      handleClose={props.handleClose}
+      content={
+        <Grid2
+          container
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Grid2>
+            <Typography variant="h2" sx={{ mb: 3 }}>
+              {props.title}
+            </Typography>
+          </Grid2>
+          <Grid2>
+            <Typography>{props.message}</Typography>
+          </Grid2>
+          <Grid2 container direction="row" sx={{ mt: 2 }}>
+            <Button
+              onClick={() => {
+                props.handleClose();
+              }}
+              sx={{ mt: 1, mr: 3, textTransform: 'none' }}
+              variant="outlined"
+            >
+              Annulla
+            </Button>
+            <Button
+              onClick={() => {
+                void handleConfirm();
+              }}
+              sx={{ mt: 1 }}
+              variant="contained"
+            >
+              Registrati
+            </Button>
+          </Grid2>
+        </Grid2>
       }
     />
   );

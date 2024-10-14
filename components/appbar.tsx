@@ -322,7 +322,7 @@ function MenuItemVersions(props: PropsMenuItemVersions): JSX.Element {
       <MenuItem onClick={handleClick}>Versioni</MenuItem>
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
         <MenuItem
-          key={'version-song-base'}
+          key="version-song-base"
           onClick={() => {
             assert(props.setVersionSong !== undefined);
             props.setVersionSong(-1);
@@ -539,7 +539,11 @@ export const SongAppBar = (props: PropsSongAppBar): JSX.Element => {
                   <ListItemText primary="Transpose" />
                   {props.transpose ?? '0'}
                 </MenuItem>
-                <MenuItemVersions />
+                <MenuItemVersions
+                  versions={props.versions}
+                  setVersionSong={props.setVersionSong}
+                  selectedIndexVersion={props.selectedIndexVersion}
+                />
               </Menu>
             </Box>
           </Toolbar>

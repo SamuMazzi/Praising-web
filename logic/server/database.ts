@@ -18,7 +18,7 @@ import {
 const firestore = getFirestore(app);
 const USERS_COLLECTION = 'users';
 const CUSTOM_SONGS_COLLECTION = 'songs';
-const VERSIONS_CUSTOM_SONGS_COLLECTION = 'songs';
+const VERSIONS_CUSTOM_SONGS_COLLECTION = 'versions';
 
 interface OnlinePlaylist {
   name: string;
@@ -188,9 +188,11 @@ export const getUserFromDatabase = async (
   userId: string
 ): Promise<UserDatabase | undefined> => {
   const docRef = await getDoc(doc(firestore, USERS_COLLECTION, userId));
+  if (!docRef.exists()) return undefined;
   return docRef.data() as UserDatabase;
 };
 
+// TODO: Aggiungi modo per editare canzoni e non aggiungerle
 export const addEditedSongToDatabase = async (
   userId: string,
   newSongId: string,
@@ -215,11 +217,30 @@ export const addEditedSongToDatabase = async (
   });
 };
 
+export const editEditedSongToDatabase = async (
+  songId: string,
+  songRef: string
+): Promise<void> => {
+  await updateDoc(
+    doc(
+      firestore,
+      CUSTOM_SONGS_COLLECTION,
+      songId,
+      VERSIONS_CUSTOM_SONGS_COLLECTION,
+      songRef
+    ),
+    {
+      lastModified: Timestamp.now()
+    }
+  );
+};
+
 export interface CustomSongInfo {
   nameFileStorage: string;
   creationTime: Timestamp;
   lastModified: Timestamp;
   author: string;
+  refDatabase: string /* In firebase case the ID of the document */;
   rates?: number;
 }
 
@@ -234,5 +255,9 @@ export const getSongInfoVersions = async (
       VERSIONS_CUSTOM_SONGS_COLLECTION
     )
   );
-  return refDocs.docs.map((doc) => doc.data() as CustomSongInfo);
+  const out = refDocs.docs.map((doc) => {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    return { ...doc.data(), refDatabase: doc.id } as CustomSongInfo;
+  });
+  return out;
 };

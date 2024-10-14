@@ -13,7 +13,7 @@ export default function SongsPage(): JSX.Element {
     <>
       <Head>
         <title>Canzoni</title>
-        <meta property="og:title" content={'Canzoni'} key="title" />
+        <meta property="og:title" content="Canzoni" key="title" />
         <meta
           name="og:description"
           content={
@@ -22,7 +22,7 @@ export default function SongsPage(): JSX.Element {
         />
         <meta
           name="og:keywords"
-          content={'accordi, canzoniere, chords, cristiani, testi'}
+          content="accordi, canzoniere, chords, cristiani, testi"
         />
       </Head>
       <main>

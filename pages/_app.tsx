@@ -13,7 +13,7 @@ import { itIT } from '@mui/x-date-pickers/locales';
  * Priorities:
  * 1. Offline
  * 2. bugs (?)
- * 2a. Transition pages
+ * 2a. Transition pages (for example go from page to songs)
  * 3. Edit song
  * 4. Tutorial (finish)
  * 5. PDF (finish) -> more songs in same page for playlists

@@ -34,21 +34,6 @@ a {
   white-space: pre;
 }
 
-/* .expandable {
-  margin-top: 1.5rem;
-  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
-  transition: clip-path 0.5s ease-in-out;
-  overflow: hidden;
-  width: fit-content;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.compressed {
-  clip-path: polygon(0% 0%, 100% 0%, 100% 30%, 0% 30%);
-  transition: clip-path 0.5s ease-in-out;
-} */
-
 .expandable {
   margin-top: 1.2rem;
   max-height: 80em;

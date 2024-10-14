@@ -1,5 +1,4 @@
 import { type CheerioAPI, load } from 'cheerio';
-import axios from 'axios';
 
 export interface WebStructLiturgy {
   firstLecture: Lettura;
@@ -21,8 +20,8 @@ interface Salmo {
 }
 
 const fetchLiturgia = async (url: string): Promise<CheerioAPI> => {
-  const { data } = await axios.get(url);
-  return load(data as string);
+  const data = await fetch(url);
+  return load(await data.text());
 };
 
 const parseSalmo = ($: CheerioAPI): Salmo => {
