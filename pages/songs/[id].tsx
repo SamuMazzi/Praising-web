@@ -14,17 +14,14 @@ import YouTube from 'react-youtube';
 import Box from '@mui/material/Box';
 import { useWakeLock } from 'react-screen-wake-lock';
 import Typography from '@mui/material/Typography';
-import { useAppSelector } from '@/logic/redux/store';
-import { type InfoLocalSong } from '@/logic/redux/info_song_slice';
+import { useAppDispatch, useAppSelector } from '@/logic/redux/store';
+import { setLocalVersionSong, type InfoLocalSong } from '@/logic/redux/info_song_slice';
 import { renderSong } from '@/logic/handle_text_song';
 import { MessageSnackbar } from '@/components/pers_snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseRounded from '@mui/icons-material/CloseRounded';
-import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import { type Playlist } from '@/logic/redux/playlist_slice';
 import ShimmerSegments from '@/components/shimmer_effect/shimmer_segments';
-import TextField from '@mui/material/TextField';
-import Fab from '@mui/material/Fab';
 import { useTheme } from '@mui/material';
 // import LinearProgress from '@mui/material/LinearProgress'
 import { driver } from 'driver.js';
@@ -32,15 +29,9 @@ import 'driver.js/dist/driver.css';
 import Head from 'next/head';
 import { SongDiv } from '@/components/song_div';
 import assert from 'assert';
-import { addModifiedSongToServerStorage } from '@/logic/server/storage';
-import {
-  addEditedSongToDatabase,
-  editEditedSongToDatabase
-} from '@/logic/server/database';
-import { v4 } from 'uuid';
-import useFirebaseAuth from '@/logic/hooks/use_auth';
 import useContentSong from '@/logic/hooks/use_content_song';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
+import { EditableSong } from '@/components/editable_song';
 
 SongPage.getInitialProps = async (props: any) => {
   const { id, playlistId } = props.query;
@@ -134,7 +125,6 @@ const TUTORIAL_SHOWN = 'tutorialShown_0';
 export default function SongPage(props: PropsSongPage): JSX.Element {
   const { content, versions, fetchSong, loadingContent, error } =
     useContentSong(props.id);
-  const [versionSong, setVersionSong] = useState<number>(-1); // Index of the selected version of the song
   const song = getSingleSong(props.id);
   const playlist: Playlist | undefined = useAppSelector((state) =>
     props.playlistId !== undefined
@@ -146,12 +136,14 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
   const infoSong: InfoLocalSong | undefined = useAppSelector((state) =>
     song?.id !== undefined ? state.infoSongs.infoSongs[song.id] : undefined
   );
+  const songVersionIndex = versions.findIndex((v) => v.idVersion === infoSong?.versionId)
   const showChords = useAppSelector((state) => state.settings.showChords);
   const { isSupported, released, request, release } = useWakeLock({});
   const [messageSnackbar, setMessageSnackbar] = useState('');
   const chordNotation = useAppSelector((state) => state.settings.chordNotation);
   const [editMode, setEditMode] = useState(false);
   const theme = useTheme();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
@@ -190,14 +182,17 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
   }, []);
 
   const callbackSetVersionSong = (index: number): void => {
-    if (index === versionSong) return;
-    setVersionSong(index);
+    assert (song !== undefined, 'Song is undefined');
+    if (index === songVersionIndex) return;
+    const idVersion = index === -1 ? undefined : versions[index].idVersion
+    dispatch(
+      setLocalVersionSong({
+        id: song.id,
+        versionId: idVersion
+      })
+    );
 
-    if (index === -1) {
-      void fetchSong();
-    } else {
-      void fetchSong(versions[index].nameFileStorage);
-    }
+    void fetchSong(idVersion);
   };
 
   const handlePressVideo = (): void => {
@@ -252,26 +247,61 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
   // fontsize std: lineHeigth 68, poi -4 tutte le volte
   assert(song !== undefined, 'Song is undefined');
 
+  const HeadComponent = (): JSX.Element => (
+    <Head>
+      <title>{song.name} - Praising</title>
+      <meta
+        property="og:title"
+        content={'Praising - ' + song.name}
+        key="title"
+      />
+      <meta
+        name="og:description"
+        content={'Guarda gli accordi della canto ' + song.name}
+      />
+      <meta
+        name="og:keywords"
+        content={
+          song.name + ', accordi, ' + song.author + ', canzoniere, chords'
+        }
+      />
+    </Head>
+  );
+
+  if (editMode) {
+    return (
+      <>
+        <HeadComponent />
+        <main>
+          <EditableSong
+            songId={song.id}
+            data={content}
+            setEditMode={(reload: boolean, idVersion?: string) => {
+              dispatch(
+                setLocalVersionSong({
+                  id: song.id,
+                  versionId: idVersion
+                })
+              );
+              setEditMode(false);
+              if (typeof window !== 'undefined' && reload) {
+                // TODO: If you edit the same version of the song the page will be reloaded anyway.. fix this sooner or later
+                window.location.reload();
+              }
+            }}
+            idExistingVersion={
+              songVersionIndex !== -1 ? versions[songVersionIndex].idVersion : undefined
+            }
+            versionIndex={songVersionIndex}
+          />
+        </main>
+      </>
+    );
+  }
+
   return (
     <>
-      <Head>
-        <title>{song.name} - Praising</title>
-        <meta
-          property="og:title"
-          content={'Praising - ' + song.name}
-          key="title"
-        />
-        <meta
-          name="og:description"
-          content={'Guarda gli accordi della canto ' + song.name}
-        />
-        <meta
-          name="og:keywords"
-          content={
-            song.name + ', accordi, ' + song.author + ', canzoniere, chords'
-          }
-        />
-      </Head>
+      <HeadComponent />
       <main>
         <Container
           disableGutters
@@ -288,47 +318,25 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
             playlist={playlist}
             setVersionSong={callbackSetVersionSong}
             versions={versions}
-            selectedIndexVersion={versionSong}
+            selectedIndexVersion={songVersionIndex}
           />
           <Container sx={{ py: 3.5 }} />
           <Container disableGutters sx={{ py: 1 }}>
-            {editMode ? (
-              <EditableSong
-                songId={song.id}
-                data={content}
-                setEditMode={() => {
-                  setEditMode(false);
-                }}
-                existingVersion={
-                  versionSong !== -1
-                    ? {
-                        nameFile: versions[versionSong].nameFileStorage,
-                        refDatabase: versions[versionSong].refDatabase
-                      }
-                    : undefined
-                }
-              />
-            ) : (
-              <SongDiv sections={sections} infoSong={infoSong} />
-            )}
+            <SongDiv sections={sections} infoSong={infoSong} />
           </Container>
-          {!editMode && (
-            <ActionsSong
-              song={song}
-              fontSize={fontSize}
-              videoIsPlaying={showVideo}
-              versionSong={
-                versionSong !== -1 ? versions[versionSong] : undefined
-              }
-              onPressVideo={handlePressVideo}
-              setOpenSheet={() => {
-                setOpenModalPlaylist(true);
-              }}
-              setEditMode={() => {
-                setEditMode(true);
-              }}
-            />
-          )}
+          <ActionsSong
+            song={song}
+            fontSize={fontSize}
+            videoIsPlaying={showVideo}
+            versionSong={songVersionIndex !== -1 ? versions[songVersionIndex] : undefined}
+            onPressVideo={handlePressVideo}
+            setOpenSheet={() => {
+              setOpenModalPlaylist(true);
+            }}
+            setEditMode={() => {
+              setEditMode(true);
+            }}
+          />
           {showVideo && song.link !== undefined && (
             <YoutubeVideoBox
               song={song}
@@ -458,91 +466,5 @@ const YoutubeVideoBox = (props: {
         }}
       />
     </Box>
-  );
-};
-
-interface PropsExistingVersion {
-  nameFile: string;
-  refDatabase: string;
-}
-
-const EditableSong = (props: {
-  songId: string;
-  data: string;
-  setEditMode: () => void;
-  existingVersion?: PropsExistingVersion;
-}): JSX.Element => {
-  const { authUser, loading } = useFirebaseAuth();
-  const [data, setData] = useState(props.data);
-  const theme = useTheme();
-
-  const handleSave = async (): Promise<void> => {
-    if (authUser === null || loading) {
-      // TODO: Implement error handling for loading === true
-      return;
-    }
-    const nameFile = props.existingVersion?.nameFile ?? `${v4()}.crd`;
-    if (props.existingVersion === undefined) {
-      await addEditedSongToDatabase(authUser.uid, props.songId, nameFile);
-    } else {
-      await editEditedSongToDatabase(
-        props.songId,
-        props.existingVersion.refDatabase
-      );
-    }
-    await addModifiedSongToServerStorage(nameFile, props.data, props.songId);
-    props.setEditMode();
-  };
-
-  return (
-    <>
-      <TextField
-        fullWidth
-        multiline
-        value={data}
-        onChange={(e) => {
-          setData(e.target.value);
-        }}
-        rows={data.split('\n').length}
-        sx={{ mt: 2, mb: 10 }}
-        InputProps={{
-          style: { color: theme.palette.mode === 'dark' ? 'white' : 'black' }
-        }}
-      />
-      <Fab
-        size="medium"
-        style={{
-          margin: 0,
-          top: 'auto',
-          right: 90,
-          bottom: 22.5,
-          left: 'auto',
-          position: 'fixed'
-        }}
-        color="warning"
-        onClick={() => {
-          props.setEditMode();
-        }}
-      >
-        <CloseRounded />
-      </Fab>
-      <Fab
-        style={{
-          margin: 0,
-          top: 'auto',
-          right: 20,
-          bottom: 20,
-          left: 'auto',
-          position: 'fixed'
-        }}
-        color="primary"
-        aria-label="Confirm"
-        onClick={() => {
-          void handleSave();
-        }}
-      >
-        <CheckRoundedIcon />
-      </Fab>
-    </>
   );
 };

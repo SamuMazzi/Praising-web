@@ -11,7 +11,8 @@ import {
   arrayUnion,
   arrayRemove,
   Timestamp,
-  getDocs
+  getDocs,
+  deleteDoc
 } from 'firebase/firestore';
 // import geofire from 'geofire-common';
 
@@ -192,12 +193,10 @@ export const getUserFromDatabase = async (
   return docRef.data() as UserDatabase;
 };
 
-// TODO: Aggiungi modo per editare canzoni e non aggiungerle
 export const addEditedSongToDatabase = async (
   userId: string,
-  newSongId: string,
-  nameFile: string
-): Promise<void> => {
+  newSongId: string
+): Promise<string> => {
   const newSongDocRef = await addDoc(
     collection(
       firestore,
@@ -206,7 +205,6 @@ export const addEditedSongToDatabase = async (
       VERSIONS_CUSTOM_SONGS_COLLECTION
     ),
     {
-      nameFileStorage: nameFile,
       creationTime: Timestamp.now(),
       lastModified: Timestamp.now(),
       author: userId
@@ -215,11 +213,30 @@ export const addEditedSongToDatabase = async (
   await updateDoc(doc(firestore, USERS_COLLECTION, userId), {
     ownedSongs: arrayUnion(newSongDocRef.path)
   });
+  return newSongDocRef.id;
+};
+
+export const deleteEditedSongFromDatabase = async (
+  userId: string,
+  songId: string,
+  idDoc: string
+): Promise<void> => {
+  const docRef = doc(
+    firestore,
+    CUSTOM_SONGS_COLLECTION,
+    songId,
+    VERSIONS_CUSTOM_SONGS_COLLECTION,
+    idDoc
+  );
+  await deleteDoc(docRef);
+  await updateDoc(doc(firestore, USERS_COLLECTION, userId), {
+    ownedSongs: arrayRemove(docRef.path)
+  });
 };
 
 export const editEditedSongToDatabase = async (
   songId: string,
-  songRef: string
+  idVersion: string
 ): Promise<void> => {
   await updateDoc(
     doc(
@@ -227,7 +244,7 @@ export const editEditedSongToDatabase = async (
       CUSTOM_SONGS_COLLECTION,
       songId,
       VERSIONS_CUSTOM_SONGS_COLLECTION,
-      songRef
+      idVersion
     ),
     {
       lastModified: Timestamp.now()
@@ -236,11 +253,10 @@ export const editEditedSongToDatabase = async (
 };
 
 export interface CustomSongInfo {
-  nameFileStorage: string;
+  idVersion: string /* In firebase case the ID of the document */;
   creationTime: Timestamp;
   lastModified: Timestamp;
   author: string;
-  refDatabase: string /* In firebase case the ID of the document */;
   rates?: number;
 }
 
@@ -257,7 +273,7 @@ export const getSongInfoVersions = async (
   );
   const out = refDocs.docs.map((doc) => {
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    return { ...doc.data(), refDatabase: doc.id } as CustomSongInfo;
+    return { ...doc.data(), idVersion: doc.id } as CustomSongInfo;
   });
   return out;
 };

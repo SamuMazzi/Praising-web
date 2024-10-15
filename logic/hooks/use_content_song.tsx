@@ -21,6 +21,7 @@ export default function useContentSong(idSong: string): {
   loadingContent: boolean;
   error: string;
   fetchSong: (nameFileVersion?: string) => Promise<void>;
+  fetchVersions: () => Promise<void>;
 } {
   const [data, setData] = useState('');
   const [loadingContent, setLoadingContent] = useState(true);
@@ -51,13 +52,13 @@ export default function useContentSong(idSong: string): {
     }
   }
 
-  async function fetchSong(nameFileVersion?: string): Promise<void> {
+  async function fetchSong(idVersion?: string): Promise<void> {
     setLoadingContent(true);
     setError('');
     try {
       let content = '';
-      if (nameFileVersion !== undefined) {
-        content = await getVersionSong(nameFileVersion, idSong);
+      if (idVersion !== undefined) {
+        content = await getVersionSong(idVersion, idSong);
       } else {
         content = await fetcher(`/api/song/${encodeURIComponent(idSong)}`);
       }
@@ -82,6 +83,7 @@ export default function useContentSong(idSong: string): {
     loadingContent,
     loadingVersions,
     error,
-    fetchSong
+    fetchSong,
+    fetchVersions
   };
 }

@@ -14,7 +14,8 @@
     "lint:check": "eslint --ext .ts,.js,.jsx .",
     "linter": "npm run lint:check && npm run lint:next",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "set_cors_fb": "gsutil cors set cors_firebase_storage.json gs://praising-web.appspot.com"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
@@ -44,8 +45,7 @@
     "react-youtube": "^10.1.0",
     "sharp": "^0.33.0",
     "smooth-dnd": "^0.12.1",
-    "swr": "^2.0.3",
-    "uuid": "^10.0.0"
+    "swr": "^2.0.3"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^14.2.14",

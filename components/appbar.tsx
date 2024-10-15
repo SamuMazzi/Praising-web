@@ -153,7 +153,7 @@ interface PropsHideOnScroll {
   children: React.ReactElement;
 }
 
-function HideOnScroll(props: PropsHideOnScroll): JSX.Element {
+export const HideOnScroll = (props: PropsHideOnScroll): JSX.Element => {
   const { children, window } = props;
   // Note that you normally won't need to set the window ref as useScrollTrigger
   // will default to window.
@@ -167,7 +167,7 @@ function HideOnScroll(props: PropsHideOnScroll): JSX.Element {
       {children}
     </Slide>
   );
-}
+};
 
 interface PropsAppBar {
   title: string;
@@ -319,8 +319,29 @@ function MenuItemVersions(props: PropsMenuItemVersions): JSX.Element {
 
   return (
     <div>
-      <MenuItem onClick={handleClick}>Versioni</MenuItem>
-      <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+      <MenuItem onClick={handleClick}>
+        <ListItemText>Versioni</ListItemText>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ ml: 2 }}
+          >
+            {props.selectedIndexVersion === -1 ? 'Base' : 'Ver ' + (props.selectedIndexVersion + 1)}
+        </Typography>
+      </MenuItem>
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'left'
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right'
+        }}
+      >
         <MenuItem
           key="version-song-base"
           onClick={() => {
@@ -350,6 +371,19 @@ function MenuItemVersions(props: PropsMenuItemVersions): JSX.Element {
   );
 }
 
+export const SongTitleAppBar = (props: {title: string, versionText: string}): JSX.Element => {
+  return (
+    <Box sx={{ flexGrow: 1 }} alignItems="center">
+      <Typography variant="h1" sx={{ py: 1, width: {xs: '16rem', md: '40rem'} }} noWrap style={{overflow: "hidden", textOverflow: "ellipsis"}}>
+        {props.title}
+        <Typography variant="subtitle1" sx={{ maxLines: 1 }} color='textDisabled' >
+          {props.versionText}
+        </Typography>
+      </Typography>
+    </Box>
+  )
+}
+
 interface PropsSongAppBar extends PropsMenuItemVersions {
   id: string;
   title: string;
@@ -365,6 +399,7 @@ export const SongAppBar = (props: PropsSongAppBar): JSX.Element => {
   const chordNotation = useAppSelector((state) => state.settings.chordNotation);
   const favoriteSongs = useAppSelector((state) => state.userInfo.favoriteSongs);
   const dispatch = useAppDispatch();
+  const versionText = props.selectedIndexVersion !== undefined && props.selectedIndexVersion !== -1 ? '(Versione ' + (props.selectedIndexVersion + 1) + ')' : ''
 
   const openMenu = (event: React.MouseEvent<HTMLButtonElement>): void => {
     setAnchorEl(event.currentTarget);
@@ -389,11 +424,10 @@ export const SongAppBar = (props: PropsSongAppBar): JSX.Element => {
             >
               <ArrowBackRoundedIcon />
             </IconButton>
-            <Box sx={{ flexGrow: 1, display: 'flex' }} alignItems="center">
-              <Typography variant="h1" sx={{ py: 1, maxLines: 2 }}>
-                {props.title}
-              </Typography>
-            </Box>
+            <SongTitleAppBar 
+              title={props.title} 
+              versionText={versionText}
+            />
             <Box sx={{ flexGrow: 0, display: 'flex' }} alignItems="center">
               {indexInPlaylist !== undefined &&
                 indexInPlaylist !== -1 &&

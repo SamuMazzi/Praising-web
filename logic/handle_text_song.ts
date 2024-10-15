@@ -327,6 +327,7 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
                 deserialized = deserialized.transpose(-1, {normalizeChordSuffix: true})
             } */
 
+      // TODO: This does not work when there is capo set
       if (DIESIS_NOTES.includes(majorRootKey.toString())) {
         deserialized = deserialized.useModifier('#');
       } else {

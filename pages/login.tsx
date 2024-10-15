@@ -189,7 +189,7 @@ function SignCard(): JSX.Element {
                       onClick={() => {
                         void onSignEmailClick('login');
                       }}
-                      disabled={loading}
+                      disabled={loadingSign}
                     >
                       Accedi
                     </Button>
@@ -198,7 +198,7 @@ function SignCard(): JSX.Element {
                       onClick={() => {
                         void onSignEmailClick('signup');
                       }}
-                      disabled={loading}
+                      disabled={loadingSign}
                     >
                       Registrati
                     </Button>
@@ -218,7 +218,7 @@ function SignCard(): JSX.Element {
                         height={20}
                       />
                     }
-                    disabled={loading}
+                    disabled={loadingSign}
                     onClick={() => {
                       void onGoogleClick();
                     }}
@@ -228,7 +228,7 @@ function SignCard(): JSX.Element {
                   </Button>
                 </Grid>
                 {loadingSign && (
-                  <Grid item>
+                  <Grid item sx={{ mt: 2 }}>
                     <CircularProgress />
                   </Grid>
                 )}

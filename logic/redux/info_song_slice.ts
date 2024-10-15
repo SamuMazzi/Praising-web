@@ -6,6 +6,7 @@ const INFO_SONGS_KEY = 'info_songs';
 export interface InfoLocalSong {
   transpose?: number;
   zoom?: number;
+  versionId?: string;
 }
 
 interface BoxInfoSongsState {
@@ -23,18 +24,35 @@ interface PayloadModifySong {
   zoom?: number;
 }
 
+interface PayloadSetLocalVersionSong {
+  id: string;
+  versionId?: string
+}
+
 export const infoSongsSlice = createSlice({
   name: INFO_SONGS_KEY,
   initialState,
   reducers: {
     modifySong: (state, action: PayloadAction<PayloadModifySong>) => {
       const idS = action.payload.id;
+      const songToModify = {
+        transpose:
+            action.payload.transpose ?? state.infoSongs[idS]?.transpose,
+          zoom: action.payload.zoom ?? state.infoSongs[idS]?.zoom,
+      }
+      state.infoSongs = {
+        ...state.infoSongs,
+        [idS]: songToModify
+      };
+      saveToStorage(INFO_SONGS_KEY, state.infoSongs);
+    },
+    setLocalVersionSong: (state, action: PayloadAction<PayloadSetLocalVersionSong>) => {
+      const idS = action.payload.id;
       state.infoSongs = {
         ...state.infoSongs,
         [idS]: {
-          transpose:
-            action.payload.transpose ?? state.infoSongs[idS]?.transpose,
-          zoom: action.payload.zoom ?? state.infoSongs[idS]?.zoom
+          ...state.infoSongs[idS],
+          versionId: action.payload.versionId
         }
       };
       saveToStorage(INFO_SONGS_KEY, state.infoSongs);
@@ -42,6 +60,6 @@ export const infoSongsSlice = createSlice({
   }
 });
 
-export const { modifySong } = infoSongsSlice.actions;
+export const { modifySong, setLocalVersionSong } = infoSongsSlice.actions;
 
 export default infoSongsSlice.reducer;
