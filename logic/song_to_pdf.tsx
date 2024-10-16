@@ -10,6 +10,7 @@ import { fetcher } from './hooks/use_content_song';
 
 const PAGE_WIDTH = 210; // width of regular a4 paper
 const PAGE_HEIGHT = 295; // height of regular a4 paper
+// FIXME: Fix the size of the page (Acclamate a Dio)
 
 interface InfoRendering {
   backgroundColor: string;
@@ -63,15 +64,13 @@ const addSongToPdf = async (
     backgroundColor: props.backgroundColor
   });
   const imgData = canvas.toDataURL('image/png');
-  const X_OFFSET = 5;
-  const Y_OFFSET = 5;
-  const imgWidth = PAGE_WIDTH - X_OFFSET;
+  const imgWidth = PAGE_WIDTH;
   const imgHeight = (canvas.height * PAGE_WIDTH) / canvas.width;
 
   pdf.addPage();
   pdf.setFillColor(props.backgroundColor);
-  pdf.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT + X_OFFSET, 'F');
-  pdf.addImage(imgData, 'PNG', X_OFFSET, Y_OFFSET, imgWidth, imgHeight);
+  pdf.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT + 5, 'F');
+  pdf.addImage(imgData, 'PNG', 0, -5, imgWidth, imgHeight);
 };
 
 function PagePDFSong(props: {
@@ -84,11 +83,12 @@ function PagePDFSong(props: {
 
   return (
     <>
-      <p style={{ fontSize: 40, fontWeight: 'bold', lineHeight: 1 }}>
-        {props.song.name}
-      </p>
-      {/* FIXME: Fix spacing */}
-      {/* <p style={{fontSize: 25, fontStyle: "italic", lineHeight: 1}}>Praising</p> */}
+      <div style={{display: "flex", alignItems: "center"}}>
+        <p style={{ fontSize: 40, fontWeight: 'bold', lineHeight: 1, marginLeft: 30 }}>
+          {props.song.name}
+        </p>
+        <p style={{fontSize: 25, fontStyle: "italic", lineHeight: 1, marginLeft: 10}}> - Praising</p>
+      </div>
       <SongDiv sections={props.info.sections} infoSong={props.song} />
     </>
   );
