@@ -1,6 +1,8 @@
 import { extractLiturgia } from '@/logic/scraper_liturgy';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+// FIX: Fix liturgia del giorno 16 ottobre 2024
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

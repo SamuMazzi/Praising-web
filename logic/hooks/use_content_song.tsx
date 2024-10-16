@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { type CustomSongInfo, getSongInfoVersions } from '../server/database';
 import { getVersionSong } from '../server/storage';
 import { getFromStorage } from '../local_logic';
+// TODO: Prevent scrolling when downloading pdf
 
 export const fetcher = async (url: string): Promise<any> => {
   try {
@@ -26,7 +27,7 @@ export default function useContentSong(
   fetchSong: (idVersion?: string) => Promise<void>;
   fetchVersions: () => Promise<void>;
 } {
-  const [data, setData] = useState('');
+  const [content, setContent] = useState('');
   const [loadingContent, setLoadingContent] = useState(true);
   const [loadingVersions, setLoadingVersions] = useState(true);
   const [error, setError] = useState('');
@@ -56,16 +57,18 @@ export default function useContentSong(
   }
 
   async function fetchSong(idVersion?: string): Promise<void> {
+    // FIXME: Fix case in which version is not available anymore
+
     setLoadingContent(true);
     setError('');
     try {
-      let content = '';
+      let contentSong = '';
       if (idVersion !== undefined) {
-        content = await getVersionSong(idVersion, idSong);
+        contentSong = await getVersionSong(idVersion, idSong);
       } else {
-        content = await fetcher(`/api/song/${encodeURIComponent(idSong)}`);
+        contentSong = await fetcher(`/api/song/${encodeURIComponent(idSong)}`);
       }
-      setData(content);
+      setContent(contentSong);
     } catch (e: any) {
       setError(e as string);
     } finally {
@@ -81,7 +84,7 @@ export default function useContentSong(
   }, []);
 
   return {
-    content: data,
+    content,
     versions,
     loadingContent,
     loadingVersions,

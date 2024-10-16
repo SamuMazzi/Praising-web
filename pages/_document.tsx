@@ -56,8 +56,14 @@ export default function Document(): JSX.Element {
 
         <meta property="og:type" content="website" />
         <meta property="type" content="website" />
-        <meta property="og:title" content="Praising - Gli accordi per i tuoi canti cristiani" />
-        <meta property="title" content="Praising - Gli accordi per i tuoi canti cristiani" />
+        <meta
+          property="og:title"
+          content="Praising - Gli accordi per i tuoi canti cristiani"
+        />
+        <meta
+          property="title"
+          content="Praising - Gli accordi per i tuoi canti cristiani"
+        />
         <meta
           property="og:description"
           content="Praising è la tua web-app per visualizzare testi e accordi dei canti cristiani più famosi."

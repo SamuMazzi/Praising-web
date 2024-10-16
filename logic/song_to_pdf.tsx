@@ -22,6 +22,24 @@ interface DataInfo extends InfoRendering {
   songs: string[];
 }
 
+const internalToPdf = async (
+  songIds: string[],
+  titleFile: string,
+  info: InfoRendering
+): Promise<void> => {
+  // eslint-disable-next-line new-cap
+  const pdf = new jsPDF('p', 'mm', 'a4');
+
+  const futures = songIds.map(async (idSong) => {
+    await createSinglePageSong(pdf, idSong, info);
+  });
+  // TODO: Maybe order is not preserved
+  await Promise.all(futures);
+
+  pdf.deletePage(1); // To fix the first empty page
+  pdf.save(`Praising - ${titleFile}.pdf`);
+};
+
 export const printDocument = async (
   idSong: string,
   props: InfoRendering
@@ -30,29 +48,14 @@ export const printDocument = async (
   if (song === undefined) {
     return;
   }
-  // eslint-disable-next-line new-cap
-  const pdf = new jsPDF('p', 'mm', 'a4');
-
-  await createSinglePageSong(pdf, idSong, props);
-  pdf.deletePage(1); // To fix the first empty page
-  pdf.save('Praising - ' + song.name + '.pdf');
+  await internalToPdf([idSong], song.name, props);
 };
 
 export const playlistToPdf = async (
   title: string,
   data: DataInfo
 ): Promise<void> => {
-  // eslint-disable-next-line new-cap
-  const pdf = new jsPDF();
-
-  const futures = data.songs.map(async (idSong) => {
-    await createSinglePageSong(pdf, idSong, data);
-  });
-  // TODO: Maybe order is not preserved
-  await Promise.all(futures);
-
-  pdf.deletePage(1); // To fix the first empty page
-  pdf.save(`Praising - ${title}.pdf`);
+  await internalToPdf(data.songs, title, data);
 };
 
 const addSongToPdf = async (
@@ -88,11 +91,28 @@ function PagePDFSong(props: {
 
   return (
     <>
-      <div style={{display: "flex", alignItems: "center"}}>
-        <p style={{ fontSize: 40, fontWeight: 'bold', lineHeight: 1, marginLeft: 30 }}>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <p
+          style={{
+            fontSize: 40,
+            fontWeight: 'bold',
+            lineHeight: 1,
+            marginLeft: 30
+          }}
+        >
           {props.song.name}
         </p>
-        <p style={{fontSize: 25, fontStyle: "italic", lineHeight: 1, marginLeft: 10}}> - Praising</p>
+        <p
+          style={{
+            fontSize: 25,
+            fontStyle: 'italic',
+            lineHeight: 1,
+            marginLeft: 10
+          }}
+        >
+          {' '}
+          - Praising
+        </p>
       </div>
       <SongDiv sections={props.info.sections} infoSong={props.song} />
     </>

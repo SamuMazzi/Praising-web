@@ -16,6 +16,7 @@ export default function TypeSearch(props: PropsTypeSearch): JSX.Element {
     <TextField
       label="Cerca"
       value={props.query}
+      sx={{ mt: 1 }}
       onChange={(e) => {
         props.setQuery(e.currentTarget.value);
         setShowClearIcon(e.target.value === '' ? 'none' : 'flex');
