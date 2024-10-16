@@ -92,7 +92,7 @@ export default function SettingsPage(): JSX.Element {
           </ListItemButton>
         </ListItem>
       </List>
-      <p>Versione: 0.5.2</p>
+      <p>Versione: 0.5.5</p>
     </Container>
   );
 }

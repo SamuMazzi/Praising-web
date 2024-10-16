@@ -321,12 +321,10 @@ function MenuItemVersions(props: PropsMenuItemVersions): JSX.Element {
     <div>
       <MenuItem onClick={handleClick}>
         <ListItemText>Versioni</ListItemText>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ ml: 2 }}
-          >
-            {props.selectedIndexVersion === -1 ? 'Base' : 'Ver ' + (props.selectedIndexVersion + 1)}
+        <Typography variant="body2" color="text.secondary" sx={{ ml: 2 }}>
+          {props.selectedIndexVersion === -1
+            ? 'Base'
+            : 'Ver ' + (props.selectedIndexVersion + 1)}
         </Typography>
       </MenuItem>
       <Menu
@@ -371,18 +369,30 @@ function MenuItemVersions(props: PropsMenuItemVersions): JSX.Element {
   );
 }
 
-export const SongTitleAppBar = (props: {title: string, versionText: string}): JSX.Element => {
+export const SongTitleAppBar = (props: {
+  title: string;
+  versionText: string;
+}): JSX.Element => {
   return (
     <Box sx={{ flexGrow: 1 }} alignItems="center">
-      <Typography variant="h1" sx={{ py: 1, width: {xs: '16rem', md: '40rem'} }} noWrap style={{overflow: "hidden", textOverflow: "ellipsis"}}>
+      <Typography
+        variant="h1"
+        sx={{ py: 1, width: { xs: '16rem', md: '40rem' } }}
+        noWrap
+        style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+      >
         {props.title}
-        <Typography variant="subtitle1" sx={{ maxLines: 1 }} color='textDisabled' >
+        <Typography
+          variant="subtitle1"
+          sx={{ maxLines: 1 }}
+          color="textDisabled"
+        >
           {props.versionText}
         </Typography>
       </Typography>
     </Box>
-  )
-}
+  );
+};
 
 interface PropsSongAppBar extends PropsMenuItemVersions {
   id: string;
@@ -399,7 +409,11 @@ export const SongAppBar = (props: PropsSongAppBar): JSX.Element => {
   const chordNotation = useAppSelector((state) => state.settings.chordNotation);
   const favoriteSongs = useAppSelector((state) => state.userInfo.favoriteSongs);
   const dispatch = useAppDispatch();
-  const versionText = props.selectedIndexVersion !== undefined && props.selectedIndexVersion !== -1 ? '(Versione ' + (props.selectedIndexVersion + 1) + ')' : ''
+  const versionText =
+    props.selectedIndexVersion !== undefined &&
+    props.selectedIndexVersion !== -1
+      ? '(Versione ' + (props.selectedIndexVersion + 1) + ')'
+      : '';
 
   const openMenu = (event: React.MouseEvent<HTMLButtonElement>): void => {
     setAnchorEl(event.currentTarget);
@@ -424,10 +438,7 @@ export const SongAppBar = (props: PropsSongAppBar): JSX.Element => {
             >
               <ArrowBackRoundedIcon />
             </IconButton>
-            <SongTitleAppBar 
-              title={props.title} 
-              versionText={versionText}
-            />
+            <SongTitleAppBar title={props.title} versionText={versionText} />
             <Box sx={{ flexGrow: 0, display: 'flex' }} alignItems="center">
               {indexInPlaylist !== undefined &&
                 indexInPlaylist !== -1 &&

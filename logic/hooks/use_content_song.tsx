@@ -14,13 +14,16 @@ export const fetcher = async (url: string): Promise<any> => {
   }
 };
 
-export default function useContentSong(idSong: string): {
+export default function useContentSong(
+  idSong: string,
+  stdIdVersion?: string
+): {
   content: string;
   versions: CustomSongInfo[];
   loadingVersions: boolean;
   loadingContent: boolean;
   error: string;
-  fetchSong: (nameFileVersion?: string) => Promise<void>;
+  fetchSong: (idVersion?: string) => Promise<void>;
   fetchVersions: () => Promise<void>;
 } {
   const [data, setData] = useState('');
@@ -74,7 +77,7 @@ export default function useContentSong(idSong: string): {
     if (getFromStorage('debug_admin') !== null) {
       void fetchVersions();
     }
-    void fetchSong();
+    void fetchSong(stdIdVersion);
   }, []);
 
   return {

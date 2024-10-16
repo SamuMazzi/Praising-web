@@ -44,20 +44,25 @@ const EditableSongAppBar = (props: PropsSongAppBar): JSX.Element => {
             <IconButton edge="start" sx={{ mr: 2 }} onClick={props.goBack}>
               <ArrowBackRoundedIcon />
             </IconButton>
-            <SongTitleAppBar title={props.title} versionText={props.versionIndex === -1 ? '' : `Ver ${props.versionIndex + 1}`}/>
-            <Box sx={{ flexGrow: 0, display: 'flex' }} alignItems="center">
-              {
-                props.versionIndex !== -1 && <IconButton
-                    onClick={() => {
-                        if (props.versionIndex === -1) {
-                            return;
-                        }
-                        void props.deleteSong();
-                    }}
-                >
-                    <DeleteRoundedIcon color="action" />
-                </IconButton>
+            <SongTitleAppBar
+              title={props.title}
+              versionText={
+                props.versionIndex === -1 ? '' : `Ver ${props.versionIndex + 1}`
               }
+            />
+            <Box sx={{ flexGrow: 0, display: 'flex' }} alignItems="center">
+              {props.versionIndex !== -1 && (
+                <IconButton
+                  onClick={() => {
+                    if (props.versionIndex === -1) {
+                      return;
+                    }
+                    void props.deleteSong();
+                  }}
+                >
+                  <DeleteRoundedIcon color="action" />
+                </IconButton>
+              )}
             </Box>
           </Toolbar>
         </AppBar>

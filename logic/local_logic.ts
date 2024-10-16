@@ -124,12 +124,11 @@ export const updateLastRecentsSongs = (song: Song): string[] | undefined => {
   }
 
   const newRec = [song.id, ...recents];
-  let out = newRec;
   if (newRec.length > limit) {
-    out = newRec.splice(limit - 1);
+    newRec.splice(limit - 1);
   }
-  saveToStorage('recents', out);
-  return out;
+  saveToStorage('recents', newRec);
+  return newRec;
 };
 
 export const getLastRecentsSongs = (): string[] => {

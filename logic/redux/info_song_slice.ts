@@ -26,7 +26,7 @@ interface PayloadModifySong {
 
 interface PayloadSetLocalVersionSong {
   id: string;
-  versionId?: string
+  versionId?: string;
 }
 
 export const infoSongsSlice = createSlice({
@@ -36,17 +36,19 @@ export const infoSongsSlice = createSlice({
     modifySong: (state, action: PayloadAction<PayloadModifySong>) => {
       const idS = action.payload.id;
       const songToModify = {
-        transpose:
-            action.payload.transpose ?? state.infoSongs[idS]?.transpose,
-          zoom: action.payload.zoom ?? state.infoSongs[idS]?.zoom,
-      }
+        transpose: action.payload.transpose ?? state.infoSongs[idS]?.transpose,
+        zoom: action.payload.zoom ?? state.infoSongs[idS]?.zoom
+      };
       state.infoSongs = {
         ...state.infoSongs,
         [idS]: songToModify
       };
       saveToStorage(INFO_SONGS_KEY, state.infoSongs);
     },
-    setLocalVersionSong: (state, action: PayloadAction<PayloadSetLocalVersionSong>) => {
+    setLocalVersionSong: (
+      state,
+      action: PayloadAction<PayloadSetLocalVersionSong>
+    ) => {
       const idS = action.payload.id;
       state.infoSongs = {
         ...state.infoSongs,

@@ -15,7 +15,10 @@ import Box from '@mui/material/Box';
 import { useWakeLock } from 'react-screen-wake-lock';
 import Typography from '@mui/material/Typography';
 import { useAppDispatch, useAppSelector } from '@/logic/redux/store';
-import { setLocalVersionSong, type InfoLocalSong } from '@/logic/redux/info_song_slice';
+import {
+  setLocalVersionSong,
+  type InfoLocalSong
+} from '@/logic/redux/info_song_slice';
 import { renderSong } from '@/logic/handle_text_song';
 import { MessageSnackbar } from '@/components/pers_snackbar';
 import IconButton from '@mui/material/IconButton';
@@ -123,9 +126,15 @@ const driverObj = driver({
 const TUTORIAL_SHOWN = 'tutorialShown_0';
 
 export default function SongPage(props: PropsSongPage): JSX.Element {
-  const { content, versions, fetchSong, loadingContent, error } =
-    useContentSong(props.id);
   const song = getSingleSong(props.id);
+  const infoSong: InfoLocalSong | undefined = useAppSelector((state) =>
+    song?.id !== undefined ? state.infoSongs.infoSongs[song.id] : undefined
+  );
+  const { content, versions, fetchSong, loadingContent, error } =
+    useContentSong(props.id, infoSong?.versionId);
+  const songVersionIndex = versions.findIndex(
+    (v) => v.idVersion === infoSong?.versionId
+  );
   const playlist: Playlist | undefined = useAppSelector((state) =>
     props.playlistId !== undefined
       ? state.playlist.playlist[props.playlistId]
@@ -133,10 +142,6 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
   );
   const [openModalPlaylist, setOpenModalPlaylist] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
-  const infoSong: InfoLocalSong | undefined = useAppSelector((state) =>
-    song?.id !== undefined ? state.infoSongs.infoSongs[song.id] : undefined
-  );
-  const songVersionIndex = versions.findIndex((v) => v.idVersion === infoSong?.versionId)
   const showChords = useAppSelector((state) => state.settings.showChords);
   const { isSupported, released, request, release } = useWakeLock({});
   const [messageSnackbar, setMessageSnackbar] = useState('');
@@ -182,9 +187,9 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
   }, []);
 
   const callbackSetVersionSong = (index: number): void => {
-    assert (song !== undefined, 'Song is undefined');
+    assert(song !== undefined, 'Song is undefined');
     if (index === songVersionIndex) return;
-    const idVersion = index === -1 ? undefined : versions[index].idVersion
+    const idVersion = index === -1 ? undefined : versions[index].idVersion;
     dispatch(
       setLocalVersionSong({
         id: song.id,
@@ -290,7 +295,9 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
               }
             }}
             idExistingVersion={
-              songVersionIndex !== -1 ? versions[songVersionIndex].idVersion : undefined
+              songVersionIndex !== -1
+                ? versions[songVersionIndex].idVersion
+                : undefined
             }
             versionIndex={songVersionIndex}
           />
@@ -328,7 +335,9 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
             song={song}
             fontSize={fontSize}
             videoIsPlaying={showVideo}
-            versionSong={songVersionIndex !== -1 ? versions[songVersionIndex] : undefined}
+            versionSong={
+              songVersionIndex !== -1 ? versions[songVersionIndex] : undefined
+            }
             onPressVideo={handlePressVideo}
             setOpenSheet={() => {
               setOpenModalPlaylist(true);
