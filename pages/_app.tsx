@@ -11,27 +11,21 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { itIT } from '@mui/x-date-pickers/locales';
 /**
  * Priorities:
+ * 0. Improve SEO
  * 1. Offline
- * 2. bugs (?)
  * 2a. Transition pages (for example go from page to songs)
- * 3. Edit song
+ * 3. Edit song -> add reviews
  * 4. Tutorial (finish)
- * 5. PDF (finish) -> more songs in same page for playlists
+ * 5. PDF (finish) -> more songs in same page for playlists -> fix vertical size
+ * 6. Share back voices
+ * 7. Share playlist -> you simply save the playlist on playlist collection (with user as owner), until it's private you don't even check online if there are modifications
+ * 8. Add song
  */
+
 // TODO: Offline https://github.com/hanford/next-offline
 // TODO: Implementare modo per evitare reload della canzone se già caricata (a volte succede inaspettatamente)
 // TODO: Implementare spazi fra accordi senza testo (per ora solo nelle righe intere senza testo, cerca canzoni con cui testare, sicuro "Mi perdo nel tuo amore")
 import Head from 'next/head';
-// TODO: Implement online for:
-/**
- * Priorities:
- * B
- * - Share playlist -> you simply save the playlist on playlist collection (with user as owner), until it's private you don't even check online if there are modifications
- * - Add song
- * - Modify song WIP
- * C
- * - Sessions
- */
 
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
   const [mounted, setMounted] = useState(false);
@@ -60,7 +54,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <>
       <Head>
-        <title>Praising</title>
+        <title>Praising - Gli accordi per i tuoi canti cristiani</title>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"

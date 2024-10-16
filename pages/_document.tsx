@@ -55,15 +55,27 @@ export default function Document(): JSX.Element {
         <link rel="shortcut icon" href="/favicon.ico" />
 
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Praising" />
+        <meta property="type" content="website" />
+        <meta property="og:title" content="Praising - Gli accordi per i tuoi canti cristiani" />
+        <meta property="title" content="Praising - Gli accordi per i tuoi canti cristiani" />
         <meta
           property="og:description"
+          content="Praising è la tua web-app per visualizzare testi e accordi dei canti cristiani più famosi."
+        />
+        <meta
+          property="description"
           content="Praising è la tua web-app per visualizzare testi e accordi dei canti cristiani più famosi."
         />
         <meta property="og:site_name" content="Praising" />
         <meta property="og:url" content="https://praising.vercel.app" />
         <meta
           property="og:image"
+          content="https://praising.vercel.app/icons/apple-touch-icon.png"
+        />
+        <meta property="site_name" content="Praising" />
+        <meta property="url" content="https://praising.vercel.app" />
+        <meta
+          property="image"
           content="https://praising.vercel.app/icons/apple-touch-icon.png"
         />
       </Head>
