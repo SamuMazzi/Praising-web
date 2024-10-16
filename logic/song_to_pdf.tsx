@@ -64,13 +64,18 @@ const addSongToPdf = async (
     backgroundColor: props.backgroundColor
   });
   const imgData = canvas.toDataURL('image/png');
-  const imgWidth = PAGE_WIDTH;
-  const imgHeight = (canvas.height * PAGE_WIDTH) / canvas.width;
+  let imgWidth = PAGE_WIDTH;
+  let imgHeight = (canvas.height * PAGE_WIDTH) / canvas.width;
+  if (imgHeight > PAGE_HEIGHT) {
+    // If image is too high, resize it
+    imgHeight = PAGE_HEIGHT;
+    imgWidth = canvas.width * (PAGE_HEIGHT / canvas.height);
+  }
 
   pdf.addPage();
   pdf.setFillColor(props.backgroundColor);
   pdf.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT + 5, 'F');
-  pdf.addImage(imgData, 'PNG', 0, -5, imgWidth, imgHeight);
+  pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
 };
 
 function PagePDFSong(props: {
