@@ -17,8 +17,8 @@ import Grid2 from '@mui/material/Grid2';
 import NewspaperRoundedIcon from '@mui/icons-material/NewspaperRounded';
 import Image from 'next/image';
 import { useTheme } from '@mui/material';
-import { useRouter } from 'next/router';
-import Routes from '@/logic/routes';
+// import { useRouter } from 'next/router';
+// import Routes from '@/logic/routes';
 // import { addActiveSession } from '@/logic/server/database'
 // import { setActiveSession } from '@/logic/redux/sessions_slice'
 
@@ -27,6 +27,7 @@ interface GenericProps {
   handleClose: () => void;
 }
 
+/*
 interface ModalAddSongProps extends GenericProps {
   location: [number, number];
 }
@@ -98,6 +99,7 @@ export function ModalCreateSession(props: ModalAddSongProps): JSX.Element {
     />
   );
 }
+*/
 
 interface PropsModalCreateAccountForThisAction extends GenericProps {
   title: string;
@@ -107,10 +109,10 @@ interface PropsModalCreateAccountForThisAction extends GenericProps {
 export function ModalCreateAccountForThisAction(
   props: PropsModalCreateAccountForThisAction
 ): JSX.Element {
-  const router = useRouter();
+  /* const router = useRouter();
   const handleConfirm = async (): Promise<void> => {
     void router.push(Routes.Login);
-  };
+  }; */
 
   return (
     <GenericModal
@@ -139,9 +141,9 @@ export function ModalCreateAccountForThisAction(
               sx={{ mt: 1, mr: 3, textTransform: 'none' }}
               variant="outlined"
             >
-              Annulla
+              {'Ok' /* "Annulla" */}
             </Button>
-            <Button
+            {/* <Button
               onClick={() => {
                 void handleConfirm();
               }}
@@ -149,7 +151,7 @@ export function ModalCreateAccountForThisAction(
               variant="contained"
             >
               Registrati
-            </Button>
+            </Button> */}
           </Grid2>
         </Grid2>
       }

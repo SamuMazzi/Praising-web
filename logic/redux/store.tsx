@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import playlistReducer from './playlist_slice';
 import infoSongsReducer from './info_song_slice';
 import settingsReducer from './settings_slice';
-import sessionsReducer from './sessions_slice';
+// import sessionsReducer from './sessions_slice';
 import userInfoReducer from './user_info_slice';
 import {
   type TypedUseSelectorHook,
@@ -15,13 +15,13 @@ export const store = configureStore({
     playlist: playlistReducer,
     infoSongs: infoSongsReducer,
     settings: settingsReducer,
-    userInfo: userInfoReducer,
-    sessions: sessionsReducer
+    userInfo: userInfoReducer
+    // sessions: sessionsReducer
   }
 });
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+type RootState = ReturnType<typeof store.getState>;
+type AppDispatch = typeof store.dispatch;
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;

@@ -1,4 +1,4 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+/*import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 interface ActiveSessionState {
   id_session: string;
@@ -27,3 +27,4 @@ export const sessionSlice = createSlice({
 export const { setActiveSession } = sessionSlice.actions;
 
 export default sessionSlice.reducer;
+*/

@@ -14,8 +14,8 @@ import { itIT } from '@mui/x-date-pickers/locales';
  * 0. Improve SEO
  * 1. Offline
  * 2a. Transition pages (for example go from page to songs)
- * 3. Edit song -> add reviews
- * 4. Tutorial (finish)
+ * 3. Edit song -> add reviews -> add check by admin(s) like back voices
+ * 4. Tutorial (finish and better styling)
  * 5. PDF (finish) -> size of print depend on size of the screen from which you print
  * https://stackoverflow.com/questions/45868042/figuring-out-how-to-mock-the-window-size-changing-for-a-react-component-test
  * https://stackoverflow.com/questions/63510429/how-to-test-different-screen-widths-using-jest
@@ -23,6 +23,7 @@ import { itIT } from '@mui/x-date-pickers/locales';
  * 7. Share playlist -> you simply save the playlist on playlist collection (with user as owner), until it's private you don't even check online if there are modifications
  * 8. Add song
  * 9. Set Firebase rules
+ * 10. Check loading times of recaptcha (they seem huge and unaffective)
  */
 
 // TODO: Offline https://github.com/hanford/next-offline

@@ -14,12 +14,11 @@ interface SettingsState {
 }
 
 const initialState: SettingsState = {
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   favoriteSongs: getFromStorage('favorite_songs') || [],
   others: {}
 };
 
-export const settingsSlice = createSlice({
+const settingsSlice = createSlice({
   name: 'settings',
   initialState,
   reducers: {
@@ -60,7 +59,7 @@ export const settingsSlice = createSlice({
 });
 
 export const {
-  setFavoriteSongs,
+  // setFavoriteSongs,
   addSongToFavoriteSongs,
   removeSongFromFavoriteSongs,
   setUserInfo

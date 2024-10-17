@@ -115,7 +115,6 @@ export const getSingleSong = (id: string): Song | undefined => {
 
 export const updateLastRecentsSongs = (song: Song): string[] | undefined => {
   const limit = 7;
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   let recents: string[] = getFromStorage('recents') || [];
   if (recents.includes(song.id) && recents[0] === song.id) return;
   else if (recents.includes(song.id) && recents[0] !== song.id) {
@@ -132,13 +131,11 @@ export const updateLastRecentsSongs = (song: Song): string[] | undefined => {
 };
 
 export const getLastRecentsSongs = (): string[] => {
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   const recents: string[] = getFromStorage('recents') || [];
   return recents;
 };
 
 export const getLocalChordNotation = (): ChordNotations => {
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   const out: ChordNotations = getFromStorage('chordNotation') || SOLFEGE;
   return out;
 };

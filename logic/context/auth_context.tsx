@@ -1,4 +1,4 @@
-import { useContext, createContext } from 'react';
+import { createContext } from 'react';
 import { User } from 'firebase/auth';
 import useFirebaseAuth from '../hooks/use_auth';
 
@@ -6,7 +6,7 @@ interface AuthContextProps {
   user: User | null;
 }
 
-export const AuthContext = createContext<AuthContextProps>({
+const AuthContext = createContext<AuthContextProps>({
   user: null
 });
 
@@ -20,6 +20,6 @@ export const AuthContextProvider = (propsWithChildren: any) => {
   );
 };
 
-export const UserAuth = () => {
+/* export const UserAuth = () => {
   return useContext(AuthContext);
-};
+}; */

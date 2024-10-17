@@ -14,7 +14,6 @@ interface BoxInfoSongsState {
 }
 
 const initialState: BoxInfoSongsState = {
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   infoSongs: getFromStorage(INFO_SONGS_KEY) || {}
 };
 
@@ -29,7 +28,7 @@ interface PayloadSetLocalVersionSong {
   versionId?: string;
 }
 
-export const infoSongsSlice = createSlice({
+const infoSongsSlice = createSlice({
   name: INFO_SONGS_KEY,
   initialState,
   reducers: {

@@ -14,7 +14,6 @@ interface BoxPlaylistState {
 }
 
 const initialState: BoxPlaylistState = {
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   playlist: getFromStorage('playlists') || {}
 };
 
@@ -36,7 +35,7 @@ interface ApplyDragParam {
   dragResult: DropResult;
 }
 
-export const playlistSlice = createSlice({
+const playlistSlice = createSlice({
   name: 'playlist',
   initialState,
   reducers: {

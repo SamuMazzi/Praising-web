@@ -1,3 +1,6 @@
+import react from 'eslint-plugin-react';
+import globals from 'globals';
+
 module.exports = {
   env: {
     browser: true,
@@ -6,7 +9,7 @@ module.exports = {
   extends: [
     'standard-with-typescript',
     'plugin:react/recommended',
-    //"plugin:prettier/recommended",
+    'plugin:prettier/recommended',
     'plugin:@next/next/recommended',
     'prettier'
   ],
@@ -25,6 +28,16 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module'
   },
-  plugins: ['react'],
+  languageOptions: {
+    parserOptions: {
+      ecmaFeatures: {
+        jsx: true
+      }
+    },
+    globals: {
+      ...globals.browser
+    }
+  },
+  plugins: { react },
   rules: {}
 };

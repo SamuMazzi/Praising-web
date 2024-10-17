@@ -20,7 +20,7 @@ const initialState: SettingsState = {
   darkMode: getFromStorage('dark_mode') === true
 };
 
-export const settingsSlice = createSlice({
+const settingsSlice = createSlice({
   name: 'settings',
   initialState,
   reducers: {

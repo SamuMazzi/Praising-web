@@ -10,11 +10,6 @@ export interface AuthUser {
   email: string;
 }
 
-export const formatAuthUser = (user: User): AuthUser => ({
-  uid: user.uid,
-  email: user.email ?? ''
-});
-
 export default function useFirebaseAuth(): {
   authUser: User | null;
   loading: boolean;

@@ -3,7 +3,7 @@ import NavBar from '@/components/navbar';
 import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar';
 import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
-import { ModalCreateSession } from '@/components/modals';
+// import { ModalCreateSession } from '@/components/modals';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 // import { getActiveSessions } from '@/logic/server/database'
@@ -119,11 +119,11 @@ export default function SessionsPage() {
         </Button>
       </Box>
       <NavBar />
-      <ModalCreateSession
+      {/* <ModalCreateSession
         open={openModal}
         handleClose={() => setOpenModal(false)}
         location={[latitude, longitude]}
-      />
+      /> */}
     </Container>
   );
 }

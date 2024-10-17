@@ -14,6 +14,7 @@ import {
   getDocs,
   deleteDoc
 } from 'firebase/firestore';
+import { deleteModifiedSongFromServerStorage } from './storage';
 // import geofire from 'geofire-common';
 
 const firestore = getFirestore(app);
@@ -31,6 +32,7 @@ interface OnlinePlaylist {
 // TODO: When you share it you want to decide if copying it or just accessing it. In the first case another playlist will be created
 // but it will be personal, in the second case the playlist will be kept in sync with the original but it won't be editable
 
+/* PLAYLIST
 export const addPlaylist = async (
   name: string,
   songs: string[]
@@ -66,9 +68,7 @@ export const getMyPlaylists = async (
   return out;
 };
 
-/**
- * Get all the playlists that have been shared with me
- */
+// Get all the playlists that have been shared with me
 export const getPersonalPlaylists = async (
   name: string,
   songs: string[]
@@ -93,6 +93,7 @@ export const getSinglePlaylist = async (
   };
   return out;
 };
+*/
 
 /*
 export const getActiveSessions = async (center: [number, number], radius_meters: number) => {
@@ -237,6 +238,7 @@ export const deleteEditedSongFromDatabase = async (
   await updateDoc(doc(firestore, USERS_COLLECTION, userId), {
     ownedSongs: arrayRemove(docRef.path)
   });
+  await deleteModifiedSongFromServerStorage(idDoc, songId);
 };
 
 export const editEditedSongToDatabase = async (
@@ -277,7 +279,6 @@ export const getSongInfoVersions = async (
     )
   );
   const out = refDocs.docs.map((doc) => {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     return { ...doc.data(), idVersion: doc.id } as CustomSongInfo;
   });
   return out;

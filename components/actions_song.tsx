@@ -93,7 +93,7 @@ const ActionIconButton = (props: any): JSX.Element => {
 export default function ActionsSong(props: PropsActionSong): JSX.Element {
   const [openModal, setOpenModal] = useState(false);
   const [menuExpanded, setMenuExpanded] = useState(true);
-  const { authUser, loading } = useFirebaseAuth();
+  const { loading } = useFirebaseAuth(); // authUser
   const infoSong: InfoLocalSong | undefined = useAppSelector(
     (state) => state.infoSongs.infoSongs[props.song.id]
   );
@@ -105,6 +105,7 @@ export default function ActionsSong(props: PropsActionSong): JSX.Element {
     if (props.fontSize !== undefined && props.fontSize !== fontSize) {
       dispatch(modifySong({ id: props.song.id, zoom: props.fontSize }));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const canEdit = getFromStorage('debug_admin') !== null; // props.versionSong === undefined || props.versionSong.author === authUser?.uid;
 
@@ -172,11 +173,12 @@ export default function ActionsSong(props: PropsActionSong): JSX.Element {
         if (loading) {
           return;
         }
-        if (authUser?.email === null) {
-          setOpenModal(true);
-          return;
-        }
-        props.setEditMode();
+        // if (authUser?.email === null) {
+        //
+        setOpenModal(true);
+        // return;
+        // }
+        // props.setEditMode();
       },
       icon: <EditRoundedIcon />,
       visible: canEdit && menuExpanded
@@ -219,8 +221,10 @@ export default function ActionsSong(props: PropsActionSong): JSX.Element {
         </ActionIconButton>
       ))}
       <ModalCreateAccountForThisAction
-        title="Registrati"
-        message="Per poter modificare questa canzone devi prima registrarti"
+        title="Modifica la canzone"
+        message="Questa funzionalità sarà disponibile a breve, stay tuned!"
+        // title="Registrati"
+        // message="Per poter modificare questa canzone devi prima registrarti"
         open={openModal}
         handleClose={(): void => {
           setOpenModal(false);

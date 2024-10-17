@@ -112,6 +112,13 @@ const driverObj = driver({
         description: 'Aggiungi la canzone ad una playlist.'
       }
     },
+    /* {
+      element: 'div #editSong',
+      popover: {
+        title: 'Modifica',
+        description: 'Modifica questo canto. Una volta confermato sarà visibile a tutti ma modificabile solo da te.'
+      }
+    }, */
     {
       popover: {
         title: 'Schermo',
@@ -151,7 +158,6 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     const tutorialNotShown = !(getFromStorage(TUTORIAL_SHOWN) ?? false);
     if (tutorialNotShown) {
       saveToStorage(TUTORIAL_SHOWN, true);
@@ -169,7 +175,6 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
 
     if (song !== undefined) updateLastRecentsSongs(song);
 
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     document.addEventListener('visibilitychange', handleVisibilityChange);
     void request();
 
@@ -178,12 +183,12 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
         // Return of useEffect get executed also on mount, this snippet prevent this
         document.removeEventListener(
           'visibilitychange',
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
           handleVisibilityChange
         );
         void release();
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const callbackSetVersionSong = (index: number): void => {
@@ -262,10 +267,21 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
       />
       <meta
         name="og:description"
-        content={'Guarda gli accordi della canto ' + song.name}
+        content={'Guarda gli accordi del canto ' + song.name}
       />
       <meta
         name="og:keywords"
+        content={
+          song.name + ', accordi, ' + song.author + ', canzoniere, chords'
+        }
+      />
+      <meta property="title" content={'Praising - ' + song.name} key="title" />
+      <meta
+        name="description"
+        content={'Guarda gli accordi del canto ' + song.name}
+      />
+      <meta
+        name="keywords"
         content={
           song.name + ', accordi, ' + song.author + ', canzoniere, chords'
         }

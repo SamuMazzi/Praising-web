@@ -156,7 +156,6 @@ function SignCard(): JSX.Element {
           </Grid>
           {!loading ? (
             authUser?.email !== null ? (
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               <InfoUser authUser={authUser!} />
             ) : (
               <>

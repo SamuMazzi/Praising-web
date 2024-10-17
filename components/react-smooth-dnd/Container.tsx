@@ -1,5 +1,4 @@
 /* eslint-disable no-prototype-builtins */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import React, { Component, createRef } from 'react';
 import * as PropTypes from 'prop-types';
 import {

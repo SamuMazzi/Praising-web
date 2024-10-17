@@ -3,7 +3,7 @@ import * as PropTypes from 'prop-types';
 import { constants } from 'smooth-dnd';
 const { wrapperClass } = constants;
 
-export interface DraggableProps {
+interface DraggableProps {
   render?: () => React.ReactElement;
   className?: string;
   children: JSX.Element;

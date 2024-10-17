@@ -249,51 +249,6 @@ export default function PraisingAppBar(props: PropsAppBar): JSX.Element {
   );
 }
 
-export function FilterAppBar(props: PropsAppBar): JSX.Element {
-  const router = useRouter();
-
-  return (
-    <React.Fragment>
-      <CssBaseline />
-      <HideOnScroll {...props}>
-        <AppBar
-          style={{ background: 'linear-gradient(to right, #F5DA81, #F0B647)' }}
-          sx={{ borderBottomLeftRadius: 24, borderBottomRightRadius: 24 }}
-        >
-          {props.backIcon !== undefined ? (
-            <Toolbar>
-              <IconButton
-                edge="start"
-                sx={{ mr: 2 }}
-                onClick={() => {
-                  router.back();
-                }}
-              >
-                <ArrowBackRoundedIcon />
-              </IconButton>
-              <Typography
-                variant="h1"
-                textAlign="center"
-                sx={{ py: verticalPaddingAppBar }}
-              >
-                {props.title}
-              </Typography>
-            </Toolbar>
-          ) : (
-            <Typography
-              variant="h1"
-              textAlign="center"
-              sx={{ py: verticalPaddingAppBar }}
-            >
-              {props.title}
-            </Typography>
-          )}
-        </AppBar>
-      </HideOnScroll>
-    </React.Fragment>
-  );
-}
-
 interface PropsMenuItemVersions {
   selectedIndexVersion?: number;
   setVersionSong?: (index: number) => void;
@@ -301,13 +256,6 @@ interface PropsMenuItemVersions {
 }
 
 function MenuItemVersions(props: PropsMenuItemVersions): JSX.Element {
-  if (
-    props.setVersionSong === undefined ||
-    props.versions === undefined ||
-    props.selectedIndexVersion === undefined
-  )
-    return <></>;
-
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>): void => {
@@ -316,6 +264,13 @@ function MenuItemVersions(props: PropsMenuItemVersions): JSX.Element {
   const handleClose = (): void => {
     setAnchorEl(null);
   };
+
+  if (
+    props.setVersionSong === undefined ||
+    props.versions === undefined ||
+    props.selectedIndexVersion === undefined
+  )
+    return <></>;
 
   return (
     <div>

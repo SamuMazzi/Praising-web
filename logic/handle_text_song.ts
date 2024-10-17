@@ -173,7 +173,6 @@ const editHTML = (
         .replace('ma', '+')
         .replace('maj', '+')
         .replace('m', '-')
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         .replace(/sus(\d*)/gm, (match, p1) => p1 || '4');
     }
     $(htmlChord).text(out);

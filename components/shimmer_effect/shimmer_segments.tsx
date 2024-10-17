@@ -18,6 +18,7 @@ const ShimmerSegments = (props: PropsShimmerSegments): JSX.Element => {
         minSegmentLength
     );
     setSegmentLengths(lengths);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

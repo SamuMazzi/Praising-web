@@ -40,6 +40,7 @@ export default function PlaylisSharedPage(
       dispatch(copyPlaylist({ name: props.name, songs }));
     }
     void router.replace(Routes.Playlist);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <PlaylistPage />;
