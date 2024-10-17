@@ -188,9 +188,14 @@ interface UserDatabase {
 export const getUserFromDatabase = async (
   userId: string
 ): Promise<UserDatabase | undefined> => {
-  const docRef = await getDoc(doc(firestore, USERS_COLLECTION, userId));
-  if (!docRef.exists()) return undefined;
-  return docRef.data() as UserDatabase;
+  try {
+    const docRef = await getDoc(doc(firestore, USERS_COLLECTION, userId));
+    if (!docRef.exists()) return undefined;
+    return docRef.data() as UserDatabase;
+  } catch (e) {
+    console.error(e);
+    return undefined;
+  }
 };
 
 export const addEditedSongToDatabase = async (

@@ -1,6 +1,7 @@
 import { type InfoLocalSong } from '@/logic/redux/info_song_slice';
 import React, { useState } from 'react';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
+import styles from './song_div.module.css';
 
 interface PropsSongDiv {
   sections: string[];
@@ -30,7 +31,7 @@ function SectionSong(props: {
   const [compressed, setCompressed] = useState<boolean>(false);
 
   const onClickExpandable = (e: React.MouseEvent<HTMLDivElement>): void => {
-    const isCompressed = e.currentTarget.classList.toggle('compressed');
+    const isCompressed = e.currentTarget.classList.toggle(styles.compressed);
     const classToPut = !isCompressed ? 'chord' : 'no-chord';
     const classToRemove = !isCompressed ? 'no-chord' : 'chord';
 
@@ -45,14 +46,14 @@ function SectionSong(props: {
     <div
       style={{ position: 'relative', paddingLeft: 28, width: 'fit-content' }}
     >
-      <div className="expandable" onClick={onClickExpandable}>
+      <div className={styles.expandable} onClick={onClickExpandable}>
         <p
           style={{ fontSize: props.infoSong?.zoom ?? 17 }}
           dangerouslySetInnerHTML={{ __html: props.section }}
         />
       </div>
       <KeyboardArrowDownRoundedIcon
-        className="arrow-down-compressed"
+        className={styles.arrow_down_compressed}
         style={{
           display: compressed ? 'flex' : 'none',
           position: 'absolute',

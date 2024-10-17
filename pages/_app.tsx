@@ -16,10 +16,13 @@ import { itIT } from '@mui/x-date-pickers/locales';
  * 2a. Transition pages (for example go from page to songs)
  * 3. Edit song -> add reviews
  * 4. Tutorial (finish)
- * 5. PDF (finish) -> more songs in same page for playlists -> fix vertical size
- * 6. Share back voices
+ * 5. PDF (finish) -> size of print depend on size of the screen from which you print
+ * https://stackoverflow.com/questions/45868042/figuring-out-how-to-mock-the-window-size-changing-for-a-react-component-test
+ * https://stackoverflow.com/questions/63510429/how-to-test-different-screen-widths-using-jest
+ * 6. Share back voices -> put them in a tmp part before accepting them and also add button to let user segnalate them
  * 7. Share playlist -> you simply save the playlist on playlist collection (with user as owner), until it's private you don't even check online if there are modifications
  * 8. Add song
+ * 9. Set Firebase rules
  */
 
 // TODO: Offline https://github.com/hanford/next-offline
@@ -31,7 +34,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     if ('serviceWorker' in navigator && window.serwist !== undefined) {
-      console.log('service worker in navigator');
+      // console.log('service worker in navigator');
       window.serwist
         .register()
         .then((registration) => {

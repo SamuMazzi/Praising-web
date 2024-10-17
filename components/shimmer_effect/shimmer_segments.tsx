@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import styles from './shimmer_segments.module.css';
 
 interface PropsShimmerSegments {
   numSegments: number;
@@ -24,7 +25,7 @@ const ShimmerSegments = (props: PropsShimmerSegments): JSX.Element => {
       {segmentLengths.map((length, index) => (
         <div
           key={index}
-          className={'shimmerSegment shimmer'}
+          className={styles.shimmerSegment + ' shimmer'}
           style={{ width: `${length}px` }}
         >
           &nbsp;
