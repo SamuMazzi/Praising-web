@@ -1,0 +1,18 @@
+.carousel {
+    display: flex;
+    overflow-x: scroll;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    cursor: grab;
+  }
+  
+  .carousel::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .carouselItem {
+    flex: 0 0 auto;
+    transition: all 0.3s ease;
+  }
+  

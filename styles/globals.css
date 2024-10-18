@@ -33,3 +33,46 @@ a {
   min-height: 1.5em;
   white-space: pre;
 }
+
+.hover-reveal {
+  position: relative;
+  overflow: hidden;
+}
+
+.hover-reveal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  margin-right: 8px;
+  margin-left: 8px;
+  border-radius: 8px;
+  bottom: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.hover-reveal::after {
+  content: attr(data-hover-text);
+  position: absolute;
+  font-size: 0.8rem;
+  font-weight: bold;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  color: white;
+  text-align: center;
+  transform: translateY(100%);
+  transition: transform 0.2s ease;
+  pointer-events: none;
+}
+
+.hover-reveal:hover::before {
+  opacity: 1;
+}
+
+.hover-reveal:hover::after {
+  transform: translateY(-150%);
+}

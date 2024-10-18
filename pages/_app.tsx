@@ -24,6 +24,7 @@ import { itIT } from '@mui/x-date-pickers/locales';
  * 8. Add song
  * 9. Set Firebase rules
  * 10. Check loading times of recaptcha (they seem huge and unaffective)
+ * 11. "Argomenti" should be a carousel
  */
 
 // TODO: Offline https://github.com/hanford/next-offline

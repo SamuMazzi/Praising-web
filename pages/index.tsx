@@ -22,6 +22,7 @@ import ListSongs from '@/components/list_songs';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { ModalNews } from '@/components/modals';
+import Carousel from '@/components/carousel';
 
 const NEWS_UPDATE = 'newsUpdate_0';
 // TODO: Swiper for arguments and parts
@@ -47,67 +48,76 @@ export default function Home(): JSX.Element {
         style={{ width: '100%', overflow: 'auto', display: 'flex' }}
         sx={{ py: 2 }}
       >
-        {Object.keys(filterMomenti).map((momento) => {
+        <Carousel idDiv='carousel-parts' items={Object.keys(filterMomenti).map((momento) => {
           return (
-            <Container
-              disableGutters
+            <ListItemButton
+              LinkComponent={Link}
+              href={Routes.FilteredSongs + '/' + momento}
               key={momento}
-              style={{ width: 200 }}
-              sx={{ mx: 0.5 }}
+              style={{ width: 150, height: 75 }}
+              sx={{ mx: 1, backgroundColor: '#F5DA81', borderRadius: 2 }}
             >
-              <ListItemButton
-                LinkComponent={Link}
-                href={Routes.FilteredSongs + '/' + momento}
-                key={momento}
-                style={{ width: 150, height: 75 }}
-                sx={{ mx: 1, backgroundColor: '#F5DA81', borderRadius: 2 }}
-              >
-                <ListItemText
-                  disableTypography
-                  primary={
-                    <Typography
-                      textAlign="center"
-                      variant="h5"
-                      style={{ color: 'black' }}
-                    >
-                      {filterMomenti[momento]}
-                    </Typography>
-                  }
-                />
-              </ListItemButton>
-            </Container>
+              <ListItemText
+                disableTypography
+                primary={
+                  <Typography
+                    textAlign="center"
+                    variant="h5"
+                    style={{ color: 'black' }}
+                  >
+                    {filterMomenti[momento]}
+                  </Typography>
+                }
+              />
+            </ListItemButton>
           );
-        })}
+        })} />
       </List>
       <Typography variant="h2" sx={{ pt: 2, pl: 2 }}>
         Argomenti
       </Typography>
       {/* https://stackoverflow.com/questions/68658249/how-to-do-react-horizontal-scroll-using-mouse-wheel */}
-      <ImageList
+      <List
         style={{ width: '100%', overflowX: 'auto', display: 'flex' }}
-        sx={{ py: 2, pl: 2 }}
+        sx={{ py: 2 }}
       >
+        <Carousel idDiv='carouse-arguments' titles={Object.values(filterArgomenti)} items=
         {Object.keys(filterArgomenti).map((arg) => {
-          return (
-            <ImageListItem
-              component={NextLinkComposed}
-              to={{ pathname: Routes.FilteredSongs + '/' + arg }}
+          /* return (
+            <ListItemButton
+              LinkComponent={Link}
+              href={Routes.FilteredSongs + '/' + arg}
               key={arg}
-              sx={{ mx: 0.5, alignItems: 'center' }}
+              disableGutters
+              style={{ width: 100, height: 100 }}
+              sx={{ mx: 1, borderRadius: 2 }}
             >
               <Image
-                src={'/assets/Illustrazioni/' + filterArgomenti[arg] + '2.png'}
-                alt=""
+                src={`/assets/Illustrazioni/${filterArgomenti[arg]}2.png`}
+                alt={filterArgomenti[arg]}
                 width={100}
                 height={100}
               />
-              <Typography textAlign="center" variant="h5">
-                {filterArgomenti[arg]}
-              </Typography>
-            </ImageListItem>
+            </ListItemButton>
+          ); */
+          return (
+            <Container
+              disableGutters
+              key={arg}
+              sx={{ mx: 1, alignItems: 'center', cursor: 'pointer' }}
+            >
+              <Link href={Routes.FilteredSongs + '/' + arg}>
+                <Image
+                  src={`/assets/Illustrazioni/${filterArgomenti[arg]}2.png`}
+                  alt={filterArgomenti[arg]}
+                  width={100}
+                  height={100}
+                />
+              </Link>
+            </Container>
           );
-        })}
-      </ImageList>
+        })} />
+      </List>
       {recentSongs.length > 0 && (
         <Container sx={{ pb: 7 }}>
           <Typography variant="h2" sx={{ pt: 2, pb: 2, pl: 2 }}>
