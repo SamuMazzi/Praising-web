@@ -1,4 +1,3 @@
-/* eslint-disable no-prototype-builtins */
 import React, { Component, createRef } from 'react';
 import * as PropTypes from 'prop-types';
 import {

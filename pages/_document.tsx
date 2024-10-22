@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function Document(): JSX.Element {
   return (
-    <Html>
+    <Html lang="it">
       <Head>
         <meta name="application-name" content="Praising" />
         <meta name="apple-mobile-web-app-capable" content="yes" />

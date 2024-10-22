@@ -81,6 +81,7 @@ export default function useContentSong(
       void fetchVersions();
     }
     void fetchSong(stdIdVersion);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {

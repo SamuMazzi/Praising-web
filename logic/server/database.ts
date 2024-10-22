@@ -1,4 +1,3 @@
-import { type Playlist } from '../redux/playlist_slice';
 import app from './firebase_config';
 import {
   getFirestore,

@@ -45,7 +45,6 @@ class SongPDF {
   private availableHeightPage: number = PAGE_HEIGHT;
 
   constructor(infoRendering: InfoRendering) {
-    // eslint-disable-next-line new-cap
     this.pdf = new jsPDF('p', 'mm', 'a4');
     this.infoRendering = infoRendering;
   }
@@ -93,7 +92,7 @@ class SongPDF {
 
   private async addSongToPdf(input: HTMLElement): Promise<void> {
     const canvas = await html2canvas(input, {
-      backgroundColor: this.infoRendering.backgroundColor
+      background: this.infoRendering.backgroundColor
     });
     const imgData = canvas.toDataURL('image/png');
     let yOffset = 0;
