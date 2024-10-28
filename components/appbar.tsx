@@ -39,6 +39,8 @@ import { SOLFEGE, SYMBOL } from 'chordsheetjs';
 import { printDocument } from '@/logic/song_to_pdf';
 import { type CustomSongInfo } from '@/logic/server/database';
 import assert from 'assert';
+import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
+import { ModalNews } from '@/components/modals';
 
 // This is really useful in the case we'll ever want to split a song in multiple pages (in case it's too long)
 /*
@@ -179,6 +181,7 @@ export const verticalPaddingAppBar = 3;
 
 export default function PraisingAppBar(props: PropsAppBar): JSX.Element {
   const router = useRouter();
+  const [showNews, setShowNews] = React.useState(false);
 
   return (
     <React.Fragment>
@@ -204,15 +207,27 @@ export default function PraisingAppBar(props: PropsAppBar): JSX.Element {
               >
                 {props.title}
               </Typography>
-              <IconButton
-                edge="end"
-                style={{ color: 'black' }}
-                sx={{ top: '25%', right: '6%', position: 'absolute' }}
-                LinkComponent={Link}
-                href={Routes.Settings}
-              >
-                <SettingsRoundedIcon />
-              </IconButton>
+              <Box sx={{ top: '25%', right: '6%', position: 'absolute' }}>
+                {
+                  // TODO: Implement news with swipes
+                  /*<IconButton
+                  edge="end"
+                  style={{ color: 'black' }}
+                  sx={{ mr: 0.5 }}
+                  onClick={() => setShowNews(true)}
+                >
+                  <HelpRoundedIcon />
+                </IconButton>*/
+                }
+                <IconButton
+                  edge="end"
+                  style={{ color: 'black' }}
+                  LinkComponent={Link}
+                  href={Routes.Settings}
+                >
+                  <SettingsRoundedIcon />
+                </IconButton>
+              </Box>
             </Box>
           ) : props.backIcon === true ? (
             <Toolbar>
@@ -245,6 +260,12 @@ export default function PraisingAppBar(props: PropsAppBar): JSX.Element {
           )}
         </AppBar>
       </HideOnScroll>
+      <ModalNews
+        open={showNews}
+        handleClose={() => {
+          setShowNews(false);
+        }}
+      />
     </React.Fragment>
   );
 }

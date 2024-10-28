@@ -60,9 +60,40 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
       <Head>
         <title>Praising - Gli accordi per i tuoi canti cristiani</title>
         <meta
+          name="og:title"
+          content="Praising - Gli accordi per i tuoi canti cristiani"
+        />
+        <meta
+          name="description"
+          content="Gli accordi per i tuoi canti cristiani"
+        />
+        <meta
+          name="og:description"
+          content="Gli accordi per i tuoi canti cristiani"
+        />
+        <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
         />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/icons/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/icons/favicon-16x16.png"
+        />
+        <link rel="manifest" href="/manifest.json" />
+        <link
+          rel="mask-icon"
+          href="/icons/safari-pinned-tab.svg"
+          color="#F0B647"
+        />
+        <link rel="shortcut icon" href="/favicon.ico" />
       </Head>
       <Provider store={store}>
         <ThemedComponent Component={Component} pageProps={pageProps} />

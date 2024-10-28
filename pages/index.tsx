@@ -12,18 +12,15 @@ import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar';
 import {
   filterArgomenti,
   filterMomenti,
-  getFromStorage,
   getLastRecentsSongs,
-  getSingleSong,
-  saveToStorage
+  getSingleSong
 } from '@/logic/local_logic';
 import Routes from '@/logic/routes';
 import ListSongs from '@/components/list_songs';
 import Link from 'next/link';
-import React, { useState } from 'react';
-import { ModalNews } from '@/components/modals';
+import React from 'react';
 
-const NEWS_UPDATE = 'newsUpdate_0';
+// const NEWS_UPDATE = 'newsUpdate_0';
 // TODO: Swiper for arguments and parts
 // https://codesandbox.io/p/devbox/swiper-react-effect-coverflow-6pxf4v?file=%2Fsrc%2FApp.jsx%3A26%2C22
 // https://swiperjs.com/react#effects
@@ -32,7 +29,7 @@ export default function Home(): JSX.Element {
   const recentSongs = getLastRecentsSongs()
     .map((id) => getSingleSong(id))
     .filter((v) => v !== undefined);
-  const [showNews, setShowNews] = useState(getFromStorage(NEWS_UPDATE) ?? true);
+  // const [showNews, setShowNews] = useState(getFromStorage(NEWS_UPDATE) ?? true);
 
   return (
     <Container disableGutters sx={{ minHeight: '100vh' }}>
@@ -97,7 +94,7 @@ export default function Home(): JSX.Element {
             >
               <Image
                 src={'/assets/Illustrazioni/' + filterArgomenti[arg] + '2.png'}
-                alt=""
+                alt={filterArgomenti[arg]}
                 width={100}
                 height={100}
               />
@@ -122,13 +119,6 @@ export default function Home(): JSX.Element {
         </Container>
       )}
       <NavBar />
-      <ModalNews
-        open={showNews}
-        handleClose={() => {
-          setShowNews(false);
-          saveToStorage(NEWS_UPDATE, false);
-        }}
-      />
     </Container>
   );
 }
