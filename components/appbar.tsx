@@ -200,6 +200,7 @@ export default function PraisingAppBar(props: PropsAppBar): JSX.Element {
             >
               <Typography
                 variant="h1"
+                component="h1"
                 fontSize={24}
                 textAlign="center"
                 style={{ color: 'black' }}
@@ -242,6 +243,7 @@ export default function PraisingAppBar(props: PropsAppBar): JSX.Element {
               </IconButton>
               <Typography
                 variant="h1"
+                component="h1"
                 textAlign="center"
                 sx={{ color: 'black', py: verticalPaddingAppBar }}
               >
@@ -251,6 +253,7 @@ export default function PraisingAppBar(props: PropsAppBar): JSX.Element {
           ) : (
             <Typography
               variant="h1"
+              component="h1"
               textAlign="center"
               style={{ color: 'black' }}
               sx={{ py: verticalPaddingAppBar }}
@@ -353,6 +356,7 @@ export const SongTitleAppBar = (props: {
     <Box sx={{ flexGrow: 1 }} alignItems="center">
       <Typography
         variant="h1"
+        component="h1"
         sx={{ py: 1, width: { xs: '16rem', md: '40rem' } }}
         noWrap
         style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
@@ -611,7 +615,7 @@ export const PlaylistAppBar = (props: PropsPlaylistAppBar): JSX.Element => {
               <ArrowBackRoundedIcon />
             </IconButton>
             <Box sx={{ flexGrow: 1, display: 'flex' }} alignItems="center">
-              <Typography variant="h1" sx={{ py: 1 }}>
+              <Typography variant="h1" component="h1" sx={{ py: 1 }}>
                 {playlist.name}
               </Typography>
             </Box>

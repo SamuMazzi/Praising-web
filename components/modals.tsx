@@ -126,7 +126,7 @@ export function ModalCreateAccountForThisAction(
           alignItems="center"
         >
           <Grid2>
-            <Typography variant="h2" sx={{ mb: 3 }}>
+            <Typography variant="h2" component="h2" sx={{ mb: 3 }}>
               {props.title}
             </Typography>
           </Grid2>
@@ -210,7 +210,7 @@ export function ModalEditNamePlaylist(
           alignItems="center"
         >
           <Grid item>
-            <Typography variant="h2" sx={{ mb: 3 }}>
+            <Typography variant="h2" component="h2" sx={{ mb: 3 }}>
               {props.playlist !== undefined
                 ? 'Modifica nome'
                 : 'Aggiungi una playlist'}
@@ -257,7 +257,7 @@ export function ModalNews(props: GenericProps): JSX.Element {
             <Grid item>
               <Box display="flex" justifyContent="center" alignItems="center">
                 <NewspaperRoundedIcon />
-                <Typography variant="h2" sx={{ pl: 2 }}>
+                <Typography variant="h2" component="h2" sx={{ pl: 2 }}>
                   Novità!
                 </Typography>
               </Box>

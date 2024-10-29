@@ -33,9 +33,10 @@ export default function Home(): JSX.Element {
 
   return (
     <Container disableGutters sx={{ minHeight: '100vh' }}>
-      <PraisingAppBar title="Home" homeVersion />
+      <PraisingAppBar title="Praising" homeVersion />
       <Typography
         variant="h2"
+        component="h2"
         sx={{ pt: verticalPaddingAppBar * 3 + 2, pl: 2 }}
       >
         Parti della messa
@@ -76,7 +77,7 @@ export default function Home(): JSX.Element {
           );
         })}
       </List>
-      <Typography variant="h2" sx={{ pt: 2, pl: 2 }}>
+      <Typography variant="h2" component="h2" sx={{ pt: 2, pl: 2 }}>
         Argomenti
       </Typography>
       {/* https://stackoverflow.com/questions/68658249/how-to-do-react-horizontal-scroll-using-mouse-wheel */}
@@ -98,7 +99,7 @@ export default function Home(): JSX.Element {
                 width={100}
                 height={100}
               />
-              <Typography textAlign="center" variant="h5">
+              <Typography textAlign="center" variant="h5" component="h5">
                 {filterArgomenti[arg]}
               </Typography>
             </ImageListItem>
@@ -107,7 +108,7 @@ export default function Home(): JSX.Element {
       </ImageList>
       {recentSongs.length > 0 && (
         <Container sx={{ pb: 7 }}>
-          <Typography variant="h2" sx={{ pt: 2, pb: 2, pl: 2 }}>
+          <Typography variant="h2" component="h2" sx={{ pt: 2, pb: 2, pl: 2 }}>
             Gli ultimi canti scelti
           </Typography>
           <ListSongs

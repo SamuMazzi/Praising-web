@@ -37,7 +37,11 @@ export default function ListPlaylist(props: PropsListPlaylist): JSX.Element {
             />
           </Grid>
           <Grid item>
-            <Typography variant="h3" sx={{ textAlign: 'center' }}>
+            <Typography
+              variant="h3"
+              component="h3"
+              sx={{ textAlign: 'center' }}
+            >
               Inizia a creare delle playlist!
             </Typography>
           </Grid>

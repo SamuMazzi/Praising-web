@@ -18,7 +18,7 @@ export default function FeedbackPage(): JSX.Element {
         sx={{ pt: verticalPaddingAppBar * 3 + 2, px: 2, pb: 3 }}
       >
         <Grid item>
-          <Typography variant="h2" sx={{ pt: 5 }}>
+          <Typography variant="h2" component="h2" sx={{ pt: 5 }}>
             Contribuisci
           </Typography>
         </Grid>

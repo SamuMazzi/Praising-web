@@ -59,7 +59,9 @@ function InfoUser(props: PropsInfoUserPage): JSX.Element {
       </Grid>
       <Grid item display="flex" whiteSpace="pre-wrap" alignItems="center">
         <Typography>La tua email:</Typography>
-        <Typography variant="h5">{' ' + props.authUser.email}</Typography>
+        <Typography variant="h5" component="h5">
+          {' ' + props.authUser.email}
+        </Typography>
       </Grid>
       <Grid item>
         <Button
@@ -140,7 +142,11 @@ function SignCard(): JSX.Element {
           alignItems="center"
         >
           <Grid item sx={{ mb: 1 }}>
-            <Typography variant="h3" sx={{ textAlign: 'center' }}>
+            <Typography
+              variant="h3"
+              component="h3"
+              sx={{ textAlign: 'center' }}
+            >
               {!loading && authUser?.email != null
                 ? 'Benvenuti!'
                 : 'Entra su Praising!'}
