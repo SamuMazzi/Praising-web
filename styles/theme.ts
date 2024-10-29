@@ -1,9 +1,12 @@
 import { type ThemeOptions } from '@mui/material/styles';
-import '@fontsource/poppins';
-import '@fontsource/poppins/800.css';
-import '@fontsource/poppins/700.css';
-import '@fontsource/poppins/400.css';
-import '@fontsource/poppins/300.css';
+import { Poppins } from 'next/font/google';
+
+const poppins = Poppins({
+  weight: ['300', '400', '700', '800'],
+  style: ['normal', 'italic'],
+  subsets: ['latin']
+  // display: 'swap'
+});
 
 //* https://mui.com/material-ui/icons/#component-prop
 
@@ -31,7 +34,7 @@ const appThemeOptions: ThemeOptions = {
   typography: {
     allVariants: {
       color: '#3A3A3A',
-      fontFamily: 'Poppins'
+      fontFamily: poppins.style.fontFamily
     },
     h1: {
       fontWeight: 700,
@@ -112,7 +115,7 @@ export const darkThemeOptions: ThemeOptions = {
   typography: {
     ...appThemeOptions.typography,
     allVariants: {
-      fontFamily: 'Poppins',
+      fontFamily: poppins.style.fontFamily,
       color: 'white'
     }
   },

@@ -18,21 +18,21 @@ export const fetcher = async (url: string): Promise<any> => {
 
 export default function useLecture(url: string): {
   content: LiturgyOfDay | undefined;
-  error: string;
+  error: string | undefined;
   loading: boolean;
 } {
   const [content, setContent] = useState<LiturgyOfDay>();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string | undefined>();
 
-  async function fetchLectures(): Promise<void> {
+  async function fetchLiturgy(): Promise<void> {
     // FIXME: Fix case in which version is not available anymore
 
     setLoading(true);
-    setError('');
+    setError(undefined);
     try {
-      const contentSong = await fetcher(url);
-      setContent(contentSong);
+      const liturgy = await fetcher(url);
+      setContent(liturgy);
     } catch (e: any) {
       setError(e as string);
     } finally {
@@ -41,7 +41,7 @@ export default function useLecture(url: string): {
   }
 
   useEffect(() => {
-    void fetchLectures();
+    void fetchLiturgy();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

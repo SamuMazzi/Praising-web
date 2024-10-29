@@ -91,9 +91,10 @@ export default function Lectures(): JSX.Element {
             Salmo Responsoriale
           </Typography>
           {content?.psalm !== undefined ? (
-            <>
+            <div key="div_psalm">
               <Typography
                 variant="h4"
+                component="h4"
                 sx={{ pb: 2 }}
                 style={{ fontWeight: 'normal' }}
               >
@@ -102,17 +103,17 @@ export default function Lectures(): JSX.Element {
               <Typography style={{ fontWeight: 'bold' }} sx={{ pb: 2 }}>
                 R. {content?.psalm.chorus}
               </Typography>
-              {content?.psalm.verses.map((verse): JSX.Element => {
+              {content?.psalm.verses.map((verse, index): JSX.Element => {
                 if (verse.trim() !== '') {
                   return (
-                    <Typography key={verse} sx={{ pb: 1 }}>
+                    <Typography key={'verse_psalm_' + index} sx={{ pb: 1 }}>
                       {verse.trim()} <strong> R.</strong>
                     </Typography>
                   );
                 }
                 return <></>;
               })}{' '}
-            </>
+            </div>
           ) : (
             <ShimmerSegments numSegments={10} />
           )}

@@ -20,10 +20,10 @@ export default function NavBar(): JSX.Element {
     Routes.Playlist
   ];
   const iconsPages = [
-    <HomeRoundedIcon key={'home'} />,
-    <LibraryMusicRoundedIcon key={'songss'} />,
-    <MenuBookRoundedIcon key={'lectures'} />,
-    <ListRoundedIcon key={'playl'} />
+    <HomeRoundedIcon key={'home_icon'} />,
+    <LibraryMusicRoundedIcon key={'songs_icon'} />,
+    <MenuBookRoundedIcon key={'lectures_icon'} />,
+    <ListRoundedIcon key={'playlist_icon'} />
   ];
   const findIndexOfPage = (): number => {
     for (let i = routesPages.length; i >= 0; i--) {
