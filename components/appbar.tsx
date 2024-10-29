@@ -224,6 +224,7 @@ export default function PraisingAppBar(props: PropsAppBar): JSX.Element {
                   edge="end"
                   style={{ color: 'black' }}
                   LinkComponent={Link}
+                  aria-label="Go to the settings page"
                   href={Routes.Settings}
                 >
                   <SettingsRoundedIcon />
