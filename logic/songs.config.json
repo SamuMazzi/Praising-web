@@ -1964,7 +1964,7 @@
   {
     "Nome": "Tutto il mondo deve sapere",
     "Nome file": "Tutto il mondo deve sapere.crd",
-    "Caratteristica": "",
+    "Caratteristica": "Pas",
     "Parte della messa": "",
     "Link": "https://youtu.be/49flLCRKb3A",
     "Autore": "Gen Verde",
@@ -2059,5 +2059,14 @@
     "Link": "https://youtu.be/zME-qXU-jq0",
     "Autore": "RnS",
     "Id": 229
+  },
+  {
+    "Nome": "Come brezza",
+    "Nome file": "Come brezza.crd",
+    "Caratteristica": "SS",
+    "Parte della messa": "Ingr-Com",
+    "Link": "https://youtu.be/oKZ5AAhhqEI",
+    "Autore": "D. Ricci",
+    "Id": 230
   }
 ]

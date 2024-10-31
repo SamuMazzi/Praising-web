@@ -4,8 +4,9 @@ import { Poppins } from 'next/font/google';
 const poppins = Poppins({
   weight: ['300', '400', '700', '800'],
   style: ['normal', 'italic'],
-  subsets: ['latin']
-  // display: 'swap'
+  subsets: ['latin'],
+  display: 'swap',
+  adjustFontFallback: false
 });
 
 //* https://mui.com/material-ui/icons/#component-prop
