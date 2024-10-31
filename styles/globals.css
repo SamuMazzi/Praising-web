@@ -33,3 +33,7 @@ a {
   min-height: 1.5em;
   white-space: pre;
 }
+
+.navbar {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}

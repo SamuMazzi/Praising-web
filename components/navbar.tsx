@@ -39,6 +39,7 @@ export default function NavBar(): JSX.Element {
     <Paper
       sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}
       elevation={3}
+      className="navbar"
     >
       <BottomNavigation
         showLabels
@@ -46,6 +47,7 @@ export default function NavBar(): JSX.Element {
         onChange={(_, newValue) => {
           setPageSelected(newValue as number);
         }}
+        style={{ backgroundColor: 'transparent' }}
       >
         {pages.map((page, index) => {
           return (

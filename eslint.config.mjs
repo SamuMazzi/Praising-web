@@ -26,7 +26,8 @@ const exports = [
       '**/public',
       '**/package-lock.json',
       '**/init-service-worker.ts',
-      '**/.vercel/'
+      '**/.vercel/',
+      '.unlighthouse/'
     ]
   },
   ...compat.extends(
