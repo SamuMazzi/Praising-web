@@ -25,16 +25,18 @@ import { setUserInfo } from '@/logic/redux/user_info_slice';
 export default function LoginPage(): JSX.Element {
   const { authUser, loading } = useFirebaseAuth();
   return (
-    <Container sx={{ minHeight: '100vh' }}>
-      <PraisingAppBar
-        title={
-          !loading ? (authUser !== null ? 'Dettagli account' : 'Accedi') : ''
-        }
-        backIcon
-      />
-      <Container sx={{ py: verticalPaddingAppBar + 2 }} />
-      <SignCard />
-    </Container>
+    <main>
+      <Container sx={{ minHeight: '100vh' }}>
+        <PraisingAppBar
+          title={
+            !loading ? (authUser !== null ? 'Dettagli account' : 'Accedi') : ''
+          }
+          backIcon
+        />
+        <Container sx={{ py: verticalPaddingAppBar + 2 }} />
+        <SignCard />
+      </Container>
+    </main>
   );
 }
 

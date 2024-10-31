@@ -1,7 +1,3 @@
-html {
-  padding-bottom: env(safe-area-inset-bottom, 0);
-}
-
 a {
   color: inherit;
   text-decoration: none;
@@ -36,4 +32,12 @@ a {
 .lyrics {
   min-height: 1.5em;
   white-space: pre;
+}
+
+main {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.navbar {
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }

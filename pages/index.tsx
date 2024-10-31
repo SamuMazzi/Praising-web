@@ -32,94 +32,102 @@ export default function Home(): JSX.Element {
   // const [showNews, setShowNews] = useState(getFromStorage(NEWS_UPDATE) ?? true);
 
   return (
-    <Container disableGutters sx={{ minHeight: '100vh' }}>
-      <PraisingAppBar title="Praising" homeVersion />
-      <Typography
-        variant="h2"
-        component="h2"
-        sx={{ pt: verticalPaddingAppBar * 3 + 2, pl: 2 }}
-      >
-        Parti della messa
-      </Typography>
-      <List
-        style={{ width: '100%', overflow: 'auto', display: 'flex' }}
-        sx={{ py: 2 }}
-      >
-        {Object.keys(filterMomenti).map((momento) => {
-          return (
-            <Container
-              disableGutters
-              key={momento}
-              style={{ width: 200 }}
-              sx={{ mx: 0.5 }}
-            >
-              <ListItemButton
-                LinkComponent={Link}
-                href={Routes.FilteredSongs + '/' + momento}
+    <main>
+      <Container disableGutters sx={{ minHeight: '100vh' }}>
+        <PraisingAppBar title="Praising" homeVersion />
+        <Typography
+          variant="h2"
+          component="h2"
+          sx={{ pt: verticalPaddingAppBar * 3 + 2, pl: 2 }}
+        >
+          Parti della messa
+        </Typography>
+        <List
+          style={{ width: '100%', overflow: 'auto', display: 'flex' }}
+          sx={{ py: 2 }}
+        >
+          {Object.keys(filterMomenti).map((momento) => {
+            return (
+              <Container
+                disableGutters
                 key={momento}
-                style={{ width: 150, height: 75 }}
-                sx={{ mx: 1, backgroundColor: '#F5DA81', borderRadius: 2 }}
+                style={{ width: 200 }}
+                sx={{ mx: 0.5 }}
               >
-                <ListItemText
-                  disableTypography
-                  primary={
-                    <Typography
-                      textAlign="center"
-                      variant="h5"
-                      style={{ color: 'black' }}
-                    >
-                      {filterMomenti[momento]}
-                    </Typography>
+                <ListItemButton
+                  LinkComponent={Link}
+                  href={Routes.FilteredSongs + '/' + momento}
+                  key={momento}
+                  style={{ width: 150, height: 75 }}
+                  sx={{ mx: 1, backgroundColor: '#F5DA81', borderRadius: 2 }}
+                >
+                  <ListItemText
+                    disableTypography
+                    primary={
+                      <Typography
+                        textAlign="center"
+                        variant="h5"
+                        style={{ color: 'black' }}
+                      >
+                        {filterMomenti[momento]}
+                      </Typography>
+                    }
+                  />
+                </ListItemButton>
+              </Container>
+            );
+          })}
+        </List>
+        <Typography variant="h2" component="h2" sx={{ pt: 2, pl: 2 }}>
+          Argomenti
+        </Typography>
+        {/* https://stackoverflow.com/questions/68658249/how-to-do-react-horizontal-scroll-using-mouse-wheel */}
+        <ImageList
+          style={{ width: '100%', overflowX: 'auto', display: 'flex' }}
+          sx={{ py: 2, pl: 2 }}
+        >
+          {Object.keys(filterArgomenti).map((arg) => {
+            return (
+              <ImageListItem
+                component={NextLinkComposed}
+                to={{ pathname: Routes.FilteredSongs + '/' + arg }}
+                key={arg}
+                sx={{ mx: 0.5, alignItems: 'center' }}
+              >
+                <Image
+                  src={
+                    '/assets/Illustrazioni/' + filterArgomenti[arg] + '2.png'
                   }
+                  alt={'illustration of ' + filterArgomenti[arg]}
+                  width={100}
+                  height={100}
                 />
-              </ListItemButton>
-            </Container>
-          );
-        })}
-      </List>
-      <Typography variant="h2" component="h2" sx={{ pt: 2, pl: 2 }}>
-        Argomenti
-      </Typography>
-      {/* https://stackoverflow.com/questions/68658249/how-to-do-react-horizontal-scroll-using-mouse-wheel */}
-      <ImageList
-        style={{ width: '100%', overflowX: 'auto', display: 'flex' }}
-        sx={{ py: 2, pl: 2 }}
-      >
-        {Object.keys(filterArgomenti).map((arg) => {
-          return (
-            <ImageListItem
-              component={NextLinkComposed}
-              to={{ pathname: Routes.FilteredSongs + '/' + arg }}
-              key={arg}
-              sx={{ mx: 0.5, alignItems: 'center' }}
+                <Typography textAlign="center" variant="h5" component="h5">
+                  {filterArgomenti[arg]}
+                </Typography>
+              </ImageListItem>
+            );
+          })}
+        </ImageList>
+        {recentSongs.length > 0 && (
+          <Container sx={{ pb: 7 }}>
+            <Typography
+              variant="h2"
+              component="h2"
+              sx={{ pt: 2, pb: 2, pl: 2 }}
             >
-              <Image
-                src={'/assets/Illustrazioni/' + filterArgomenti[arg] + '2.png'}
-                alt={'illustration of ' + filterArgomenti[arg]}
-                width={100}
-                height={100}
-              />
-              <Typography textAlign="center" variant="h5" component="h5">
-                {filterArgomenti[arg]}
-              </Typography>
-            </ImageListItem>
-          );
-        })}
-      </ImageList>
-      {recentSongs.length > 0 && (
-        <Container sx={{ pb: 7 }}>
-          <Typography variant="h2" component="h2" sx={{ pt: 2, pb: 2, pl: 2 }}>
-            Gli ultimi canti scelti
-          </Typography>
-          <ListSongs
-            songs={recentSongs}
-            mode="normal"
-            withSearch={false}
-            auto_sorting={false}
-          />
-        </Container>
-      )}
-      <NavBar />
-    </Container>
+              Gli ultimi canti scelti
+            </Typography>
+            <ListSongs
+              songs={recentSongs}
+              mode="normal"
+              withSearch={false}
+              auto_sorting={false}
+            />
+          </Container>
+        )}
+        <NavBar />
+      </Container>
+    </main>
   );
 }

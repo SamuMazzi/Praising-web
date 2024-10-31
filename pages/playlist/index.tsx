@@ -37,7 +37,7 @@ export default function PlaylistPage(): JSX.Element {
             <Button
               sx={{ borderRadius: 4 }}
               color="primary"
-              style={{ position: 'fixed', bottom: 80 }}
+              style={{ position: 'fixed', bottom: 90 }}
               variant="contained"
               onClick={() => {
                 setOpenModal(true);

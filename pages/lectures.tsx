@@ -66,74 +66,83 @@ export default function Lectures(): JSX.Element {
   }
 
   return (
-    <Container
-      sx={{
-        minHeight: '100vh',
-        pt: verticalPaddingAppBar * 3 + 2,
-        pb: 7,
-        whiteSpace: 'pre-wrap'
-      }}
-    >
-      <PraisingAppBar title="Liturgia del giorno" homeVersion />
-      <CalendarSelectSingleDay
-        daySelected={dataLiturgia}
-        onChangeDate={setDataLiturgia}
-      />
-      <Container sx={{ py: 2 }}>
-        <Typography variant="h2" component="h2" sx={{ pb: 2 }}>
-          Prima lettura
-        </Typography>
-        <SingleLecture isLoading={loading} lecture={content?.firstLecture} />
-      </Container>
-      <Container sx={{ py: 2 }}>
-        <>
-          <Typography variant="h2" component="h2">
-            Salmo Responsoriale
-          </Typography>
-          {content?.psalm !== undefined ? (
-            <div key="div_psalm">
-              <Typography
-                variant="h4"
-                component="h4"
-                sx={{ pb: 2 }}
-                style={{ fontWeight: 'normal' }}
-              >
-                {content?.psalm.title}
-              </Typography>
-              <Typography style={{ fontWeight: 'bold' }} sx={{ pb: 2 }}>
-                R. {content?.psalm.chorus}
-              </Typography>
-              {content?.psalm.verses.map((verse, index): JSX.Element => {
-                if (verse.trim() !== '') {
-                  return (
-                    <Typography key={'verse_psalm_' + index} sx={{ pb: 1 }}>
-                      {verse.trim()} <strong> R.</strong>
-                    </Typography>
-                  );
-                }
-                return <></>;
-              })}{' '}
-            </div>
-          ) : (
-            <ShimmerSegments numSegments={10} />
-          )}
-        </>
-      </Container>
-      {content?.secondLecture !== undefined && (
+    <main>
+      <Container
+        sx={{
+          minHeight: '100vh',
+          pt: verticalPaddingAppBar * 3 + 2,
+          pb: 7,
+          whiteSpace: 'pre-wrap'
+        }}
+      >
+        <PraisingAppBar title="Liturgia del giorno" homeVersion />
+        <CalendarSelectSingleDay
+          daySelected={dataLiturgia}
+          onChangeDate={setDataLiturgia}
+        />
         <Container sx={{ py: 2 }}>
           <Typography variant="h2" component="h2" sx={{ pb: 2 }}>
-            Seconda Lettura
+            Prima lettura
           </Typography>
-          <SingleLecture isLoading={loading} lecture={content?.secondLecture} />
+          <SingleLecture isLoading={loading} lecture={content?.firstLecture} />
         </Container>
-      )}
-      <Container sx={{ py: 2 }}>
-        <Typography variant="h2" component="h2" sx={{ pb: 2 }}>
-          Vangelo
-        </Typography>
-        <SingleLecture isLoading={loading} lecture={content?.gospel} isGospel />
+        <Container sx={{ py: 2 }}>
+          <>
+            <Typography variant="h2" component="h2">
+              Salmo Responsoriale
+            </Typography>
+            {content?.psalm !== undefined ? (
+              <div key="div_psalm">
+                <Typography
+                  variant="h4"
+                  component="h4"
+                  sx={{ pb: 2 }}
+                  style={{ fontWeight: 'normal' }}
+                >
+                  {content?.psalm.title}
+                </Typography>
+                <Typography style={{ fontWeight: 'bold' }} sx={{ pb: 2 }}>
+                  R. {content?.psalm.chorus}
+                </Typography>
+                {content?.psalm.verses.map((verse, index): JSX.Element => {
+                  if (verse.trim() !== '') {
+                    return (
+                      <Typography key={'verse_psalm_' + index} sx={{ pb: 1 }}>
+                        {verse.trim()} <strong> R.</strong>
+                      </Typography>
+                    );
+                  }
+                  return <></>;
+                })}{' '}
+              </div>
+            ) : (
+              <ShimmerSegments numSegments={10} />
+            )}
+          </>
+        </Container>
+        {content?.secondLecture !== undefined && (
+          <Container sx={{ py: 2 }}>
+            <Typography variant="h2" component="h2" sx={{ pb: 2 }}>
+              Seconda Lettura
+            </Typography>
+            <SingleLecture
+              isLoading={loading}
+              lecture={content?.secondLecture}
+            />
+          </Container>
+        )}
+        <Container sx={{ py: 2 }}>
+          <Typography variant="h2" component="h2" sx={{ pb: 2 }}>
+            Vangelo
+          </Typography>
+          <SingleLecture
+            isLoading={loading}
+            lecture={content?.gospel}
+            isGospel
+          />
+        </Container>
+        <NavBar />
       </Container>
-      <NavBar />
-    </Container>
+    </main>
   );
 }

@@ -25,41 +25,42 @@ export default function SettingsPage(): JSX.Element {
   const borderRadius = 8;
 
   return (
-    <Container sx={{ minHeight: '100vh' }}>
-      <PraisingAppBar title="Impostazioni" backIcon />
-      <Container sx={{ py: verticalPaddingAppBar + 2 }} />
-      <List>
-        <ListItem
-          disablePadding
-          sx={{
-            borderTopRightRadius: borderRadius,
-            borderTopLeftRadius: borderRadius
-          }}
-        >
-          <ListItemButton LinkComponent={Link} href={Routes.Login}>
-            <ListItemIcon>
-              <AccountCircleRoundedIcon />
-            </ListItemIcon>
-            <ListItemText primary="Account" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton onClick={() => dispatch(setDarkMode(!darkTheme))}>
-            <ListItemIcon>
-              {darkTheme ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}
-            </ListItemIcon>
-            <ListItemText primary="Tema" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton LinkComponent={Link} href={Routes.Feedback}>
-            <ListItemIcon>
-              <InsertCommentRoundedIcon />
-            </ListItemIcon>
-            <ListItemText primary="Feedback" />
-          </ListItemButton>
-        </ListItem>
-        {/* <ListItem disablePadding>
+    <main>
+      <Container sx={{ minHeight: '100vh' }}>
+        <PraisingAppBar title="Impostazioni" backIcon />
+        <Container sx={{ py: verticalPaddingAppBar + 2 }} />
+        <List>
+          <ListItem
+            disablePadding
+            sx={{
+              borderTopRightRadius: borderRadius,
+              borderTopLeftRadius: borderRadius
+            }}
+          >
+            <ListItemButton LinkComponent={Link} href={Routes.Login}>
+              <ListItemIcon>
+                <AccountCircleRoundedIcon />
+              </ListItemIcon>
+              <ListItemText primary="Account" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton onClick={() => dispatch(setDarkMode(!darkTheme))}>
+              <ListItemIcon>
+                {darkTheme ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}
+              </ListItemIcon>
+              <ListItemText primary="Tema" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton LinkComponent={Link} href={Routes.Feedback}>
+              <ListItemIcon>
+                <InsertCommentRoundedIcon />
+              </ListItemIcon>
+              <ListItemText primary="Feedback" />
+            </ListItemButton>
+          </ListItem>
+          {/* <ListItem disablePadding>
                     <ListItemButton LinkComponent={Link} href={Routes.Contribute}>
                     <ListItemIcon>
                         <VolunteerActivismRoundedIcon />
@@ -67,32 +68,33 @@ export default function SettingsPage(): JSX.Element {
                         <ListItemText primary="Contribuisci" />
                     </ListItemButton>
                     </ListItem> */}
-        <ListItem disablePadding>
-          <InstallPWA />
-        </ListItem>
-        <ListItem
-          disablePadding
-          sx={{
-            borderBottomRightRadius: borderRadius,
-            borderBottomLeftRadius: borderRadius
-          }}
-        >
-          <ListItemButton
-            onClick={() => {
-              clearStorage();
+          <ListItem disablePadding>
+            <InstallPWA />
+          </ListItem>
+          <ListItem
+            disablePadding
+            sx={{
+              borderBottomRightRadius: borderRadius,
+              borderBottomLeftRadius: borderRadius
             }}
           >
-            <ListItemIcon>
-              <SdStorageRoundedIcon />
-            </ListItemIcon>
-            <ListItemText
-              primary="Elimina cache"
-              secondary="Eliminerai tutti i dati presenti su questo dispositivo"
-            />
-          </ListItemButton>
-        </ListItem>
-      </List>
-      <p>Versione: 0.5.91</p>
-    </Container>
+            <ListItemButton
+              onClick={() => {
+                clearStorage();
+              }}
+            >
+              <ListItemIcon>
+                <SdStorageRoundedIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="Elimina cache"
+                secondary="Eliminerai tutti i dati presenti su questo dispositivo"
+              />
+            </ListItemButton>
+          </ListItem>
+        </List>
+        <p>Versione: 0.5.92</p>
+      </Container>
+    </main>
   );
 }
