@@ -1,4 +1,4 @@
-import ChordSheetJS, { type Song, Key, SOLFEGE } from 'chordsheetjs';
+import ChordSheetJS, { type Song, Key, SOLFEGE, SYMBOL } from 'chordsheetjs';
 import * as cheerio from 'cheerio';
 import { type ChordNotations } from './redux/settings_slice';
 
@@ -283,8 +283,6 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
       props.fileContent
     );
 
-    // if (props.key !== undefined) song_parsed = song_parsed.setKey(props.key) // Serve per poter normalizzare bene gli accordi
-
     const serializedSong = new ChordSheetJS.ChordSheetSerializer().serialize(
       songParsed
     );
@@ -295,38 +293,22 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
     let deserialized = new ChordSheetJS.ChordSheetSerializer().deserialize(
       serializedSong
     );
-    /* const majorRootKey = Key.parseOrFail(deserialized.key).toMajor()
-        if (props.chordNotation === SYMBOL) {
-            deserialized = deserialized.setKey(majorRootKey.toChordSymbolString(majorRootKey))
-        } else if (props.chordNotation === SOLFEGE) {
-            deserialized = deserialized.setKey(majorRootKey.toChordSolfegeString(majorRootKey))
-        } */
 
-    if (
-      deserialized.capo !== undefined &&
-      deserialized.capo !== null &&
-      !(deserialized.capo instanceof Array)
-    ) {
-      const capo = -parseInt(deserialized.capo);
-      deserialized = deserialized.setCapo(capo);
-    }
+    let transpose = props.transpose ?? 0;
+    // FIXME: Don't why there's this actually big problem, it can't really change chords from ita to eng
+    /* if (props.chordNotation === SYMBOL) {
+      transpose = 2 * transpose + 2;
+      console.log('transpose', transpose);
+    } */
 
-    if (props.transpose !== undefined && props.transpose !== 0) {
-      deserialized = deserialized.transpose(props.transpose);
+    if (transpose !== 0) {
+      deserialized = deserialized.transpose(transpose);
     }
-    // console.log("key", deserialized.key)
 
     if (deserialized.key !== null) {
       // This is needed because it seems like the normalization is different between major and minor keys (and we want always the major-like one)
       const majorRootKey = Key.parseOrFail(deserialized.key).toMajor();
 
-      // FIXME: Don't why there's this actually big problem, it can't really change chords from ita to eng
-      /*
-            if (props.chordNotation === SYMBOL) {
-                deserialized = deserialized.transpose(-1, {normalizeChordSuffix: true})
-            } */
-
-      // TODO: This does not work when there is capo set
       if (DIESIS_NOTES.includes(majorRootKey.toString())) {
         deserialized = deserialized.useModifier('#');
       } else {
