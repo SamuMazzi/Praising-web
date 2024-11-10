@@ -11,7 +11,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { itIT } from '@mui/x-date-pickers/locales';
 /**
  * Priorities:
- * 0. Improve SEO
+ * 0. Improve SEO!!!
  * 1. Offline
  * 2a. Transition pages (for example go from page to songs)
  * 3. Edit song -> add reviews -> add check by admin(s) like back voices
@@ -24,6 +24,8 @@ import { itIT } from '@mui/x-date-pickers/locales';
  * 8. Add song
  * 9. Set Firebase rules
  * 10. Check loading times of recaptcha (they seem huge and unaffective)
+ * 11. Add Google Analytics
+ * 12. Add Google Ads
  */
 
 // TODO: Offline https://github.com/hanford/next-offline
@@ -73,7 +75,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
         />
         <meta
           name="viewport"
-          content="minimum-scale=1, initial-scale=1, maximum-scale=6, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
+          content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover"
         />
         <link
           rel="icon"

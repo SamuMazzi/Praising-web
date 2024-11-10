@@ -96,7 +96,7 @@ export default function Home(): JSX.Element {
               >
                 <Image
                   src={
-                    '/assets/Illustrazioni/' + filterArgomenti[arg] + '2.png'
+                    '/assets/Illustrazioni/' + filterArgomenti[arg] + '2.webp'
                   }
                   alt={'illustration of ' + filterArgomenti[arg]}
                   width={100}
