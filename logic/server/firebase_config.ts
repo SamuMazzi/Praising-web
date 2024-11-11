@@ -1,5 +1,4 @@
 import { initializeApp } from 'firebase/app';
-// import { getAnalytics } from "firebase/analytics";
 // import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
 
 // Pass your reCAPTCHA v3 site key (public key) to activate(). Make sure this
@@ -16,19 +15,16 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-if (typeof window !== 'undefined') {
-  // const analytics = getAnalytics(app);
-  /* const env = process.env.NODE_ENV
-  if(env == "development"){
-    self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
-  } */
-  // const appCheck =
-  /* initializeAppCheck(app, {
-    provider: new ReCaptchaV3Provider(
-      '6LeQJl0pAAAAACbI7G1iJSbZb2G1mBUsiSJOmS_v'
-    ),
-    isTokenAutoRefreshEnabled: true
-  }); */
-}
+/* const env = process.env.NODE_ENV
+if(env == "development"){
+  self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+} */
+// const appCheck =
+/* initializeAppCheck(app, {
+  provider: new ReCaptchaV3Provider(
+    '6LeQJl0pAAAAACbI7G1iJSbZb2G1mBUsiSJOmS_v'
+  ),
+  isTokenAutoRefreshEnabled: true
+}); */
 
 export default app;

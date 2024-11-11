@@ -4,6 +4,8 @@ import { auth } from '../server/auth';
 import { getUserFromDatabase } from '../server/database';
 import { getFromStorage, saveToStorage } from '../local_logic';
 import { UserProfileServerKey } from '../redux/user_info_slice';
+import fbApp from '../server/firebase_config';
+import { getAnalytics, setUserId } from 'firebase/analytics';
 
 export interface AuthUser {
   uid: string;
@@ -59,6 +61,7 @@ export default function useFirebaseAuth(): {
         );
       }
     }
+    setUserId(getAnalytics(fbApp), auth.currentUser?.uid ?? null);
   };
 
   useEffect(() => {
