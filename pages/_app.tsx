@@ -13,19 +13,21 @@ import { itIT } from '@mui/x-date-pickers/locales';
  * Priorities:
  * 0. Improve SEO!!!
  * 1. Offline
- * 3. Edit song -> add reviews -> add check by admin(s) like back voices
- * 4. Tutorial (finish and better styling, actually also the initial one should be changed)
- * 5. PDF (finish) -> size of print depend on size of the screen from which you print
+ * 2. Tutorial (finish and better styling, actually also the initial one should be changed)
+ * 3. PDF (finish) -> size of print depend on size of the screen from which you print
  * https://stackoverflow.com/questions/45868042/figuring-out-how-to-mock-the-window-size-changing-for-a-react-component-test
  * https://stackoverflow.com/questions/63510429/how-to-test-different-screen-widths-using-jest
- * 6. Share back voices -> put them in a tmp part before accepting them and also add button to let user segnalate them
- * 7. Share playlist -> you simply save the playlist on playlist collection (with user as owner), until it's private you don't even check online if there are modifications
- * 8. Add song
- * 9. Set Firebase rules
- * 10. Check loading times of recaptcha (they seem huge and unaffective)
- * 11. Add Google Analytics (Just to improve, basic is done)
- * 12. Add Google Ads
- * 2a. Transition pages (for example go from page to songs)
+ * 4. Share back voices -> put them in a tmp part before accepting them and also add button to let user segnalate them
+ * 5. Share playlist -> you simply save the playlist on playlist collection (with user as owner), until it's private you don't even check online if there are modifications
+ * 6. Add song
+ * 7. Set Firebase rules
+ * 8. Migration to App Router
+ *
+ * Later:
+ * 1. Add Google Analytics (Just to improve, basic is done)
+ * 2. Add Google Ads
+ * 3. Transition pages (for example go from page to songs)
+ * 4. Check loading times of recaptcha (they seem huge and unaffective)
  */
 
 // TODO: Offline https://github.com/hanford/next-offline

@@ -19,6 +19,7 @@ import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import { HideOnScroll, SongTitleAppBar } from './appbar';
 import { getSingleSong } from '@/logic/local_logic';
+import { EmailPayload } from '@/logic/server/emails';
 
 interface PropsSongAppBar {
   id: string;
@@ -78,14 +79,24 @@ export const EditableSong = (props: {
   idExistingVersion?: string;
   versionIndex: number;
 }): JSX.Element => {
-  const { authUser, loading } = useFirebaseAuth();
+  const { authUser, infoProfile, loading } = useFirebaseAuth();
   const [data, setData] = useState(props.data);
   const song = getSingleSong(props.songId);
   const theme = useTheme();
 
   const handleSave = async (): Promise<void> => {
-    if (authUser === null || loading) {
+    if (authUser === null || infoProfile === undefined || loading) {
       // TODO: Implement error handling for loading === true
+      return;
+    }
+    if (
+      infoProfile.counter_pending_songs !== undefined &&
+      infoProfile.counter_pending_songs > 10
+    ) {
+      // TODO: This should be implemented also on server side
+      alert(
+        'Hai troppe canzoni in attesa di revisione. Attendi che vengano revisionate.'
+      );
       return;
     }
     let idVersion = '';
@@ -97,6 +108,24 @@ export const EditableSong = (props: {
     }
     await addModifiedSongToServerStorage(idVersion, data, props.songId);
     props.setEditMode(true, idVersion);
+
+    // Email notification
+    const emailData: EmailPayload = {
+      userId: authUser.uid,
+      songId: props.songId,
+      versionId: idVersion,
+      nameSong: song?.name ?? '',
+      email: authUser.email ?? ''
+    };
+    const response = await fetch('/api/notification-song-version', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(emailData)
+    });
+    if (response.status !== 200) {
+      const text = await response.text();
+      console.error('Error sending email.', text);
+    }
   };
 
   return (

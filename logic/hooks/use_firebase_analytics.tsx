@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
 import { useEffect } from 'react';
 import { getAnalytics, logEvent } from '@firebase/analytics';
 import fbApp from '@/logic/server/firebase_config';
-import { usePathname } from 'next/navigation'
+import { usePathname } from 'next/navigation';
 
 export function useFirebaseRoutesAnalytics() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   useEffect(() => {
     const analytics = getAnalytics(fbApp);
@@ -22,7 +22,7 @@ export function useFirebaseRoutesAnalytics() {
         song_id: page_path.split('/').pop()
       });
     }
-  }, [location]);
+  }, [pathname]);
 
   return null;
 }

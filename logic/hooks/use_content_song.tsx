@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { type CustomSongInfo, getSongInfoVersions } from '../server/database';
 import { getVersionSong } from '../server/storage';
 import { getFromStorage } from '../local_logic';
+import useFirebaseAuth from './use_auth';
 // TODO: Prevent scrolling when downloading pdf
 
 export const fetcher = async (url: string): Promise<any> => {
@@ -32,6 +33,7 @@ export default function useContentSong(
   const [loadingVersions, setLoadingVersions] = useState(true);
   const [error, setError] = useState('');
   const [versions, setVersions] = useState<CustomSongInfo[]>([]);
+  const { authUser, loading } = useFirebaseAuth();
 
   /**
    * Collections:
@@ -44,10 +46,13 @@ export default function useContentSong(
    */
 
   async function fetchVersions(): Promise<void> {
+    if (!authUser) {
+      return;
+    }
     try {
-      const songsLoaded = (await getSongInfoVersions(idSong)).sort(
-        (a, b) => b.creationTime.seconds - a.creationTime.seconds
-      ); // TODO: If this is the correct order or opposite
+      const songsLoaded = (
+        await getSongInfoVersions(authUser.uid, idSong)
+      ).sort((a, b) => b.creationTime.seconds - a.creationTime.seconds); // TODO: If this is the correct order or opposite
       setVersions(songsLoaded);
     } catch (e: any) {
       setError(e as string);
@@ -77,12 +82,15 @@ export default function useContentSong(
   }
 
   useEffect(() => {
+    if (loading) {
+      return;
+    }
     if (getFromStorage('debug_admin') !== null) {
       void fetchVersions();
     }
     void fetchSong(stdIdVersion);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [loading]);
 
   return {
     content,

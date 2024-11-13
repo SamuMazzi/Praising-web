@@ -1,5 +1,5 @@
 import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+import { type jsPDF } from 'jspdf';
 import { renderSong } from './handle_text_song';
 import { getSingleSong } from './local_logic';
 import { type ChordNotations } from './redux/settings_slice';
@@ -19,6 +19,11 @@ interface DataInfo extends InfoRendering {
   songs: string[];
 }
 
+const generateJsPdfStdObject = async (): Promise<jsPDF> => {
+  const jsPDFModule = await import('jspdf');
+  return new jsPDFModule.jsPDF('p', 'mm', 'a4');
+};
+
 export const printDocument = async (
   idSong: string,
   props: InfoRendering
@@ -27,7 +32,7 @@ export const printDocument = async (
   if (song === undefined) {
     return;
   }
-  const pdfSong = new SongPDF(props);
+  const pdfSong = new SongPDF(await generateJsPdfStdObject(), props);
   await pdfSong.createPdf([idSong], song.name);
 };
 
@@ -35,17 +40,18 @@ export const playlistToPdf = async (
   title: string,
   data: DataInfo
 ): Promise<void> => {
-  const pdfSong = new SongPDF(data);
+  const pdfSong = new SongPDF(await generateJsPdfStdObject(), data);
   await pdfSong.createPdf(data.songs, title);
 };
 
 class SongPDF {
-  private readonly pdf: jsPDF;
   private readonly infoRendering: InfoRendering;
   private availableHeightPage: number = PAGE_HEIGHT;
 
-  constructor(infoRendering: InfoRendering) {
-    this.pdf = new jsPDF('p', 'mm', 'a4');
+  constructor(
+    private readonly pdf: jsPDF,
+    infoRendering: InfoRendering
+  ) {
     this.infoRendering = infoRendering;
   }
 

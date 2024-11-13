@@ -11,7 +11,11 @@ import {
   arrayRemove,
   Timestamp,
   getDocs,
-  deleteDoc
+  deleteDoc,
+  query,
+  where,
+  or,
+  increment
 } from 'firebase/firestore';
 import { deleteModifiedSongFromServerStorage } from './storage';
 // import geofire from 'geofire-common';
@@ -157,6 +161,12 @@ export const addActiveSession = async (name: string, center: [number, number]) =
 }
 */
 
+/**
+ * When approving a song:
+ * 1. Change status of song to 'approved'
+ * 2. Decrement counter_pending_songs in user
+ */
+
 export const addServerFavoriteSongs = async (
   userId: string,
   newSong: string
@@ -179,10 +189,11 @@ export const addUserToDatabase = async (userId: string): Promise<void> => {
   await setDoc(doc(firestore, USERS_COLLECTION, userId), {});
 };
 
-interface UserDatabase {
+export interface UserDatabase {
   favoriteSongs?: string[];
   playlists?: string[];
   ownedSongs?: string[];
+  counter_pending_songs?: number;
 }
 
 export const getUserFromDatabase = async (
@@ -212,11 +223,13 @@ export const addEditedSongToDatabase = async (
     {
       creationTime: Timestamp.now(),
       lastModified: Timestamp.now(),
-      author: userId
+      author: userId,
+      state: 'pending'
     }
   );
   await updateDoc(doc(firestore, USERS_COLLECTION, userId), {
-    ownedSongs: arrayUnion(newSongDocRef.path)
+    ownedSongs: arrayUnion(newSongDocRef.path),
+    counter_pending_songs: increment(1)
   });
   return newSongDocRef.id;
 };
@@ -233,11 +246,29 @@ export const deleteEditedSongFromDatabase = async (
     VERSIONS_CUSTOM_SONGS_COLLECTION,
     idDoc
   );
+  const song = await getInfoEditedSong(songId, idDoc);
   await deleteDoc(docRef);
   await updateDoc(doc(firestore, USERS_COLLECTION, userId), {
-    ownedSongs: arrayRemove(docRef.path)
+    ownedSongs: arrayRemove(docRef.path),
+    counter_pending_songs: increment(song.state === 'pending' ? -1 : 0)
   });
   await deleteModifiedSongFromServerStorage(idDoc, songId);
+};
+
+export const getInfoEditedSong = async (
+  songId: string,
+  versionId: string
+): Promise<CustomSongInfo> => {
+  const docSong = doc(
+    firestore,
+    CUSTOM_SONGS_COLLECTION,
+    songId,
+    VERSIONS_CUSTOM_SONGS_COLLECTION,
+    versionId
+  );
+  const refDoc = await getDoc(docSong);
+  const out = { ...refDoc.data(), idVersion: refDoc.id } as CustomSongInfo;
+  return out;
 };
 
 export const editEditedSongToDatabase = async (
@@ -264,19 +295,30 @@ export interface CustomSongInfo {
   lastModified: Timestamp;
   author: string;
   rates?: number;
+  state: 'approved' | 'pending';
 }
 
+/**
+ * Get all the versions of a song that are approved or that the user has created
+ * @param userId
+ * @param songId
+ * @returns
+ */
 export const getSongInfoVersions = async (
+  userId: string,
   songId: string
 ): Promise<CustomSongInfo[]> => {
-  const refDocs = await getDocs(
-    collection(
-      firestore,
-      CUSTOM_SONGS_COLLECTION,
-      songId,
-      VERSIONS_CUSTOM_SONGS_COLLECTION
-    )
+  const customSongCollections = collection(
+    firestore,
+    CUSTOM_SONGS_COLLECTION,
+    songId,
+    VERSIONS_CUSTOM_SONGS_COLLECTION
   );
+  const q = query(
+    customSongCollections,
+    or(where('author', '==', userId), where('state', '==', 'approved'))
+  );
+  const refDocs = await getDocs(q);
   const out = refDocs.docs.map((doc) => {
     return { ...doc.data(), idVersion: doc.id } as CustomSongInfo;
   });

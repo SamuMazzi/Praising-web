@@ -22,6 +22,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Badge from '@mui/material/Badge';
 import { useTheme } from '@mui/material';
+import Tooltip from '@mui/material/Tooltip';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -39,7 +40,7 @@ import { SOLFEGE, SYMBOL } from 'chordsheetjs';
 import { printDocument } from '@/logic/song_to_pdf';
 import { type CustomSongInfo } from '@/logic/server/database';
 import assert from 'assert';
-import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
+import HourglassBottomRoundedIcon from '@mui/icons-material/HourglassBottomRounded';
 import { ModalNews } from '@/components/modals';
 
 // This is really useful in the case we'll ever want to split a song in multiple pages (in case it's too long)
@@ -341,6 +342,13 @@ function MenuItemVersions(props: PropsMenuItemVersions): JSX.Element {
             }}
             selected={index === props.selectedIndexVersion}
           >
+            {version.state === 'pending' && (
+              <ListItemIcon>
+                <Tooltip title="In revisione">
+                  <HourglassBottomRoundedIcon />
+                </Tooltip>
+              </ListItemIcon>
+            )}
             {'Versione ' + (index + 1)}
           </MenuItem>
         ))}
