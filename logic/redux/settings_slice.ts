@@ -17,7 +17,7 @@ interface SettingsState {
 const initialState: SettingsState = {
   showChords: getFromStorage('show_chords') !== false,
   chordNotation: getLocalChordNotation(),
-  darkMode: getFromStorage('dark_mode') === true
+  darkMode: getFromStorage('dark_mode') !== false
 };
 
 const settingsSlice = createSlice({
