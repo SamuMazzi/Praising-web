@@ -10,7 +10,13 @@ import ListPlaylist from './list_playlist';
 import Button from '@mui/material/Button';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import { useTheme } from '@mui/material';
-import React from 'react';
+import TextField from '@mui/material/TextField';
+import React, { useState, ChangeEvent } from 'react';
+import useFirebaseAuth from '@/logic/hooks/use_auth';
+import { addPartSongToDatabase } from '@/logic/server/database';
+import { EmailPayloadPartSong } from '@/logic/server/emails';
+import { addPartSongToServerStorage } from '@/logic/server/storage';
+import song from '@/pages/api/song';
 
 interface PropsModalBottomSheet {
   open: boolean;
@@ -50,6 +56,106 @@ export function ModalBottomSheetPlaylist(
               mode="selection_playlist"
               withSearch
             />
+          </Sheet.Scroller>
+        </Sheet.Content>
+      </Sheet.Container>
+      <Sheet.Backdrop />
+    </Sheet>
+  );
+}
+
+interface PropsModalBottomSheetAddPart extends PropsModalBottomSheet {
+  idSong: string;
+  afterUpload: () => void;
+}
+
+export function ModalBottomSheetAddPart(
+  props: PropsModalBottomSheetAddPart
+): JSX.Element {
+  const theme = useTheme();
+  const { authUser, loading } = useFirebaseAuth();
+  const fileInput = React.useRef<any>();
+  const [namePart, setNamePart] = useState('');
+  const [file, setFile] = useState<any>(null);
+
+  return (
+    <Sheet isOpen={props.open} onClose={props.onClose}>
+      <Sheet.Container>
+        <Sheet.Header>
+          <TitleModal onClose={props.onClose} title={'Carica un audio'} />
+        </Sheet.Header>
+        <Sheet.Content className={theme.palette.mode}>
+          <Sheet.Scroller style={{ marginLeft: 15, marginRight: 15 }}>
+            <TextField
+              sx={{ mt: 2 }}
+              placeholder="Nome della parte"
+              value={namePart}
+              onChange={(e) => setNamePart(e.target.value)}
+            />
+            <Button
+              sx={{ my: 3 }}
+              style={{ textAlign: 'center' }}
+              variant="contained"
+              component="label"
+              color="primary"
+            >
+              Carica audio
+              <input
+                hidden
+                ref={fileInput}
+                multiple={false}
+                type="file"
+                accept="audio/*"
+                onChange={async (e: ChangeEvent<HTMLInputElement>) => {
+                  if (!authUser || !e.target.files) return;
+
+                  setFile(e.target.files[0]);
+                  return;
+                }}
+              />
+            </Button>
+
+            <Typography>{'Caricato: ' + file?.name}</Typography>
+            <Button
+              sx={{ mt: 2 }}
+              variant="outlined"
+              disabled={!namePart || !file}
+              onClick={async () => {
+                const idPart = await addPartSongToDatabase(
+                  authUser?.uid ?? '',
+                  props.idSong
+                );
+                await addPartSongToServerStorage(
+                  idPart,
+                  file,
+                  file.type,
+                  props.idSong
+                );
+
+                // Email notification
+                const emailData: EmailPayloadPartSong = {
+                  userId: authUser?.uid ?? '',
+                  songId: props.idSong,
+                  partId: idPart,
+                  nameSong: song?.name ?? '',
+                  email: authUser?.email ?? '',
+                  namePart
+                };
+                const response = await fetch('/api/notification-song-part', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(emailData)
+                });
+                if (response.status !== 200) {
+                  const text = await response.text();
+                  console.error('Error sending email.', text);
+                }
+                props.afterUpload();
+                props.onClose();
+              }}
+            >
+              Invia
+            </Button>
           </Sheet.Scroller>
         </Sheet.Content>
       </Sheet.Container>

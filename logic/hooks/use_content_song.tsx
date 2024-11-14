@@ -38,8 +38,8 @@ export default function useContentSong(
   /**
    * Collections:
    *   Collection      Document     Collection    Document
-   * - custom_songs -> song_id_1 -> version_1  -> {name_file_storage: string, creation_time: timestamp, last_modified: timestamp, author: string, rates?: number}
-   *                   song_id_2
+   * - custom_songs -> song_id_1 -> versions  ->  version_1  -> {id_version: string, creation_time: timestamp, last_modified: timestamp, author: string, rates?: number}
+   *                   song_id_2    parts     ->  part_1     -> {name: string, id_part: string, creation_time: timestamp, last_modified: timestamp, author: string, rates?: number}
    *                   ...
    *
    *

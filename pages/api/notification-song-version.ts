@@ -1,4 +1,4 @@
-import { EmailPayload } from '@/logic/server/emails';
+import { EmailPayloadVersionSong } from '@/logic/server/emails';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import nodemailer from 'nodemailer';
 
@@ -23,7 +23,7 @@ export default async function handler(
       return res.status(405).json({ error: 'Method not allowed' });
     }
   
-    const { userId, songId, nameSong, versionId, email } = req.body as EmailPayload;
+    const { userId, songId, nameSong, versionId, email } = req.body as EmailPayloadVersionSong;
   
     // Validate required fields
     if (!userId || !songId || !nameSong || !versionId) {

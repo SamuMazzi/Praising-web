@@ -39,19 +39,19 @@ const appThemeOptions: ThemeOptions = {
     },
     h1: {
       fontWeight: 700,
-      fontSize: 21
+      fontSize: 24
     },
     h2: {
       fontWeight: 700,
-      fontSize: 18
+      fontSize: 22
     },
     h3: {
       fontWeight: 600,
-      fontSize: 17
+      fontSize: 19
     },
     h4: {
       fontWeight: 600,
-      fontSize: 16
+      fontSize: 17
     },
     h5: {
       fontWeight: 600,

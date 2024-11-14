@@ -42,6 +42,8 @@ import { type CustomSongInfo } from '@/logic/server/database';
 import assert from 'assert';
 import HourglassBottomRoundedIcon from '@mui/icons-material/HourglassBottomRounded';
 import { ModalNews } from '@/components/modals';
+import InterpreterModeRoundedIcon from '@mui/icons-material/InterpreterModeRounded';
+import { getFromStorage } from '@/logic/local_logic';
 
 // This is really useful in the case we'll ever want to split a song in multiple pages (in case it's too long)
 /*
@@ -202,7 +204,6 @@ export default function PraisingAppBar(props: PropsAppBar): JSX.Element {
               <Typography
                 variant="h1"
                 component="h1"
-                fontSize={24}
                 textAlign="center"
                 style={{ color: 'black' }}
                 sx={{ py: verticalPaddingAppBar }}
@@ -544,6 +545,17 @@ export const SongAppBar = (props: PropsSongAppBar): JSX.Element => {
                   </ListItemIcon>
                   <ListItemText primary="Stampa (beta)" />
                 </MenuItem>
+                {getFromStorage('debug_admin') === true && (
+                  <MenuItem
+                    onClick={() => router.push(`${router.asPath}/parts`)}
+                    style={{ fontWeight: 600 }}
+                  >
+                    <ListItemIcon>
+                      <InterpreterModeRoundedIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Seconde voci" />
+                  </MenuItem>
+                )}
                 <MenuItem
                   sx={{ width: 200 }}
                   onClick={() => {

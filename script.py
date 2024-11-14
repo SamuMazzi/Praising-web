@@ -9,8 +9,8 @@ parser = argparse.ArgumentParser(
                 description='Contains some utility functions to help with Praising project')
 
 parser.add_argument('--chords-to-text', dest="chords_to_text", type=bool, default=False, help="This option will populate the folder 'text_chords' with all the lyrics of the chords file without chords")
-parser.add_argument('--fix-service-worker', dest="fix_service_worker", type=bool, default=False, help="This option will fix the service worker file to escape apostrophes in the name of the song")
-parser.add_argument('--generate-revisions', dest="generate_revisions", type=bool, default=False, help="Generate revisions for all files in the 'public' directory")
+parser.add_argument('--fix-service-worker', dest="fix_service_worker", action="store_true", default=False, help="This option will fix the service worker file to escape apostrophes in the name of the song")
+parser.add_argument('--generate-revisions', dest="generate_revisions", action="store_true", default=False, help="Generate revisions for all files in the 'public' directory")
 
 def modify_and_write_files(source_dir: str, target_dir: str):
     """

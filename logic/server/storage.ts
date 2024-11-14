@@ -43,3 +43,35 @@ export const getVersionSong = async (
   const content = await getBlob(pathReference);
   return await content.text();
 };
+
+const getRefPartSong = (songId: string, idPart: string): StorageReference =>
+  ref(storage, `${CUSTOM_SONGS_FOLDER}/${songId}/parts/${idPart}.mp3`);
+
+export const addPartSongToServerStorage = async (
+  idPart: string,
+  contentFile: string,
+  type: string,
+  songId: string
+): Promise<void> => {
+  const pathReference = getRefPartSong(songId, idPart);
+  await uploadString(pathReference, contentFile, 'base64', {
+    contentType: 'audio/mp3'
+  });
+};
+
+export const deletePartSongFromServerStorage = async (
+  idPart: string,
+  songId: string
+): Promise<void> => {
+  const pathReference = getRefPartSong(songId, idPart);
+  await deleteObject(pathReference);
+};
+
+export const getPartSong = async (
+  idPart: string,
+  songId: string
+): Promise<string> => {
+  const pathReference = getRefPartSong(songId, idPart);
+  const content = await getBlob(pathReference);
+  return await content.text();
+};

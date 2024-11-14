@@ -17,13 +17,17 @@ import {
   or,
   increment
 } from 'firebase/firestore';
-import { deleteModifiedSongFromServerStorage } from './storage';
+import {
+  deleteModifiedSongFromServerStorage,
+  deletePartSongFromServerStorage
+} from './storage';
 // import geofire from 'geofire-common';
 
 const firestore = getFirestore(app);
 const USERS_COLLECTION = 'users';
 const CUSTOM_SONGS_COLLECTION = 'songs';
 const VERSIONS_CUSTOM_SONGS_COLLECTION = 'versions';
+const PARTS_SONGS_COLLECTION = 'parts';
 
 interface OnlinePlaylist {
   name: string;
@@ -193,7 +197,9 @@ export interface UserDatabase {
   favoriteSongs?: string[];
   playlists?: string[];
   ownedSongs?: string[];
+  ownedParts?: string[];
   counter_pending_songs?: number;
+  counter_pending_parts?: number;
 }
 
 export const getUserFromDatabase = async (
@@ -267,7 +273,7 @@ export const getInfoEditedSong = async (
     versionId
   );
   const refDoc = await getDoc(docSong);
-  const out = { ...refDoc.data(), idVersion: refDoc.id } as CustomSongInfo;
+  const out = { ...refDoc.data(), versionId: refDoc.id } as CustomSongInfo;
   return out;
 };
 
@@ -290,7 +296,7 @@ export const editEditedSongToDatabase = async (
 };
 
 export interface CustomSongInfo {
-  idVersion: string /* In firebase case the ID of the document */;
+  versionId: string /* In firebase case the ID of the document */;
   creationTime: Timestamp;
   lastModified: Timestamp;
   author: string;
@@ -320,7 +326,119 @@ export const getSongInfoVersions = async (
   );
   const refDocs = await getDocs(q);
   const out = refDocs.docs.map((doc) => {
-    return { ...doc.data(), idVersion: doc.id } as CustomSongInfo;
+    return { ...doc.data(), versionId: doc.id } as CustomSongInfo;
   });
   return out;
+};
+
+// Parts song ----------------------------------------------------------------
+
+export const addPartSongToDatabase = async (
+  userId: string,
+  songId: string
+): Promise<string> => {
+  const newPartDocRef = await addDoc(
+    collection(
+      firestore,
+      CUSTOM_SONGS_COLLECTION,
+      songId,
+      PARTS_SONGS_COLLECTION
+    ),
+    {
+      creationTime: Timestamp.now(),
+      lastModified: Timestamp.now(),
+      author: userId,
+      state: 'pending'
+    }
+  );
+  await updateDoc(doc(firestore, USERS_COLLECTION, userId), {
+    ownedParts: arrayUnion(newPartDocRef.path),
+    counter_pending_parts: increment(1)
+  });
+  return newPartDocRef.id;
+};
+
+export const deletePartSongFromDatabase = async (
+  userId: string,
+  songId: string,
+  idDoc: string
+): Promise<void> => {
+  const docRef = doc(
+    firestore,
+    CUSTOM_SONGS_COLLECTION,
+    songId,
+    PARTS_SONGS_COLLECTION,
+    idDoc
+  );
+  const song = await getInfoPartSong(songId, idDoc);
+  await deleteDoc(docRef);
+  await updateDoc(doc(firestore, USERS_COLLECTION, userId), {
+    ownedPart: arrayRemove(docRef.path),
+    counter_pending_parts: increment(song.state === 'pending' ? -1 : 0)
+  });
+  await deletePartSongFromServerStorage(idDoc, songId);
+};
+
+export const getInfoPartSong = async (
+  songId: string,
+  idPart: string
+): Promise<PartSongInfo> => {
+  const docSong = doc(
+    firestore,
+    CUSTOM_SONGS_COLLECTION,
+    songId,
+    PARTS_SONGS_COLLECTION,
+    idPart
+  );
+  const refDoc = await getDoc(docSong);
+  const out = { ...refDoc.data(), idPart: refDoc.id } as PartSongInfo;
+  return out;
+};
+
+export const editPartSongToDatabase = async (
+  songId: string,
+  idPart: string
+): Promise<void> => {
+  await updateDoc(
+    doc(
+      firestore,
+      CUSTOM_SONGS_COLLECTION,
+      songId,
+      PARTS_SONGS_COLLECTION,
+      idPart
+    ),
+    {
+      lastModified: Timestamp.now()
+    }
+  );
+};
+
+export interface PartSongInfo {
+  name: string;
+  idPart: string /* In firebase case the ID of the document */;
+  creationTime: Timestamp;
+  lastModified: Timestamp;
+  author: string;
+  rates?: number;
+  state: 'approved' | 'pending';
+}
+
+export const getSongInfoParts = async (
+  userId: string,
+  songId: string
+): Promise<PartSongInfo[]> => {
+  const customSongCollections = collection(
+    firestore,
+    CUSTOM_SONGS_COLLECTION,
+    songId,
+    PARTS_SONGS_COLLECTION
+  );
+  const q = query(
+    customSongCollections,
+    or(where('author', '==', userId), where('state', '==', 'approved'))
+  );
+  const refDocs = await getDocs(q);
+  return refDocs.docs.map((doc) => {
+    return { ...doc.data(), idPart: doc.id } as PartSongInfo;
+  });
 };

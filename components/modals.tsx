@@ -352,10 +352,10 @@ interface PropsGenericModal extends GenericProps {
   content: JSX.Element;
 }
 
-function GenericModal(props: PropsGenericModal): JSX.Element {
+export const GenericModal = (props: PropsGenericModal): JSX.Element => {
   return (
     <Modal open={props.open} onClose={props.handleClose}>
       <Box sx={style}>{props.content}</Box>
     </Modal>
   );
-}
+};

@@ -80,7 +80,7 @@ export default function Lectures(): JSX.Element {
           daySelected={dataLiturgia}
           onChangeDate={setDataLiturgia}
         />
-        <Container sx={{ py: 2 }}>
+        <Container sx={{ pb: 2, pt: 4 }}>
           <Typography variant="h2" component="h2" sx={{ pb: 2 }}>
             Prima lettura
           </Typography>
@@ -88,7 +88,7 @@ export default function Lectures(): JSX.Element {
         </Container>
         <Container sx={{ py: 2 }}>
           <>
-            <Typography variant="h2" component="h2">
+            <Typography variant="h2" component="h2" sx={{ pb: 1 }}>
               Salmo Responsoriale
             </Typography>
             {content?.psalm !== undefined ? (

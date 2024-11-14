@@ -22,6 +22,9 @@ import { itIT } from '@mui/x-date-pickers/locales';
  * 6. Add song
  * 7. Set Firebase rules
  * 8. Migration to App Router
+ * 9. Modify categories songs
+ * 10. Apply "pending" state also for modifications?
+ * 11. Maybe add email to creator of version
  *
  * Later:
  * 1. Add Google Analytics (Just to improve, basic is done)

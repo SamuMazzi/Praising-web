@@ -19,7 +19,7 @@ import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import { HideOnScroll, SongTitleAppBar } from './appbar';
 import { getSingleSong } from '@/logic/local_logic';
-import { EmailPayload } from '@/logic/server/emails';
+import { EmailPayloadVersionSong } from '@/logic/server/emails';
 
 interface PropsSongAppBar {
   id: string;
@@ -110,7 +110,7 @@ export const EditableSong = (props: {
     props.setEditMode(true, idVersion);
 
     // Email notification
-    const emailData: EmailPayload = {
+    const emailData: EmailPayloadVersionSong = {
       userId: authUser.uid,
       songId: props.songId,
       versionId: idVersion,

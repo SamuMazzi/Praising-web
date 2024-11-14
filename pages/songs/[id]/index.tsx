@@ -140,7 +140,7 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
   const { content, versions, fetchSong, loadingContent, error } =
     useContentSong(props.id, infoSong?.versionId);
   const songVersionIndex = versions.findIndex(
-    (v) => v.idVersion === infoSong?.versionId
+    (v) => v.versionId === infoSong?.versionId
   );
   const playlist: Playlist | undefined = useAppSelector((state) =>
     props.playlistId !== undefined
@@ -194,7 +194,7 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
   const callbackSetVersionSong = (index: number): void => {
     assert(song !== undefined, 'Song is undefined');
     if (index === songVersionIndex) return;
-    const idVersion = index === -1 ? undefined : versions[index].idVersion;
+    const idVersion = index === -1 ? undefined : versions[index].versionId;
     dispatch(
       setLocalVersionSong({
         id: song.id,
@@ -312,7 +312,7 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
             }}
             idExistingVersion={
               songVersionIndex !== -1
-                ? versions[songVersionIndex].idVersion
+                ? versions[songVersionIndex].versionId
                 : undefined
             }
             versionIndex={songVersionIndex}
