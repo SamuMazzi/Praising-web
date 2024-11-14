@@ -10,6 +10,7 @@ import 'dayjs/locale/it';
 import { type Lettura } from '@/logic/scraper_liturgy';
 import ShimmerSegments from '@/components/shimmer_effect/shimmer_segments';
 import useLecture from '@/logic/hooks/use_lecture';
+import { NextSeo } from 'next-seo';
 
 // TODO: 19 agosto 2024 check because it give some "formatting" error
 
@@ -67,6 +68,7 @@ export default function Lectures(): JSX.Element {
 
   return (
     <main>
+      <NextSeo title="Letture" />
       <Container
         sx={{
           minHeight: '100vh',

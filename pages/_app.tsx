@@ -9,6 +9,9 @@ import React, { useEffect, useState } from 'react';
 import { AuthContextProvider } from '@/logic/context/auth_context';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { itIT } from '@mui/x-date-pickers/locales';
+import { DefaultSeo } from 'next-seo';
+import SEO from '../next-seo.config';
+
 /**
  * Priorities:
  * 0. Improve SEO!!!
@@ -36,7 +39,6 @@ import { itIT } from '@mui/x-date-pickers/locales';
 // TODO: Offline https://github.com/hanford/next-offline
 // TODO: Implementare modo per evitare reload della canzone se già caricata (a volte succede inaspettatamente)
 // TODO: Implementare spazi fra accordi senza testo (per ora solo nelle righe intere senza testo, cerca canzoni con cui testare, sicuro "Mi perdo nel tuo amore")
-import Head from 'next/head';
 import { useFirebaseRoutesAnalytics } from '@/logic/hooks/use_firebase_analytics';
 
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
@@ -67,44 +69,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
 
   return (
     <>
-      <Head>
-        <title>Praising - Gli accordi per i tuoi canti cristiani</title>
-        <meta
-          name="og:title"
-          content="Praising - Gli accordi per i tuoi canti cristiani"
-        />
-        <meta
-          name="description"
-          content="Gli accordi per i tuoi canti cristiani"
-        />
-        <meta
-          name="og:description"
-          content="Gli accordi per i tuoi canti cristiani"
-        />
-        <meta
-          name="viewport"
-          content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/icons/favicon-32x32.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/icons/favicon-16x16.png"
-        />
-        <link rel="manifest" href="/manifest.json" />
-        <link
-          rel="mask-icon"
-          href="/icons/safari-pinned-tab.svg"
-          color="#F0B647"
-        />
-        <link rel="shortcut icon" href="/favicon.ico" />
-      </Head>
+      <DefaultSeo {...SEO} />
       <Provider store={store}>
         <ThemedComponent Component={Component} pageProps={pageProps} />
       </Provider>

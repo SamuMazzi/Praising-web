@@ -5,26 +5,23 @@ import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar';
 import ListSongs from '@/components/list_songs';
 import Head from 'next/head';
 import React from 'react';
+import { NextSeo } from 'next-seo';
 
 export default function SongsPage(): JSX.Element {
   const localSongs = getLocalSongs();
 
   return (
     <>
-      <Head>
-        <title>Canzoni</title>
-        <meta property="og:title" content="Canzoni" key="title" />
-        <meta
-          name="og:description"
-          content={
-            'Qui troverai tutti i testi e accordi dei tuoi canti preferiti!'
+      <NextSeo
+        title="Canzoni"
+        description="Qui troverai tutti i testi e accordi dei tuoi canti preferiti!"
+        additionalMetaTags={[
+          {
+            name: 'keywords',
+            content: 'accordi, canzoniere, chords, cristiani, testi'
           }
-        />
-        <meta
-          name="og:keywords"
-          content="accordi, canzoniere, chords, cristiani, testi"
-        />
-      </Head>
+        ]}
+      />
       <main>
         <Container>
           <PraisingAppBar title="Canzoni" homeVersion />

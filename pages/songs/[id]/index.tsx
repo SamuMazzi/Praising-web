@@ -35,6 +35,7 @@ import assert from 'assert';
 import useContentSong from '@/logic/hooks/use_content_song';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import { EditableSong } from '@/components/editable_song';
+import { NextSeo } from 'next-seo';
 
 SongPage.getInitialProps = async (props: any) => {
   const { id, playlistId } = props.query;
@@ -258,35 +259,17 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
   assert(song !== undefined, 'Song is undefined');
 
   const HeadComponent = (): JSX.Element => (
-    <Head>
-      <title>{song.name} - Praising</title>
-      <meta
-        property="og:title"
-        content={'Praising - ' + song.name}
-        key="title"
-      />
-      <meta
-        name="og:description"
-        content={'Guarda gli accordi del canto ' + song.name}
-      />
-      <meta
-        name="og:keywords"
-        content={
-          song.name + ', accordi, ' + song.author + ', canzoniere, chords'
+    <NextSeo
+      title={song.name}
+      description={'Guarda gli accordi del canto ' + song.name}
+      additionalMetaTags={[
+        {
+          name: 'keywords',
+          content:
+            song.name + ', accordi, ' + song.author + ', canzoniere, chords'
         }
-      />
-      <meta property="title" content={'Praising - ' + song.name} key="title" />
-      <meta
-        name="description"
-        content={'Guarda gli accordi del canto ' + song.name}
-      />
-      <meta
-        name="keywords"
-        content={
-          song.name + ', accordi, ' + song.author + ', canzoniere, chords'
-        }
-      />
-    </Head>
+      ]}
+    />
   );
 
   if (editMode) {
