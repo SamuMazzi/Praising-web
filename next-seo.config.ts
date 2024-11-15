@@ -8,6 +8,38 @@ const config: DefaultSeoProps = {
   themeColor: '#F0B647',
   additionalMetaTags: [
     {
+      name: 'apple-mobile-web-app-status-bar-style',
+      content: 'default'
+    },
+    {
+      name: 'apple-mobile-web-app-title',
+      content: 'Praising'
+    },
+    {
+      name: 'format-detection',
+      content: 'telephone=no'
+    },
+    {
+      name: 'mobile-web-app-capable',
+      content: 'yes'
+    },
+    {
+      name: 'msapplication-config',
+      content: '/icons/browserconfig.xml'
+    },
+    {
+      name: 'msapplication-TileColor',
+      content: '#F0B647'
+    },
+    {
+      name: 'msapplication-tap-highlight',
+      content: 'no'
+    },
+    {
+      name: 'apple-mobile-web-app-capable',
+      content: 'yes'
+    },
+    {
       name: 'viewport',
       content:
         'minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover'

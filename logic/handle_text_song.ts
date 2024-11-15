@@ -1,6 +1,8 @@
-import ChordSheetJS, { type Song, Key, SOLFEGE, SYMBOL } from 'chordsheetjs';
+import ChordSheetJS, { type Song, Key, SOLFEGE } from 'chordsheetjs';
 import * as cheerio from 'cheerio';
 import { type ChordNotations } from './redux/settings_slice';
+
+// TODO: Fix "Re dei re" parsing of chorus lines
 
 interface ParamsRenderSong {
   fileContent: string;
