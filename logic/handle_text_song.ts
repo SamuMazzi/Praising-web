@@ -1,8 +1,7 @@
 import ChordSheetJS, { type Song, Key, SOLFEGE } from 'chordsheetjs';
 import * as cheerio from 'cheerio';
 import { type ChordNotations } from './redux/settings_slice';
-
-// TODO: Fix "Re dei re" parsing of chorus lines
+import type { Element } from 'domhandler';
 
 interface ParamsRenderSong {
   fileContent: string;
@@ -49,22 +48,21 @@ const findLinesChorus = (deserialized: Song): number[] => {
     if (line.items.every(checkChordLyricsPair)) {
       isChordLyricsPair = true;
     }
-    if (line.isChorus() && isChordLyricsPair) {
-      linesChorus.push(cont);
-    }
-    //* Se la riga è fatta solo di testo+accordi e il testo non è vuoto
-    if (
-      isChordLyricsPair &&
-      line.items
+    if (isChordLyricsPair) {
+      const lyrics = line.items
         .map(
           (item) => item instanceof ChordSheetJS.ChordLyricsPair && item.lyrics
         )
         .join('')
-        .trim() !== ''
-    ) {
-      //* Aggiorno solo se è una riga che verrà visualizzata
-      // console.log(cont.toString() + ' ' + line.items.map(item => item instanceof ChordSheetJS.ChordLyricsPair && item.lyrics).join(''))
-      cont += 1;
+        .trim();
+      if (line.isChorus() && lyrics !== '') {
+        linesChorus.push(cont);
+      }
+      //* Se la riga è fatta solo di testo+accordi e il testo non è vuoto
+      if (lyrics !== '') {
+        //* Aggiorno solo se è una riga che verrà visualizzata
+        cont += 1;
+      }
     }
   });
   return linesChorus;
@@ -100,11 +98,15 @@ const boldenChorus = ($: cheerio.CheerioAPI, linesChorus: number[]): void => {
   });
 };
 
-const rowHasLyrics = ($: cheerio.CheerioAPI, row: any): boolean => {
-  const lyricsPieces = $(row)
+const getLyricsRow = ($: cheerio.CheerioAPI, row: Element): string => {
+  return $(row)
     .find(`.${COLUMN_CSS} > .${LYRICS_CSS}`)
-    .filter((i, l) => $(l).text().trim() !== '');
-  return lyricsPieces.length !== 0;
+    .filter((i, l) => $(l).text().trim() !== '')
+    .text();
+};
+
+const rowHasLyrics = ($: cheerio.CheerioAPI, row: Element): boolean => {
+  return getLyricsRow($, row).length !== 0;
 };
 
 const measureText = (text: string, fontSize: number): number => {
@@ -206,7 +208,7 @@ const editHTML = (
  * - It sets spaces around chords without lyrics
  * - Fix bug in ChordSheetJS: if there's an empty chord with only whitespace lyrics, it renders an empty <div>
  */
-const internalEditTML = ($: cheerio.CheerioAPI, row: any): void => {
+const internalEditTML = ($: cheerio.CheerioAPI, row: Element): void => {
   // TODO: Understand better the purpose of this function
 
   //* Only lyrics
