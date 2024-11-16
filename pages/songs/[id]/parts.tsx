@@ -5,10 +5,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InsertCommentRoundedIcon from '@mui/icons-material/InsertCommentRounded';
-import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
-import Routes from '@/logic/routes';
-import Link from 'next/link';
 import { getSingleSong } from '@/logic/local_logic';
 import React, { useState } from 'react';
 import { GenericModal } from '@/components/modals';
@@ -18,9 +14,13 @@ import Typography from '@mui/material/Typography';
 import AudioPlayer, { RHAP_UI } from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 import { ModalBottomSheetAddPart } from '@/components/bottom_sheet';
-import Button from '@mui/material/Button';
-
-// TODO: Add pending parts if you're the owner
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import IconButton from '@mui/material/IconButton';
+import Box from '@mui/material/Box';
+import Tooltip from '@mui/material/Tooltip';
+import HourglassBottomRoundedIcon from '@mui/icons-material/HourglassBottomRounded';
+import PlayCircleFilledRoundedIcon from '@mui/icons-material/PlayCircleFilledRounded';
+import PauseCircleFilledRoundedIcon from '@mui/icons-material/PauseCircleFilledRounded';
 
 PartsPage.getInitialProps = async (props: any) => {
   const { id } = props.query;
@@ -53,16 +53,14 @@ export default function PartsPage(props: PropsPartsPage): JSX.Element {
       >
         <PraisingAppBar title={'Parti - ' + song?.name} backIcon />
         <Container sx={{ py: verticalPaddingAppBar + 2 }} />
-        <Button
-          onClick={() => setOpenNewPart(true)}
-          variant="outlined"
-          sx={{ m: 2 }}
-        >
-          Carica una nuova parte
-        </Button>
-        <Typography variant="h2" component="h2" sx={{ mb: 4, mt: 2 }}>
-          Seconde voci
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', my: 2 }}>
+          <Typography variant="h2" component="h2" sx={{ mr: 2 }}>
+            Seconde voci
+          </Typography>
+          <IconButton color="primary" onClick={() => setOpenNewPart(true)}>
+            <AddRoundedIcon />
+          </IconButton>
+        </Box>
         {loadingParts ? (
           <CircularProgress />
         ) : parts.length === 0 ? (
@@ -72,6 +70,7 @@ export default function PartsPage(props: PropsPartsPage): JSX.Element {
               textAlign: 'center',
               fontWeight: 400
             }}
+            sx={{ mt: 4 }}
             variant="h4"
             component="h4"
           >
@@ -79,17 +78,16 @@ export default function PartsPage(props: PropsPartsPage): JSX.Element {
           </Typography>
         ) : (
           <List>
-            <ListItem disablePadding>
-              <ListItemButton LinkComponent={Link} href={Routes.Login}>
-                <ListItemIcon>
-                  <AccountCircleRoundedIcon />
-                </ListItemIcon>
-                <ListItemText primary="Account" />
-              </ListItemButton>
-            </ListItem>
             {parts.map((p) => {
               return (
-                <ListItem disablePadding key={p.idPart}>
+                <ListItem key={p.idPart} sx={{ my: 1, borderRadius: 8 }}>
+                  {p.state === 'pending' && (
+                    <ListItemIcon>
+                      <Tooltip title="In revisione">
+                        <HourglassBottomRoundedIcon />
+                      </Tooltip>
+                    </ListItemIcon>
+                  )}
                   <ListItemButton
                     onClick={() => {
                       setPart(p.idPart);
@@ -102,14 +100,6 @@ export default function PartsPage(props: PropsPartsPage): JSX.Element {
                 </ListItem>
               );
             })}
-            <ListItem disablePadding>
-              <ListItemButton LinkComponent={Link} href={Routes.Feedback}>
-                <ListItemIcon>
-                  <InsertCommentRoundedIcon />
-                </ListItemIcon>
-                <ListItemText primary="Feedback" />
-              </ListItemButton>
-            </ListItem>
           </List>
         )}
         <GenericModal
@@ -130,7 +120,10 @@ export default function PartsPage(props: PropsPartsPage): JSX.Element {
                   RHAP_UI.ADDITIONAL_CONTROLS,
                   RHAP_UI.MAIN_CONTROLS
                 ]}
-                // customIcons={}
+                customIcons={{
+                  play: <PlayCircleFilledRoundedIcon />,
+                  pause: <PauseCircleFilledRoundedIcon />
+                }}
               />
             )
           }
@@ -141,7 +134,6 @@ export default function PartsPage(props: PropsPartsPage): JSX.Element {
           afterUpload={() => fetchParts()}
           idSong={props.id}
         />
-        {/** TODO: Add button to add parts, and check if name already exists */}
       </Container>
     </main>
   );

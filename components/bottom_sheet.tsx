@@ -1,6 +1,6 @@
 import { Sheet } from 'react-modal-sheet';
 import ListSongs from './list_songs';
-import { getLocalSongs } from '@/logic/local_logic';
+import { getLocalSongs, getSingleSong } from '@/logic/local_logic';
 import { useAppSelector } from '@/logic/redux/store';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -10,13 +10,17 @@ import ListPlaylist from './list_playlist';
 import Button from '@mui/material/Button';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import { useTheme } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
+import Grid from '@mui/material/Grid2';
 import TextField from '@mui/material/TextField';
 import React, { useState, ChangeEvent } from 'react';
 import useFirebaseAuth from '@/logic/hooks/use_auth';
-import { addPartSongToDatabase } from '@/logic/server/database';
+import {
+  addPartSongToDatabase,
+  checkNamePartSongToDatabase
+} from '@/logic/server/database';
 import { EmailPayloadPartSong } from '@/logic/server/emails';
 import { addPartSongToServerStorage } from '@/logic/server/storage';
-import song from '@/pages/api/song';
 
 interface PropsModalBottomSheet {
   open: boolean;
@@ -76,7 +80,65 @@ export function ModalBottomSheetAddPart(
   const { authUser, loading } = useFirebaseAuth();
   const fileInput = React.useRef<any>();
   const [namePart, setNamePart] = useState('');
-  const [file, setFile] = useState<any>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [loadingUpload, setLoadingUpload] = useState(false);
+  const song = getSingleSong(props.idSong);
+
+  const toBase64 = (file: File) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+    });
+
+  const onSubmit = async () => {
+    if (!authUser || !file) return;
+
+    const sameNameAlreadyExists = await checkNamePartSongToDatabase(
+      namePart,
+      props.idSong
+    );
+    if (sameNameAlreadyExists) {
+      // TODO: Change this alert with a snackbar
+      alert('Esiste già una parte con lo stesso nome.');
+      return;
+    }
+    const base64File = ((await toBase64(file)) as string).split(',')[1];
+
+    const idPart = await addPartSongToDatabase(
+      authUser.uid,
+      props.idSong,
+      namePart
+    );
+    await addPartSongToServerStorage(
+      idPart,
+      base64File,
+      file.type,
+      props.idSong
+    );
+
+    // Email notification
+    const emailData: EmailPayloadPartSong = {
+      userId: authUser.uid,
+      songId: props.idSong,
+      partId: idPart,
+      nameSong: song?.name ?? '',
+      email: authUser.email ?? '',
+      namePart
+    };
+    const response = await fetch('/api/notification-song-part', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(emailData)
+    });
+    if (response.status !== 200) {
+      const text = await response.text();
+      console.error('Error sending email.', text);
+    }
+    props.afterUpload();
+    props.onClose();
+  };
 
   return (
     <Sheet isOpen={props.open} onClose={props.onClose}>
@@ -86,76 +148,84 @@ export function ModalBottomSheetAddPart(
         </Sheet.Header>
         <Sheet.Content className={theme.palette.mode}>
           <Sheet.Scroller style={{ marginLeft: 15, marginRight: 15 }}>
-            <TextField
-              sx={{ mt: 2 }}
-              placeholder="Nome della parte"
-              value={namePart}
-              onChange={(e) => setNamePart(e.target.value)}
-            />
-            <Button
-              sx={{ my: 3 }}
-              style={{ textAlign: 'center' }}
-              variant="contained"
-              component="label"
-              color="primary"
+            <Grid
+              container
+              spacing={0}
+              direction="column"
+              alignItems="center"
+              sx={{ mt: 4 }}
             >
-              Carica audio
-              <input
-                hidden
-                ref={fileInput}
-                multiple={false}
-                type="file"
-                accept="audio/*"
-                onChange={async (e: ChangeEvent<HTMLInputElement>) => {
-                  if (!authUser || !e.target.files) return;
-
-                  setFile(e.target.files[0]);
-                  return;
-                }}
-              />
-            </Button>
-
-            <Typography>{'Caricato: ' + file?.name}</Typography>
-            <Button
-              sx={{ mt: 2 }}
-              variant="outlined"
-              disabled={!namePart || !file}
-              onClick={async () => {
-                const idPart = await addPartSongToDatabase(
-                  authUser?.uid ?? '',
-                  props.idSong
-                );
-                await addPartSongToServerStorage(
-                  idPart,
-                  file,
-                  file.type,
-                  props.idSong
-                );
-
-                // Email notification
-                const emailData: EmailPayloadPartSong = {
-                  userId: authUser?.uid ?? '',
-                  songId: props.idSong,
-                  partId: idPart,
-                  nameSong: song?.name ?? '',
-                  email: authUser?.email ?? '',
-                  namePart
-                };
-                const response = await fetch('/api/notification-song-part', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify(emailData)
-                });
-                if (response.status !== 200) {
-                  const text = await response.text();
-                  console.error('Error sending email.', text);
-                }
-                props.afterUpload();
-                props.onClose();
-              }}
-            >
-              Invia
-            </Button>
+              <Grid>
+                <Typography variant="h6" component="h2">
+                  Carica una parte
+                </Typography>
+                <Typography variant="body2" component="p">
+                  Carica una parte della canzone per poterla condividere con gli
+                  altri membri della comunità.
+                </Typography>
+                <Typography variant="h6" component="h2" sx={{ mt: 4 }}>
+                  Nome della parte
+                </Typography>
+                <Typography variant="body2" component="p">
+                  Inserisci il nome della parte che stai per caricare.
+                </Typography>
+              </Grid>
+              <Grid sx={{ mb: 2 }}>
+                <TextField
+                  sx={{ mt: 2 }}
+                  placeholder="Nome della parte"
+                  value={namePart}
+                  onChange={(e) => setNamePart(e.target.value)}
+                />
+              </Grid>
+              <Grid>
+                <Button
+                  sx={{ my: 3 }}
+                  style={{ textAlign: 'center' }}
+                  variant="contained"
+                  component="label"
+                  color="primary"
+                >
+                  Carica audio
+                  <input
+                    hidden
+                    ref={fileInput}
+                    multiple={false}
+                    type="file"
+                    accept="audio/*"
+                    onChange={async (e: ChangeEvent<HTMLInputElement>) => {
+                      if (!authUser || !e.target.files) return;
+                      setFile(e.target.files[0]);
+                    }}
+                  />
+                </Button>
+              </Grid>
+              <Grid>
+                <Typography>
+                  {file ? 'Caricato: ' + file?.name : 'Nessun file caricato'}
+                </Typography>
+              </Grid>
+              <Grid sx={{ mt: 2 }}>
+                {loadingUpload ? (
+                  <CircularProgress />
+                ) : (
+                  <Button
+                    variant="outlined"
+                    disabled={!namePart || !file}
+                    onClick={async () => {
+                      setLoadingUpload(true);
+                      try {
+                        await onSubmit();
+                      } finally {
+                        setLoadingUpload(false);
+                      }
+                    }}
+                  >
+                    Invia
+                  </Button>
+                )}
+              </Grid>
+            </Grid>
           </Sheet.Scroller>
         </Sheet.Content>
       </Sheet.Container>

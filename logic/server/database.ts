@@ -333,9 +333,29 @@ export const getSongInfoVersions = async (
 
 // Parts song ----------------------------------------------------------------
 
+/**
+ * Checks if a part with the same name already exists in the database
+ * @returns True if the part already exists, false otherwise
+ */
+export const checkNamePartSongToDatabase = async (
+  namePart: string,
+  songId: string
+): Promise<boolean> => {
+  const col = collection(
+    firestore,
+    CUSTOM_SONGS_COLLECTION,
+    songId,
+    PARTS_SONGS_COLLECTION
+  );
+  const q = query(col, where('name', '==', namePart));
+  const refDocs = await getDocs(q);
+  return refDocs.docs.length !== 0;
+};
+
 export const addPartSongToDatabase = async (
   userId: string,
-  songId: string
+  songId: string,
+  namePart: string
 ): Promise<string> => {
   const newPartDocRef = await addDoc(
     collection(
@@ -348,7 +368,8 @@ export const addPartSongToDatabase = async (
       creationTime: Timestamp.now(),
       lastModified: Timestamp.now(),
       author: userId,
-      state: 'pending'
+      state: 'pending',
+      name: namePart
     }
   );
   await updateDoc(doc(firestore, USERS_COLLECTION, userId), {

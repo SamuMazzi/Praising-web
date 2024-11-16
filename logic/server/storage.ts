@@ -5,6 +5,7 @@ import {
   uploadString,
   getBlob,
   deleteObject,
+  getDownloadURL,
   type StorageReference
 } from 'firebase/storage';
 
@@ -55,7 +56,7 @@ export const addPartSongToServerStorage = async (
 ): Promise<void> => {
   const pathReference = getRefPartSong(songId, idPart);
   await uploadString(pathReference, contentFile, 'base64', {
-    contentType: 'audio/mp3'
+    contentType: type
   });
 };
 
@@ -72,6 +73,7 @@ export const getPartSong = async (
   songId: string
 ): Promise<string> => {
   const pathReference = getRefPartSong(songId, idPart);
+  return await getDownloadURL(pathReference);
   const content = await getBlob(pathReference);
   return await content.text();
 };
