@@ -23,10 +23,10 @@ export default async function handler(
       return res.status(405).json({ error: 'Method not allowed' });
     }
   
-    const { userId, songId, nameSong, partId, email, namePart } = req.body as EmailPayloadPartSong;
+    const { userName, songId, nameSong, partId, email, namePart } = req.body as EmailPayloadPartSong;
   
     // Validate required fields
-    if (!userId || !songId || !nameSong || !partId || !namePart) {
+    if (!userName || !songId || !nameSong || !partId || !namePart) {
       return res.status(400).json({ 
         error: 'All fields are required (message, userId, songId, nameSong, versionId)' 
       });
@@ -55,7 +55,7 @@ export default async function handler(
             <li><strong>Song ID:</strong> ${songId}</li>
             <li><strong>Part ID of the song:</strong> ${partId}</li>
             <li><strong>Part name:</strong> ${namePart}</li>
-            <li><strong>Shared by User ID:</strong> ${userId}</li>
+            <li><strong>Shared by User:</strong> ${userName}</li>
             <li><strong>User email:</strong> ${email}</li>
           </ul>
         `

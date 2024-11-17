@@ -21,7 +21,7 @@ interface DataInfo extends InfoRendering {
 
 const generateJsPdfStdObject = async (): Promise<jsPDF> => {
   const jsPDFModule = await import('jspdf');
-  return new jsPDFModule.jsPDF('p', 'mm', 'a4');
+  return new jsPDFModule.jsPDF('p', 'mm', 'a4', true);
 };
 
 export const printDocument = async (
@@ -56,11 +56,14 @@ class SongPDF {
   }
 
   public async createPdf(songIds: string[], titleFile: string): Promise<void> {
-    const futures = songIds.map(async (idSong) => {
+    /* const futures = songIds.map(async (idSong) => {
       await this.createSinglePageSong(idSong);
     });
-    // TODO: Maybe order is not preserved
-    await Promise.all(futures);
+    // TODO: Order is not preserved
+    await Promise.all(futures); */
+    for (const idSong of songIds) {
+      await this.createSinglePageSong(idSong);
+    }
 
     this.pdf.deletePage(1); // To fix the first empty page
     this.pdf.save(`Praising - ${titleFile}.pdf`);
@@ -120,7 +123,16 @@ class SongPDF {
       this.pdf.setFillColor(this.infoRendering.backgroundColor);
       this.pdf.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT + 5, 'F');
     }
-    this.pdf.addImage(imgData, 'PNG', 0, yOffset, imgWidth, imgHeight);
+    this.pdf.addImage(
+      imgData,
+      'PNG',
+      0,
+      yOffset,
+      imgWidth,
+      imgHeight,
+      undefined,
+      'FAST'
+    );
     this.availableHeightPage -= imgHeight;
   }
 }

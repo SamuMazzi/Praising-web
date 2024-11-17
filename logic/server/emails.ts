@@ -7,7 +7,7 @@ export interface EmailPayloadVersionSong {
 }
 
 export interface EmailPayloadPartSong {
-  userId: string;
+  userName: string;
   songId: string;
   partId: string;
   namePart: string;

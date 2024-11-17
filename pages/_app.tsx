@@ -18,17 +18,16 @@ import SEO from '../next-seo.config';
  * 0. Improve SEO!!!
  * 1. Offline
  * 2. Tutorial (finish and better styling, actually also the initial one should be changed)
- * 3. PDF (finish) -> size of print depend on size of the screen from which you print
+ * 3. PDF (finish, broken at least in smarthpones) -> size of print depend on size of the screen from which you print
  * https://stackoverflow.com/questions/45868042/figuring-out-how-to-mock-the-window-size-changing-for-a-react-component-test
  * https://stackoverflow.com/questions/63510429/how-to-test-different-screen-widths-using-jest
- * 4. Share back voices -> put them in a tmp part before accepting them and also add button to let user segnalate them
+ * 4. Add button to live record backvoice
  * 5. Share playlist -> you simply save the playlist on playlist collection (with user as owner), until it's private you don't even check online if there are modifications
  * 6. Add song
  * 7. Set Firebase rules
  * 8. Migration to App Router
  * 9. Modify categories songs
  * 10. Apply "pending" state also for modifications?
- * 11. Maybe add email to creator of version
  *
  * Later:
  * 1. Add Google Analytics (Just to improve, basic is done)

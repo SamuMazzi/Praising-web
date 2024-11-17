@@ -18,6 +18,7 @@ import PrintIcon from '@mui/icons-material/PrintRounded';
 import { useTheme } from '@mui/material';
 import { playlistToPdf } from '@/logic/song_to_pdf';
 import { type ChordNotations } from '@/logic/redux/settings_slice';
+import { PrintButton } from './print_button';
 
 interface PropsMenuPlaylist {
   anchorEl: HTMLElement | null;
@@ -61,7 +62,7 @@ export const MenuPlaylist = (props: PropsMenuPlaylist): JSX.Element => {
     >
       <RWebShare
         data={{
-          text: 'Visualizza la playlist ' + playlist.name + " su 'Praising'!",
+          text: 'Visualizza la playlist ' + playlist.name + " su 'Praising'!\n",
           url:
             Routes.Base +
             Routes.SharePlaylist +
@@ -93,21 +94,16 @@ export const MenuPlaylist = (props: PropsMenuPlaylist): JSX.Element => {
         </ListItemIcon>
         <ListItemText primary="Modifica il nome" />
       </MenuItem>
-      <MenuItem
-        onClick={() => {
-          void playlistToPdf(playlist.name, {
+      <PrintButton
+        onClick={async () => {
+          await playlistToPdf(playlist.name, {
             backgroundColor: theme.palette.background.default,
             textColor: theme.palette.text.primary,
             chordNotation,
             songs: playlist.songs
           });
         }}
-      >
-        <ListItemIcon>
-          <PrintIcon />
-        </ListItemIcon>
-        <ListItemText primary="Stampa (beta)" />
-      </MenuItem>
+      />
       <MenuItem
         onClick={() => {
           saveToStorage('deleting_playlist', playlist.id, 'sessionStorage');

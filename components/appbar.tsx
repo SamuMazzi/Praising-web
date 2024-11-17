@@ -28,7 +28,6 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { setChordNotation } from '@/logic/redux/settings_slice';
 import ShareIcon from '@mui/icons-material/Share';
-import PrintIcon from '@mui/icons-material/PrintRounded';
 import { RWebShare } from 'react-web-share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {
@@ -37,13 +36,14 @@ import {
 } from '@/logic/redux/user_info_slice';
 import { MenuPlaylist } from './menus';
 import { SOLFEGE, SYMBOL } from 'chordsheetjs';
-import { printDocument } from '@/logic/song_to_pdf';
 import { type CustomSongInfo } from '@/logic/server/database';
 import assert from 'assert';
 import HourglassBottomRoundedIcon from '@mui/icons-material/HourglassBottomRounded';
 import { ModalNews } from '@/components/modals';
 import InterpreterModeRoundedIcon from '@mui/icons-material/InterpreterModeRounded';
 import { getFromStorage } from '@/logic/local_logic';
+import { PrintButton } from './print_button';
+import { printDocument } from '@/logic/song_to_pdf';
 
 // This is really useful in the case we'll ever want to split a song in multiple pages (in case it's too long)
 /*
@@ -531,20 +531,15 @@ export const SongAppBar = (props: PropsSongAppBar): JSX.Element => {
                   </ListItemIcon>
                   <ListItemText>Preferiti</ListItemText>
                 </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    void printDocument(props.id, {
+                <PrintButton
+                  onClick={async () => {
+                    await printDocument(props.id, {
                       backgroundColor: theme.palette.background.default,
                       textColor: theme.palette.text.primary,
                       chordNotation
                     });
                   }}
-                >
-                  <ListItemIcon>
-                    <PrintIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Stampa (beta)" />
-                </MenuItem>
+                />
                 {getFromStorage('debug_admin') === true && (
                   <MenuItem
                     onClick={() => router.push(`${router.asPath}/parts`)}

@@ -80,6 +80,7 @@ export function ModalBottomSheetAddPart(
   const { authUser, loading } = useFirebaseAuth();
   const fileInput = React.useRef<any>();
   const [namePart, setNamePart] = useState('');
+  const [nameAuthor, setNameAuthor] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [loadingUpload, setLoadingUpload] = useState(false);
   const song = getSingleSong(props.idSong);
@@ -93,7 +94,7 @@ export function ModalBottomSheetAddPart(
     });
 
   const onSubmit = async () => {
-    if (!authUser || !file) return;
+    if (!authUser || !file || !nameAuthor) return;
 
     const sameNameAlreadyExists = await checkNamePartSongToDatabase(
       namePart,
@@ -120,7 +121,7 @@ export function ModalBottomSheetAddPart(
 
     // Email notification
     const emailData: EmailPayloadPartSong = {
-      userId: authUser.uid,
+      userName: nameAuthor,
       songId: props.idSong,
       partId: idPart,
       nameSong: song?.name ?? '',
@@ -144,7 +145,7 @@ export function ModalBottomSheetAddPart(
     <Sheet isOpen={props.open} onClose={props.onClose}>
       <Sheet.Container>
         <Sheet.Header>
-          <TitleModal onClose={props.onClose} title={'Carica un audio'} />
+          <TitleModal onClose={props.onClose} title={'Carica una parte'} />
         </Sheet.Header>
         <Sheet.Content className={theme.palette.mode}>
           <Sheet.Scroller style={{ marginLeft: 15, marginRight: 15 }}>
@@ -156,18 +157,18 @@ export function ModalBottomSheetAddPart(
               sx={{ mt: 4 }}
             >
               <Grid>
-                <Typography variant="h6" component="h2">
-                  Carica una parte
-                </Typography>
                 <Typography variant="body2" component="p">
-                  Carica una parte della canzone per poterla condividere con gli
-                  altri membri della comunità.
+                  {
+                    "Carica una parte della canzone per poterla condividere con gli altri membri della comunità. Dovrà prima essere approvata dall'amministratore, poi sarà visibile a tutti"
+                  }
                 </Typography>
                 <Typography variant="h6" component="h2" sx={{ mt: 4 }}>
                   Nome della parte
                 </Typography>
                 <Typography variant="body2" component="p">
-                  Inserisci il nome della parte che stai per caricare.
+                  {
+                    'Inserisci il nome della parte che stai per caricare. (Per esempio: "Contralti", "Tenori", ecc.)'
+                  }
                 </Typography>
               </Grid>
               <Grid sx={{ mb: 2 }}>
@@ -176,6 +177,24 @@ export function ModalBottomSheetAddPart(
                   placeholder="Nome della parte"
                   value={namePart}
                   onChange={(e) => setNamePart(e.target.value)}
+                />
+              </Grid>
+              <Grid>
+                <Typography variant="h6" component="h2" sx={{ mt: 4 }}>
+                  Autore
+                </Typography>
+                <Typography variant="body2" component="p">
+                  {
+                    "Inserisci il nome dell'autore della parte che stai per caricare."
+                  }
+                </Typography>
+              </Grid>
+              <Grid sx={{ mb: 2 }}>
+                <TextField
+                  sx={{ mt: 2 }}
+                  placeholder="Autore"
+                  value={nameAuthor}
+                  onChange={(e) => setNameAuthor(e.target.value)}
                 />
               </Grid>
               <Grid>
@@ -211,7 +230,7 @@ export function ModalBottomSheetAddPart(
                 ) : (
                   <Button
                     variant="outlined"
-                    disabled={!namePart || !file}
+                    disabled={!namePart || !file || !nameAuthor}
                     onClick={async () => {
                       setLoadingUpload(true);
                       try {
