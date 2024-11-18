@@ -12,7 +12,6 @@ import { itIT } from '@mui/x-date-pickers/locales';
 import { DefaultSeo } from 'next-seo';
 import SEO from '../next-seo.config';
 
-// TODO: Fix "Install pwa" button that never appears first time you go into settings page
 /**
  * Priorities:
  * 0. Improve SEO!!!

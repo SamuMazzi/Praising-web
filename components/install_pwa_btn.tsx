@@ -5,20 +5,37 @@ import React, { useEffect, useState } from 'react';
 import InstallMobileRoundedIcon from '@mui/icons-material/InstallMobileRounded';
 import InstallDesktopRoundedIcon from '@mui/icons-material/InstallDesktopRounded';
 
-const InstallPWA = (): JSX.Element | null => {
+const InstallPWA = (): JSX.Element => {
   const [supportsPWA, setSupportsPWA] = useState(false);
   const [promptInstall, setPromptInstall] = useState<any>(null);
 
   useEffect(() => {
+    // Check for multiple PWA support indicators
+    const isPWASupported = () => {
+      const isStandalone = window.matchMedia(
+        '(display-mode: standalone)'
+      ).matches;
+      const hasBeforeInstallPrompt = 'onbeforeinstallprompt' in window;
+      const hasServiceWorker = 'serviceWorker' in navigator;
+
+      return hasBeforeInstallPrompt && hasServiceWorker && !isStandalone;
+    };
+
     const handler = (e: any): void => {
       e.preventDefault();
-      setSupportsPWA(true);
+      setSupportsPWA(isPWASupported());
       setPromptInstall(e);
     };
+
+    // https://stackoverflow.com/a/68525181/15212468
+    // Initial check
+    setSupportsPWA(isPWASupported());
+
+    // Add event listener
     window.addEventListener('beforeinstallprompt', handler);
 
     return () => {
-      window.removeEventListener('transitionend', handler);
+      window.removeEventListener('beforeinstallprompt', handler);
     };
   }, []);
 
@@ -30,7 +47,7 @@ const InstallPWA = (): JSX.Element | null => {
     promptInstall.prompt();
   };
   if (!supportsPWA) {
-    return null;
+    return <></>;
   }
   return (
     <ListItemButton onClick={onClick}>
