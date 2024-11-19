@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import ListItemButton from '@mui/material/ListItemButton';
 import {
   handleSongForPlaylist,
-  type Playlist
+  setPlaylist
 } from '@/logic/redux/playlist_slice';
 import { useAppDispatch } from '@/logic/redux/store';
 import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded';
@@ -17,6 +17,7 @@ import MusicNoteRoundedIcon from '@mui/icons-material/MusicNoteRounded';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { useTheme, alpha } from '@mui/material';
 import React from 'react';
+import { setServerPlaylist, type Playlist } from '@/logic/server/database';
 
 /**
  * 
@@ -75,14 +76,11 @@ export function SelectableSongTile(
     <ListItemButton
       sx={{ borderRadius: 8, my: 1 }}
       selected={selected}
-      onClick={() =>
-        dispatch(
-          handleSongForPlaylist({
-            idSong: props.song.id,
-            id: props.playlist.id
-          })
-        )
-      }
+      onClick={() => {
+        const songs = handleSongForPlaylist(props.playlist, props.song.id);
+        dispatch(setPlaylist({ ...props.playlist, songs }));
+        void setServerPlaylist(props.playlist);
+      }}
       style={{
         backgroundColor: selected
           ? alpha(theme.palette.primary.main, 0.4)

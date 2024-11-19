@@ -15,7 +15,10 @@ import {
   query,
   where,
   or,
-  increment
+  increment,
+  type DocumentSnapshot,
+  onSnapshot,
+  type Unsubscribe
 } from 'firebase/firestore';
 import {
   deleteModifiedSongFromServerStorage,
@@ -28,79 +31,116 @@ const USERS_COLLECTION = 'users';
 const CUSTOM_SONGS_COLLECTION = 'songs';
 const VERSIONS_CUSTOM_SONGS_COLLECTION = 'versions';
 const PARTS_SONGS_COLLECTION = 'parts';
+const PLAYLIST_COLLECTION = 'playlist';
 
-interface OnlinePlaylist {
+export interface Playlist {
   name: string;
   songs: string[];
-  notes?: string;
+  id: string;
   owner: string;
+  notes?: string;
+  shared: boolean;
+  creationTime: Timestamp;
+  lastModified: Timestamp | number;
 }
 
-// TODO: When you share it you want to decide if copying it or just accessing it. In the first case another playlist will be created
-// but it will be personal, in the second case the playlist will be kept in sync with the original but it won't be editable
-
-/* PLAYLIST
-export const addPlaylist = async (
+/* PLAYLIST */
+export const addServerPlaylist = async (
+  userId: string,
   name: string,
   songs: string[]
 ): Promise<Playlist> => {
-  const onlinePlaylist: OnlinePlaylist = {
+  const onlinePlaylist: Omit<Playlist, 'id'> = {
     name,
     songs,
-    owner: '' // TODO: Add personal id
+    owner: userId,
+    creationTime: Timestamp.now(),
+    lastModified: Timestamp.now(),
+    shared: false
   };
   const docRef = await addDoc(
-    collection(firestore, 'playlists'),
+    collection(firestore, PLAYLIST_COLLECTION),
     onlinePlaylist
   );
-  const out: Playlist = {
-    id: docRef.id,
-    name,
-    songs
-  };
-  return out;
+  return { ...onlinePlaylist, id: docRef.id };
 };
 
-export const getMyPlaylists = async (
-  name: string,
-  songs: string[]
-): Promise<Playlist> => {
-  // TODO: Add personal id and implement everything
-  const docRef = await getDoc(doc(firestore, USERS_COLLECTION, 'id'));
-  const out: Playlist = {
-    id: docRef.id,
-    name,
-    songs
-  };
-  return out;
+export const setServerPlaylist = async (playlist: Playlist) => {
+  await setDoc(doc(firestore, PLAYLIST_COLLECTION, playlist.id), {
+    ...playlist,
+    lastModified:
+      typeof playlist.lastModified === 'number'
+        ? Timestamp.fromMillis(playlist.lastModified)
+        : playlist.lastModified
+  });
+};
+
+export const getMyPlaylists = async (userId: string): Promise<Playlist[]> => {
+  const c = collection(firestore, PLAYLIST_COLLECTION);
+  const q = query(c, where('owner', '==', userId));
+
+  const docRef = await getDocs(q);
+  return docRef.docs.map((doc) => {
+    return {
+      ...doc.data(),
+      id: doc.id
+    } as Playlist;
+  });
 };
 
 // Get all the playlists that have been shared with me
-export const getPersonalPlaylists = async (
-  name: string,
-  songs: string[]
-): Promise<Playlist> => {
-  const docRef = await getDoc(doc(firestore, USERS_COLLECTION, 'persona-id'));
-  const out: Playlist = {
-    id: docRef.id,
-    name,
-    songs
-  };
-  return out;
+export const getSharedPlaylists = async (
+  sharedPlaylist: string[] /* Array of playlist id, got from user profile */
+): Promise<Playlist[]> => {
+  const futures: Promise<DocumentSnapshot<any>>[] = [];
+  for (const playlistId of sharedPlaylist) {
+    futures.push(getDoc(doc(firestore, PLAYLIST_COLLECTION, playlistId)));
+  }
+  const playlists = await Promise.all(futures);
+  return playlists.map((doc) => {
+    return {
+      ...doc.data(),
+      id: doc.id
+    } as Playlist;
+  });
 };
 
-export const getSinglePlaylist = async (
-  idPlaylist: string
-): Promise<Playlist> => {
-  const docRef = await getDoc(doc(firestore, 'playlists', idPlaylist));
-  const out: Playlist = {
-    id: docRef.id,
-    name: docRef.get('name'),
-    songs: docRef.get('songs')
-  };
-  return out;
+export const addSharedPlaylist = async (userId: string, playlistId: string) => {
+  await setDoc(
+    doc(firestore, USERS_COLLECTION, userId),
+    {
+      sharedPlaylists: arrayUnion(playlistId)
+    },
+    { merge: true }
+  );
 };
-*/
+
+export const removeSharedPlaylist = async (
+  userId: string,
+  playlistId: string
+) => {
+  await setDoc(
+    doc(firestore, USERS_COLLECTION, userId),
+    {
+      sharedPlaylists: arrayRemove(playlistId)
+    },
+    { merge: true }
+  );
+};
+
+export const listenOnSinglePlaylist = (
+  idPlaylist: string,
+  onChange: (playlist: Playlist) => void
+): Unsubscribe => {
+  const unsubscribe = onSnapshot(
+    doc(firestore, PLAYLIST_COLLECTION, idPlaylist),
+    (snapshot) => {
+      const newPlaylist = { ...snapshot.data(), id: snapshot.id } as Playlist;
+      onChange(newPlaylist);
+    }
+  );
+  return unsubscribe;
+};
 
 /*
 export const getActiveSessions = async (center: [number, number], radius_meters: number) => {
@@ -195,7 +235,7 @@ export const addUserToDatabase = async (userId: string): Promise<void> => {
 
 export interface UserDatabase {
   favoriteSongs?: string[];
-  playlists?: string[];
+  sharedPlaylists?: string[] /* Array of playlist id got from other users */;
   ownedSongs?: string[];
   ownedParts?: string[];
   counter_pending_songs?: number;

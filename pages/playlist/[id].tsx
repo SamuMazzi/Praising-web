@@ -11,7 +11,8 @@ import React, { useState } from 'react';
 import { ModalBottomSheetPlaylist } from '@/components/bottom_sheet';
 import Fab from '@mui/material/Fab';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
-import { type Playlist } from '@/logic/redux/playlist_slice';
+import { type Playlist } from '@/logic/server/database';
+import useFirebaseAuth from '@/logic/hooks/use_auth';
 
 PlaylistPage.getInitialProps = async (props: any) => {
   const { id } = props.query;
@@ -24,6 +25,7 @@ interface PropsSongPage {
 }
 
 export default function PlaylistPage(props: PropsSongPage): JSX.Element {
+  const { authUser } = useFirebaseAuth();
   const playlist: Playlist | undefined = useAppSelector(
     (state) => state.playlist.playlist[props.id]
   );
@@ -51,17 +53,19 @@ export default function PlaylistPage(props: PropsSongPage): JSX.Element {
       <Container sx={{ py: 5 }} />
       <ListSongsPlaylist songs={songs} playlistId={playlist.id} />
       <Container sx={{ py: 2 }} /> {/* Padding necessario per il Fab */}
-      <Fab
-        variant="extended"
-        onClick={() => {
-          setOpenModal(true);
-        }}
-        color="primary"
-        style={{ position: 'fixed', bottom: 20 }}
-      >
-        <AddRoundedIcon sx={{ mr: 1 }} />
-        Aggiungi dei canti
-      </Fab>
+      {playlist.owner === authUser?.uid && (
+        <Fab
+          variant="extended"
+          onClick={() => {
+            setOpenModal(true);
+          }}
+          color="primary"
+          style={{ position: 'fixed', bottom: 20 }}
+        >
+          <AddRoundedIcon sx={{ mr: 1 }} />
+          Aggiungi dei canti
+        </Fab>
+      )}
       <ModalBottomSheetPlaylist
         open={openModal}
         onClose={() => {

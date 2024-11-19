@@ -7,6 +7,7 @@ import Image from 'next/image';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import React from 'react';
+import useFirebaseAuth from '@/logic/hooks/use_auth';
 
 interface PropsListPlaylist {
   fromSongId?: string;
@@ -17,6 +18,7 @@ interface PropsListPlaylist {
  * If there are no playlists, a message with an image is displayed.
  */
 export default function ListPlaylist(props: PropsListPlaylist): JSX.Element {
+  const { authUser } = useFirebaseAuth();
   const allPlaylists = useAppSelector((state) => state.playlist.playlist);
 
   return (
@@ -52,13 +54,13 @@ export default function ListPlaylist(props: PropsListPlaylist): JSX.Element {
         return props.fromSongId === undefined ||
           props.fromSongId.length === 0 ? (
           <PlaylistTile key={playlist.id} playlist={playlist} />
-        ) : (
+        ) : playlist.owner == authUser?.uid ? ( // You need to be the owner to add a song
           <SelectablePlaylistTile
             key={playlist.id}
             playlist={playlist}
             songId={props.fromSongId}
           />
-        );
+        ) : null;
       })}
     </List>
   );

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { type Playlist, deletePlaylist } from '@/logic/redux/playlist_slice';
+import { deletePlaylist } from '@/logic/redux/playlist_slice';
 import Routes from '@/logic/routes';
 import { useAppDispatch, useAppSelector } from '@/logic/redux/store';
 import Menu from '@mui/material/Menu';
@@ -14,11 +14,11 @@ import { RWebShare } from 'react-web-share';
 import PersSnackbar from './pers_snackbar';
 import { ModalEditNamePlaylist } from './modals';
 import { saveToStorage } from '@/logic/local_logic';
-import PrintIcon from '@mui/icons-material/PrintRounded';
 import { useTheme } from '@mui/material';
 import { playlistToPdf } from '@/logic/song_to_pdf';
 import { type ChordNotations } from '@/logic/redux/settings_slice';
 import { PrintButton } from './print_button';
+import { type Playlist } from '@/logic/server/database';
 
 interface PropsMenuPlaylist {
   anchorEl: HTMLElement | null;
@@ -66,9 +66,8 @@ export const MenuPlaylist = (props: PropsMenuPlaylist): JSX.Element => {
           url:
             Routes.Base +
             Routes.SharePlaylist +
-            '?name=' +
-            encodeURIComponent(playlist?.name) +
-            getSongsParameter(),
+            '?p=' +
+            encodeURIComponent(playlist?.id),
           title: 'Condividi questa playlist'
         }}
         sites={['facebook', 'whatsapp', 'telegram', 'mail', 'copy']}

@@ -9,7 +9,6 @@ import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import IconButton from '@mui/material/IconButton';
 import { useRouter } from 'next/router';
 import Box from '@mui/material/Box';
-import { type Playlist } from '@/logic/redux/playlist_slice';
 import FirstPageRoundedIcon from '@mui/icons-material/FirstPageRounded';
 import LastPageRoundedIcon from '@mui/icons-material/LastPageRounded';
 import Routes from '@/logic/routes';
@@ -36,7 +35,7 @@ import {
 } from '@/logic/redux/user_info_slice';
 import { MenuPlaylist } from './menus';
 import { SOLFEGE, SYMBOL } from 'chordsheetjs';
-import { type CustomSongInfo } from '@/logic/server/database';
+import { type Playlist, type CustomSongInfo } from '@/logic/server/database';
 import assert from 'assert';
 import HourglassBottomRoundedIcon from '@mui/icons-material/HourglassBottomRounded';
 import { ModalNews } from '@/components/modals';

@@ -23,19 +23,17 @@ import { renderSong } from '@/logic/handle_text_song';
 import { MessageSnackbar } from '@/components/pers_snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseRounded from '@mui/icons-material/CloseRounded';
-import { type Playlist } from '@/logic/redux/playlist_slice';
 import ShimmerSegments from '@/components/shimmer_effect/shimmer_segments';
 import { useTheme } from '@mui/material';
-// import LinearProgress from '@mui/material/LinearProgress'
 import { driver } from 'driver.js';
 import 'driver.js/dist/driver.css';
-import Head from 'next/head';
 import { SongDiv } from '@/components/song_div';
 import assert from 'assert';
 import useContentSong from '@/logic/hooks/use_content_song';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import { EditableSong } from '@/components/editable_song';
 import { NextSeo } from 'next-seo';
+import { Playlist } from '@/logic/server/database';
 
 SongPage.getInitialProps = async (props: any) => {
   const { id, playlistId } = props.query;

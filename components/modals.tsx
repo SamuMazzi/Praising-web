@@ -5,11 +5,7 @@ import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import { useAppDispatch } from '../logic/redux/store';
 import TextField from '@mui/material/TextField';
-import {
-  addPlaylist,
-  modifyNamePlaylist,
-  type Playlist
-} from '@/logic/redux/playlist_slice';
+import { setPlaylist } from '@/logic/redux/playlist_slice';
 import List from '@mui/material/List';
 import ListItemText from '@mui/material/ListItemText';
 import Grid from '@mui/material/Grid';
@@ -17,6 +13,14 @@ import Grid2 from '@mui/material/Grid2';
 import NewspaperRoundedIcon from '@mui/icons-material/NewspaperRounded';
 import Image from 'next/image';
 import { useTheme } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
+import {
+  addServerPlaylist,
+  type Playlist,
+  setServerPlaylist
+} from '@/logic/server/database';
+import useFirebaseAuth from '@/logic/hooks/use_auth';
+import assert from 'assert';
 // import { useRouter } from 'next/router';
 // import Routes from '@/logic/routes';
 // import { addActiveSession } from '@/logic/server/database'
@@ -171,11 +175,14 @@ export function ModalEditNamePlaylist(
   props: PropsModalEditNamePlaylist
 ): JSX.Element {
   const [name, setName] = useState(props.playlist?.name ?? '');
+  const [loading, setLoading] = useState(false);
+  const { authUser } = useFirebaseAuth();
   const [error, setError] = useState('');
   const dispatch = useAppDispatch();
 
-  const handleConfirm = (): void => {
+  const handleConfirm = async () => {
     setError('');
+    setLoading(true);
     if (name === '') {
       setError('Il nome non può essere vuoto');
     } else if (name.length > 15) {
@@ -184,18 +191,25 @@ export function ModalEditNamePlaylist(
       if (props.playlist !== undefined) {
         modifyName();
       } else {
-        creaPlaylist();
+        await createPlaylist();
       }
       props.handleClose();
     }
+    setLoading(false);
   };
 
-  const creaPlaylist = (): void => {
-    dispatch(addPlaylist(name));
+  const createPlaylist = async () => {
+    if (authUser === null) {
+      return;
+    }
+    const p = await addServerPlaylist(authUser.uid, name, []);
+    dispatch(setPlaylist(p));
   };
 
   const modifyName = (): void => {
-    dispatch(modifyNamePlaylist({ id: props.playlist?.id, name }));
+    assert(props.playlist !== undefined);
+    dispatch(setPlaylist({ ...props.playlist, name }));
+    void setServerPlaylist(props.playlist);
   };
 
   return (
@@ -228,10 +242,14 @@ export function ModalEditNamePlaylist(
               FormHelperTextProps={{ style: { color: 'red' } }}
             />
           </Grid>
-          <Grid item>
-            <Button onClick={handleConfirm} sx={{ mt: 1 }} variant="contained">
-              Conferma
-            </Button>
+          <Grid item sx={{ mt: 1 }}>
+            {loading ? (
+              <CircularProgress />
+            ) : (
+              <Button onClick={handleConfirm} variant="contained">
+                Conferma
+              </Button>
+            )}
           </Grid>
         </Grid>
       }

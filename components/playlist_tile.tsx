@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import {
   handleSongForPlaylist,
-  type Playlist
+  setPlaylist
 } from '@/logic/redux/playlist_slice';
 import ListItemButton from '@mui/material/ListItemButton';
 import { useAppDispatch } from '@/logic/redux/store';
@@ -13,6 +13,7 @@ import Routes from '@/logic/routes';
 import { MenuPlaylist } from './menus';
 import React from 'react';
 import { useTheme, alpha } from '@mui/material';
+import { setServerPlaylist, type Playlist } from '@/logic/server/database';
 
 interface PropsPlaylistTile {
   playlist: Playlist;
@@ -66,14 +67,11 @@ export function SelectablePlaylistTile(
       <ListItemButton
         sx={{ borderRadius: 8, my: 1 }}
         selected={selected}
-        onClick={() =>
-          dispatch(
-            handleSongForPlaylist({
-              id: props.playlist.id,
-              idSong: props.songId
-            })
-          )
-        }
+        onClick={() => {
+          const songs = handleSongForPlaylist(props.playlist, props.songId);
+          dispatch(setPlaylist({ ...props.playlist, songs }));
+          void setServerPlaylist(props.playlist);
+        }}
         style={{
           backgroundColor: selected
             ? alpha(theme.palette.primary.main, 0.4)

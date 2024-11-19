@@ -14,6 +14,7 @@ import SEO from '../next-seo.config';
 
 /**
  * Priorities:
+ * IMPLEMENT BUDGET QUOTA IN FIREBASE AND VERCEL!!!
  * 0. Improve SEO!!!
  * 1. Offline
  * 2. Tutorial (finish and better styling, actually also the initial one should be changed)
@@ -21,7 +22,6 @@ import SEO from '../next-seo.config';
  * https://stackoverflow.com/questions/45868042/figuring-out-how-to-mock-the-window-size-changing-for-a-react-component-test
  * https://stackoverflow.com/questions/63510429/how-to-test-different-screen-widths-using-jest
  * 4. Add button to live record backvoice
- * 5. Share playlist -> you simply save the playlist on playlist collection (with user as owner), until it's private you don't even check online if there are modifications
  * 6. Add song
  * 7. Set Firebase rules
  * 8. Migration to App Router
@@ -33,6 +33,7 @@ import SEO from '../next-seo.config';
  * 2. Add Google Ads
  * 3. Transition pages (for example go from page to songs)
  * 4. Check loading times of recaptcha (they seem huge and unaffective)
+ * 5. Create tmp playlist for the mass of the day (with hints maybe? AI generated maybe?)
  */
 
 // TODO: Offline https://github.com/hanford/next-offline

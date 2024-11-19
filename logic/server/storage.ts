@@ -74,6 +74,4 @@ export const getPartSong = async (
 ): Promise<string> => {
   const pathReference = getRefPartSong(songId, idPart);
   return await getDownloadURL(pathReference);
-  const content = await getBlob(pathReference);
-  return await content.text();
 };

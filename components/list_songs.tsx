@@ -7,7 +7,7 @@ import SongTile, {
 } from '@/components/song_tile';
 import TypeSearch from '@/components/search_field';
 import React, { useState } from 'react';
-import { applyDrag, type Playlist } from '@/logic/redux/playlist_slice';
+import { applyDrag } from '@/logic/redux/playlist_slice';
 import { ModalBottomSheetSong } from './bottom_sheet';
 import DragContainer from './react-smooth-dnd/Container';
 import { useAppDispatch, useAppSelector } from '@/logic/redux/store';
@@ -20,6 +20,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import IconButton from '@mui/material/IconButton';
 import assert from 'assert';
+import { Playlist, setServerPlaylist } from '@/logic/server/database';
 
 const AVOID_SPECIAL_CHARACTERS = /[^a-zA-Z0-9 ]/g;
 
@@ -173,6 +174,7 @@ export function ListSongsPlaylist(props: PropsListSongsPlaylist): JSX.Element {
                 dragResult: e
               })
             );
+            void setServerPlaylist(playlist);
           }}
         >
           <>
