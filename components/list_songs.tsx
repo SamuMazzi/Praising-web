@@ -147,14 +147,11 @@ export default function ListSongs(props: PropsListSongs): JSX.Element {
 
 interface PropsListSongsPlaylist {
   songs: Song[];
-  playlistId: string;
+  playlist: Playlist;
 }
 
 export function ListSongsPlaylist(props: PropsListSongsPlaylist): JSX.Element {
   const dispatch = useAppDispatch();
-  const playlist = useAppSelector(
-    (state) => state.playlist.playlist[props.playlistId]
-  );
   const [songModal, setSongModal] = useState('');
   const [filter, setFilter] = useState('');
   const localSongs = props.songs.filter((v) =>
@@ -170,16 +167,20 @@ export function ListSongsPlaylist(props: PropsListSongsPlaylist): JSX.Element {
           onDrop={(e: any) => {
             dispatch(
               applyDrag({
-                id: props.playlistId,
+                id: props.playlist.id,
                 dragResult: e
               })
             );
-            void setServerPlaylist(playlist);
+            void setServerPlaylist(props.playlist);
           }}
         >
           <>
             {localSongs.map((song) => (
-              <PlaylistSongTile key={song.id} song={song} playlist={playlist} />
+              <PlaylistSongTile
+                key={song.id}
+                song={song}
+                playlist={props.playlist}
+              />
             ))}
           </>
         </DragContainer>

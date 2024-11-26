@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import Image from 'next/image';
 import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import TextField from '@mui/material/TextField';
 import Divider from '@mui/material/Divider';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -19,8 +19,7 @@ import Card from '@mui/material/Card';
 import { useRouter } from 'next/router';
 import useFirebaseAuth from '@/logic/hooks/use_auth';
 import { type User } from 'firebase/auth';
-import { useAppDispatch } from '@/logic/redux/store';
-import { setUserInfo } from '@/logic/redux/user_info_slice';
+import { GenericModal } from '@/components/modals';
 
 export default function LoginPage(): JSX.Element {
   const { authUser, loading } = useFirebaseAuth();
@@ -53,19 +52,19 @@ function InfoUser(props: PropsInfoUserPage): JSX.Element {
       justifyContent="center"
       spacing={2}
     >
-      <Grid item>
+      <Grid>
         <Typography whiteSpace="pre-wrap" textAlign="center">
           {'Ciao, ora che sei iscritto puoi salvare le tue preferenze e i tuoi canti preferiti.\n' +
             'Presto saranno disponibili nuove funzionalità!'}
         </Typography>
       </Grid>
-      <Grid item display="flex" whiteSpace="pre-wrap" alignItems="center">
+      <Grid display="flex" whiteSpace="pre-wrap" alignItems="center">
         <Typography>La tua email:</Typography>
         <Typography variant="h5" component="h5">
           {' ' + props.authUser.email}
         </Typography>
       </Grid>
-      <Grid item>
+      <Grid>
         <Button
           variant="contained"
           onClick={() => {
@@ -86,10 +85,12 @@ function SignCard(): JSX.Element {
   const [errorEmail, setErrorEmail] = useState('');
   const [errorPassword, setErrorPassword] = useState('');
   const [loadingSign, setLoadingSign] = useState(false);
+  const [warningModal, setWarningModal] = useState(false);
+  const [callbackSign, setCallbackSign] = useState<CallableFunction>(() => {});
   const router = useRouter();
-  const dispatch = useAppDispatch();
 
   const onSignEmailClick = async (type: 'login' | 'signup'): Promise<void> => {
+    if (loading || !authUser) return;
     setErrorEmail('');
     setErrorPassword('');
     if (email === '') {
@@ -102,8 +103,7 @@ function SignCard(): JSX.Element {
     }
     try {
       setLoadingSign(true);
-      const user = await signInWithEmail(type, email, password);
-      dispatch(setUserInfo(user));
+      await signInWithEmail(type, authUser, email, password);
       void router.replace('/');
     } catch (e: unknown) {
       if (e instanceof SignError) {
@@ -115,9 +115,10 @@ function SignCard(): JSX.Element {
   };
 
   const onGoogleClick = async (): Promise<void> => {
+    if (loading || !authUser) return;
     try {
       setLoadingSign(true);
-      await signInWithGoogle();
+      await signInWithGoogle(authUser);
     } catch (e: any) {
       console.log(e);
       setErrorEmail(e.message as string);
@@ -143,7 +144,7 @@ function SignCard(): JSX.Element {
           justifyContent="center"
           alignItems="center"
         >
-          <Grid item sx={{ mb: 1 }}>
+          <Grid sx={{ mb: 1 }}>
             <Typography
               variant="h3"
               component="h3"
@@ -154,7 +155,7 @@ function SignCard(): JSX.Element {
                 : 'Entra su Praising!'}
             </Typography>
           </Grid>
-          <Grid item sx={{ pb: 6, pt: 3 }}>
+          <Grid sx={{ pb: 6, pt: 3 }}>
             <Image
               src="assets/undraw_illustrations/undraw_access_account.svg"
               alt="Compose music"
@@ -167,7 +168,7 @@ function SignCard(): JSX.Element {
               <InfoUser authUser={authUser!} />
             ) : (
               <>
-                <Grid item sx={{ mb: 2 }}>
+                <Grid sx={{ mb: 2 }}>
                   <TextField
                     value={email}
                     onChange={(e) => {
@@ -177,7 +178,7 @@ function SignCard(): JSX.Element {
                     helperText={errorEmail}
                   />
                 </Grid>
-                <Grid item>
+                <Grid>
                   <TextField
                     value={password}
                     onChange={(e) => {
@@ -188,13 +189,14 @@ function SignCard(): JSX.Element {
                     type="password"
                   />
                 </Grid>
-                <Grid item sx={{ mt: 2 }}>
+                <Grid sx={{ mt: 2 }}>
                   <Box display="flex">
                     <Button
                       sx={{ mr: 2 }}
                       variant="contained"
                       onClick={() => {
-                        void onSignEmailClick('login');
+                        setCallbackSign(() => () => onSignEmailClick('login'));
+                        setWarningModal(true);
                       }}
                       disabled={loadingSign}
                     >
@@ -214,7 +216,7 @@ function SignCard(): JSX.Element {
                 <Divider flexItem sx={{ my: 2 }} textAlign="center">
                   Oppure
                 </Divider>
-                <Grid item>
+                <Grid>
                   <Button
                     variant="outlined"
                     startIcon={
@@ -227,7 +229,8 @@ function SignCard(): JSX.Element {
                     }
                     disabled={loadingSign}
                     onClick={() => {
-                      void onGoogleClick();
+                      setCallbackSign(() => () => onGoogleClick());
+                      setWarningModal(true);
                     }}
                     style={{ textTransform: 'none' }}
                   >
@@ -235,7 +238,7 @@ function SignCard(): JSX.Element {
                   </Button>
                 </Grid>
                 {loadingSign && (
-                  <Grid item sx={{ mt: 2 }}>
+                  <Grid sx={{ mt: 2 }}>
                     <CircularProgress />
                   </Grid>
                 )}
@@ -246,6 +249,46 @@ function SignCard(): JSX.Element {
           )}
         </Grid>
       </Card>
+      <GenericModal
+        open={warningModal}
+        handleClose={() => setWarningModal(false)}
+        content={
+          <Grid
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Grid>
+              <Typography>
+                Se accedi con un account già registrato, perderai tutti i dati
+                salvati salvati fino ad adesso (per esempio playlist, canti
+                preferiti, ecc).
+              </Typography>
+            </Grid>
+            <Grid>
+              <Box display="flex" justifyContent="center" mt={2}>
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    callbackSign();
+                    setCallbackSign(() => {});
+                    setWarningModal(false);
+                  }}
+                >
+                  Continua
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => setWarningModal(false)}
+                >
+                  Indietro
+                </Button>
+              </Box>
+            </Grid>
+          </Grid>
+        }
+      />
     </Box>
   );
 }

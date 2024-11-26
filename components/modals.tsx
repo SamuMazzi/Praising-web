@@ -208,8 +208,9 @@ export function ModalEditNamePlaylist(
 
   const modifyName = (): void => {
     assert(props.playlist !== undefined);
-    dispatch(setPlaylist({ ...props.playlist, name }));
-    void setServerPlaylist(props.playlist);
+    const newPlaylist = { ...props.playlist, name };
+    dispatch(setPlaylist(newPlaylist));
+    void setServerPlaylist(newPlaylist);
   };
 
   return (

@@ -5,7 +5,6 @@ const Routes = {
   LetturaDelGiorno: '/lectures',
   Playlist: '/playlist',
   FilteredSongs: '/songs/filter',
-  SharePlaylist: '/playlist/shared',
   Feedback: '/feedback',
   Contribute: '/contribute',
   Settings: '/settings',

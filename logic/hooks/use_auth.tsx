@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
 import { type User, signInAnonymously } from 'firebase/auth';
 import { auth } from '../server/auth';
-import { getUserFromDatabase, UserDatabase } from '../server/database';
+import {
+  addUserToDatabase,
+  getUserFromDatabase,
+  UserDatabase
+} from '../server/database';
 import { getFromStorage, saveToStorage } from '../local_logic';
 import { UserProfileServerKey } from '../redux/user_info_slice';
 import fbApp from '../server/firebase_config';
@@ -31,6 +35,8 @@ export default function useFirebaseAuth(): {
   const onAuthStateReady = async (): Promise<void> => {
     if (auth.currentUser === null) {
       const credentials = await signInAnonymously(auth);
+      const infoUser = await addUserToDatabase(credentials.user.uid, {});
+      setInfoProfile(infoUser);
       setAuthUser(credentials.user);
       saveToStorage(
         UserProfileServerKey,
@@ -53,6 +59,7 @@ export default function useFirebaseAuth(): {
       ) {
         /** Fetch from firebase */
         const infoProfileDoc = await getUserFromDatabase(auth.currentUser.uid);
+        console.log('infoProfileDoc', infoProfileDoc);
         saveToStorage(
           UserProfileServerKey,
           {

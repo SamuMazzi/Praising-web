@@ -1,14 +1,20 @@
 import {
   getAuth,
   GoogleAuthProvider,
+  EmailAuthProvider,
   signInWithPopup,
   signOut,
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword
+  linkWithPopup,
+  linkWithCredential,
+  User
 } from 'firebase/auth';
 import app from './firebase_config';
-import { addUserToDatabase, getUserFromDatabase } from './database';
-import { type DocumentData } from 'firebase/firestore';
+import {
+  addUserToDatabase,
+  deleteUserFromDatabase,
+  getUserFromDatabase
+} from './database';
 
 export const auth = getAuth(app);
 auth.languageCode = 'it';
@@ -21,19 +27,24 @@ export class SignError extends Error {
   }
 }
 
-export const signInWithGoogle = async (): Promise<DocumentData | undefined> => {
+export const signInWithGoogle = async (authUser: User) => {
   const provider = new GoogleAuthProvider();
-  provider.addScope('https://www.googleapis.com/auth/userinfo.profile	');
+  provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
   // try {
-  const result = await signInWithPopup(auth, provider);
+  const oldIdUser = authUser.uid;
+  const oldInfoUser = await getUserFromDatabase(oldIdUser);
+  const result = await linkWithPopup(authUser, provider);
   const credential = GoogleAuthProvider.credentialFromResult(result);
   if (credential === null) throw new Error('Credential is null');
   const user = result.user;
   const serverInfo = await getUserFromDatabase(user.uid);
-  if (serverInfo !== undefined) {
-    await addUserToDatabase(user.uid);
-  }
-  return serverInfo;
+  if (serverInfo === undefined) {
+    // User didn't exists yet, so we signed up actually
+    await addUserToDatabase(user.uid, oldInfoUser ?? {});
+  } // Otherwise we don't need to do anything
+
+  // We delete the old user
+  await deleteUserFromDatabase(oldIdUser);
   /* } catch (error: any) {
     // Handle Errors here.
     const errorCode = error.code;
@@ -46,33 +57,33 @@ export const signInWithGoogle = async (): Promise<DocumentData | undefined> => {
   } */
 };
 
+/**
+ * - signup -> colleghi account anonimo al nuovo e sposti tutto
+ * - signup (già fatto con altra mail) -> si dovrebbe lamentare che non puoi linkare questo account due volte (quindi alert per utente)
+ */
+
 export const signInWithEmail = async (
   type: 'signup' | 'login',
+  authUser: User,
   email: string,
   password: string
-): Promise<DocumentData | undefined> => {
+) => {
   try {
-    let userInfo;
+    const oldIdUser = authUser.uid;
     if (type === 'signup') {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      await addUserToDatabase(userCredential.user.uid);
-      userInfo = { favoriteSongs: [] };
+      const oldInfoUser = await getUserFromDatabase(oldIdUser);
+      const emailUserCredential = EmailAuthProvider.credential(email, password);
+      await linkWithCredential(authUser, emailUserCredential);
+      await addUserToDatabase(authUser.uid, oldInfoUser ?? {});
     } else if (type === 'login') {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const userInfoServer = await getUserFromDatabase(userCredential.user.uid);
-      userInfo = userInfoServer;
+      await signInWithEmailAndPassword(auth, email, password);
     }
-    return userInfo;
+    await deleteUserFromDatabase(oldIdUser);
   } catch (error: any) {
     let message = error.message as string;
+    if (error.code === 'auth/provider-already-linked') {
+      throw new SignError('Questo account è già collegato ad un altro account');
+    }
     if (
       error.code === 'auth/argument-error' ||
       error.code === 'auth/invalid-email'

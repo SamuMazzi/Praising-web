@@ -44,7 +44,7 @@ export default function PlaylistTile(props: PropsPlaylistTile): JSX.Element {
       <MenuPlaylist
         anchorEl={anchorEl}
         setAnchorEl={setAnchorEl}
-        playlistId={props.playlist.id}
+        playlist={props.playlist}
       />
     </>
   );
@@ -69,8 +69,9 @@ export function SelectablePlaylistTile(
         selected={selected}
         onClick={() => {
           const songs = handleSongForPlaylist(props.playlist, props.songId);
-          dispatch(setPlaylist({ ...props.playlist, songs }));
-          void setServerPlaylist(props.playlist);
+          const newPlaylist = { ...props.playlist, songs };
+          dispatch(setPlaylist(newPlaylist));
+          void setServerPlaylist(newPlaylist);
         }}
         style={{
           backgroundColor: selected

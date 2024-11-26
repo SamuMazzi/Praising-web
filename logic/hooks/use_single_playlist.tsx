@@ -1,55 +1,115 @@
 import { useEffect, useState } from 'react';
-import { type Playlist, listenOnSinglePlaylist } from '../server/database';
-import { useAppSelector } from '../redux/store';
+import {
+  type Playlist,
+  addServerPlaylist,
+  addSharedPlaylist,
+  getServerSinglePlaylist
+} from '../server/database';
+import { useAppDispatch, useAppSelector } from '../redux/store';
+import useFirebaseAuth from './use_auth';
+import { setPlaylist, upgradePlaylist } from '@/logic/redux/playlist_slice';
+import { useRouter } from 'next/router';
+import Routes from '../routes';
 
-export default function usePlaylist(
-  idPlaylist: string,
-  shared: boolean
-): {
+// TODO: If accessing to a playlist that has been deleted or anyway it doesn't exist, we should delete it from array of shared playlists
+
+export default function useSinglePlaylist(idPlaylist: string): {
   playlist: Playlist | null;
   loadingPlaylist: boolean;
+  canEdit: boolean;
   error: string;
 } {
+  const { authUser, loading } = useFirebaseAuth();
   const [loadingPlaylist, setLoadingPlaylist] = useState(true);
-  const local_playlist_state = useAppSelector((state) => state.playlist);
+  const local_playlist: Playlist | undefined = useAppSelector(
+    (state) => state.playlist.playlist[idPlaylist]
+  );
   const [error, setError] = useState('');
-  const [playlist, setPlaylist] = useState<Playlist | null>(null);
+  const [canEdit, setCanEdit] = useState(false);
+  const [playlist, setStatePlaylist] = useState<Playlist | null>(null);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
 
-  function fetchPlaylist() {
+  const onLegacyPlaylist = async () => {
+    try {
+      const newPlaylist = await addServerPlaylist(
+        authUser!.uid,
+        local_playlist.name,
+        local_playlist.songs,
+        { convertLocal: true }
+      );
+      dispatch(
+        upgradePlaylist({
+          p: { ...newPlaylist },
+          old_id: local_playlist.id,
+          userId: authUser!.uid
+        })
+      );
+      await router.replace(Routes.Playlist + '/' + newPlaylist.id);
+      // This reload seems to be needed
+      window.location.reload();
+    } catch (e) {
+      console.log('error', e);
+    }
+  };
+
+  const handleNewPlaylist = (p: Playlist | null) => {
+    setStatePlaylist(p);
+    setLoadingPlaylist(false);
+    if (p === null) {
+      setError('Playlist non trovata');
+      return;
+    }
+    setCanEdit(p.owner === authUser?.uid);
+    dispatch(setPlaylist({ ...p }));
+  };
+
+  const fetchPlaylist = async () => {
     setLoadingPlaylist(true);
     try {
-      if (!shared) {
-        const p = local_playlist_state.playlist[idPlaylist];
-        setPlaylist(p);
-        setLoadingPlaylist(false);
-        return null;
+      if (
+        local_playlist &&
+        ((!Number.isNaN(parseInt(local_playlist.id)) &&
+          parseInt(local_playlist.id) < 2000) ||
+          local_playlist.shared === undefined)
+      ) {
+        // If this is true it means this is legacy playlist
+        onLegacyPlaylist();
+      } else if (local_playlist && !local_playlist.shared) {
+        handleNewPlaylist(local_playlist);
+      } else if (!local_playlist && authUser) {
+        await addSharedPlaylist(authUser.uid, idPlaylist);
+        const newP = await getServerSinglePlaylist(idPlaylist);
+        handleNewPlaylist(newP);
       }
-      const unsubscribe = listenOnSinglePlaylist(idPlaylist, (playlist) => {
-        setPlaylist(playlist);
-        if (loadingPlaylist) {
-          setLoadingPlaylist(false);
-        }
-      });
-      setLoadingPlaylist(false);
-      return unsubscribe;
     } catch (e: any) {
       setError(e as string);
-    } finally {
       setLoadingPlaylist(false);
     }
-  }
+  };
 
   useEffect(() => {
-    const unsubscribe = fetchPlaylist();
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
+    if (loading) {
+      return;
+    }
+    void fetchPlaylist();
+    // FIXME: This doesn't work
+    /* return () => {
+      if (loadingPlaylist) {
+        console.log('unsubscribing');
+        listenOnSinglePlaylist(idPlaylist, (playlist) => {
+          console.log('playlist found', playlist);
+          handleNewPlaylist(playlist);
+        });
+      }
+    }; */
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [loading]);
 
   return {
     loadingPlaylist,
     playlist,
+    canEdit,
     error
   };
 }

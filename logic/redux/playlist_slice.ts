@@ -2,7 +2,6 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { type DropResult } from 'smooth-dnd/dist/src/exportTypes';
 import { getFromStorage, saveToStorage } from '../local_logic';
 import { type Playlist } from '../server/database';
-import { Timestamp } from '@firebase/firestore';
 
 interface BoxPlaylistState {
   playlist: Record<string, Playlist>;
@@ -57,6 +56,20 @@ const playlistSlice = createSlice({
       };
       saveToStorage('playlists', state.playlist);
     },
+    upgradePlaylist: (
+      state,
+      action: PayloadAction<{ p: Playlist; old_id: string; userId: string }>
+    ) => {
+      const newPlaylist = { ...action.payload.p };
+      const playlists = {
+        ...state.playlist,
+        [newPlaylist.id]: newPlaylist
+      };
+      // Move playlist with certain Id to new Id and remove old one
+      delete playlists[action.payload.old_id];
+      state.playlist = { ...playlists };
+      saveToStorage('playlists', state.playlist);
+    },
     setPlaylist: (state, action: PayloadAction<Playlist>) => {
       const newPlaylist = action.payload;
       newPlaylist.lastModified = new Date().getTime();
@@ -73,10 +86,23 @@ const playlistSlice = createSlice({
         ...otherPlaylists
       };
       saveToStorage('playlists', state.playlist);
+    },
+    setAllPlaylists: (
+      state,
+      action: PayloadAction<Record<string, Playlist>>
+    ) => {
+      state.playlist = { ...action.payload };
+      saveToStorage('playlists', state.playlist);
     }
   }
 });
 
-export const { setPlaylist, deletePlaylist, applyDrag } = playlistSlice.actions;
+export const {
+  setPlaylist,
+  deletePlaylist,
+  applyDrag,
+  upgradePlaylist,
+  setAllPlaylists
+} = playlistSlice.actions;
 
 export default playlistSlice.reducer;

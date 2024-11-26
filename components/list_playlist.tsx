@@ -1,13 +1,14 @@
 import List from '@mui/material/List';
-import { useAppSelector } from '@/logic/redux/store';
 import PlaylistTile, {
   SelectablePlaylistTile
 } from '@/components/playlist_tile';
 import Image from 'next/image';
 import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import React from 'react';
 import useFirebaseAuth from '@/logic/hooks/use_auth';
+import usePlaylists from '@/logic/hooks/use_playlists';
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface PropsListPlaylist {
   fromSongId?: string;
@@ -19,18 +20,43 @@ interface PropsListPlaylist {
  */
 export default function ListPlaylist(props: PropsListPlaylist): JSX.Element {
   const { authUser } = useFirebaseAuth();
-  const allPlaylists = useAppSelector((state) => state.playlist.playlist);
+  const { playlists, loadingPlaylists } = usePlaylists();
+  const listPlaylists = Object.values(playlists).sort((a, b) =>
+    a.name.localeCompare(b.name)
+  );
+  /*    (typeof b.creationTime === 'number'
+        ? b.creationTime
+        : b.creationTime.toMillis()) -
+      (typeof a.creationTime === 'number'
+        ? a.creationTime
+        : a.creationTime.toMillis())
+  */
+
+  if (loadingPlaylists) {
+    return (
+      <Grid
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Grid>
+          <CircularProgress />
+        </Grid>
+      </Grid>
+    );
+  }
 
   return (
     <List sx={{ px: 2 }}>
-      {Object.keys(allPlaylists).length === 0 && (
+      {listPlaylists.length === 0 && (
         <Grid
           container
           direction="column"
           justifyContent="center"
           alignItems="center"
         >
-          <Grid item sx={{ pb: 3, pt: 20 }}>
+          <Grid sx={{ pb: 3, pt: 20 }}>
             <Image
               src="assets/undraw_illustrations/undraw_compose_music.svg"
               alt="Compose music"
@@ -38,7 +64,7 @@ export default function ListPlaylist(props: PropsListPlaylist): JSX.Element {
               height="230"
             />
           </Grid>
-          <Grid item>
+          <Grid>
             <Typography
               variant="h3"
               component="h3"
@@ -49,8 +75,7 @@ export default function ListPlaylist(props: PropsListPlaylist): JSX.Element {
           </Grid>
         </Grid>
       )}
-      {Object.keys(allPlaylists).map((idP) => {
-        const playlist = allPlaylists[idP];
+      {listPlaylists.map((playlist) => {
         return props.fromSongId === undefined ||
           props.fromSongId.length === 0 ? (
           <PlaylistTile key={playlist.id} playlist={playlist} />

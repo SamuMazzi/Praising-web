@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { deletePlaylist } from '@/logic/redux/playlist_slice';
+import { deletePlaylist, setPlaylist } from '@/logic/redux/playlist_slice';
 import Routes from '@/logic/routes';
 import { useAppDispatch, useAppSelector } from '@/logic/redux/store';
 import Menu from '@mui/material/Menu';
@@ -18,19 +18,16 @@ import { useTheme } from '@mui/material';
 import { playlistToPdf } from '@/logic/song_to_pdf';
 import { type ChordNotations } from '@/logic/redux/settings_slice';
 import { PrintButton } from './print_button';
-import { type Playlist } from '@/logic/server/database';
+import { setServerPlaylist, type Playlist } from '@/logic/server/database';
 
 interface PropsMenuPlaylist {
   anchorEl: HTMLElement | null;
   setAnchorEl: (value: HTMLElement | null) => void;
-  playlistId: string;
+  playlist: Playlist | undefined;
   back_on_delete?: boolean;
 }
 
 export const MenuPlaylist = (props: PropsMenuPlaylist): JSX.Element => {
-  const playlist: Playlist | undefined = useAppSelector(
-    (state) => state.playlist.playlist[props.playlistId]
-  );
   const chordNotation: ChordNotations = useAppSelector(
     (state) => state.settings.chordNotation
   );
@@ -45,12 +42,6 @@ export const MenuPlaylist = (props: PropsMenuPlaylist): JSX.Element => {
     props.setAnchorEl(null);
   };
 
-  const getSongsParameter = (): string => {
-    if (playlist?.songs.length === 0) return '';
-
-    return '&songs=' + encodeURIComponent(playlist?.songs.join(','));
-  };
-
   return (
     <Menu
       anchorEl={props.anchorEl}
@@ -62,16 +53,25 @@ export const MenuPlaylist = (props: PropsMenuPlaylist): JSX.Element => {
     >
       <RWebShare
         data={{
-          text: 'Visualizza la playlist ' + playlist.name + " su 'Praising'!\n",
+          text:
+            'Visualizza la playlist ' +
+            props.playlist!.name +
+            " su 'Praising'!\n",
           url:
             Routes.Base +
-            Routes.SharePlaylist +
-            '?p=' +
-            encodeURIComponent(playlist?.id),
+            Routes.Playlist +
+            '/' +
+            encodeURIComponent(props.playlist!.id),
           title: 'Condividi questa playlist'
         }}
         sites={['facebook', 'whatsapp', 'telegram', 'mail', 'copy']}
         onClick={() => {
+          if (props.playlist === undefined) return;
+          if (!props.playlist.shared) {
+            const newPlaylist = { ...props.playlist, shared: true };
+            dispatch(setPlaylist(newPlaylist));
+            void setServerPlaylist(props.playlist);
+          }
           setMessage('Link copiato');
           openSnackbar(true);
         }}
@@ -95,18 +95,25 @@ export const MenuPlaylist = (props: PropsMenuPlaylist): JSX.Element => {
       </MenuItem>
       <PrintButton
         onClick={async () => {
-          await playlistToPdf(playlist.name, {
+          if (props.playlist === undefined) return;
+
+          await playlistToPdf(props.playlist.name, {
             backgroundColor: theme.palette.background.default,
             textColor: theme.palette.text.primary,
             chordNotation,
-            songs: playlist.songs
+            songs: props.playlist.songs
           });
         }}
       />
       <MenuItem
         onClick={() => {
-          saveToStorage('deleting_playlist', playlist.id, 'sessionStorage');
-          dispatch(deletePlaylist(playlist.id));
+          if (props.playlist === undefined) return;
+          saveToStorage(
+            'deleting_playlist',
+            props.playlist.id,
+            'sessionStorage'
+          );
+          dispatch(deletePlaylist(props.playlist.id));
           if (props.back_on_delete ?? false)
             void router.replace(Routes.Playlist);
         }}
@@ -122,7 +129,7 @@ export const MenuPlaylist = (props: PropsMenuPlaylist): JSX.Element => {
           setOpenEdit(false);
           closeMenu();
         }}
-        playlist={playlist}
+        playlist={props.playlist}
       />
       <PersSnackbar
         open={snackbar}

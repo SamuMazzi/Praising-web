@@ -4,19 +4,40 @@ import {
   getMyPlaylists,
   getSharedPlaylists
 } from '../server/database';
-import { saveToStorage } from '../local_logic';
 import useFirebaseAuth from './use_auth';
+import { useAppSelector, useAppDispatch } from '../redux/store';
+import { setAllPlaylists } from '../redux/playlist_slice';
+import { getFromStorage } from '../local_logic';
 
-export default function usePlaylist(): {
-  playlists: Playlist[];
+export default function usePlaylists(): {
+  playlists: Record<string, Playlist>;
   loadingPlaylists: boolean;
   error: string;
   fetchAllPlaylists: () => Promise<void>;
 } {
   const [loadingPlaylists, setLoadingPlaylists] = useState(true);
   const [error, setError] = useState('');
-  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const playlists = useAppSelector((state) => state.playlist.playlist);
   const { authUser, loading, infoProfile } = useFirebaseAuth();
+  const dispatch = useAppDispatch();
+
+  const getOldLegacyPlaylists = () => {
+    const listPlaylists = (getFromStorage('playlists') || []) as
+      | Playlist[]
+      | Record<string, Playlist>;
+    if (
+      typeof listPlaylists === 'object' &&
+      !Array.isArray(listPlaylists) &&
+      listPlaylists !== null
+    ) {
+      // In this case it's already a record
+      return listPlaylists;
+    }
+    // In this case it's a list
+    return listPlaylists.reduce((a, v) => {
+      return { ...a, [v.id]: v };
+    }, {});
+  };
 
   async function fetchAllPlaylists(): Promise<void> {
     if (!authUser) {
@@ -24,15 +45,20 @@ export default function usePlaylist(): {
     }
     setLoadingPlaylists(true);
     try {
+      // TODO: Sooner or later we'll remove caching in localStorage, but for legacy reasons let's keep it like this
+      console.log('aaa');
+      const oldPlaylists = getOldLegacyPlaylists();
+      console.log('bbb', oldPlaylists);
       const idSharedPlaylists = infoProfile?.sharedPlaylists ?? [];
+      console.log('infoProfile', infoProfile);
+      console.log('idSharedPlaylists', idSharedPlaylists);
       const sharedPlaylists = await getSharedPlaylists(idSharedPlaylists);
-      const myPlaylist = await getMyPlaylists(authUser.uid);
-      const playlistsLoaded = sharedPlaylists
-        .concat(myPlaylist)
-        .sort((a, b) => b.creationTime.seconds - a.creationTime.seconds);
-      setPlaylists(playlistsLoaded);
-      saveToStorage('playlists', playlistsLoaded);
+      const myPlaylists = await getMyPlaylists(authUser.uid);
+      dispatch(
+        setAllPlaylists({ ...oldPlaylists, ...sharedPlaylists, ...myPlaylists })
+      );
     } catch (e: any) {
+      console.error('error', e);
       setError(e as string);
     } finally {
       setLoadingPlaylists(false);

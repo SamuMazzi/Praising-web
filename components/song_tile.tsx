@@ -78,8 +78,9 @@ export function SelectableSongTile(
       selected={selected}
       onClick={() => {
         const songs = handleSongForPlaylist(props.playlist, props.song.id);
-        dispatch(setPlaylist({ ...props.playlist, songs }));
-        void setServerPlaylist(props.playlist);
+        const newPlaylist = { ...props.playlist, songs };
+        dispatch(setPlaylist(newPlaylist));
+        void setServerPlaylist(newPlaylist);
       }}
       style={{
         backgroundColor: selected

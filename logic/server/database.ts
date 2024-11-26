@@ -26,6 +26,9 @@ import {
 } from './storage';
 // import geofire from 'geofire-common';
 
+// This will be really useful to manage the database
+// TODO: https://firebase.google.com/docs/firestore/query-data/get-data#custom_objects
+
 const firestore = getFirestore(app);
 const USERS_COLLECTION = 'users';
 const CUSTOM_SONGS_COLLECTION = 'songs';
@@ -39,30 +42,52 @@ export interface Playlist {
   id: string;
   owner: string;
   notes?: string;
-  shared: boolean;
-  creationTime: Timestamp;
+  shared: boolean /* Probably this is still not really exploited */;
+  creationTime: Timestamp | number;
   lastModified: Timestamp | number;
 }
 
 /* PLAYLIST */
+const convertTimestampToDatePlaylist = (
+  p: Playlist,
+  convertLocal?: boolean,
+  timestampNow?: Timestamp
+) => {
+  const t = timestampNow ?? Timestamp.now();
+  return {
+    ...p,
+    creationTime: convertLocal ? t.toMillis() : timestampNow,
+    lastModified: convertLocal ? t.toMillis() : timestampNow
+  } as Playlist;
+};
+
 export const addServerPlaylist = async (
   userId: string,
   name: string,
-  songs: string[]
+  songs: string[],
+  options?: { convertLocal?: boolean }
 ): Promise<Playlist> => {
+  const timestampNow = Timestamp.now();
   const onlinePlaylist: Omit<Playlist, 'id'> = {
     name,
     songs,
     owner: userId,
-    creationTime: Timestamp.now(),
-    lastModified: Timestamp.now(),
+    creationTime: timestampNow,
+    lastModified: timestampNow,
     shared: false
   };
   const docRef = await addDoc(
     collection(firestore, PLAYLIST_COLLECTION),
     onlinePlaylist
   );
-  return { ...onlinePlaylist, id: docRef.id };
+  return convertTimestampToDatePlaylist(
+    {
+      ...onlinePlaylist,
+      id: docRef.id
+    },
+    options?.convertLocal,
+    timestampNow
+  );
 };
 
 export const setServerPlaylist = async (playlist: Playlist) => {
@@ -71,38 +96,56 @@ export const setServerPlaylist = async (playlist: Playlist) => {
     lastModified:
       typeof playlist.lastModified === 'number'
         ? Timestamp.fromMillis(playlist.lastModified)
-        : playlist.lastModified
+        : playlist.lastModified,
+    creationTime:
+      typeof playlist.creationTime === 'number'
+        ? Timestamp.fromMillis(playlist.creationTime)
+        : playlist.creationTime
   });
 };
 
-export const getMyPlaylists = async (userId: string): Promise<Playlist[]> => {
+export const getMyPlaylists = async (
+  userId: string,
+  options?: { convertLocal?: boolean }
+): Promise<Promise<Record<string, Playlist>>> => {
   const c = collection(firestore, PLAYLIST_COLLECTION);
   const q = query(c, where('owner', '==', userId));
 
   const docRef = await getDocs(q);
-  return docRef.docs.map((doc) => {
-    return {
-      ...doc.data(),
-      id: doc.id
-    } as Playlist;
-  });
+  return docRef.docs
+    .map((doc) => {
+      return convertTimestampToDatePlaylist(
+        {
+          ...doc.data(),
+          id: doc.id
+        } as Playlist,
+        options?.convertLocal
+      );
+    })
+    .reduce((a, v) => ({ ...a, [v.id]: v }), {});
 };
 
 // Get all the playlists that have been shared with me
 export const getSharedPlaylists = async (
-  sharedPlaylist: string[] /* Array of playlist id, got from user profile */
-): Promise<Playlist[]> => {
+  sharedPlaylist: string[] /* Array of playlist id, got from user profile */,
+  options?: { convertLocal?: boolean }
+): Promise<Record<string, Playlist>> => {
   const futures: Promise<DocumentSnapshot<any>>[] = [];
   for (const playlistId of sharedPlaylist) {
     futures.push(getDoc(doc(firestore, PLAYLIST_COLLECTION, playlistId)));
   }
   const playlists = await Promise.all(futures);
-  return playlists.map((doc) => {
-    return {
-      ...doc.data(),
-      id: doc.id
-    } as Playlist;
-  });
+  return playlists
+    .map((doc) => {
+      return convertTimestampToDatePlaylist(
+        {
+          ...doc.data(),
+          id: doc.id
+        } as Playlist,
+        options?.convertLocal
+      );
+    })
+    .reduce((a, v) => ({ ...a, [v.id]: v }), {});
 };
 
 export const addSharedPlaylist = async (userId: string, playlistId: string) => {
@@ -128,15 +171,33 @@ export const removeSharedPlaylist = async (
   );
 };
 
+export const getServerSinglePlaylist = async (
+  idPlaylist: string
+): Promise<Playlist | null> => {
+  const docRef = doc(firestore, PLAYLIST_COLLECTION, idPlaylist);
+  const initialSnap = await getDoc(docRef);
+  if (!initialSnap.exists()) {
+    return null;
+  }
+  return { ...initialSnap.data(), id: initialSnap.id } as Playlist;
+};
+
 export const listenOnSinglePlaylist = (
   idPlaylist: string,
-  onChange: (playlist: Playlist) => void
+  onChange: (playlist: Playlist | null) => void
 ): Unsubscribe => {
   const unsubscribe = onSnapshot(
     doc(firestore, PLAYLIST_COLLECTION, idPlaylist),
     (snapshot) => {
+      if (!snapshot.exists()) {
+        onChange(null);
+        return;
+      }
       const newPlaylist = { ...snapshot.data(), id: snapshot.id } as Playlist;
       onChange(newPlaylist);
+    },
+    (error) => {
+      console.error('Error snapshot listener', error);
     }
   );
   return unsubscribe;
@@ -229,8 +290,23 @@ export const removeServerFavoriteSongs = async (
   });
 };
 
-export const addUserToDatabase = async (userId: string): Promise<void> => {
-  await setDoc(doc(firestore, USERS_COLLECTION, userId), {});
+export const addUserToDatabase = async (
+  userId: string,
+  oldInfoUser: UserDatabase
+) => {
+  const userInfo: UserDatabase = {
+    favoriteSongs: [],
+    sharedPlaylists: [],
+    ownedSongs: [],
+    ownedParts: [],
+    counter_pending_songs: 0,
+    counter_pending_parts: 0
+  };
+  await setDoc(doc(firestore, USERS_COLLECTION, userId), {
+    ...userInfo,
+    ...oldInfoUser
+  });
+  return userInfo;
 };
 
 export interface UserDatabase {
@@ -241,6 +317,15 @@ export interface UserDatabase {
   counter_pending_songs?: number;
   counter_pending_parts?: number;
 }
+
+export const deleteUserFromDatabase = async (userId: string) => {
+  // TODO: Sooner or later we'll need to do this in firebase functions (now there is security issue)
+  try {
+    await deleteDoc(doc(firestore, USERS_COLLECTION, userId));
+  } catch (e) {
+    console.error(e);
+  }
+};
 
 export const getUserFromDatabase = async (
   userId: string

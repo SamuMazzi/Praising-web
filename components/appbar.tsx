@@ -594,13 +594,10 @@ export const SongAppBar = (props: PropsSongAppBar): JSX.Element => {
 };
 
 interface PropsPlaylistAppBar {
-  playlistId: string;
+  playlist: Playlist | undefined;
 }
 
 export const PlaylistAppBar = (props: PropsPlaylistAppBar): JSX.Element => {
-  const playlist: Playlist | undefined = useAppSelector(
-    (state) => state.playlist.playlist[props.playlistId]
-  );
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const router = useRouter();
   const theme = useTheme();
@@ -631,7 +628,7 @@ export const PlaylistAppBar = (props: PropsPlaylistAppBar): JSX.Element => {
             </IconButton>
             <Box sx={{ flexGrow: 1, display: 'flex' }} alignItems="center">
               <Typography variant="h1" component="h1" sx={{ py: 1 }}>
-                {playlist.name}
+                {props.playlist?.name}
               </Typography>
             </Box>
             <Box sx={{ flexGrow: 0, display: 'flex' }} alignItems="center">
@@ -641,7 +638,7 @@ export const PlaylistAppBar = (props: PropsPlaylistAppBar): JSX.Element => {
               <MenuPlaylist
                 anchorEl={anchorEl}
                 setAnchorEl={setAnchorEl}
-                playlistId={props.playlistId}
+                playlist={props.playlist}
                 back_on_delete
               />
             </Box>
