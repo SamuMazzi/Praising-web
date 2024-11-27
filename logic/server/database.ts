@@ -1,6 +1,5 @@
 import app from './firebase_config';
 import {
-  getFirestore,
   collection,
   addDoc,
   getDoc,
@@ -18,7 +17,10 @@ import {
   increment,
   type DocumentSnapshot,
   onSnapshot,
-  type Unsubscribe
+  type Unsubscribe,
+  persistentLocalCache,
+  persistentMultipleTabManager,
+  initializeFirestore
 } from 'firebase/firestore';
 import {
   deleteModifiedSongFromServerStorage,
@@ -29,7 +31,14 @@ import {
 // This will be really useful to manage the database
 // TODO: https://firebase.google.com/docs/firestore/query-data/get-data#custom_objects
 
-const firestore = getFirestore(app);
+// TODO: Implement caching
+
+// const firestore = getFirestore(app);
+const firestore = initializeFirestore(app, {
+  localCache: persistentLocalCache({
+    tabManager: persistentMultipleTabManager()
+  })
+});
 const USERS_COLLECTION = 'users';
 const CUSTOM_SONGS_COLLECTION = 'songs';
 const VERSIONS_CUSTOM_SONGS_COLLECTION = 'versions';

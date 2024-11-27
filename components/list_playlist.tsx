@@ -39,6 +39,7 @@ export default function ListPlaylist(props: PropsListPlaylist): JSX.Element {
         direction="column"
         justifyContent="center"
         alignItems="center"
+        sx={{ mt: 4 }}
       >
         <Grid>
           <CircularProgress />
