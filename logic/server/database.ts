@@ -1,5 +1,6 @@
 import app from './firebase_config';
 import {
+  getFirestore,
   collection,
   addDoc,
   getDoc,
@@ -32,13 +33,20 @@ import {
 // TODO: https://firebase.google.com/docs/firestore/query-data/get-data#custom_objects
 
 // TODO: Implement caching
-
-// const firestore = getFirestore(app);
-const firestore = initializeFirestore(app, {
-  localCache: persistentLocalCache({
-    tabManager: persistentMultipleTabManager()
-  })
-});
+// FIXME: Maybe this doesn't work only in local dev
+/* let firestoreInit = false;
+const getRealFirestore = () => {
+  if (!firestoreInit) {
+    firestoreInit = true;
+    return initializeFirestore(app, {
+      localCache: persistentLocalCache({
+        tabManager: persistentMultipleTabManager()
+      })
+    });
+  }
+  return getFirestore(app);
+}; */
+const firestore = getFirestore();
 const USERS_COLLECTION = 'users';
 const CUSTOM_SONGS_COLLECTION = 'songs';
 const VERSIONS_CUSTOM_SONGS_COLLECTION = 'versions';

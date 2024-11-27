@@ -70,10 +70,10 @@ class SongPDF {
   }
 
   private async createSinglePageSong(id: string): Promise<void> {
-    const data = (await fetcher(`/api/song/${encodeURIComponent(id)}`)) as
-      | string
-      | undefined
-      | null;
+    const data = (await fetcher(
+      `/api/song/${encodeURIComponent(id)}`,
+      false
+    )) as string | undefined | null;
     const song = getSingleSong(id);
 
     if (data === undefined || data === null || song === undefined) {

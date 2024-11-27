@@ -103,9 +103,26 @@ export default function Lectures(): JSX.Element {
                 >
                   {content?.psalm.title}
                 </Typography>
-                <Typography style={{ fontWeight: 'bold' }} sx={{ pb: 2 }}>
-                  R. {content?.psalm.chorus}
-                </Typography>
+                {content?.psalm.chorus.map((chorus, index): JSX.Element => {
+                  const lastChorus = index === content?.psalm.chorus.length - 1;
+                  return (
+                    <div key={'chorus_psalm_' + index}>
+                      <Typography
+                        style={{ fontWeight: 'bold' }}
+                        sx={{ pb: lastChorus ? 2 : 1 }}
+                      >
+                        R. {chorus}
+                      </Typography>
+                      {!lastChorus && (
+                        <Typography
+                          style={{ fontStyle: 'italic', paddingBottom: '8px' }}
+                        >
+                          Oppure
+                        </Typography>
+                      )}
+                    </div>
+                  );
+                })}
                 {content?.psalm.verses.map((verse, index): JSX.Element => {
                   if (verse.trim() !== '') {
                     return (

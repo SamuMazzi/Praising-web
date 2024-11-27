@@ -15,7 +15,7 @@ export interface Lettura {
 
 interface Salmo {
   title: string;
-  chorus: string;
+  chorus: string[] /* Array because there can be possibly more than one */;
   verses: string[];
 }
 
@@ -36,14 +36,19 @@ const parseSalmo = ($: CheerioAPI): Salmo => {
     .text()
     .split('R.');
   const title = $(tag + ' > .cci-liturgia-giorno-section-versetto').text();
-  let chorus = $(tag + ' > .cci-liturgia-giorno-section-content')
+  const chorus = $(tag + ' > .cci-liturgia-giorno-section-content')
     .children('p:not(:empty)')
     .first()
     .text();
-  if (chorus.startsWith('R.')) {
-    chorus = chorus.slice(2).trim();
-  }
-  return { title, chorus, verses };
+  const all_chorus = chorus.split('Oppure:').map((x) => {
+    x = x.trim();
+    if (x.startsWith('R.')) {
+      x = x.slice(2).trim();
+    }
+    return x;
+  });
+
+  return { title, chorus: all_chorus, verses };
 };
 
 const parseLecture = (

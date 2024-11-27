@@ -1,9 +1,17 @@
 import { useEffect, useState } from 'react';
 import { LiturgyOfDay } from '../scraper_liturgy';
 
-export const fetcher = async (url: string): Promise<any> => {
+export const fetcher = async (
+  url: string,
+  forceReload: boolean
+): Promise<any> => {
   try {
-    const res = await fetch(url);
+    // TODO: Test this
+    console.log('fetcher', url, forceReload);
+    const res = await fetch(url, {
+      cache: forceReload ? 'reload' : 'force-cache',
+      next: { revalidate: 3600 * 24 }
+    });
     if (res.status >= 400) {
       const msg = JSON.parse(await res.text()).error;
       throw Error(msg as string);
@@ -31,7 +39,11 @@ export default function useLecture(url: string): {
     setLoading(true);
     setError(undefined);
     try {
-      const liturgy = await fetcher(url);
+      const liturgy = await fetcher(
+        url,
+        (window.performance.getEntries()[0] as PerformanceNavigationTiming)
+          .type === 'reload'
+      );
       setContent(liturgy);
     } catch (e: any) {
       setError(e as string);

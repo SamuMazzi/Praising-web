@@ -46,12 +46,8 @@ export default function usePlaylists(): {
     setLoadingPlaylists(true);
     try {
       // TODO: Sooner or later we'll remove caching in localStorage, but for legacy reasons let's keep it like this
-      console.log('aaa');
       const oldPlaylists = getOldLegacyPlaylists();
-      console.log('bbb', oldPlaylists);
       const idSharedPlaylists = infoProfile?.sharedPlaylists ?? [];
-      console.log('infoProfile', infoProfile);
-      console.log('idSharedPlaylists', idSharedPlaylists);
       const sharedPlaylists = await getSharedPlaylists(idSharedPlaylists);
       const myPlaylists = await getMyPlaylists(authUser.uid);
       dispatch(

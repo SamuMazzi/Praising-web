@@ -5,9 +5,15 @@ import { getFromStorage } from '../local_logic';
 import useFirebaseAuth from './use_auth';
 // TODO: Prevent scrolling when downloading pdf
 
-export const fetcher = async (url: string): Promise<any> => {
+export const fetcher = async (
+  url: string,
+  forceReload: boolean
+): Promise<any> => {
   try {
-    const res = await fetch(url);
+    const res = await fetch(url, {
+      cache: forceReload ? 'reload' : 'force-cache',
+      next: { revalidate: 3600 }
+    });
     const out = await res.json();
     return out;
   } catch (err) {
@@ -71,7 +77,11 @@ export default function useContentSong(
       if (idVersion !== undefined) {
         contentSong = await getVersionSong(idVersion, idSong);
       } else {
-        contentSong = await fetcher(`/api/song/${encodeURIComponent(idSong)}`);
+        contentSong = await fetcher(
+          `/api/song/${encodeURIComponent(idSong)}`,
+          (window.performance.getEntries()[0] as PerformanceNavigationTiming)
+            .type === 'reload'
+        );
       }
       setContent(contentSong);
     } catch (e: any) {

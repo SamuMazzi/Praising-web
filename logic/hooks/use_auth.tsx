@@ -59,7 +59,7 @@ export default function useFirebaseAuth(): {
       ) {
         /** Fetch from firebase */
         const infoProfileDoc = await getUserFromDatabase(auth.currentUser.uid);
-        console.log('infoProfileDoc', infoProfileDoc);
+        // console.log('infoProfileDoc', infoProfileDoc);
         saveToStorage(
           UserProfileServerKey,
           {
