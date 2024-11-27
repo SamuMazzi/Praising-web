@@ -6,8 +6,6 @@ export const fetcher = async (
   forceReload: boolean
 ): Promise<any> => {
   try {
-    // TODO: Test this
-    console.log('fetcher', url, forceReload);
     const res = await fetch(url, {
       cache: forceReload ? 'reload' : 'force-cache',
       next: { revalidate: 3600 * 24 }

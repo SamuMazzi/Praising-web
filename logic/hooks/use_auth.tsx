@@ -29,7 +29,12 @@ export default function useFirebaseAuth(): {
 
   const authStateChanged = (authState: User | null): void => {
     setAuthUser(authState);
-    setLoading(false);
+    // As of now, we can't have authState as null, so if we receive it, it means that it's still loading
+    if (authState !== null) {
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
   };
 
   const onAuthStateReady = async (): Promise<void> => {

@@ -108,17 +108,23 @@ export const addServerPlaylist = async (
 };
 
 export const setServerPlaylist = async (playlist: Playlist) => {
-  await setDoc(doc(firestore, PLAYLIST_COLLECTION, playlist.id), {
+  // TODO: Understand why the times can be undefined when you share them (maybe not really problem now)
+  const newPlaylist = {
     ...playlist,
     lastModified:
       typeof playlist.lastModified === 'number'
         ? Timestamp.fromMillis(playlist.lastModified)
-        : playlist.lastModified,
+        : playlist.lastModified === undefined
+          ? Timestamp.now()
+          : playlist.lastModified,
     creationTime:
       typeof playlist.creationTime === 'number'
         ? Timestamp.fromMillis(playlist.creationTime)
-        : playlist.creationTime
-  });
+        : playlist.creationTime === undefined
+          ? Timestamp.now()
+          : playlist.creationTime
+  };
+  await setDoc(doc(firestore, PLAYLIST_COLLECTION, playlist.id), newPlaylist);
 };
 
 export const getMyPlaylists = async (
@@ -166,6 +172,7 @@ export const getSharedPlaylists = async (
 };
 
 export const addSharedPlaylist = async (userId: string, playlistId: string) => {
+  console.log('about to add', userId, playlistId);
   await setDoc(
     doc(firestore, USERS_COLLECTION, userId),
     {
@@ -173,6 +180,7 @@ export const addSharedPlaylist = async (userId: string, playlistId: string) => {
     },
     { merge: true }
   );
+  console.log('set', playlistId);
 };
 
 export const removeSharedPlaylist = async (
