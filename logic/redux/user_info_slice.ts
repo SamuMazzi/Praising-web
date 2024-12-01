@@ -1,11 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { getFromStorage, saveToStorage } from '../local_logic';
-import {
-  addServerFavoriteSongs,
-  removeServerFavoriteSongs
-} from '../server/database';
 
-export const UserProfileServerKey = 'userProfile';
 const FAVORITE_SONGS_KEY = 'favorite_songs';
 
 interface SettingsState {
@@ -36,9 +31,6 @@ const settingsSlice = createSlice({
       if (state.favoriteSongs.includes(action.payload)) return;
       state.favoriteSongs = [...state.favoriteSongs, action.payload];
       saveToStorage(FAVORITE_SONGS_KEY, state.favoriteSongs);
-      const userProfile = getFromStorage(UserProfileServerKey);
-      if (userProfile !== null && userProfile.anonymous === false)
-        void addServerFavoriteSongs(userProfile.uid as string, action.payload);
     },
     removeSongFromFavoriteSongs: (state, action: PayloadAction<string>) => {
       if (!state.favoriteSongs.includes(action.payload)) return;
@@ -48,12 +40,6 @@ const settingsSlice = createSlice({
         ...state.favoriteSongs.slice(indexSong + 1, state.favoriteSongs.length)
       ];
       saveToStorage(FAVORITE_SONGS_KEY, state.favoriteSongs);
-      const userProfile = getFromStorage(UserProfileServerKey);
-      if (userProfile !== null && userProfile.anonymous === false)
-        void removeServerFavoriteSongs(
-          userProfile.uid as string,
-          action.payload
-        );
     }
   }
 });

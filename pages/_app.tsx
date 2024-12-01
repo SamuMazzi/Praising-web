@@ -28,6 +28,7 @@ import SEO from '../next-seo.config';
  * 8. Migration to App Router
  * 9. Modify categories songs
  * 10. Apply "pending" state also for modifications?
+ * 11. Animations on transition from song to page (like button being pressed and then pops up new page from a growing circle)
  *
  * Later:
  * 1. Add Google Analytics (Just to improve, basic is done)

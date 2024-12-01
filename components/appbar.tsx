@@ -35,14 +35,19 @@ import {
 } from '@/logic/redux/user_info_slice';
 import { MenuPlaylist } from './menus';
 import { SOLFEGE, SYMBOL } from 'chordsheetjs';
-import { type Playlist, type CustomSongInfo } from '@/logic/server/database';
+import {
+  type Playlist,
+  type CustomSongInfo,
+  addServerFavoriteSongs,
+  removeServerFavoriteSongs
+} from '@/logic/server/database';
 import assert from 'assert';
 import HourglassBottomRoundedIcon from '@mui/icons-material/HourglassBottomRounded';
 import { ModalNews } from '@/components/modals';
 import InterpreterModeRoundedIcon from '@mui/icons-material/InterpreterModeRounded';
 import { getFromStorage } from '@/logic/local_logic';
 import { PrintButton } from './print_button';
-import { printDocument } from '@/logic/song_to_pdf';
+import useFirebaseAuth from '@/logic/hooks/use_auth';
 
 // This is really useful in the case we'll ever want to split a song in multiple pages (in case it's too long)
 /*
@@ -392,6 +397,7 @@ interface PropsSongAppBar extends PropsMenuItemVersions {
 
 export const SongAppBar = (props: PropsSongAppBar): JSX.Element => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const { authUser } = useFirebaseAuth();
   const router = useRouter();
   const theme = useTheme();
   const indexInPlaylist = props.playlist?.songs.indexOf(props.id);
@@ -516,9 +522,17 @@ export const SongAppBar = (props: PropsSongAppBar): JSX.Element => {
                 </RWebShare>
                 <MenuItem
                   onClick={() => {
-                    if (favoriteSongs.includes(props.id))
+                    if (authUser === null) return;
+
+                    if (favoriteSongs.includes(props.id)) {
+                      if (!authUser.isAnonymous)
+                        void removeServerFavoriteSongs(authUser.uid, props.id);
                       dispatch(removeSongFromFavoriteSongs(props.id));
-                    else dispatch(addSongToFavoriteSongs(props.id));
+                    } else {
+                      if (!authUser.isAnonymous)
+                        void addServerFavoriteSongs(authUser.uid, props.id);
+                      dispatch(addSongToFavoriteSongs(props.id));
+                    }
                   }}
                 >
                   <ListItemIcon>
@@ -532,6 +546,8 @@ export const SongAppBar = (props: PropsSongAppBar): JSX.Element => {
                 </MenuItem>
                 <PrintButton
                   onClick={async () => {
+                    const printDocument = (await import('@/logic/song_to_pdf'))
+                      .printDocument;
                     await printDocument(props.id, {
                       backgroundColor: theme.palette.background.default,
                       textColor: theme.palette.text.primary,
@@ -579,11 +595,13 @@ export const SongAppBar = (props: PropsSongAppBar): JSX.Element => {
                   <ListItemText primary="Transpose" />
                   {props.transpose ?? '0'}
                 </MenuItem>
-                <MenuItemVersions
-                  versions={props.versions}
-                  setVersionSong={props.setVersionSong}
-                  selectedIndexVersion={props.selectedIndexVersion}
-                />
+                {getFromStorage('debug_admin') === true && (
+                  <MenuItemVersions
+                    versions={props.versions}
+                    setVersionSong={props.setVersionSong}
+                    selectedIndexVersion={props.selectedIndexVersion}
+                  />
+                )}
               </Menu>
             </Box>
           </Toolbar>

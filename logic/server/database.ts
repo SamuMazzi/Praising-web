@@ -21,7 +21,8 @@ import {
   type Unsubscribe,
   persistentLocalCache,
   persistentMultipleTabManager,
-  initializeFirestore
+  initializeFirestore,
+  getDocFromCache
 } from 'firebase/firestore';
 import {
   deleteModifiedSongFromServerStorage,
@@ -34,9 +35,9 @@ import {
 
 // TODO: Implement caching
 // FIXME: Maybe this doesn't work only in local dev
-/* let firestoreInit = false;
+let firestoreInit = false;
 const getRealFirestore = () => {
-  if (!firestoreInit) {
+  if (!firestoreInit && process.env.NODE_ENV === 'production') {
     firestoreInit = true;
     return initializeFirestore(app, {
       localCache: persistentLocalCache({
@@ -45,8 +46,8 @@ const getRealFirestore = () => {
     });
   }
   return getFirestore(app);
-}; */
-const firestore = getFirestore();
+};
+const firestore = getRealFirestore();
 const USERS_COLLECTION = 'users';
 const CUSTOM_SONGS_COLLECTION = 'songs';
 const VERSIONS_CUSTOM_SONGS_COLLECTION = 'versions';
@@ -353,10 +354,16 @@ export const deleteUserFromDatabase = async (userId: string) => {
 };
 
 export const getUserFromDatabase = async (
-  userId: string
+  userId: string,
+  options?: { source?: 'cache' | 'server' | 'auto' }
 ): Promise<UserDatabase | undefined> => {
   try {
-    const docRef = await getDoc(doc(firestore, USERS_COLLECTION, userId));
+    let docRef: DocumentSnapshot<UserDatabase>;
+    if (options?.source === 'cache') {
+      docRef = await getDocFromCache(doc(firestore, USERS_COLLECTION, userId));
+    } else {
+      docRef = await getDoc(doc(firestore, USERS_COLLECTION, userId));
+    }
     if (!docRef.exists()) return undefined;
     return docRef.data() as UserDatabase;
   } catch (e) {

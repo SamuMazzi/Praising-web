@@ -1,11 +1,11 @@
 {
   "name": "web-praising",
   "description": "Praising è la tua web-app per visualizzare testi e accordi dei canti cristiani più famosi.",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && python3 script.py --fix-service-worker",
+    "build": "next build && python3 script.py --fix-service-worker --update-sitemap",
     "start": "next start",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "deploy": "python3 script.py --generate-revisions && vercel build --prod && vercel --prebuilt --prod",
@@ -65,7 +65,7 @@
     "@typescript-eslint/eslint-plugin": "^8.11.0",
     "@typescript-eslint/parser": "^8.11.0",
     "eslint": "^9.13.0",
-    "eslint-config-love": "^107.0.0",
+    "eslint-config-love": "^109.0.0",
     "eslint-config-next": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",

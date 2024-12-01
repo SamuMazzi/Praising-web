@@ -7,9 +7,10 @@ import {
   UserDatabase
 } from '../server/database';
 import { getFromStorage, saveToStorage } from '../local_logic';
-import { UserProfileServerKey } from '../redux/user_info_slice';
 import fbApp from '../server/firebase_config';
 import { getAnalytics, setUserId } from 'firebase/analytics';
+
+const LastTimeFetchedUserKey = 'last_time_fetched_user_profile';
 
 export interface AuthUser {
   uid: string;
@@ -43,38 +44,23 @@ export default function useFirebaseAuth(): {
       const infoUser = await addUserToDatabase(credentials.user.uid, {});
       setInfoProfile(infoUser);
       setAuthUser(credentials.user);
-      saveToStorage(
-        UserProfileServerKey,
-        {
-          anonymous: credentials.user.isAnonymous,
-          uid: credentials.user.uid,
-          email: credentials.user.email
-        },
-        'sessionStorage'
-      );
+      saveToStorage(LastTimeFetchedUserKey, Date.now(), 'sessionStorage');
     } else {
       setAuthUser(auth.currentUser);
-      const sessionProfile = getFromStorage(
-        UserProfileServerKey,
+      const lastTimeFetched = getFromStorage(
+        LastTimeFetchedUserKey,
         'sessionStorage'
       );
+      // If user data already been fetched in 1 hour, don't fetch again
       if (
-        (sessionProfile === null || sessionProfile.uid !== auth.currentUser) &&
+        (lastTimeFetched === null ||
+          (Date.now() - lastTimeFetched) / (1000 * 60 * 60)) &&
         !auth.currentUser.isAnonymous
       ) {
         /** Fetch from firebase */
         const infoProfileDoc = await getUserFromDatabase(auth.currentUser.uid);
         // console.log('infoProfileDoc', infoProfileDoc);
-        saveToStorage(
-          UserProfileServerKey,
-          {
-            ...infoProfileDoc,
-            uid: auth.currentUser.uid,
-            anonymous: auth.currentUser.isAnonymous,
-            email: auth.currentUser.email
-          },
-          'sessionStorage'
-        );
+        saveToStorage(LastTimeFetchedUserKey, Date.now(), 'sessionStorage');
         setInfoProfile(infoProfileDoc);
       }
     }

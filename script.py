@@ -3,6 +3,8 @@ import json
 import os
 import re
 import hashlib
+import xml.etree.ElementTree as ET
+from datetime import datetime
 
 parser = argparse.ArgumentParser(
                 prog='Helper script Praising',
@@ -11,6 +13,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument('--chords-to-text', dest="chords_to_text", type=bool, default=False, help="This option will populate the folder 'text_chords' with all the lyrics of the chords file without chords")
 parser.add_argument('--fix-service-worker', dest="fix_service_worker", action="store_true", default=False, help="This option will fix the service worker file to escape apostrophes in the name of the song")
 parser.add_argument('--generate-revisions', dest="generate_revisions", action="store_true", default=False, help="Generate revisions for all files in the 'public' directory")
+parser.add_argument('--update-sitemap', dest="update_sitemap", action="store_true", default=False, help="Update the sitemap.xml file with the latest songs")
 
 def modify_and_write_files(source_dir: str, target_dir: str):
     """
@@ -125,6 +128,79 @@ def generate_revisions_pages():
     with open("info_revision.json", "w") as outfile: 
         json.dump(pages_to_be_cached, outfile)
 
+
+
+def parse_datetime(date_str: str):
+    try:
+        return datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S.%fZ')
+    except ValueError:
+        # Handle potential different format
+        return datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%SZ')
+
+def update_sitemap(sitemap_path: str, json_path: str, songs_directory: str):
+    ET.register_namespace('', 'http://www.sitemaps.org/schemas/sitemap/0.9')
+
+    tree = ET.parse(sitemap_path)
+    root = tree.getroot()
+    
+    # Get namespace
+    namespace = root.tag.split('}')[0] + '}'
+    
+    # Read JSON file
+    with open(json_path, 'r') as f:
+        songs_data = json.load(f)
+    
+    # Create a dictionary of existing URLs and their elements
+    existing_urls = {}
+    for url_elem in root.findall(f'{namespace}url'):
+        loc = url_elem.find(f'{namespace}loc').text
+        existing_urls[loc] = url_elem
+    
+    # Process each song
+    for song in songs_data:
+        song_url = f'https://praising.vercel.app/song/{song["Id"]}'
+        song_file_path = os.path.join(songs_directory, song['Nome file'])
+        
+        # Get file's last modification time
+        if os.path.exists(song_file_path):
+            mtime = datetime.fromtimestamp(os.path.getmtime(song_file_path))
+            new_lastmod = mtime.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+        else:
+            mtime = datetime.now()
+            new_lastmod = mtime.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+        
+        if song_url in existing_urls:
+            # URL exists, check if we need to update lastmod
+            url_element = existing_urls[song_url]
+            lastmod_elem = url_element.find(f'{namespace}lastmod')
+            if lastmod_elem is not None:
+                existing_date = parse_datetime(lastmod_elem.text)
+                if mtime > existing_date:
+                    lastmod_elem.text = new_lastmod
+        else:
+            # Create new URL element
+            url_element = ET.SubElement(root, f'{namespace}url')
+            
+            # Add location
+            loc = ET.SubElement(url_element, f'{namespace}loc')
+            loc.text = song_url
+            
+            # Add last modified date
+            lastmod_elem = ET.SubElement(url_element, f'{namespace}lastmod')
+            lastmod_elem.text = new_lastmod
+            
+            # Add change frequency
+            changefreq = ET.SubElement(url_element, f'{namespace}changefreq')
+            changefreq.text = 'always'
+            
+            # Add priority
+            priority = ET.SubElement(url_element, f'{namespace}priority')
+            priority.text = '0.9'
+    
+    ET.indent(tree, space="\t", level=0)
+    tree.write(sitemap_path, encoding='utf-8', xml_declaration=True)
+
+
 if __name__ == "__main__":
     args = parser.parse_args()
     if args.chords_to_text:
@@ -133,3 +209,5 @@ if __name__ == "__main__":
         fix_service_worker_name_chord_files("public/sw.js")
     if args.generate_revisions:
         generate_revisions_pages()
+    if args.update_sitemap:
+        update_sitemap('public/sitemap.xml', 'logic/songs.config.json', '/public/accordi')
