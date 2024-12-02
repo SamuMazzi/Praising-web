@@ -19,9 +19,6 @@ import SEO from '../next-seo.config';
  * 0. Improve SEO!!!
  * 1. Offline
  * 2. Tutorial (finish and better styling, actually also the initial one should be changed)
- * 3. PDF (finish, broken at least in smarthpones) -> size of print depend on size of the screen from which you print
- * https://stackoverflow.com/questions/45868042/figuring-out-how-to-mock-the-window-size-changing-for-a-react-component-test
- * https://stackoverflow.com/questions/63510429/how-to-test-different-screen-widths-using-jest
  * 4. Add button to live record backvoice
  * 6. Add song
  * 7. Set Firebase rules

@@ -6,8 +6,9 @@ import { type ChordNotations } from './redux/settings_slice';
 import { fetcher } from './hooks/use_content_song';
 import { getHtmlPdfPage } from '@/components/pdf_page';
 
-const PAGE_WIDTH = 210; // width of regular a4 paper
-const PAGE_HEIGHT = 295; // height of regular a4 paper
+const PAGE_WIDTH = 595.28; // width of regular a4 paper
+const PAGE_HEIGHT = 841.89; // height of regular a4 paper
+const PADDING_PAGE = 10; // Padding between images and page edges
 
 interface InfoRendering {
   backgroundColor: string;
@@ -19,9 +20,31 @@ interface DataInfo extends InfoRendering {
   songs: string[];
 }
 
+/* Function to calculate scaled dimensions for an image */
+function calculateDimensions(
+  width: number,
+  height: number,
+  maxWidth: number,
+  maxHeight: number
+) {
+  const aspectRatio = width / height;
+  let renderWidth = maxWidth - PADDING_PAGE * 2;
+  let renderHeight = maxWidth / aspectRatio;
+
+  if (renderHeight > maxHeight) {
+    renderHeight = maxHeight;
+    renderWidth = maxHeight * aspectRatio;
+  }
+
+  return {
+    width: renderWidth,
+    height: renderHeight
+  };
+}
+
 const generateJsPdfStdObject = async (): Promise<jsPDF> => {
   const jsPDFModule = await import('jspdf');
-  return new jsPDFModule.jsPDF('p', 'mm', 'a4', true);
+  return new jsPDFModule.jsPDF('p', 'pt', 'a4', true);
 };
 
 export const printDocument = async (
@@ -46,7 +69,8 @@ export const playlistToPdf = async (
 
 class SongPDF {
   private readonly infoRendering: InfoRendering;
-  private availableHeightPage: number = PAGE_HEIGHT;
+  private currentY: number = PADDING_PAGE;
+  private isFirstImage: boolean = true;
 
   constructor(
     private readonly pdf: jsPDF,
@@ -61,6 +85,7 @@ class SongPDF {
     });
     // TODO: Order is not preserved
     await Promise.all(futures); */
+    this.addPage();
     for (const idSong of songIds) {
       await this.createSinglePageSong(idSong);
     }
@@ -99,40 +124,46 @@ class SongPDF {
     }
   }
 
+  private addPage() {
+    this.currentY = PADDING_PAGE;
+    this.pdf.addPage();
+    this.pdf.setFillColor(this.infoRendering.backgroundColor);
+    this.pdf.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT + 5, 'F');
+  }
+
   private async addSongToPdf(input: HTMLElement): Promise<void> {
     const canvas = await html2canvas(input, {
       backgroundColor: this.infoRendering.backgroundColor
     });
-    const imgData = canvas.toDataURL('image/png');
-    let yOffset = 0;
-    let imgWidth = PAGE_WIDTH;
-    let imgHeight = (canvas.height * PAGE_WIDTH) / canvas.width;
-    const alreadySongsInPage = this.availableHeightPage !== PAGE_HEIGHT;
 
-    if (imgHeight > PAGE_HEIGHT && !alreadySongsInPage) {
-      // If image is too high and the page is free, resize it
-      imgHeight = PAGE_HEIGHT;
-      imgWidth = canvas.width * (PAGE_HEIGHT / canvas.height);
-    }
-    if (alreadySongsInPage && imgHeight < this.availableHeightPage) {
-      yOffset = PAGE_HEIGHT - this.availableHeightPage;
-    } else {
-      // Cannot fit more songs in this page, so creating another one and reset the available height
-      this.availableHeightPage = PAGE_HEIGHT;
-      this.pdf.addPage();
-      this.pdf.setFillColor(this.infoRendering.backgroundColor);
-      this.pdf.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT + 5, 'F');
+    const scaledDims = calculateDimensions(
+      canvas.width,
+      canvas.height,
+      PAGE_WIDTH - PADDING_PAGE * 2,
+      PAGE_HEIGHT - PADDING_PAGE * 2
+    );
+
+    const imgData = canvas.toDataURL('image/png');
+
+    if (
+      !this.isFirstImage &&
+      this.currentY + scaledDims.height + PADDING_PAGE > PAGE_HEIGHT
+    ) {
+      this.addPage();
     }
     this.pdf.addImage(
       imgData,
       'PNG',
-      0,
-      yOffset,
-      imgWidth,
-      imgHeight,
+      PADDING_PAGE,
+      this.currentY,
+      scaledDims.width,
+      scaledDims.height,
       undefined,
       'FAST'
     );
-    this.availableHeightPage -= imgHeight;
+
+    // Update Y position for next image
+    this.currentY += scaledDims.height + PADDING_PAGE;
+    this.isFirstImage = false;
   }
 }
