@@ -39,7 +39,6 @@ import SEO from '../next-seo.config';
  */
 
 // TODO: Offline https://github.com/hanford/next-offline
-// TODO: Implementare modo per evitare reload della canzone se già caricata (a volte succede inaspettatamente)
 // TODO: Implementare spazi fra accordi senza testo (per ora solo nelle righe intere senza testo, cerca canzoni con cui testare, sicuro "Mi perdo nel tuo amore")
 import { useFirebaseRoutesAnalytics } from '@/logic/hooks/use_firebase_analytics';
 

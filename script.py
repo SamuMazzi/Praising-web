@@ -176,6 +176,7 @@ def update_sitemap(sitemap_path: str, json_path: str, songs_directory: str):
             if lastmod_elem is not None:
                 existing_date = parse_datetime(lastmod_elem.text)
                 if mtime > existing_date:
+                    print(f"Updating lastmod for {song_file_path} because {mtime} > {existing_date}")
                     lastmod_elem.text = new_lastmod
         else:
             # Create new URL element
@@ -210,4 +211,4 @@ if __name__ == "__main__":
     if args.generate_revisions:
         generate_revisions_pages()
     if args.update_sitemap:
-        update_sitemap('public/sitemap.xml', 'logic/songs.config.json', '/public/accordi')
+        update_sitemap('public/sitemap.xml', 'logic/songs.config.json', 'public/accordi')
