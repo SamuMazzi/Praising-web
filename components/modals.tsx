@@ -6,13 +6,8 @@ import Button from '@mui/material/Button';
 import { useAppDispatch } from '../logic/redux/store';
 import TextField from '@mui/material/TextField';
 import { setPlaylist } from '@/logic/redux/playlist_slice';
-import List from '@mui/material/List';
-import ListItemText from '@mui/material/ListItemText';
 import Grid from '@mui/material/Grid';
 import Grid2 from '@mui/material/Grid2';
-import NewspaperRoundedIcon from '@mui/icons-material/NewspaperRounded';
-import Image from 'next/image';
-import { useTheme } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import {
   addServerPlaylist,
@@ -21,10 +16,6 @@ import {
 } from '@/logic/server/database';
 import useFirebaseAuth from '@/logic/hooks/use_auth';
 import assert from 'assert';
-// import { useRouter } from 'next/router';
-// import Routes from '@/logic/routes';
-// import { addActiveSession } from '@/logic/server/database'
-// import { setActiveSession } from '@/logic/redux/sessions_slice'
 
 interface GenericProps {
   open: boolean;
@@ -253,100 +244,6 @@ export function ModalEditNamePlaylist(
             )}
           </Grid>
         </Grid>
-      }
-    />
-  );
-}
-
-export function ModalNews(props: GenericProps): JSX.Element {
-  const theme = useTheme();
-
-  return (
-    <GenericModal
-      open={props.open}
-      handleClose={props.handleClose}
-      content={
-        <>
-          <Grid
-            container
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Grid item>
-              <Box display="flex" justifyContent="center" alignItems="center">
-                <NewspaperRoundedIcon />
-                <Typography variant="h2" component="h2" sx={{ pl: 2 }}>
-                  Novità!
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item sx={{ py: 2 }}>
-              <Image
-                src="/assets/undraw_illustrations/undraw_happy_news.svg"
-                alt="Happy news"
-                width={100}
-                height={100}
-              />
-            </Grid>
-            <Grid item>
-              <Typography>Ecco alcune novità di Praising:</Typography>
-              <List
-                sx={{
-                  listStyleType: 'disc',
-                  pl: 4,
-                  py: 2,
-                  my: 1,
-                  borderRadius: 8,
-                  backgroundColor:
-                    theme.palette.mode === 'light' ? '#F2F2F2' : '#3A3A3A',
-                  maxHeight: { xs: 250, sm: 400 },
-                  overflow: 'auto'
-                }}
-              >
-                <ListItemText sx={{ display: 'list-item' }}>
-                  <strong>Schermo sempre attivo:</strong> quando utilizzerai
-                  Praising non dovrai preoccuparti di toccare lo schermo per non
-                  farlo spegnere, ora rimarrà sempre acceso!
-                </ListItemText>
-                <ListItemText sx={{ display: 'list-item' }}>
-                  <strong>Playlist condivisibili:</strong>
-                  {
-                    " hai scelto i canti che vuoi fare e non ti va cercarli nell'elenco ogni volta? Ora puoi creare una playlist e condividerla con i tuoi amici!"
-                  }
-                </ListItemText>
-                <ListItemText sx={{ display: 'list-item' }}>
-                  <strong>Sezioni espandibili:</strong> le sezioni dei canti
-                  sono ora espandibili, così puoi scegliere quali parti
-                  visualizzare e quali no! Per farlo basta toccare la sezione
-                  che vuoi espandere.
-                </ListItemText>
-                <ListItemText sx={{ display: 'list-item' }}>
-                  <strong>Feedback:</strong>
-                  {
-                    " qualcosa non ti piace o vuoi suggerire delle modifiche? Clicca sull'icona in alto a destra per inviarmi un messaggio!"
-                  }
-                </ListItemText>
-                <ListItemText sx={{ display: 'list-item' }}>
-                  <strong>Altre:</strong>
-                  {
-                    " tante altre funzionalità fra cui la trasposizione degli accordi, ascoltare l'audio originale direttamente dalla pagina della canzone e tanto altro!"
-                  }
-                </ListItemText>
-              </List>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={() => {
-                  props.handleClose();
-                }}
-                variant="contained"
-              >
-                Ho capito!
-              </Button>
-            </Grid>
-          </Grid>
-        </>
       }
     />
   );

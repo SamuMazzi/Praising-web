@@ -18,7 +18,7 @@ import {
 import Routes from '@/logic/routes';
 import ListSongs from '@/components/list_songs';
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 
 // const NEWS_UPDATE = 'newsUpdate_0';
 // TODO: Swiper for arguments and parts
@@ -29,12 +29,16 @@ export default function Home(): JSX.Element {
   const recentSongs = getLastRecentsSongs()
     .map((id) => getSingleSong(id))
     .filter((v) => v !== undefined);
-  // const [showNews, setShowNews] = useState(getFromStorage(NEWS_UPDATE) ?? true);
+  const [updatesIsShown, setUpdatesIsShown] = useState(false);
 
   return (
     <main>
       <Container disableGutters sx={{ minHeight: '100vh' }}>
-        <PraisingAppBar title="Praising" homeVersion />
+        <PraisingAppBar
+          title="Praising"
+          homeVersion
+          setShowUpdates={setUpdatesIsShown}
+        />
         <Typography
           variant="h2"
           component="h2"
@@ -122,7 +126,7 @@ export default function Home(): JSX.Element {
             />
           </Container>
         )}
-        <NavBar />
+        {!updatesIsShown && <NavBar />}
       </Container>
     </main>
   );

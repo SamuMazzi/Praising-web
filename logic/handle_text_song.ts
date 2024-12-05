@@ -311,12 +311,18 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
 
     if (deserialized.key !== null) {
       // This is needed because it seems like the normalization is different between major and minor keys (and we want always the major-like one)
-      const majorRootKey = Key.parseOrFail(deserialized.key).toMajor();
+      try {
+        // FIXME: Starting frm chordsheetjs 10.7.0 the key throws error
+        // console.log('deserialized.key', typeof deserialized.key, JSON.stringify(deserialized.key));
+        const majorRootKey = Key.parseOrFail(deserialized.key).toMajor();
 
-      if (DIESIS_NOTES.includes(majorRootKey.toString())) {
-        deserialized = deserialized.useModifier('#');
-      } else {
-        deserialized = deserialized.useModifier('b');
+        if (DIESIS_NOTES.includes(majorRootKey.toString())) {
+          deserialized = deserialized.useModifier('#');
+        } else {
+          deserialized = deserialized.useModifier('b');
+        }
+      } catch (e) {
+        console.error(e);
       }
     }
 

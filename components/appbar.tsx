@@ -29,6 +29,7 @@ import { setChordNotation } from '@/logic/redux/settings_slice';
 import ShareIcon from '@mui/icons-material/Share';
 import { RWebShare } from 'react-web-share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 import {
   addSongToFavoriteSongs,
   removeSongFromFavoriteSongs
@@ -43,11 +44,11 @@ import {
 } from '@/logic/server/database';
 import assert from 'assert';
 import HourglassBottomRoundedIcon from '@mui/icons-material/HourglassBottomRounded';
-import { ModalNews } from '@/components/modals';
 import InterpreterModeRoundedIcon from '@mui/icons-material/InterpreterModeRounded';
 import { getFromStorage } from '@/logic/local_logic';
 import { PrintButton } from './print_button';
 import useFirebaseAuth from '@/logic/hooks/use_auth';
+import AnimatedOnboardingSlider from './onboard';
 
 // This is really useful in the case we'll ever want to split a song in multiple pages (in case it's too long)
 /*
@@ -182,6 +183,7 @@ interface PropsAppBar {
   title: string;
   backIcon?: boolean;
   homeVersion?: boolean;
+  setShowUpdates?: (show: boolean) => void;
 }
 
 export const verticalPaddingAppBar = 3;
@@ -215,23 +217,29 @@ export default function PraisingAppBar(props: PropsAppBar): JSX.Element {
                 {props.title}
               </Typography>
               <Box sx={{ top: '25%', right: '6%', position: 'absolute' }}>
-                {
-                  // TODO: Implement news with swipes
-                  /*<IconButton
+                <IconButton
                   edge="end"
                   style={{ color: 'black' }}
                   sx={{ mr: 0.5 }}
-                  onClick={() => setShowNews(true)}
+                  onClick={() => {
+                    if (showNews) {
+                      document.body.style.overflow = 'unset';
+                    } else {
+                      document.body.style.overflow = 'hidden';
+                    }
+                    props.setShowUpdates?.(!showNews);
+                    setShowNews(!showNews);
+                  }}
                 >
                   <HelpRoundedIcon />
-                </IconButton>*/
-                }
+                </IconButton>
                 <IconButton
                   edge="end"
                   style={{ color: 'black' }}
                   LinkComponent={Link}
                   aria-label="Go to the settings page"
                   href={Routes.Settings}
+                  disabled={showNews}
                 >
                   <SettingsRoundedIcon />
                 </IconButton>
@@ -270,9 +278,12 @@ export default function PraisingAppBar(props: PropsAppBar): JSX.Element {
           )}
         </AppBar>
       </HideOnScroll>
-      <ModalNews
-        open={showNews}
-        handleClose={() => {
+      {/* TODO: Make this import dynamic!!!! */}
+      <AnimatedOnboardingSlider
+        isOpen={showNews}
+        closeFn={() => {
+          document.body.style.overflow = 'unset';
+          props.setShowUpdates?.(false);
           setShowNews(false);
         }}
       />

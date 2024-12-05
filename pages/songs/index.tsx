@@ -3,7 +3,6 @@ import NavBar from '@/components/navbar';
 import { getLocalSongs } from '@/logic/local_logic';
 import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar';
 import ListSongs from '@/components/list_songs';
-import Head from 'next/head';
 import React from 'react';
 import { NextSeo } from 'next-seo';
 

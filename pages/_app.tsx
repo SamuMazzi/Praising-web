@@ -15,22 +15,21 @@ import SEO from '../next-seo.config';
 //TODO: Add function in cloud functions to delete old users (based on last access time)
 /**
  * Priorities:
- * IMPLEMENT BUDGET QUOTA IN VERCEL!!!
- * 0. Improve SEO!!!
+ * 0. Improve SEO!
  * 1. Offline
- * 2. Tutorial (finish and better styling, actually also the initial one should be changed)
+ * 2. Tutorial (finish and better styling, actually also the initial one should be changed, make a separate page out of it)
  * 4. Add button to live record backvoice
  * 6. Add song
  * 7. Set Firebase rules
  * 8. Migration to App Router
  * 9. Modify categories songs
  * 10. Apply "pending" state also for modifications?
- * 11. Animations on transition from song to page (like button being pressed and then pops up new page from a growing circle)
  *
  * Later:
  * 1. Add Google Analytics (Just to improve, basic is done)
  * 2. Add Google Ads
  * 3. Transition pages (for example go from page to songs)
+ * 3a. Animations on transition from song to page (like button being pressed and then pops up new page from a growing circle)
  * 4. Check loading times of recaptcha (they seem huge and unaffective)
  * 5. Create tmp playlist for the mass of the day (with hints maybe? AI generated maybe?)
  */

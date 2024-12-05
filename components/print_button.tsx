@@ -27,7 +27,7 @@ export const PrintButton = (props: PropsPrintButton): JSX.Element => {
       <ListItemIcon sx={{ pr: 1 }}>
         {loading ? <CircularProgress size={25} /> : <PrintIcon />}
       </ListItemIcon>
-      <ListItemText primary="Stampa (beta)" />
+      <ListItemText primary="Stampa" />
     </MenuItem>
   );
 };
