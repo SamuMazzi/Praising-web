@@ -158,7 +158,7 @@ def update_sitemap(sitemap_path: str, json_path: str, songs_directory: str):
     
     # Process each song
     for song in songs_data:
-        song_url = f'https://praising.vercel.app/song/{song["Id"]}'
+        song_url = f'https://praising.vercel.app/songs/{song["Id"]}'
         song_file_path = os.path.join(songs_directory, song['Nome file'])
         
         # Get file's last modification time
