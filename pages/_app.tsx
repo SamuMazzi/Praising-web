@@ -17,12 +17,11 @@ import SEO from '../next-seo.config';
  * Priorities:
  * 0. Improve SEO!
  * 1. Offline
- * 2. Tutorial (finish and better styling, actually also the initial one should be changed, make a separate page out of it)
  * 4. Add button to live record backvoice
  * 6. Add song
  * 7. Set Firebase rules
  * 8. Migration to App Router
- * 9. Modify categories songs
+ * 9. Modify categories songs style
  * 10. Apply "pending" state also for modifications?
  *
  * Later:
@@ -34,7 +33,6 @@ import SEO from '../next-seo.config';
  * 5. Create tmp playlist for the mass of the day (with hints maybe? AI generated maybe?)
  */
 
-// TODO: Offline https://github.com/hanford/next-offline
 // TODO: Implementare spazi fra accordi senza testo (per ora solo nelle righe intere senza testo, cerca canzoni con cui testare, sicuro "Mi perdo nel tuo amore")
 import { useFirebaseRoutesAnalytics } from '@/logic/hooks/use_firebase_analytics';
 

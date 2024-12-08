@@ -275,14 +275,14 @@ export interface InfoRenderSong {
 export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
   try {
     // This is because of a probable ChordSheetJS bug which renders "null" text at the end of the song if there's a blank line (i.e. with "Chiamati per nome")
-    if (props.fileContent.trim() === '') {
+    props.fileContent = props.fileContent.trim();
+    if (props.fileContent === '') {
       return {
         sections: [],
         fontSize: 17,
         error: 'Il file è vuoto.'
       };
     }
-    props.fileContent = props.fileContent.replace(/\n$/, '');
     const songParsed = new ChordSheetJS.ChordProParser().parse(
       props.fileContent
     );
@@ -312,8 +312,6 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
     if (deserialized.key !== null) {
       // This is needed because it seems like the normalization is different between major and minor keys (and we want always the major-like one)
       try {
-        // FIXME: Starting frm chordsheetjs 10.7.0 the key throws error
-        // console.log('deserialized.key', typeof deserialized.key, JSON.stringify(deserialized.key));
         const majorRootKey = Key.parseOrFail(deserialized.key).toMajor();
 
         if (DIESIS_NOTES.includes(majorRootKey.toString())) {
