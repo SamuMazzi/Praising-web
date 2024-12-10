@@ -95,15 +95,22 @@ const BgBlob = (props: { index: number; matchHeight: boolean }) => {
 // 250, 200, 120
 // 300, 250, 180
 const OnboardingSlider = (props: { closeFn: () => void }) => {
+  // TODO: Make image actually responsive
   const [currentSlide, setCurrentSlide] = useState(0);
   const [matchHeight, setMatchHeight] = useState(
     window.matchMedia('(min-height: 690px)').matches
+  );
+  const [showImage, setShowImage] = useState(
+    window.matchMedia('(min-height: 580px)').matches
   );
 
   useEffect(() => {
     window
       .matchMedia('(min-height: 690px)')
       .addEventListener('change', (e) => setMatchHeight(e.matches));
+    window
+      .matchMedia('(min-height: 580px)')
+      .addEventListener('change', (e) => setShowImage(e.matches));
   }, []);
 
   const styles = {
@@ -180,7 +187,7 @@ const OnboardingSlider = (props: { closeFn: () => void }) => {
           transition={{ duration: 0.5 }}
         >
           <Box sx={styles.container}>
-            <Card elevation={3} sx={styles.content}>
+            <Card elevation={3} sx={{ ...styles.content, mt: 4 }}>
               <Box
                 sx={{
                   display: 'flex',
@@ -192,7 +199,10 @@ const OnboardingSlider = (props: { closeFn: () => void }) => {
                 <Button
                   variant="outlined"
                   sx={styles.skipButton}
-                  style={{ textTransform: 'none' }}
+                  style={{
+                    textTransform: 'none',
+                    marginBottom: showImage ? 0 : 48
+                  }}
                   onClick={props.closeFn}
                 >
                   Esci
@@ -200,28 +210,30 @@ const OnboardingSlider = (props: { closeFn: () => void }) => {
               </Box>
 
               <Box sx={{ textAlign: 'center', mx: 4, mb: 4 }}>
-                <motion.div
-                  style={{
-                    position: 'relative',
-                    height: matchHeight ? 250 : 200,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 0.2, duration: 0.5 }}
-                >
-                  <BgBlob index={currentSlide} matchHeight={matchHeight} />
-                  <div style={{ position: 'relative' }}>
-                    <Image
-                      src={slides[currentSlide].icon}
-                      alt={'image ' + slides[currentSlide].icon}
-                      width={matchHeight ? 180 : 120}
-                      height={matchHeight ? 180 : 120}
-                    />
-                  </div>
-                </motion.div>
+                {showImage && (
+                  <motion.div
+                    style={{
+                      position: 'relative',
+                      height: matchHeight ? 250 : 200,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.2, duration: 0.5 }}
+                  >
+                    <BgBlob index={currentSlide} matchHeight={matchHeight} />
+                    <div style={{ position: 'relative' }}>
+                      <Image
+                        src={slides[currentSlide].icon}
+                        alt={'image ' + slides[currentSlide].icon}
+                        width={matchHeight ? 180 : 120}
+                        height={matchHeight ? 180 : 120}
+                      />
+                    </div>
+                  </motion.div>
+                )}
 
                 <Box sx={{ mb: 4, mt: matchHeight ? 4 : 0 }}>
                   <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold' }}>
@@ -247,7 +259,7 @@ const OnboardingSlider = (props: { closeFn: () => void }) => {
             position: 'relative',
             top:
               typeof window !== 'undefined'
-                ? `${window.innerHeight * 0.8}px`
+                ? `${window.innerHeight * (window.innerHeight < 850 ? 0.85 : 0.8)}px`
                 : '50px',
             display: 'flex',
             justifyContent: 'center',
