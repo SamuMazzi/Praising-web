@@ -34,9 +34,7 @@ interface PropsModalBottomSheetPlaylist extends PropsModalBottomSheet {
 /**
  * This is used to show all the songs that can be added to a playlist, from the same playlist page
  */
-export function ModalBottomSheetPlaylist(
-  props: PropsModalBottomSheetPlaylist
-): JSX.Element {
+export function ModalBottomSheetPlaylist(props: PropsModalBottomSheetPlaylist) {
   const songs = getLocalSongs();
   const playlist = useAppSelector(
     (state) => state.playlist.playlist[props.playlistId]
@@ -73,12 +71,10 @@ interface PropsModalBottomSheetAddPart extends PropsModalBottomSheet {
   afterUpload: () => void;
 }
 
-export function ModalBottomSheetAddPart(
-  props: PropsModalBottomSheetAddPart
-): JSX.Element {
+export function ModalBottomSheetAddPart(props: PropsModalBottomSheetAddPart) {
   const theme = useTheme();
   const { authUser, loading } = useFirebaseAuth();
-  const fileInput = React.useRef<any>();
+  const fileInput = React.useRef<any>(null);
   const [namePart, setNamePart] = useState('');
   const [nameAuthor, setNameAuthor] = useState('');
   const [file, setFile] = useState<File | null>(null);
@@ -258,9 +254,7 @@ interface PropsModalBottomSheetSong extends PropsModalBottomSheet {
   openModalCreate?: () => void;
 }
 
-export function ModalBottomSheetSong(
-  props: PropsModalBottomSheetSong
-): JSX.Element {
+export function ModalBottomSheetSong(props: PropsModalBottomSheetSong) {
   const theme = useTheme();
 
   return (
@@ -292,7 +286,7 @@ interface PropsTitleModal {
   openModal?: () => void;
 }
 
-function TitleModal(props: PropsTitleModal): JSX.Element {
+function TitleModal(props: PropsTitleModal) {
   const theme = useTheme();
 
   return (

@@ -5,7 +5,7 @@ interface PropsShimmerSegments {
   numSegments: number;
 }
 
-const ShimmerSegments = (props: PropsShimmerSegments): JSX.Element => {
+const ShimmerSegments = (props: PropsShimmerSegments) => {
   const [segmentLengths, setSegmentLengths] = useState<number[]>([]);
 
   useEffect(() => {

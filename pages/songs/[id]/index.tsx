@@ -9,7 +9,7 @@ import {
 } from '@/logic/local_logic';
 import ActionsSong from '@/components/actions_song';
 import { ModalBottomSheetSong } from '@/components/bottom_sheet';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import YouTube from 'react-youtube';
 import Box from '@mui/material/Box';
 import { useWakeLock } from 'react-screen-wake-lock';
@@ -131,7 +131,7 @@ const driverObj = driver({
 
 const TUTORIAL_SHOWN = 'tutorialShown_0';
 
-export default function SongPage(props: PropsSongPage): JSX.Element {
+export default function SongPage(props: PropsSongPage) {
   const song = getSingleSong(props.id);
   const infoSong: InfoLocalSong | undefined = useAppSelector((state) =>
     song?.id !== undefined ? state.infoSongs.infoSongs[song.id] : undefined
@@ -256,7 +256,7 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
   // fontsize std: lineHeigth 68, poi -4 tutte le volte
   assert(song !== undefined, 'Song is undefined');
 
-  const HeadComponent = (): JSX.Element => (
+  const HeadComponent = () => (
     <NextSeo
       title={song.name}
       description={'Guarda gli accordi del canto ' + song.name}
@@ -371,10 +371,7 @@ export default function SongPage(props: PropsSongPage): JSX.Element {
   );
 }
 
-const YoutubeVideoBox = (props: {
-  song: Song;
-  closeVideo: () => void;
-}): JSX.Element => {
+const YoutubeVideoBox = (props: { song: Song; closeVideo: () => void }) => {
   const [minimized, setMinimized] = useState(false);
 
   return (

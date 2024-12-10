@@ -24,7 +24,7 @@ interface PropsSongPage {
   id: string;
 }
 
-export default function PlaylistPage(props: PropsSongPage): JSX.Element {
+export default function PlaylistPage(props: PropsSongPage) {
   const { playlist, loadingPlaylist, error, canEdit } = useSinglePlaylist(
     props.id
   );

@@ -2,14 +2,14 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Image from 'next/image';
 import Card from '@mui/material/Card';
 
-export default function FeedbackPage(): JSX.Element {
+export default function FeedbackPage() {
   const [body, setBody] = useState('');
 
   return (

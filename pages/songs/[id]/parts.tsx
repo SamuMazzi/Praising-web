@@ -31,7 +31,7 @@ interface PropsPartsPage {
   id: string;
 }
 
-export default function PartsPage(props: PropsPartsPage): JSX.Element {
+export default function PartsPage(props: PropsPartsPage) {
   const {
     parts,
     content,

@@ -29,7 +29,7 @@ interface PropsSongAppBar {
   deleteSong: () => Promise<void>;
 }
 
-const EditableSongAppBar = (props: PropsSongAppBar): JSX.Element => {
+const EditableSongAppBar = (props: PropsSongAppBar) => {
   const theme = useTheme();
 
   return (
@@ -78,7 +78,7 @@ export const EditableSong = (props: {
   setEditMode: (reload: boolean, idVersion?: string) => void;
   idExistingVersion?: string;
   versionIndex: number;
-}): JSX.Element => {
+}) => {
   const { authUser, infoProfile, loading } = useFirebaseAuth();
   const [data, setData] = useState(props.data);
   const song = getSingleSong(props.songId);

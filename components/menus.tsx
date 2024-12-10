@@ -27,7 +27,7 @@ interface PropsMenuPlaylist {
   back_on_delete?: boolean;
 }
 
-export const MenuPlaylist = (props: PropsMenuPlaylist): JSX.Element => {
+export const MenuPlaylist = (props: PropsMenuPlaylist) => {
   const chordNotation: ChordNotations = useAppSelector(
     (state) => state.settings.chordNotation
   );

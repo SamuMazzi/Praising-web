@@ -1,5 +1,4 @@
-import React, { Component, createRef } from 'react';
-import * as PropTypes from 'prop-types';
+import React, { Component, createRef, JSX } from 'react';
 import {
   smoothDnD as container,
   type ContainerOptions,
@@ -17,41 +16,41 @@ interface ContainerProps extends ContainerOptions {
   children?: React.ReactNode;
 }
 
-class DragContainer extends Component<ContainerProps> {
-  static propTypes = {
-    behaviour: PropTypes.oneOf(['move', 'copy', 'drop-zone', 'contain']),
-    groupName: PropTypes.string,
-    orientation: PropTypes.oneOf(['horizontal', 'vertical']),
-    style: PropTypes.object,
-    dragHandleSelector: PropTypes.string,
-    nonDragAreaSelector: PropTypes.string,
-    dragBeginDelay: PropTypes.number,
-    animationDuration: PropTypes.number,
-    autoScrollEnabled: PropTypes.bool,
-    lockAxis: PropTypes.string,
-    dragClass: PropTypes.string,
-    dropClass: PropTypes.string,
-    onDragStart: PropTypes.func,
-    onDragEnd: PropTypes.func,
-    onDrop: PropTypes.func,
-    getChildPayload: PropTypes.func,
-    shouldAnimateDrop: PropTypes.func,
-    shouldAcceptDrop: PropTypes.func,
-    onDragEnter: PropTypes.func,
-    onDragLeave: PropTypes.func,
-    render: PropTypes.func,
-    getGhostParent: PropTypes.func,
-    removeOnDropOut: PropTypes.bool,
-    dropPlaceholder: PropTypes.oneOfType([
-      PropTypes.shape({
-        className: PropTypes.string,
-        animationDuration: PropTypes.number,
-        showOnTop: PropTypes.bool
-      }),
-      PropTypes.bool
-    ])
-  };
+interface DragContainerProps {
+  behaviour?: 'move' | 'copy' | 'drop-zone' | 'contain';
+  groupName?: string;
+  orientation?: 'horizontal' | 'vertical';
+  style?: object;
+  dragHandleSelector?: string;
+  nonDragAreaSelector?: string;
+  dragBeginDelay?: number;
+  animationDuration?: number;
+  autoScrollEnabled?: boolean;
+  lockAxis?: string;
+  dragClass?: string;
+  dropClass?: string;
+  onDragStart?(...args: unknown[]): unknown;
+  onDragEnd?(...args: unknown[]): unknown;
+  onDrop?(...args: unknown[]): unknown;
+  getChildPayload?(...args: unknown[]): unknown;
+  shouldAnimateDrop?(...args: unknown[]): unknown;
+  shouldAcceptDrop?(...args: unknown[]): unknown;
+  onDragEnter?(...args: unknown[]): unknown;
+  onDragLeave?(...args: unknown[]): unknown;
+  render?(...args: unknown[]): React.ReactElement;
+  getGhostParent?(...args: unknown[]): unknown;
+  removeOnDropOut?: boolean;
+  dropPlaceholder?:
+    | {
+        className?: string;
+        animationDuration?: number;
+        showOnTop?: boolean;
+      }
+    | boolean;
+  children?: React.ReactNode;
+}
 
+class DragContainer extends Component<DragContainerProps> {
   static defaultProps = {
     behaviour: 'move',
     orientation: 'vertical'
@@ -107,6 +106,7 @@ class DragContainer extends Component<ContainerProps> {
     for (const _key in containerOptions) {
       const key = _key as keyof ContainerOptions;
       if (containerOptions.hasOwnProperty(key)) {
+        // @ts-ignore
         const prop = containerOptions[key];
 
         if (typeof prop !== 'function' && prop !== prevProps[key]) {
@@ -121,13 +121,12 @@ class DragContainer extends Component<ContainerProps> {
   render(): JSX.Element {
     if (this.props.render !== undefined) {
       return this.props.render(this.containerRef);
-    } else {
-      return (
-        <div style={this.props.style} ref={this.containerRef}>
-          {this.props.children}
-        </div>
-      );
     }
+    return (
+      <div style={this.props.style} ref={this.containerRef}>
+        {this.props.children}
+      </div>
+    );
   }
 
   getContainer(): HTMLElement | null {
@@ -136,7 +135,7 @@ class DragContainer extends Component<ContainerProps> {
 
   getContainerOptions(): ContainerOptions {
     return Object.keys(this.props).reduce((result: any, key: string) => {
-      const optionName = key as keyof ContainerOptions;
+      const optionName = key as keyof DragContainerProps;
       const prop = this.props[optionName];
 
       if (typeof prop === 'function') {

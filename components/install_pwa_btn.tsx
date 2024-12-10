@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import InstallMobileRoundedIcon from '@mui/icons-material/InstallMobileRounded';
 import InstallDesktopRoundedIcon from '@mui/icons-material/InstallDesktopRounded';
 
-const InstallPWA = (): JSX.Element => {
+const InstallPWA = () => {
   const [supportsPWA, setSupportsPWA] = useState(false);
   const [promptInstall, setPromptInstall] = useState<any>(null);
 

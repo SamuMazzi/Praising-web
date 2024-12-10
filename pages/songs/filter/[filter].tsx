@@ -18,7 +18,7 @@ interface PropsFilterPage {
   filter: string;
 }
 
-export default function FilterPage(props: PropsFilterPage): JSX.Element {
+export default function FilterPage(props: PropsFilterPage) {
   const localSongs = getLocalSongs().filter(
     (v) =>
       (v.argomento?.includes(props.filter) ?? false) ||

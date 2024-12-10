@@ -18,14 +18,14 @@ import {
 import Routes from '@/logic/routes';
 import ListSongs from '@/components/list_songs';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 // const NEWS_UPDATE = 'newsUpdate_0';
 // TODO: Swiper for arguments and parts
 // https://codesandbox.io/p/devbox/swiper-react-effect-coverflow-6pxf4v?file=%2Fsrc%2FApp.jsx%3A26%2C22
 // https://swiperjs.com/react#effects
 
-export default function Home(): JSX.Element {
+export default function Home() {
   const recentSongs = getLastRecentsSongs()
     .map((id) => getSingleSong(id))
     .filter((v) => v !== undefined);

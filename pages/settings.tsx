@@ -19,7 +19,7 @@ import { clearStorage } from '@/logic/local_logic';
 import InstallPWA from '@/components/install_pwa_btn';
 import React from 'react';
 
-export default function SettingsPage(): JSX.Element {
+export default function SettingsPage() {
   const darkTheme = useAppSelector((state) => state.settings.darkMode);
   const dispatch = useAppDispatch();
   const borderRadius = 8;

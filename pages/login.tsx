@@ -1,6 +1,6 @@
 import Container from '@mui/material/Container';
 import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Button from '@mui/material/Button';
 import Image from 'next/image';
 import Typography from '@mui/material/Typography';
@@ -21,7 +21,7 @@ import useFirebaseAuth from '@/logic/hooks/use_auth';
 import { type User } from 'firebase/auth';
 import { GenericModal } from '@/components/modals';
 
-export default function LoginPage(): JSX.Element {
+export default function LoginPage() {
   const { authUser, loading } = useFirebaseAuth();
   return (
     <main>
@@ -43,7 +43,7 @@ interface PropsInfoUserPage {
   authUser: User;
 }
 
-function InfoUser(props: PropsInfoUserPage): JSX.Element {
+function InfoUser(props: PropsInfoUserPage) {
   return (
     <Grid
       container
@@ -78,7 +78,7 @@ function InfoUser(props: PropsInfoUserPage): JSX.Element {
   );
 }
 
-function SignCard(): JSX.Element {
+function SignCard() {
   const { authUser, loading } = useFirebaseAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

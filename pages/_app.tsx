@@ -5,7 +5,7 @@ import { darkThemeOptions, lightThemeOptions } from '../styles/theme';
 import { Provider } from 'react-redux';
 import { store, useAppSelector } from '../logic/redux/store';
 import '../styles/globals.css';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AuthContextProvider } from '@/logic/context/auth_context';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { itIT } from '@mui/x-date-pickers/locales';
@@ -36,7 +36,7 @@ import SEO from '../next-seo.config';
 // TODO: Implementare spazi fra accordi senza testo (per ora solo nelle righe intere senza testo, cerca canzoni con cui testare, sicuro "Mi perdo nel tuo amore")
 import { useFirebaseRoutesAnalytics } from '@/logic/hooks/use_firebase_analytics';
 
-export default function App({ Component, pageProps }: AppProps): JSX.Element {
+export default function App({ Component, pageProps }: AppProps) {
   const [mounted, setMounted] = useState(false);
   useFirebaseRoutesAnalytics();
 
@@ -72,7 +72,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
   );
 }
 
-function ThemedComponent({ Component, pageProps }: any): JSX.Element {
+function ThemedComponent({ Component, pageProps }: any) {
   const darkMode = useAppSelector((state) => state.settings.darkMode);
 
   return (

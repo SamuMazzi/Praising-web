@@ -20,7 +20,7 @@ interface PropsSingleLecture {
   isGospel?: boolean;
 }
 
-const SingleLecture = (props: PropsSingleLecture): JSX.Element => {
+const SingleLecture = (props: PropsSingleLecture) => {
   if (props.isLoading) {
     return <ShimmerSegments numSegments={20} />;
   }
@@ -41,7 +41,7 @@ const SingleLecture = (props: PropsSingleLecture): JSX.Element => {
   );
 };
 
-export default function Lectures(): JSX.Element {
+export default function Lectures() {
   const [dataLiturgia, setDataLiturgia] = useState(dayjs());
   const { content, error, loading } = useLecture(
     `/api/lectures/${dataLiturgia.format('YYYYMMDD')}`
@@ -103,7 +103,7 @@ export default function Lectures(): JSX.Element {
                 >
                   {content?.psalm.title}
                 </Typography>
-                {content?.psalm.chorus.map((chorus, index): JSX.Element => {
+                {content?.psalm.chorus.map((chorus, index) => {
                   const lastChorus = index === content?.psalm.chorus.length - 1;
                   return (
                     <div key={'chorus_psalm_' + index}>
@@ -123,7 +123,7 @@ export default function Lectures(): JSX.Element {
                     </div>
                   );
                 })}
-                {content?.psalm.verses.map((verse, index): JSX.Element => {
+                {content?.psalm.verses.map((verse, index) => {
                   if (verse.trim() !== '') {
                     return (
                       <Typography key={'verse_psalm_' + index} sx={{ pb: 1 }}>

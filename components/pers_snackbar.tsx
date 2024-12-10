@@ -9,7 +9,7 @@ interface PropsSnackbar {
   message: string;
 }
 
-export default function PersSnackbar(props: PropsSnackbar): JSX.Element {
+export default function PersSnackbar(props: PropsSnackbar) {
   const handleClose = (
     event: React.SyntheticEvent | Event,
     reason?: string
@@ -48,7 +48,7 @@ interface PropsMessageSnackbar {
   message: string;
 }
 
-export function MessageSnackbar(props: PropsMessageSnackbar): JSX.Element {
+export function MessageSnackbar(props: PropsMessageSnackbar) {
   const handleClose = (
     event: React.SyntheticEvent | Event,
     reason?: string

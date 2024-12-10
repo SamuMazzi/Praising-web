@@ -8,7 +8,7 @@ interface PropsSongDiv {
   infoSong: InfoLocalSong | undefined;
 }
 
-export const SongDiv = (props: PropsSongDiv): JSX.Element => {
+export const SongDiv = (props: PropsSongDiv) => {
   return (
     <div id="songDiv">
       {props.sections.map((section, index) => {
@@ -27,7 +27,7 @@ export const SongDiv = (props: PropsSongDiv): JSX.Element => {
 function SectionSong(props: {
   section: string;
   infoSong: InfoLocalSong | undefined;
-}): JSX.Element {
+}) {
   const [compressed, setCompressed] = useState<boolean>(false);
 
   const onClickExpandable = (e: React.MouseEvent<HTMLDivElement>): void => {

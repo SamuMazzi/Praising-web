@@ -35,7 +35,7 @@ interface PropsListSongs {
  *
  * @param auto_sorting Default = True
  */
-export default function ListSongs(props: PropsListSongs): JSX.Element {
+export default function ListSongs(props: PropsListSongs) {
   const [songModal, setSongModal] = useState('');
   const [showModalCreatePlaylist, setShowModalCreatePlaylist] = useState(false);
   const [filter, setFilter] = useState('');
@@ -100,7 +100,7 @@ export default function ListSongs(props: PropsListSongs): JSX.Element {
           </Box>
         ))}
       <List>
-        {localSongs.map((song): JSX.Element => {
+        {localSongs.map((song) => {
           if (props.mode === 'normal')
             return (
               <SongTile
@@ -150,7 +150,7 @@ interface PropsListSongsPlaylist {
   playlist: Playlist;
 }
 
-export function ListSongsPlaylist(props: PropsListSongsPlaylist): JSX.Element {
+export function ListSongsPlaylist(props: PropsListSongsPlaylist) {
   const dispatch = useAppDispatch();
   const [songModal, setSongModal] = useState('');
   const [filter, setFilter] = useState('');

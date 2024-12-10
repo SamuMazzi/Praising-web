@@ -4,9 +4,8 @@ import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar';
 import Link from 'next/link';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import React from 'react';
 
-export default function FeedbackPage(): JSX.Element {
+export default function FeedbackPage() {
   return (
     <Container disableGutters sx={{ minHeight: '100vh' }}>
       <PraisingAppBar title="Feedback" backIcon />

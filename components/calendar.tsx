@@ -11,9 +11,7 @@ interface PropsCalendarSelectSingleDay {
   onChangeDate: (arg0: Dayjs) => void;
 }
 
-export function CalendarSelectSingleDay(
-  props: PropsCalendarSelectSingleDay
-): JSX.Element {
+export function CalendarSelectSingleDay(props: PropsCalendarSelectSingleDay) {
   const handleDaySelected = (newDate: Dayjs): void => {
     props.onChangeDate(newDate);
   };

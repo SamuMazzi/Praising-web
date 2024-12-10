@@ -9,7 +9,7 @@ interface PropsTypeSearch {
   setQuery: (arg0: string) => void;
 }
 
-export default function TypeSearch(props: PropsTypeSearch): JSX.Element {
+export default function TypeSearch(props: PropsTypeSearch) {
   const [showClearIcon, setShowClearIcon] = useState('none');
 
   return (

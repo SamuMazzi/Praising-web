@@ -9,7 +9,7 @@ interface PropsPdfPage {
   info: InfoRenderSong;
 }
 
-const PagePDFSong = (props: PropsPdfPage): JSX.Element => {
+const PagePDFSong = (props: PropsPdfPage) => {
   if (props.song === undefined) {
     return <div></div>;
   }

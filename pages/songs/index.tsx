@@ -6,7 +6,7 @@ import ListSongs from '@/components/list_songs';
 import React from 'react';
 import { NextSeo } from 'next-seo';
 
-export default function SongsPage(): JSX.Element {
+export default function SongsPage() {
   const localSongs = getLocalSongs();
 
   return (

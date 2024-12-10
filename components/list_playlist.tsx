@@ -18,7 +18,7 @@ interface PropsListPlaylist {
  * List of songs displayed in the playlist page.
  * If there are no playlists, a message with an image is displayed.
  */
-export default function ListPlaylist(props: PropsListPlaylist): JSX.Element {
+export default function ListPlaylist(props: PropsListPlaylist) {
   const { authUser } = useFirebaseAuth();
   const { playlists, loadingPlaylists } = usePlaylists();
   const listPlaylists = Object.values(playlists).sort((a, b) =>

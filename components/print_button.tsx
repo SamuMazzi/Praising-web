@@ -9,7 +9,7 @@ interface PropsPrintButton {
   onClick: () => Promise<void>;
 }
 
-export const PrintButton = (props: PropsPrintButton): JSX.Element => {
+export const PrintButton = (props: PropsPrintButton) => {
   const [loading, setLoading] = useState(false);
 
   return (

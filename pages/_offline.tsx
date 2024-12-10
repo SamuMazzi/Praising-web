@@ -1,9 +1,8 @@
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar';
-import React from 'react';
 
-export default function OfflinePage(): JSX.Element {
+export default function OfflinePage() {
   return (
     <Container
       sx={{ minHeight: '100vh', pt: verticalPaddingAppBar * 3 + 2, pb: 7 }}

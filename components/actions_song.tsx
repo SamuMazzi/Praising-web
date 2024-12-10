@@ -14,7 +14,7 @@ import IconButton from '@mui/material/IconButton';
 import { type InfoLocalSong, modifySong } from '@/logic/redux/info_song_slice';
 import { setShowChords } from '@/logic/redux/settings_slice';
 import Tooltip from '@mui/material/Tooltip';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Slide from '@mui/material/Slide';
 import { type CustomSongInfo } from '@/logic/server/database';
 import useFirebaseAuth from '@/logic/hooks/use_auth';
@@ -30,7 +30,7 @@ interface PropsActionSong {
   setEditMode: () => void;
 }
 
-const ActionIconButton = (props: any): JSX.Element => {
+const ActionIconButton = (props: any) => {
   const { title, children, index, visible, onClick, ...propsIconButton } =
     props;
 
@@ -90,7 +90,7 @@ const ActionIconButton = (props: any): JSX.Element => {
   );
 };
 
-export default function ActionsSong(props: PropsActionSong): JSX.Element {
+export default function ActionsSong(props: PropsActionSong) {
   const [openModal, setOpenModal] = useState(false);
   const [menuExpanded, setMenuExpanded] = useState(true);
   const { loading } = useFirebaseAuth(); // authUser

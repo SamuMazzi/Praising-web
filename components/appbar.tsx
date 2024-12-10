@@ -163,7 +163,7 @@ interface PropsHideOnScroll {
   children: React.ReactElement;
 }
 
-export const HideOnScroll = (props: PropsHideOnScroll): JSX.Element => {
+export const HideOnScroll = (props: PropsHideOnScroll) => {
   const { children, window } = props;
   // Note that you normally won't need to set the window ref as useScrollTrigger
   // will default to window.
@@ -188,7 +188,7 @@ interface PropsAppBar {
 
 export const verticalPaddingAppBar = 3;
 
-export default function PraisingAppBar(props: PropsAppBar): JSX.Element {
+export default function PraisingAppBar(props: PropsAppBar) {
   const router = useRouter();
   const [showNews, setShowNews] = React.useState(false);
 
@@ -297,7 +297,7 @@ interface PropsMenuItemVersions {
   versions?: CustomSongInfo[];
 }
 
-function MenuItemVersions(props: PropsMenuItemVersions): JSX.Element {
+function MenuItemVersions(props: PropsMenuItemVersions) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>): void => {
@@ -376,7 +376,7 @@ function MenuItemVersions(props: PropsMenuItemVersions): JSX.Element {
 export const SongTitleAppBar = (props: {
   title: string;
   versionText: string;
-}): JSX.Element => {
+}) => {
   return (
     <Box sx={{ flexGrow: 1 }} alignItems="center">
       <Typography
@@ -406,7 +406,7 @@ interface PropsSongAppBar extends PropsMenuItemVersions {
   playlist?: Playlist;
 }
 
-export const SongAppBar = (props: PropsSongAppBar): JSX.Element => {
+export const SongAppBar = (props: PropsSongAppBar) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const { authUser } = useFirebaseAuth();
   const router = useRouter();
@@ -626,7 +626,7 @@ interface PropsPlaylistAppBar {
   playlist: Playlist | undefined;
 }
 
-export const PlaylistAppBar = (props: PropsPlaylistAppBar): JSX.Element => {
+export const PlaylistAppBar = (props: PropsPlaylistAppBar) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const router = useRouter();
   const theme = useTheme();

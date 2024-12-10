@@ -19,7 +19,7 @@ interface PropsPlaylistTile {
   playlist: Playlist;
 }
 
-export default function PlaylistTile(props: PropsPlaylistTile): JSX.Element {
+export default function PlaylistTile(props: PropsPlaylistTile) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const openMenu = (event: React.MouseEvent<HTMLButtonElement>): void => {
@@ -55,9 +55,7 @@ interface PropsSelectablePlaylistTile {
   songId: string;
 }
 
-export function SelectablePlaylistTile(
-  props: PropsSelectablePlaylistTile
-): JSX.Element {
+export function SelectablePlaylistTile(props: PropsSelectablePlaylistTile) {
   const dispatch = useAppDispatch();
   const theme = useTheme();
   const selected = props.playlist.songs.includes(props.songId);

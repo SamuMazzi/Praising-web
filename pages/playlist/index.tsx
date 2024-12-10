@@ -8,7 +8,7 @@ import ListPlaylist from '@/components/list_playlist';
 import Box from '@mui/material/Box';
 import { NextSeo } from 'next-seo';
 
-export default function PlaylistPage(): JSX.Element {
+export default function PlaylistPage() {
   const [openModal, setOpenModal] = useState(false);
 
   return (

@@ -27,7 +27,7 @@ interface ModalAddSongProps extends GenericProps {
   location: [number, number];
 }
 
-export function ModalCreateSession(props: ModalAddSongProps): JSX.Element {
+export function ModalCreateSession(props: ModalAddSongProps) {
   const [name, setName] = useState('');
   const [error, setError] = useState('');
   // TODO: Add "useUser"
@@ -103,7 +103,7 @@ interface PropsModalCreateAccountForThisAction extends GenericProps {
 
 export function ModalCreateAccountForThisAction(
   props: PropsModalCreateAccountForThisAction
-): JSX.Element {
+) {
   /* const router = useRouter();
   const handleConfirm = async (): Promise<void> => {
     void router.push(Routes.Login);
@@ -154,7 +154,7 @@ export function ModalCreateAccountForThisAction(
   );
 }
 
-export function ModalAddPlaylist(props: GenericProps): JSX.Element {
+export function ModalAddPlaylist(props: GenericProps) {
   return <ModalEditNamePlaylist {...props} />;
 }
 
@@ -162,9 +162,7 @@ interface PropsModalEditNamePlaylist extends GenericProps {
   playlist?: Playlist;
 }
 
-export function ModalEditNamePlaylist(
-  props: PropsModalEditNamePlaylist
-): JSX.Element {
+export function ModalEditNamePlaylist(props: PropsModalEditNamePlaylist) {
   const [name, setName] = useState(props.playlist?.name ?? '');
   const [loading, setLoading] = useState(false);
   const { authUser } = useFirebaseAuth();
@@ -249,29 +247,31 @@ export function ModalEditNamePlaylist(
   );
 }
 
-const style = {
-  position: 'absolute' as const,
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  maxWidth: '90%',
-  maxHeight: '85%',
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-  borderRadius: 8,
-  borderColor: 'background.paper',
-  p: 4
-};
-
 interface PropsGenericModal extends GenericProps {
-  content: JSX.Element;
+  content: React.ReactElement;
 }
 
-export const GenericModal = (props: PropsGenericModal): JSX.Element => {
+export const GenericModal = (props: PropsGenericModal) => {
   return (
     <Modal open={props.open} onClose={props.handleClose}>
-      <Box sx={style}>{props.content}</Box>
+      <Box
+        sx={{
+          position: 'absolute' as const,
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 400,
+          maxWidth: '90%',
+          maxHeight: '85%',
+          bgcolor: 'background.paper',
+          boxShadow: 24,
+          borderRadius: 8,
+          borderColor: 'background.paper',
+          p: 4
+        }}
+      >
+        {props.content}
+      </Box>
     </Modal>
   );
 };

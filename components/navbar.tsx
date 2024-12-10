@@ -10,7 +10,7 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded';
 import ListRoundedIcon from '@mui/icons-material/ListRounded';
 
-export default function NavBar(): JSX.Element {
+export default function NavBar() {
   const router = useRouter();
   const pages = ['Home', 'Canti', 'Letture', 'Playlist'];
   const routesPages = [

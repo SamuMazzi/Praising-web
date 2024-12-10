@@ -34,7 +34,7 @@ interface PropsSongTile {
   onSecondaryAction: () => void;
 }
 
-export default function SongTile(props: PropsSongTile): JSX.Element {
+export default function SongTile(props: PropsSongTile) {
   return (
     <ListItem
       component={NextLinkComposed}
@@ -65,9 +65,7 @@ interface PropsSelectableSongTile {
   playlist: Playlist;
 }
 
-export function SelectableSongTile(
-  props: PropsSelectableSongTile
-): JSX.Element {
+export function SelectableSongTile(props: PropsSelectableSongTile) {
   const dispatch = useAppDispatch();
   const theme = useTheme();
   const selected = props.playlist.songs.includes(props.song.id);
@@ -99,7 +97,7 @@ interface PropsSelectableSongTile {
   playlist: Playlist;
 }
 
-export function PlaylistSongTile(props: PropsSelectableSongTile): JSX.Element {
+export function PlaylistSongTile(props: PropsSelectableSongTile) {
   // FIXME: Sometimes it throws "TypeError: Illegal invocation"
   return (
     <Draggable key={props.song.id}>
