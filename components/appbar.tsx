@@ -26,8 +26,6 @@ import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { setChordNotation } from '@/logic/redux/settings_slice';
-import ShareIcon from '@mui/icons-material/Share';
-import { RWebShare } from 'react-web-share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 import {
@@ -49,6 +47,7 @@ import { getFromStorage } from '@/logic/local_logic';
 import { PrintButton } from './print_button';
 import useFirebaseAuth from '@/logic/hooks/use_auth';
 import AnimatedOnboardingSlider from './onboard';
+import { ShareSong } from './shares';
 
 // This is really useful in the case we'll ever want to split a song in multiple pages (in case it's too long)
 /*
@@ -513,24 +512,7 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                   setAnchorEl(null);
                 }}
               >
-                <RWebShare
-                  data={{
-                    text:
-                      'Visualizza la canzone ' +
-                      props.title +
-                      " su 'Praising'!",
-                    url: Routes.Base + Routes.Songs + '/' + props.id,
-                    title: 'Condividi questa canzone'
-                  }}
-                  sites={['facebook', 'whatsapp', 'telegram', 'mail', 'copy']}
-                >
-                  <MenuItem>
-                    <ListItemIcon>
-                      <ShareIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Condividi" />
-                  </MenuItem>
-                </RWebShare>
+                <ShareSong title={props.title} id={props.id} />
                 <MenuItem
                   onClick={() => {
                     if (authUser === null) return;

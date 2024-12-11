@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { deletePlaylist, setPlaylist } from '@/logic/redux/playlist_slice';
+import { deletePlaylist } from '@/logic/redux/playlist_slice';
 import Routes from '@/logic/routes';
 import { useAppDispatch, useAppSelector } from '@/logic/redux/store';
 import Menu from '@mui/material/Menu';
@@ -9,16 +9,14 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
-import ShareIcon from '@mui/icons-material/Share';
-import { RWebShare } from 'react-web-share';
-import PersSnackbar from './pers_snackbar';
 import { ModalEditNamePlaylist } from './modals';
 import { saveToStorage } from '@/logic/local_logic';
 import { useTheme } from '@mui/material';
 import { playlistToPdf } from '@/logic/song_to_pdf';
 import { type ChordNotations } from '@/logic/redux/settings_slice';
 import { PrintButton } from './print_button';
-import { setServerPlaylist, type Playlist } from '@/logic/server/database';
+import { type Playlist } from '@/logic/server/database';
+import { SharePlaylist } from './shares';
 
 interface PropsMenuPlaylist {
   anchorEl: HTMLElement | null;
@@ -32,8 +30,6 @@ export const MenuPlaylist = (props: PropsMenuPlaylist) => {
     (state) => state.settings.chordNotation
   );
   const [openEdit, setOpenEdit] = useState(false);
-  const [snackbar, openSnackbar] = useState(false);
-  const [message, setMessage] = useState('');
   const router = useRouter();
   const dispatch = useAppDispatch();
   const theme = useTheme();
@@ -47,42 +43,10 @@ export const MenuPlaylist = (props: PropsMenuPlaylist) => {
       anchorEl={props.anchorEl}
       open={Boolean(props.anchorEl)}
       onClose={() => {
-        openSnackbar(false);
         closeMenu();
       }}
     >
-      <RWebShare
-        data={{
-          text:
-            'Visualizza la playlist ' +
-            props.playlist!.name +
-            " su 'Praising'!\n",
-          url:
-            Routes.Base +
-            Routes.Playlist +
-            '/' +
-            encodeURIComponent(props.playlist!.id),
-          title: 'Condividi questa playlist'
-        }}
-        sites={['facebook', 'whatsapp', 'telegram', 'mail', 'copy']}
-        onClick={() => {
-          if (props.playlist === undefined) return;
-          if (!props.playlist.shared) {
-            const newPlaylist = { ...props.playlist, shared: true };
-            dispatch(setPlaylist(newPlaylist));
-            void setServerPlaylist(props.playlist);
-          }
-          setMessage('Link copiato');
-          openSnackbar(true);
-        }}
-      >
-        <MenuItem>
-          <ListItemIcon>
-            <ShareIcon />
-          </ListItemIcon>
-          <ListItemText primary="Condividi" />
-        </MenuItem>
-      </RWebShare>
+      <SharePlaylist playlist={props.playlist!} />
       <MenuItem
         onClick={() => {
           setOpenEdit(true);
@@ -130,13 +94,6 @@ export const MenuPlaylist = (props: PropsMenuPlaylist) => {
           closeMenu();
         }}
         playlist={props.playlist}
-      />
-      <PersSnackbar
-        open={snackbar}
-        handleClose={() => {
-          openSnackbar(false);
-        }}
-        message={message}
       />
     </Menu>
   );
