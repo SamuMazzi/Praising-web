@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+/* import React, { useCallback, useEffect, useRef } from 'react';
 import {
   EmblaCarouselType,
   EmblaEventType,
@@ -138,10 +138,10 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
               )}
             />
           ))}
-        </div> */}
+        </div> /}
       </div>
     </div>
   );
 };
 
-export default EmblaCarousel;
+export default EmblaCarousel; */

@@ -1,4 +1,4 @@
-import React, {
+/* import React, {
   ComponentPropsWithRef,
   useCallback,
   useEffect,
@@ -92,4 +92,4 @@ export const NextButton: React.FC<PropType> = (props) => {
       {children}
     </button>
   );
-};
+}; */

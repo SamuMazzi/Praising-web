@@ -93,7 +93,7 @@ export default function SettingsPage() {
             </ListItemButton>
           </ListItem>
         </List>
-        <p>Versione: 0.6.4</p>
+        <p>Versione: 0.6.5</p>
       </Container>
     </main>
   );
