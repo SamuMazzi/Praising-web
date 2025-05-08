@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar';
 import Link from 'next/link';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 
 export default function FeedbackPage() {
   return (
@@ -16,12 +16,12 @@ export default function FeedbackPage() {
         alignItems="center"
         sx={{ pt: verticalPaddingAppBar * 3 + 2, px: 2, pb: 3 }}
       >
-        <Grid item>
+        <Grid>
           <Typography variant="h2" component="h2" sx={{ pt: 5 }}>
             Contribuisci
           </Typography>
         </Grid>
-        <Grid item>
+        <Grid>
           <Typography
             sx={{ pt: 2 }}
             style={{ maxWidth: 600, whiteSpace: 'pre-wrap' }}
@@ -42,7 +42,7 @@ export default function FeedbackPage() {
               '(Se vuoi metti il tuo nome e magari anche un indirizzo email cosi che possa ringraziarti!)'}
           </Typography>
         </Grid>
-        <Grid item sx={{ mt: 4 }}>
+        <Grid sx={{ mt: 4 }}>
           <Button
             variant="contained"
             LinkComponent={Link}

@@ -12,6 +12,8 @@ import { itIT } from '@mui/x-date-pickers/locales';
 import { DefaultSeo } from 'next-seo';
 import SEO from '../next-seo.config';
 
+//TODO: Check out https://vaul.emilkowal.ski/ and https://sonner.emilkowal.ski/
+
 //TODO: Add function in cloud functions to delete old users (based on last access time)
 /**
  * Priorities:
@@ -31,6 +33,8 @@ import SEO from '../next-seo.config';
  * 3a. Animations on transition from song to page (like button being pressed and then pops up new page from a growing circle)
  * 4. Check loading times of recaptcha (they seem huge and unaffective)
  * 5. Create tmp playlist for the mass of the day (with hints maybe? AI generated maybe?)
+ * https://platform.openai.com/docs/assistants/tools/file-search?context=without-streaming
+ *
  */
 
 // TODO: Implementare spazi fra accordi senza testo (per ora solo nelle righe intere senza testo, cerca canzoni con cui testare, sicuro "Mi perdo nel tuo amore")
