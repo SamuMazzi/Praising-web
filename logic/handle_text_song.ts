@@ -324,7 +324,10 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
       }
     }
 
-    deserialized.setMetadata('chord_style', props.chordNotation);
+    deserialized = deserialized.changeMetadata(
+      'chord_style',
+      props.chordNotation
+    );
 
     const disp = new ChordSheetJS.HtmlDivFormatter({
       normalizeChords: true

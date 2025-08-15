@@ -7,7 +7,6 @@ import { useAppDispatch } from '../logic/redux/store';
 import TextField from '@mui/material/TextField';
 import { setPlaylist } from '@/logic/redux/playlist_slice';
 import Grid from '@mui/material/Grid';
-import Grid2 from '@mui/material/Grid2';
 import CircularProgress from '@mui/material/CircularProgress';
 import {
   addServerPlaylist,
@@ -114,21 +113,21 @@ export function ModalCreateAccountForThisAction(
       open={props.open}
       handleClose={props.handleClose}
       content={
-        <Grid2
+        <Grid
           container
           direction="column"
           justifyContent="center"
           alignItems="center"
         >
-          <Grid2>
+          <Grid>
             <Typography variant="h2" component="h2" sx={{ mb: 3 }}>
               {props.title}
             </Typography>
-          </Grid2>
-          <Grid2>
+          </Grid>
+          <Grid>
             <Typography>{props.message}</Typography>
-          </Grid2>
-          <Grid2 container direction="row" sx={{ mt: 2 }}>
+          </Grid>
+          <Grid container direction="row" sx={{ mt: 2 }}>
             <Button
               onClick={() => {
                 props.handleClose();
@@ -147,8 +146,8 @@ export function ModalCreateAccountForThisAction(
             >
               Registrati
             </Button> */}
-          </Grid2>
-        </Grid2>
+          </Grid>
+        </Grid>
       }
     />
   );
@@ -213,14 +212,14 @@ export function ModalEditNamePlaylist(props: PropsModalEditNamePlaylist) {
           justifyContent="center"
           alignItems="center"
         >
-          <Grid item>
+          <Grid>
             <Typography variant="h2" component="h2" sx={{ mb: 3 }}>
               {props.playlist !== undefined
                 ? 'Modifica nome'
                 : 'Aggiungi una playlist'}
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid>
             <TextField
               sx={{ my: 1 }}
               label="Nome"
@@ -232,7 +231,7 @@ export function ModalEditNamePlaylist(props: PropsModalEditNamePlaylist) {
               FormHelperTextProps={{ style: { color: 'red' } }}
             />
           </Grid>
-          <Grid item sx={{ mt: 1 }}>
+          <Grid sx={{ mt: 1 }}>
             {loading ? (
               <CircularProgress />
             ) : (

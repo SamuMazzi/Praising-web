@@ -380,7 +380,6 @@ export const SongTitleAppBar = (props: {
     <Box sx={{ flexGrow: 1 }} alignItems="center">
       <Typography
         variant="h1"
-        component="h1"
         sx={{ py: 1, width: { xs: '16rem', md: '40rem' } }}
         noWrap
         style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}

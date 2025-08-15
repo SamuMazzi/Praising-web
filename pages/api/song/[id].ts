@@ -15,6 +15,8 @@ export default async function handler(
     return;
   }
 
+  res.setHeader('Cache-Control', 'public, max-age=7200, stale-while-revalidate=119');
+
   const dirRelativeToPublicFolder = 'accordi';
   const dir = path.resolve('./public', dirRelativeToPublicFolder);
   const fileContents = await fs.readFile(dir + '/' + song.nameFile, 'utf8');

@@ -1,6 +1,6 @@
 import MuiContainer from '@mui/material/Container';
 import List from '@mui/material/List';
-import { type Song } from '@/logic/local_logic';
+import { getSingleSong, type Song } from '@/logic/local_logic';
 import SongTile, {
   PlaylistSongTile,
   SelectableSongTile
@@ -69,7 +69,7 @@ export default function ListSongs(props: PropsListSongs) {
       alignItems="center"
       justifyContent="center"
     >
-      <Grid item xs={12} sx={{ pt: 4 }}>
+      <Grid sx={{ pt: 4 }}>
         <Image
           src="assets/undraw_illustrations/undraw_more_music.svg"
           alt="More music"
@@ -77,7 +77,7 @@ export default function ListSongs(props: PropsListSongs) {
           height={200}
         />
       </Grid>
-      <Grid item xs={12} sx={{ pt: 2 }}>
+      <Grid sx={{ pt: 2 }}>
         <Typography align="center" style={{ fontWeight: 300 }}>
           Inizia a suonare per riempire la lista
         </Typography>
@@ -146,7 +146,6 @@ export default function ListSongs(props: PropsListSongs) {
 }
 
 interface PropsListSongsPlaylist {
-  songs: Song[];
   playlist: Playlist;
 }
 
@@ -154,7 +153,11 @@ export function ListSongsPlaylist(props: PropsListSongsPlaylist) {
   const dispatch = useAppDispatch();
   const [songModal, setSongModal] = useState('');
   const [filter, setFilter] = useState('');
-  const localSongs = props.songs.filter((v) =>
+  console.log('ListSongsPlaylist', props.playlist.songs);
+  const songs = props.playlist.songs
+    .map((idSong) => getSingleSong(idSong))
+    .filter((x) => x !== undefined);
+  const localSongs = songs.filter((v) =>
     v.name.toLowerCase().includes(filter.toLowerCase())
   );
 

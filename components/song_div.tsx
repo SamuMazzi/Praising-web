@@ -10,7 +10,7 @@ interface PropsSongDiv {
 
 export const SongDiv = (props: PropsSongDiv) => {
   return (
-    <div id="songDiv">
+    <div>
       {props.sections.map((section, index) => {
         return (
           <SectionSong

@@ -11,7 +11,7 @@ import Button from '@mui/material/Button';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import { useTheme } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import React, { useState, ChangeEvent } from 'react';
 import useFirebaseAuth from '@/logic/hooks/use_auth';
@@ -158,7 +158,7 @@ export function ModalBottomSheetAddPart(props: PropsModalBottomSheetAddPart) {
                     "Carica una parte della canzone per poterla condividere con gli altri membri della comunità. Dovrà prima essere approvata dall'amministratore, poi sarà visibile a tutti"
                   }
                 </Typography>
-                <Typography variant="h6" component="h2" sx={{ mt: 4 }}>
+                <Typography variant="h2" component="h2" sx={{ mt: 4 }}>
                   Nome della parte
                 </Typography>
                 <Typography variant="body2" component="p">
@@ -176,7 +176,7 @@ export function ModalBottomSheetAddPart(props: PropsModalBottomSheetAddPart) {
                 />
               </Grid>
               <Grid>
-                <Typography variant="h6" component="h2" sx={{ mt: 4 }}>
+                <Typography variant="h2" component="h2" sx={{ mt: 4 }}>
                   Autore
                 </Typography>
                 <Typography variant="body2" component="p">

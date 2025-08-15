@@ -4,7 +4,7 @@ import PlaylistTile, {
 } from '@/components/playlist_tile';
 import Image from 'next/image';
 import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import React from 'react';
 import useFirebaseAuth from '@/logic/hooks/use_auth';
 import usePlaylists from '@/logic/hooks/use_playlists';

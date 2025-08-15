@@ -28,12 +28,9 @@ export default function PlaylistPage(props: PropsSongPage) {
   const { playlist, loadingPlaylist, error, canEdit } = useSinglePlaylist(
     props.id
   );
-  const songs = playlist?.songs
-    .map((idSong) => getSingleSong(idSong))
-    .filter((x) => x !== undefined);
   const [openModal, setOpenModal] = useState(false);
 
-  if (!playlist || songs === undefined || loadingPlaylist || error) {
+  if (!playlist || loadingPlaylist || error) {
     if (getFromStorage('deleting_playlist') === props.id) {
       /** It means that it's deleting and you shouldn't display an error */
       saveToStorage('deleting_playlist', '');
@@ -59,7 +56,7 @@ export default function PlaylistPage(props: PropsSongPage) {
     <Container sx={{ minHeight: '100vh' }}>
       <PlaylistAppBar playlist={playlist} />
       <Container sx={{ py: 5 }} />
-      <ListSongsPlaylist songs={songs} playlist={playlist} />
+      <ListSongsPlaylist playlist={playlist} />
       <Container sx={{ py: 2 }} /> {/* Padding necessario per il Fab */}
       {canEdit && (
         <Fab

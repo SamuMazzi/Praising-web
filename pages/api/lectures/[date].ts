@@ -12,6 +12,7 @@ export default async function handler(
 
   try {
     const out = await extractLiturgia(url);
+    res.setHeader('Cache-Control', 'public, max-age=86400');
     res.status(200).json(out);
   } catch (e: any) {
     // TODO: This was used with axios, now find a way to handle this error

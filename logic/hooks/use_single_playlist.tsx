@@ -21,12 +21,10 @@ export default function useSinglePlaylist(idPlaylist: string): {
 } {
   const { authUser, loading } = useFirebaseAuth();
   const [loadingPlaylist, setLoadingPlaylist] = useState(true);
-  const local_playlist: Playlist | undefined = useAppSelector(
-    (state) => state.playlist.playlist[idPlaylist]
-  );
+  const all_playlists = useAppSelector((state) => state.playlist.playlist);
+  const playlist: Playlist | undefined = all_playlists[idPlaylist];
   const [error, setError] = useState('');
   const [canEdit, setCanEdit] = useState(false);
-  const [playlist, setStatePlaylist] = useState<Playlist | null>(null);
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -34,14 +32,14 @@ export default function useSinglePlaylist(idPlaylist: string): {
     try {
       const newPlaylist = await addServerPlaylist(
         authUser!.uid,
-        local_playlist.name,
-        local_playlist.songs,
+        playlist.name,
+        playlist.songs,
         { convertLocal: true }
       );
       dispatch(
         upgradePlaylist({
           p: { ...newPlaylist },
-          old_id: local_playlist.id,
+          old_id: playlist.id,
           userId: authUser!.uid
         })
       );
@@ -54,7 +52,6 @@ export default function useSinglePlaylist(idPlaylist: string): {
   };
 
   const handleNewPlaylist = (p: Playlist | null) => {
-    setStatePlaylist(p);
     setLoadingPlaylist(false);
     if (p === null) {
       setError('Playlist non trovata');
@@ -68,16 +65,16 @@ export default function useSinglePlaylist(idPlaylist: string): {
     setLoadingPlaylist(true);
     try {
       if (
-        local_playlist &&
-        ((!Number.isNaN(parseInt(local_playlist.id)) &&
-          parseInt(local_playlist.id) < 2000) ||
-          local_playlist.shared === undefined)
+        playlist &&
+        ((!Number.isNaN(parseInt(playlist.id)) &&
+          parseInt(playlist.id) < 2000) ||
+          playlist.shared === undefined)
       ) {
         // If this is true it means this is legacy playlist
         onLegacyPlaylist();
-      } else if (local_playlist && !local_playlist.shared) {
-        handleNewPlaylist(local_playlist);
-      } else if (!local_playlist && authUser) {
+      } else if (playlist && !playlist.shared) {
+        handleNewPlaylist(playlist);
+      } else if (!playlist && authUser) {
         await addSharedPlaylist(authUser.uid, idPlaylist);
         const newP = await getServerSinglePlaylist(idPlaylist);
         handleNewPlaylist(newP);

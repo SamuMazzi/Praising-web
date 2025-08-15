@@ -53,7 +53,7 @@ export default function useLecture(url: string): {
   useEffect(() => {
     void fetchLiturgy();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [url]);
 
   return {
     content,
