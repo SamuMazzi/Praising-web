@@ -22,7 +22,7 @@ export default function FeedbackPage() {
         alignItems="center"
         sx={{ pt: verticalPaddingAppBar * 3 + 2, px: 2, pb: 3 }}
       >
-        <Grid item sx={{ mb: 2 }}>
+        <Grid sx={{ mb: 2 }}>
           <Card elevation={8} sx={{ borderRadius: 4, p: 2 }}>
             <Image
               src="assets/undraw_illustrations/undraw_feedback.svg"
@@ -32,7 +32,7 @@ export default function FeedbackPage() {
             />
           </Card>
         </Grid>
-        <Grid item>
+        <Grid>
           <Typography sx={{ maxWidth: 600 }} style={{ whiteSpace: 'pre-wrap' }}>
             {'Inserisci qui i problemi che vuoi segnalare o i consigli che vuoi dare: saranno accolti con piacere!\n' +
               "Non essendo il mio lavoro a tempo pieno potrei metterci un po' a rispondere, ma lo farò sicuramente.\n" +
@@ -40,7 +40,7 @@ export default function FeedbackPage() {
             {/** #eca113 */}
           </Typography>
         </Grid>
-        <Grid item>
+        <Grid>
           <TextField
             id="outlined-controlled"
             label=""
@@ -54,7 +54,7 @@ export default function FeedbackPage() {
             }}
           />
         </Grid>
-        <Grid item sx={{ mt: 2 }}>
+        <Grid sx={{ mt: 2 }}>
           <Button
             variant="contained"
             LinkComponent={Link}

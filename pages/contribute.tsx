@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar';
 import Link from 'next/link';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 
 export default function FeedbackPage() {
   return (
