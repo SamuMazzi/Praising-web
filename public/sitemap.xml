@@ -1434,4 +1434,10 @@
 		<changefreq>always</changefreq>
 		<priority>0.9</priority>
 	</url>
+	<url>
+		<loc>https://praising.vercel.app/songs/233</loc>
+		<lastmod>2025-08-19T16:41:10.657Z</lastmod>
+		<changefreq>always</changefreq>
+		<priority>0.9</priority>
+	</url>
 </urlset>

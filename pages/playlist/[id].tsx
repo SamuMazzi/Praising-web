@@ -1,10 +1,6 @@
 import Container from '@mui/material/Container';
 import { PlaylistAppBar } from '@/components/appbar';
-import {
-  getFromStorage,
-  getSingleSong,
-  saveToStorage
-} from '@/logic/local_logic';
+import { getFromStorage, saveToStorage } from '@/logic/local_logic';
 import { ListSongsPlaylist } from '@/components/list_songs';
 import React, { useState } from 'react';
 import { ModalBottomSheetPlaylist } from '@/components/bottom_sheet';
@@ -13,25 +9,18 @@ import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import useSinglePlaylist from '@/logic/hooks/use_single_playlist';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Typography } from '@mui/material';
+import { useRouter } from 'next/router';
 
-PlaylistPage.getInitialProps = async (props: any) => {
-  const { id } = props.query;
-
-  return { id };
-};
-
-interface PropsSongPage {
-  id: string;
-}
-
-export default function PlaylistPage(props: PropsSongPage) {
-  const { playlist, loadingPlaylist, error, canEdit } = useSinglePlaylist(
-    props.id
-  );
+export default function PlaylistPage() {
+  const router = useRouter();
+  const { id } = router.query;
+  const id_playlist = id as string;
+  const { playlist, loadingPlaylist, error, canEdit } =
+    useSinglePlaylist(id_playlist);
   const [openModal, setOpenModal] = useState(false);
 
   if (!playlist || loadingPlaylist || error) {
-    if (getFromStorage('deleting_playlist') === props.id) {
+    if (getFromStorage('deleting_playlist') === id_playlist) {
       /** It means that it's deleting and you shouldn't display an error */
       saveToStorage('deleting_playlist', '');
       return <Container sx={{ minHeight: '100vh' }}></Container>;

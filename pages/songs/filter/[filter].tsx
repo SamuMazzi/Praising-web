@@ -7,25 +7,19 @@ import {
 import PraisingAppBar from '@/components/appbar';
 import ListSongs from '@/components/list_songs';
 import React from 'react';
+import { useRouter } from 'next/router';
 
-FilterPage.getInitialProps = async (props: any) => {
-  const { filter } = props.query;
-
-  return { filter };
-};
-
-interface PropsFilterPage {
-  filter: string;
-}
-
-export default function FilterPage(props: PropsFilterPage) {
+export default function FilterPage() {
+  const router = useRouter();
+  const { filter } = router.query;
+  if (typeof filter !== 'string') {
+    return <>Invalid filter</>;
+  }
   const localSongs = getLocalSongs().filter(
     (v) =>
-      (v.argomento?.includes(props.filter) ?? false) ||
-      v.parteMessa?.includes(props.filter)
+      (v.argomento?.includes(filter) ?? false) || v.parteMessa?.includes(filter)
   );
-  const nameFilter =
-    filterMomenti[props.filter] ?? filterArgomenti[props.filter];
+  const nameFilter = filterMomenti[filter] ?? filterArgomenti[filter];
 
   return (
     <Container>

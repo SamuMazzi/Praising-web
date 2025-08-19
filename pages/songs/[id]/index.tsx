@@ -34,16 +34,7 @@ import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownR
 import { EditableSong } from '@/components/editable_song';
 import { NextSeo } from 'next-seo';
 import { Playlist } from '@/logic/server/database';
-
-SongPage.getInitialProps = async (props: any) => {
-  const { id, playlistId } = props.query;
-  return { id, playlistId };
-};
-
-interface PropsSongPage {
-  id: string;
-  playlistId: string | undefined;
-}
+import { useRouter } from 'next/router';
 
 const driverObj = driver({
   // TODO: Sistema progress
@@ -131,19 +122,23 @@ const driverObj = driver({
 
 const TUTORIAL_SHOWN = 'tutorialShown_0';
 
-export default function SongPage(props: PropsSongPage) {
-  const song = getSingleSong(props.id);
+export default function SongPage() {
+  const router = useRouter();
+  const { id, playlistId } = router.query;
+  const id_song = id as string;
+  const playlistIdCode = playlistId as string | undefined;
+  const song = getSingleSong(id_song);
   const infoSong: InfoLocalSong | undefined = useAppSelector((state) =>
     song?.id !== undefined ? state.infoSongs.infoSongs[song.id] : undefined
   );
   const { content, versions, fetchSong, loadingContent, error } =
-    useContentSong(props.id, infoSong?.versionId);
+    useContentSong(id_song, infoSong?.versionId);
   const songVersionIndex = versions.findIndex(
     (v) => v.versionId === infoSong?.versionId
   );
   const playlist: Playlist | undefined = useAppSelector((state) =>
-    props.playlistId !== undefined
-      ? state.playlist.playlist[props.playlistId]
+    playlistIdCode !== undefined
+      ? state.playlist.playlist[playlistIdCode]
       : undefined
   );
   const [openModalPlaylist, setOpenModalPlaylist] = useState(false);

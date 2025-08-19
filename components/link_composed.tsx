@@ -25,7 +25,7 @@ export const NextLinkComposed = React.forwardRef<
     replace,
     scroll,
     shallow,
-    prefetch,
+    prefetch = true,
     legacyBehavior = true,
     locale,
     ...other

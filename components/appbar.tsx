@@ -7,7 +7,7 @@ import React from 'react';
 import Toolbar from '@mui/material/Toolbar';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import IconButton from '@mui/material/IconButton';
-import { useRouter } from 'next/router';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import Box from '@mui/material/Box';
 import FirstPageRoundedIcon from '@mui/icons-material/FirstPageRounded';
 import LastPageRoundedIcon from '@mui/icons-material/LastPageRounded';
@@ -408,6 +408,8 @@ export const SongAppBar = (props: PropsSongAppBar) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const { authUser } = useFirebaseAuth();
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const theme = useTheme();
   const indexInPlaylist = props.playlist?.songs.indexOf(props.id);
   const chordNotation = useAppSelector((state) => state.settings.chordNotation);
@@ -549,7 +551,11 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                 />
                 {getFromStorage('debug_admin') === true && (
                   <MenuItem
-                    onClick={() => router.push(`${router.asPath}/parts`)}
+                    onClick={() =>
+                      router.push(
+                        `${pathname}/parts?${searchParams.toString()}`
+                      )
+                    }
                     style={{ fontWeight: 600 }}
                   >
                     <ListItemIcon>

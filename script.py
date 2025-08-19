@@ -4,7 +4,7 @@ import os
 import re
 import hashlib
 import xml.etree.ElementTree as ET
-from datetime import datetime
+from datetime import datetime, timedelta
 
 parser = argparse.ArgumentParser(
                 prog='Helper script Praising',
@@ -175,7 +175,8 @@ def update_sitemap(sitemap_path: str, json_path: str, songs_directory: str):
             lastmod_elem = url_element.find(f'{namespace}lastmod')
             if lastmod_elem is not None:
                 existing_date = parse_datetime(lastmod_elem.text)
-                if mtime > existing_date:
+                if mtime > (existing_date + timedelta(seconds=1)):
+                    # Timedelta is needed to avoid issues with microseconds
                     print(f"Updating lastmod for {song_file_path} because {mtime} > {existing_date}")
                     lastmod_elem.text = new_lastmod
         else:
