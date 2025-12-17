@@ -9,6 +9,8 @@ export function useFirebaseRoutesAnalytics() {
   const pathname = usePathname();
 
   useEffect(() => {
+    if (!pathname) return;
+
     const analytics = getAnalytics(fbApp);
     const page_path = pathname;
     logEvent(analytics, 'screen_view', {

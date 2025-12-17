@@ -26,7 +26,6 @@ export const NextLinkComposed = React.forwardRef<
     scroll,
     shallow,
     prefetch = true,
-    legacyBehavior = true,
     locale,
     ...other
   } = props;
@@ -39,9 +38,7 @@ export const NextLinkComposed = React.forwardRef<
       replace={replace}
       scroll={scroll}
       shallow={shallow}
-      passHref
       locale={locale}
-      legacyBehavior={legacyBehavior}
     >
       <Anchor ref={ref} {...other} />
     </NextLink>

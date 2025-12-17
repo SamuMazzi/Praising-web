@@ -153,7 +153,6 @@ export function ListSongsPlaylist(props: PropsListSongsPlaylist) {
   const dispatch = useAppDispatch();
   const [songModal, setSongModal] = useState('');
   const [filter, setFilter] = useState('');
-  console.log('ListSongsPlaylist', props.playlist.songs);
   const songs = props.playlist.songs
     .map((idSong) => getSingleSong(idSong))
     .filter((x) => x !== undefined);

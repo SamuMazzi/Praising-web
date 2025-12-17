@@ -55,6 +55,7 @@ export default function NavBar() {
               key={page}
               label={page}
               icon={iconsPages[index]}
+              sx={{ pt: 1 }}
               component={NextLinkComposed}
               to={{
                 pathname: routesPages[index]
