@@ -459,7 +459,8 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                           props.playlist.songs[indexInPlaylist - 1] +
                           '?playlistId=' +
                           props.playlist.id
-                        }>
+                        }
+                      >
                         <IconButton
                           sx={{ ml: 2, mr: 0.5 }}
                           LinkComponent={Link}
@@ -477,7 +478,8 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                           props.playlist.songs[indexInPlaylist + 1] +
                           '?playlistId=' +
                           props.playlist.id
-                        }>
+                        }
+                      >
                         <IconButton sx={{ mr: 2 }} LinkComponent={Link}>
                           <LastPageRoundedIcon />
                         </IconButton>
