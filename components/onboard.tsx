@@ -54,9 +54,16 @@ const slides = [
     buttonText: 'Continua'
   },
   {
+    title: 'Seconde voci (beta)',
+    description:
+      'Conosci delle seconde voci per questa canzone? Caricale per aiutare il resto della community!\n Potresti trovare degli errori, non esitare a segnalarmeli.',
+    icon: '/assets/undraw_illustrations/onboarding/undraw_conference-speaker.svg',
+    buttonText: 'Continua'
+  },
+  {
     title: 'Altro in arrivo...',
     description:
-      'Praising è in continuo sviluppo, nuove funzionalità sono in arrivo, come le seconde voci e la modifica dei canti!\nResta aggiornato per non perderti nulla!',
+      'Praising è in continuo sviluppo, nuove funzionalità sono in arrivo!\nResta aggiornato per non perderti nulla!',
     icon: '/assets/undraw_illustrations/onboarding/undraw_programming.svg',
     buttonText: 'Finito'
   }
@@ -193,7 +200,7 @@ const OnboardingSlider = (props: { closeFn: () => void }) => {
           initial={{ opacity: 0, x: 100 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -100 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.25 }}
         >
           <Box sx={styles.container}>
             <Card elevation={3} sx={{ ...styles.content, mt: 4 }}>
@@ -230,7 +237,7 @@ const OnboardingSlider = (props: { closeFn: () => void }) => {
                     }}
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    transition={{ delay: 0.2, duration: 0.5 }}
+                    transition={{ delay: 0.2, duration: 0.25 }}
                   >
                     <BgBlob index={currentSlide} matchHeight={matchHeight} />
                     <div style={{ position: 'relative' }}>
@@ -256,10 +263,15 @@ const OnboardingSlider = (props: { closeFn: () => void }) => {
                   </Typography>
                 </Box>
 
-                {currentSlide !== 0 && 
-                <Button variant="outlined" sx={{ mr: 2, textTransform: 'none' }} onClick={handlePrev}>
-                  Indietro
-                </Button>}
+                {currentSlide !== 0 && (
+                  <Button
+                    variant="outlined"
+                    sx={{ mr: 2, textTransform: 'none' }}
+                    onClick={handlePrev}
+                  >
+                    Indietro
+                  </Button>
+                )}
                 <Button variant="contained" onClick={handleNext}>
                   {slides[currentSlide].buttonText}
                 </Button>

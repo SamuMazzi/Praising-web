@@ -299,10 +299,10 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
 
     const transpose = props.transpose ?? 0;
     // FIXME: Don't why there's this actually big problem, it can't really change chords from ita to eng
-    /* if (props.chordNotation === SYMBOL) {
-      transpose = 2 * transpose + 2;
-      console.log('transpose', transpose);
-    } */
+    // if (props.chordNotation === 'symbol') {
+    //   transpose = 2 * transpose - 2;
+    //   console.log('transpose', transpose);
+    // }
 
     if (transpose !== 0) {
       deserialized = deserialized.transpose(transpose);
@@ -345,13 +345,14 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
       sections,
       fontSize
     };
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
     return {
       sections: [],
       fontSize: 17,
       error:
-        "C'è stato un errore nel leggere il file, riprovare.\n" + error.message
+        "C'è stato un errore nel leggere il file, riprovare.\n" +
+        (error instanceof Error ? error.message : 'Errore sconosciuto')
     };
   }
 };

@@ -27,7 +27,7 @@ import Tooltip from '@mui/material/Tooltip';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { setChordNotation } from '@/logic/redux/settings_slice';
+// import { setChordNotation } from '@/logic/redux/settings_slice';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 import {
@@ -35,7 +35,7 @@ import {
   removeSongFromFavoriteSongs
 } from '@/logic/redux/user_info_slice';
 import { MenuPlaylist } from './menus';
-import { SOLFEGE, SYMBOL } from 'chordsheetjs';
+// import { SOLFEGE, SYMBOL } from 'chordsheetjs';
 import {
   type Playlist,
   type CustomSongInfo,
@@ -196,7 +196,8 @@ export default function PraisingAppBar(props: PropsAppBar) {
   const [openTooltip, setOpenTooltip] = React.useState(false);
 
   useEffect(() => {
-    const tooltipShown = window.localStorage.getItem('tooltip_news_shown') === 'true';
+    const tooltipShown =
+      window.localStorage.getItem('tooltip_news_shown') === 'true';
     if (!tooltipShown) {
       setOpenTooltip(true);
       window.localStorage.setItem('tooltip_news_shown', 'true');
@@ -210,11 +211,11 @@ export default function PraisingAppBar(props: PropsAppBar) {
 
     const { getAnalytics, logEvent } = await import('firebase/analytics');
     const fbApp = (await import('@/logic/server/firebase_config')).default;
-    const analytics = getAnalytics(fbApp)
+    const analytics = getAnalytics(fbApp);
     logEvent(analytics, 'see_functions_app', {
-      firebase_screen: '/home',
+      firebase_screen: '/home'
     });
-  }
+  };
 
   return (
     <React.Fragment>
@@ -243,14 +244,14 @@ export default function PraisingAppBar(props: PropsAppBar) {
               <Box sx={{ top: '25%', right: '6%', position: 'absolute' }}>
                 <Tooltip
                   title="Vuoi conoscere i vantaggi dell'app?"
-                  placement='bottom-start'
+                  placement="bottom-start"
                   arrow
                   enterDelay={200}
                   open={openTooltip}
                   onClose={() => setOpenTooltip(false)}
                   onOpen={() => setOpenTooltip(true)}
                   slots={{
-                    transition: Zoom,
+                    transition: Zoom
                   }}
                 >
                   <IconButton
@@ -267,7 +268,7 @@ export default function PraisingAppBar(props: PropsAppBar) {
                       props.setShowUpdates?.(!showNews);
                       setShowNews(!showNews);
                     }}
-                    >
+                  >
                     <HelpRoundedIcon />
                   </IconButton>
                 </Tooltip>
@@ -277,7 +278,6 @@ export default function PraisingAppBar(props: PropsAppBar) {
                   LinkComponent={Link}
                   aria-label="Go to the settings page"
                   href={Routes.Settings}
-                  disabled={showNews}
                 >
                   <SettingsRoundedIcon />
                 </IconButton>
@@ -601,7 +601,7 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                     <ListItemText primary="Seconde voci" />
                   </MenuItem>
                 )}
-                <MenuItem
+                {/* <MenuItem
                   sx={{ width: 200 }}
                   onClick={() => {
                     if (chordNotation === SYMBOL) {
@@ -620,7 +620,7 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                   >
                     {chordNotation === SYMBOL ? 'Eng' : 'Ita'}
                   </Typography>
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem
                   onClick={() =>
                     dispatch(modifySong({ id: props.id, transpose: 0 }))
