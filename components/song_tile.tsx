@@ -1,3 +1,5 @@
+'use client';
+
 import ListItemText from '@mui/material/ListItemText';
 import { type Song } from '@/logic/local_logic';
 import { NextLinkComposed } from './link_composed';
@@ -43,7 +45,7 @@ export default function SongTile(props: PropsSongTile) {
       style={{ WebkitTapHighlightColor: 'transparent' }}
       secondaryAction={
         <IconButton
-          onClick={(e: any) => {
+          onClick={(e) => {
             e.preventDefault();
             props.onSecondaryAction();
           }}

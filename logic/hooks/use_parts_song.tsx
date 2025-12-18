@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import { type PartSongInfo, getSongInfoParts } from '../server/database';
 import { getPartSong } from '../server/storage';
@@ -29,7 +31,7 @@ export default function usePartsSong(idSong: string): {
         (a, b) => b.creationTime.seconds - a.creationTime.seconds
       ); // TODO: If this is the correct order or opposite
       setParts(songsLoaded);
-    } catch (e: any) {
+    } catch (e) {
       setError(e as string);
     } finally {
       setLoadingParts(false);
@@ -42,7 +44,7 @@ export default function usePartsSong(idSong: string): {
     try {
       const contentPart = await getPartSong(idPart, idSong);
       setContent(contentPart);
-    } catch (e: any) {
+    } catch (e) {
       setError(e as string);
     } finally {
       setLoadingSinglePart(false);

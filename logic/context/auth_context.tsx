@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext } from 'react';
 import { User } from 'firebase/auth';
 import useFirebaseAuth from '../hooks/use_auth';
@@ -10,8 +12,10 @@ const AuthContext = createContext<AuthContextProps>({
   user: null
 });
 
-export const AuthContextProvider = (propsWithChildren: any) => {
-  const { authUser, loading } = useFirebaseAuth();
+export const AuthContextProvider = (propsWithChildren: {
+  children: React.ReactNode;
+}) => {
+  const { authUser } = useFirebaseAuth();
 
   return (
     <AuthContext.Provider value={{ user: authUser }}>

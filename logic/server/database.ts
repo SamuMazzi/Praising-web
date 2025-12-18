@@ -154,7 +154,7 @@ export const getSharedPlaylists = async (
   sharedPlaylist: string[] /* Array of playlist id, got from user profile */,
   options?: { convertLocal?: boolean }
 ): Promise<Record<string, Playlist>> => {
-  const futures: Promise<DocumentSnapshot<any>>[] = [];
+  const futures: Promise<DocumentSnapshot>[] = [];
   for (const playlistId of sharedPlaylist) {
     futures.push(getDoc(doc(firestore, PLAYLIST_COLLECTION, playlistId)));
   }

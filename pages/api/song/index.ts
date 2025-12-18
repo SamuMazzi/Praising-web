@@ -1,3 +1,3 @@
-export default async function handler(req: any, res: any) {
+export default async function handler(req: Request, res: any) {
   res.status(404).json({ message: 'Error' });
 }

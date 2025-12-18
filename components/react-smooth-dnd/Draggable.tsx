@@ -17,7 +17,7 @@ const Draggable: React.FC<DraggableProps> = ({
   ...rest
 }) => {
   if (render) {
-    // @ts-ignore
+    // @ts-expect-error
     return React.cloneElement(render(), { className: wrapperClass });
   }
 

@@ -1,3 +1,5 @@
+'use client';
+
 import { Sheet } from 'react-modal-sheet';
 import ListSongs from './list_songs';
 import { getLocalSongs, getSingleSong } from '@/logic/local_logic';
@@ -73,8 +75,8 @@ interface PropsModalBottomSheetAddPart extends PropsModalBottomSheet {
 
 export function ModalBottomSheetAddPart(props: PropsModalBottomSheetAddPart) {
   const theme = useTheme();
-  const { authUser, loading } = useFirebaseAuth();
-  const fileInput = React.useRef<any>(null);
+  const { authUser } = useFirebaseAuth();
+  const fileInput = React.useRef<HTMLInputElement>(null);
   const [namePart, setNamePart] = useState('');
   const [nameAuthor, setNameAuthor] = useState('');
   const [file, setFile] = useState<File | null>(null);

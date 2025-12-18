@@ -1,3 +1,5 @@
+'use client';
+
 import Container from '@mui/material/Container';
 import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar';
 import List from '@mui/material/List';

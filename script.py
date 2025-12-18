@@ -42,7 +42,7 @@ def modify_and_write_files(source_dir: str, target_dir: str):
             try:
                 with open(source_filepath, 'r') as source_file, open(target_filepath, 'w') as target_file:
                     content = source_file.read()
-                    new_content = re.sub("[\{\[].*?[\}\]]", "", content).strip()
+                    new_content = re.sub(r"[\{\[].*?[\}\]]", "", content).strip()
                     new_content = new_content.replace("\nRit.\n", "").replace("\nRit. (2V)\n", "").replace("\nRit. (1V)\n", "").replace("\nRit. (4V)\n", "")
                     target_file.write(new_content)
                     print(f"Successfully modified and wrote '{filename}' to '{target_filepath}'")

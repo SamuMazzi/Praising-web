@@ -1,3 +1,5 @@
+'use client';
+
 import ListItemText from '@mui/material/ListItemText';
 import { NextLinkComposed } from './link_composed';
 import ListItem from '@mui/material/ListItem';

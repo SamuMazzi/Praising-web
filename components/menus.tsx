@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { deletePlaylist } from '@/logic/redux/playlist_slice';

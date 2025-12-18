@@ -1,3 +1,5 @@
+'use client';
+
 import List from '@mui/material/List';
 import PlaylistTile, {
   SelectablePlaylistTile

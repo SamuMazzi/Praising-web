@@ -1,3 +1,5 @@
+'use client';
+
 import Container from '@mui/material/Container';
 import { PlaylistAppBar } from '@/components/appbar';
 import { getFromStorage, saveToStorage } from '@/logic/local_logic';

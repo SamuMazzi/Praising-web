@@ -2,7 +2,6 @@ import {
   getAuth,
   GoogleAuthProvider,
   EmailAuthProvider,
-  signInWithPopup,
   signOut,
   signInWithEmailAndPassword,
   linkWithPopup,

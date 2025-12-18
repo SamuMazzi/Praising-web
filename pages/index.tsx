@@ -1,3 +1,5 @@
+'use client';
+
 import ListItemButton from '@mui/material/ListItemButton';
 import Container from '@mui/material/Container';
 import List from '@mui/material/List';

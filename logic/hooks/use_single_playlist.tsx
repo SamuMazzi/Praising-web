@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import {
   type Playlist,
@@ -79,7 +81,7 @@ export default function useSinglePlaylist(idPlaylist: string): {
         const newP = await getServerSinglePlaylist(idPlaylist);
         handleNewPlaylist(newP);
       }
-    } catch (e: any) {
+    } catch (e) {
       setError(e as string);
       setLoadingPlaylist(false);
     }

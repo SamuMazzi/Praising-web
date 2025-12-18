@@ -1,3 +1,5 @@
+'use client';
+
 import { type InfoLocalSong } from '@/logic/redux/info_song_slice';
 import React, { useState } from 'react';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';

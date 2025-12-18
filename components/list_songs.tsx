@@ -1,3 +1,5 @@
+'use client';
+
 import MuiContainer from '@mui/material/Container';
 import List from '@mui/material/List';
 import { getSingleSong, type Song } from '@/logic/local_logic';
@@ -21,6 +23,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import IconButton from '@mui/material/IconButton';
 import assert from 'assert';
 import { Playlist, setServerPlaylist } from '@/logic/server/database';
+import { type DropResult } from 'smooth-dnd';
 
 const AVOID_SPECIAL_CHARACTERS = /[^a-zA-Z0-9 ]/g;
 
@@ -166,7 +169,7 @@ export function ListSongsPlaylist(props: PropsListSongsPlaylist) {
       <List>
         <DragContainer
           dragHandleSelector=".column-drag-handle"
-          onDrop={(e: any) => {
+          onDrop={(e: DropResult) => {
             dispatch(
               applyDrag({
                 id: props.playlist.id,

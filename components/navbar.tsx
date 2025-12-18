@@ -1,3 +1,5 @@
+'use client';
+
 import { NextLinkComposed } from '@/components/link_composed';
 import Routes from '@/logic/routes';
 import BottomNavigation from '@mui/material/BottomNavigation';

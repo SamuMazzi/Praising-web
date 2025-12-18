@@ -1,3 +1,5 @@
+import nextTypescript from 'eslint-config-next/typescript';
+import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
 import globals from 'globals';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -15,6 +17,7 @@ const compat = new FlatCompat({
 });
 
 const exports = [
+  ...nextTypescript,
   {
     ignores: [
       '**/node_modules',
@@ -27,16 +30,16 @@ const exports = [
       '**/package-lock.json',
       '**/init-service-worker.ts',
       '**/.vercel/',
-      '.unlighthouse/'
+      '.unlighthouse/',
+      'tmp_part/*',
+      '**/react-smooth-dnd/**'
     ]
   },
-  ...compat.extends(
-    'plugin:react/recommended',
-    'plugin:prettier/recommended',
-    'plugin:@next/next/recommended',
-    'prettier',
-    'next/core-web-vitals'
-  ),
+  ...compat.extends('plugin:react/recommended'),
+  ...compat.extends('plugin:prettier/recommended'),
+  ...compat.extends('plugin:next-recommended/recommended'),
+  ...compat.extends('prettier'),
+  ...nextCoreWebVitals,
   {
     languageOptions: {
       globals: {

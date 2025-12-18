@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import { type CustomSongInfo, getSongInfoVersions } from '../server/database';
 import { getVersionSong } from '../server/storage';
@@ -8,7 +10,7 @@ import useFirebaseAuth from './use_auth';
 export const fetcher = async (
   url: string,
   forceReload: boolean
-): Promise<any> => {
+): Promise<string> => {
   try {
     const res = await fetch(url, {
       cache: forceReload ? 'reload' : 'force-cache',
@@ -60,7 +62,7 @@ export default function useContentSong(
         await getSongInfoVersions(authUser.uid, idSong)
       ).sort((a, b) => b.creationTime.seconds - a.creationTime.seconds); // TODO: If this is the correct order or opposite
       setVersions(songsLoaded);
-    } catch (e: any) {
+    } catch (e) {
       setError(e as string);
     } finally {
       setLoadingVersions(false);
@@ -84,7 +86,7 @@ export default function useContentSong(
         );
       }
       setContent(contentSong);
-    } catch (e: any) {
+    } catch (e) {
       setError(e as string);
     } finally {
       setLoadingContent(false);

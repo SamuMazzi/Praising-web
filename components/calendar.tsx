@@ -1,3 +1,5 @@
+'use client';
+
 import { type Dayjs } from 'dayjs';
 import EventIcon from '@mui/icons-material/Event';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';

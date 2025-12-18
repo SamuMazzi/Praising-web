@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import TextField from '@mui/material/TextField';

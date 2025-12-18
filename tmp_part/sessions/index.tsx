@@ -1,3 +1,5 @@
+'use client';
+
 import Container from '@mui/material/Container';
 import NavBar from '@/components/navbar';
 import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar';

@@ -9,6 +9,16 @@ const withBundleAnalyzer = NextBundleAnalyzer({
   enabled: process.env.ANALYZE === 'true'
 });
 
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+};
+
+
 const withSerwist = withSerwistInit({
   swSrc: './init-service-worker.ts',
   swDest: 'public/sw.js',
@@ -19,10 +29,7 @@ const withSerwist = withSerwistInit({
 
 export default withSentryConfig(
   withBundleAnalyzer(
-    withSerwist({
-      reactStrictMode: true
-      // Your Next.js config
-    })
+    withSerwist(nextConfig)
   ),
   {
     // For all available options, see:
@@ -48,12 +55,15 @@ export default withSentryConfig(
     // tunnelRoute: "/monitoring",
 
     // Automatically tree-shake Sentry logger statements to reduce bundle size
-    disableLogger: true,
-
-    // Enables automatic instrumentation of Vercel Cron Monitors. (Does not yet work with App Router route handlers.)
-    // See the following for more information:
-    // https://docs.sentry.io/product/crons/
-    // https://vercel.com/docs/cron-jobs
-    automaticVercelMonitors: true
+    webpack: {
+      // Enables automatic instrumentation of Vercel Cron Monitors. (Does not yet work with App Router route handlers.)
+      // See the following for more information:
+      // https://docs.sentry.io/product/crons/
+      // https://vercel.com/docs/cron-jobs
+      automaticVercelMonitors: true,
+      treeshake: {
+        removeDebugLogging: true
+      }
+    }
   }
 );

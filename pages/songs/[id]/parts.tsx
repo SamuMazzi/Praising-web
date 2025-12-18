@@ -1,3 +1,5 @@
+'use client';
+
 import Container from '@mui/material/Container';
 import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar';
 import List from '@mui/material/List';
@@ -21,8 +23,9 @@ import Tooltip from '@mui/material/Tooltip';
 import HourglassBottomRoundedIcon from '@mui/icons-material/HourglassBottomRounded';
 import PlayCircleFilledRoundedIcon from '@mui/icons-material/PlayCircleFilledRounded';
 import PauseCircleFilledRoundedIcon from '@mui/icons-material/PauseCircleFilledRounded';
+import { type NextPageContext } from 'next';
 
-PartsPage.getInitialProps = async (props: any) => {
+PartsPage.getInitialProps = async (props: NextPageContext) => {
   const { id } = props.query;
   return { id };
 };

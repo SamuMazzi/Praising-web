@@ -106,7 +106,7 @@ export class LiturgyOfDay {
   secondLecture?: Lettura;
   gospel: Lettura;
 
-  constructor(body: WebStructLiturgy | any) {
+  constructor(body: WebStructLiturgy) {
     this.firstLecture = body.firstLecture;
     this.psalm = body.psalm;
     this.secondLecture = body.secondLecture;

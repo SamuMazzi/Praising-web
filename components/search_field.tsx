@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';

@@ -1,3 +1,5 @@
+'use client';
+
 import { useAppDispatch, useAppSelector } from '@/logic/redux/store';
 import { getFromStorage, type Song } from '@/logic/local_logic';
 import Container from '@mui/material/Container';
@@ -14,7 +16,7 @@ import IconButton from '@mui/material/IconButton';
 import { type InfoLocalSong, modifySong } from '@/logic/redux/info_song_slice';
 import { setShowChords } from '@/logic/redux/settings_slice';
 import Tooltip from '@mui/material/Tooltip';
-import { useEffect, useState } from 'react';
+import { type MouseEventHandler, useEffect, useState } from 'react';
 import Slide from '@mui/material/Slide';
 import { type CustomSongInfo } from '@/logic/server/database';
 import useFirebaseAuth from '@/logic/hooks/use_auth';
@@ -30,7 +32,23 @@ interface PropsActionSong {
   setEditMode: () => void;
 }
 
-const ActionIconButton = (props: any) => {
+const ActionIconButton = (props: {
+  title: string;
+  children: React.ReactNode;
+  index?: number;
+  visible?: boolean;
+  onClick: MouseEventHandler<HTMLButtonElement>;
+  id: string;
+  color?:
+    | 'inherit'
+    | 'default'
+    | 'primary'
+    | 'secondary'
+    | 'success'
+    | 'error'
+    | 'info'
+    | 'warning';
+}) => {
   const { title, children, index, visible, onClick, ...propsIconButton } =
     props;
 
@@ -48,7 +66,7 @@ const ActionIconButton = (props: any) => {
           onClick={(e) => {
             e.stopPropagation();
             if (onClick !== undefined) {
-              onClick();
+              onClick(e);
             }
           }}
           {...propsIconButton}
@@ -78,7 +96,7 @@ const ActionIconButton = (props: any) => {
           onClick={(e) => {
             e.stopPropagation();
             if (onClick !== undefined) {
-              onClick();
+              onClick(e);
             }
           }}
           {...propsIconButton}
@@ -213,7 +231,7 @@ export default function ActionsSong(props: PropsActionSong) {
           id={action.id}
           title={action.title}
           onClick={action.onClick}
-          color={action.color}
+          color={action.color as 'primary' | undefined}
           index={index + 1}
           visible={action.visible ?? menuExpanded}
         >

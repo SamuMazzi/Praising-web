@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import {
   Playlist,
@@ -53,7 +55,7 @@ export default function usePlaylists(): {
       dispatch(
         setAllPlaylists({ ...oldPlaylists, ...sharedPlaylists, ...myPlaylists })
       );
-    } catch (e: any) {
+    } catch (e) {
       console.error('error', e);
       setError(e as string);
     } finally {

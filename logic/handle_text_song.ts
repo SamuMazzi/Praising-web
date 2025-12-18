@@ -37,15 +37,14 @@ const LYRICS_CSS = 'lyrics';
 const ROW_CSS = 'row';
 const SECTION_CSS = 'section';
 
-const checkChordLyricsPair = (item: any): boolean =>
-  item instanceof ChordSheetJS.ChordLyricsPair;
-
 const findLinesChorus = (deserialized: Song): number[] => {
   const linesChorus: number[] = [];
   let cont = 0;
   deserialized.lines.forEach((line) => {
     let isChordLyricsPair = false;
-    if (line.items.every(checkChordLyricsPair)) {
+    if (
+      line.items.every((item) => item instanceof ChordSheetJS.ChordLyricsPair)
+    ) {
       isChordLyricsPair = true;
     }
     if (isChordLyricsPair) {
@@ -298,7 +297,7 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
       serializedSong
     );
 
-    let transpose = props.transpose ?? 0;
+    const transpose = props.transpose ?? 0;
     // FIXME: Don't why there's this actually big problem, it can't really change chords from ita to eng
     /* if (props.chordNotation === SYMBOL) {
       transpose = 2 * transpose + 2;

@@ -17,7 +17,7 @@ const settingsSlice = createSlice({
   name: 'settings',
   initialState,
   reducers: {
-    setUserInfo: (state, action: PayloadAction<any>) => {
+    setUserInfo: (state, action: PayloadAction<Partial<SettingsState>>) => {
       state.favoriteSongs = action.payload.favoriteSongs ?? [];
       /** Aggiornare con altri dati */
       saveToStorage(FAVORITE_SONGS_KEY, action.payload);

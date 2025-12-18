@@ -1,10 +1,12 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import { LiturgyOfDay } from '../scraper_liturgy';
 
 export const fetcher = async (
   url: string,
   forceReload: boolean
-): Promise<any> => {
+): Promise<LiturgyOfDay> => {
   try {
     const res = await fetch(url, {
       cache: forceReload ? 'reload' : 'force-cache',
@@ -43,7 +45,7 @@ export default function useLecture(url: string): {
           .type === 'reload'
       );
       setContent(liturgy);
-    } catch (e: any) {
+    } catch (e) {
       setError(e as string);
     } finally {
       setLoading(false);

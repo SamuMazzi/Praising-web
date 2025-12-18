@@ -1,3 +1,5 @@
+'use client';
+
 import Slide from '@mui/material/Slide';
 import CssBaseline from '@mui/material/CssBaseline';
 import useScrollTrigger from '@mui/material/useScrollTrigger';

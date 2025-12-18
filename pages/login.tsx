@@ -1,3 +1,5 @@
+'use client';
+
 import Container from '@mui/material/Container';
 import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar';
 import { useState } from 'react';
@@ -119,9 +121,11 @@ function SignCard() {
     try {
       setLoadingSign(true);
       await signInWithGoogle(authUser);
-    } catch (e: any) {
+    } catch (e) {
       console.log(e);
-      setErrorEmail(e.message as string);
+      if (e instanceof Error) {
+        setErrorEmail(e.message as string);
+      }
     } finally {
       setLoadingSign(false);
     }
