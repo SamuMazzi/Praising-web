@@ -16,7 +16,7 @@ export default function FeedbackPage() {
 
   return (
     <Container disableGutters sx={{ minHeight: '100vh' }}>
-      <PraisingAppBar title="Feedback (beta)" backIcon />
+      <PraisingAppBar title="Feedback" backIcon />
       <Grid
         container
         direction="column"

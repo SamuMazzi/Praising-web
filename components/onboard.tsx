@@ -47,9 +47,9 @@ const slides = [
     buttonText: 'Continua'
   },
   {
-    title: "Installa l'app",
+    title: "Installa l'app (beta)",
     description:
-      "Qualcosa non ti piace o vuoi suggerire delle modifiche? Clicca sull'icona in alto a destra per inviarmi un messaggio!",
+      "Sai che se vuoi, puoi installare Praising come un'app?\nVai nelle impostazioni per più informazioni.",
     icon: '/assets/undraw_illustrations/onboarding/undraw_pwa.svg',
     buttonText: 'Continua'
   },
@@ -177,6 +177,13 @@ const OnboardingSlider = (props: { closeFn: () => void }) => {
     setCurrentSlide((prev) => (prev + 1) % slides.length);
   };
 
+  const handlePrev = () => {
+    if (currentSlide === 0) {
+      return;
+    }
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  };
+
   return (
     <Box sx={{ ...styles.root, zIndex: 9000 }}>
       <Box sx={{ width: '100%', px: 4 }}>
@@ -249,6 +256,10 @@ const OnboardingSlider = (props: { closeFn: () => void }) => {
                   </Typography>
                 </Box>
 
+                {currentSlide !== 0 && 
+                <Button variant="outlined" sx={{ mr: 2, textTransform: 'none' }} onClick={handlePrev}>
+                  Indietro
+                </Button>}
                 <Button variant="contained" onClick={handleNext}>
                   {slides[currentSlide].buttonText}
                 </Button>

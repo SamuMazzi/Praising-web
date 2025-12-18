@@ -5,7 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import AppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Toolbar from '@mui/material/Toolbar';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import IconButton from '@mui/material/IconButton';
@@ -50,6 +50,7 @@ import { PrintButton } from './print_button';
 import useFirebaseAuth from '@/logic/hooks/use_auth';
 import AnimatedOnboardingSlider from './onboard';
 import { ShareSong } from './shares';
+import Zoom from '@mui/material/Zoom';
 
 // This is really useful in the case we'll ever want to split a song in multiple pages (in case it's too long)
 /*
@@ -192,6 +193,28 @@ export const verticalPaddingAppBar = 3;
 export default function PraisingAppBar(props: PropsAppBar) {
   const router = useRouter();
   const [showNews, setShowNews] = React.useState(false);
+  const [openTooltip, setOpenTooltip] = React.useState(false);
+
+  useEffect(() => {
+    const tooltipShown = window.localStorage.getItem('tooltip_news_shown') === 'true';
+    if (!tooltipShown) {
+      setOpenTooltip(true);
+      window.localStorage.setItem('tooltip_news_shown', 'true');
+      const timer = setTimeout(() => setOpenTooltip(false), 2500);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const logEventShow = async () => {
+    if (typeof window === 'undefined') return;
+
+    const { getAnalytics, logEvent } = await import('firebase/analytics');
+    const fbApp = (await import('@/logic/server/firebase_config')).default;
+    const analytics = getAnalytics(fbApp)
+    logEvent(analytics, 'see_functions_app', {
+      firebase_screen: '/home',
+    });
+  }
 
   return (
     <React.Fragment>
@@ -218,22 +241,36 @@ export default function PraisingAppBar(props: PropsAppBar) {
                 {props.title}
               </Typography>
               <Box sx={{ top: '25%', right: '6%', position: 'absolute' }}>
-                <IconButton
-                  edge="end"
-                  style={{ color: 'black' }}
-                  sx={{ mr: 0.5 }}
-                  onClick={() => {
-                    if (showNews) {
-                      document.body.style.overflow = 'unset';
-                    } else {
-                      document.body.style.overflow = 'hidden';
-                    }
-                    props.setShowUpdates?.(!showNews);
-                    setShowNews(!showNews);
+                <Tooltip
+                  title="Vuoi conoscere i vantaggi dell'app?"
+                  placement='bottom-start'
+                  arrow
+                  enterDelay={200}
+                  open={openTooltip}
+                  onClose={() => setOpenTooltip(false)}
+                  onOpen={() => setOpenTooltip(true)}
+                  slots={{
+                    transition: Zoom,
                   }}
                 >
-                  <HelpRoundedIcon />
-                </IconButton>
+                  <IconButton
+                    edge="end"
+                    style={{ color: 'black' }}
+                    sx={{ mr: 0.5 }}
+                    onClick={async () => {
+                      if (showNews) {
+                        document.body.style.overflow = 'unset';
+                      } else {
+                        document.body.style.overflow = 'hidden';
+                        logEventShow();
+                      }
+                      props.setShowUpdates?.(!showNews);
+                      setShowNews(!showNews);
+                    }}
+                    >
+                    <HelpRoundedIcon />
+                  </IconButton>
+                </Tooltip>
                 <IconButton
                   edge="end"
                   style={{ color: 'black' }}
