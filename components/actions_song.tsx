@@ -111,7 +111,7 @@ const ActionIconButton = (props: {
 export default function ActionsSong(props: PropsActionSong) {
   const [openModal, setOpenModal] = useState(false);
   const [menuExpanded, setMenuExpanded] = useState(true);
-  const { loading } = useFirebaseAuth(); // authUser
+  const { authUser, loading } = useFirebaseAuth();
   const infoSong: InfoLocalSong | undefined = useAppSelector(
     (state) => state.infoSongs.infoSongs[props.song.id]
   );
@@ -125,7 +125,9 @@ export default function ActionsSong(props: PropsActionSong) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const canEdit = getFromStorage('debug_admin') !== null; // props.versionSong === undefined || props.versionSong.author === authUser?.uid;
+  const canEdit =
+    props.versionSong === undefined ||
+    props.versionSong.author === authUser?.uid;
 
   const actionsInfo = [
     {
@@ -191,12 +193,10 @@ export default function ActionsSong(props: PropsActionSong) {
         if (loading) {
           return;
         }
-        // if (authUser?.email === null) {
-        //
-        setOpenModal(true);
-        // return;
-        // }
-        // props.setEditMode();
+        if (authUser?.email === null) {
+          return;
+        }
+        props.setEditMode();
       },
       icon: <EditRoundedIcon />,
       visible: canEdit && menuExpanded
@@ -239,10 +239,10 @@ export default function ActionsSong(props: PropsActionSong) {
         </ActionIconButton>
       ))}
       <ModalCreateAccountForThisAction
-        title="Modifica la canzone"
-        message="Questa funzionalità sarà disponibile a breve, stay tuned!"
-        // title="Registrati"
-        // message="Per poter modificare questa canzone devi prima registrarti"
+        // title="Modifica la canzone"
+        // message="Questa funzionalità sarà disponibile a breve, stay tuned!"
+        title="Registrati"
+        message="Per poter modificare questa canzone devi prima registrarti"
         open={openModal}
         handleClose={(): void => {
           setOpenModal(false);

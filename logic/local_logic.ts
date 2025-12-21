@@ -136,7 +136,7 @@ export const getLastRecentsSongs = (): string[] => {
 };
 
 export const getLocalChordNotation = (): ChordNotations => {
-  const out: ChordNotations = getFromStorage('chordNotation') || SOLFEGE;
+  const out: ChordNotations = SOLFEGE; // getFromStorage('chordNotation') ||
   return out;
 };
 

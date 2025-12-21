@@ -11,7 +11,7 @@ import Box from '@mui/material/Box';
 import ListPlaylist from './list_playlist';
 import Button from '@mui/material/Button';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
-import { useTheme } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';

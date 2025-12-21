@@ -23,7 +23,7 @@ export default function SongsPage() {
       />
       <main>
         <Container>
-          <PraisingAppBar title="Canzoni" homeVersion />
+          <PraisingAppBar title="Canzoni" homeVersion addSongIcon />
           <Container
             disableGutters
             sx={{ pt: verticalPaddingAppBar * 3 + 2, pb: 7 }}

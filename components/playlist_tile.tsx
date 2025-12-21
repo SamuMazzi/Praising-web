@@ -14,7 +14,7 @@ import { useAppDispatch } from '@/logic/redux/store';
 import Routes from '@/logic/routes';
 import { MenuPlaylist } from './menus';
 import React from 'react';
-import { useTheme, alpha } from '@mui/material';
+import { useTheme, alpha } from '@mui/material/styles';
 import { setServerPlaylist, type Playlist } from '@/logic/server/database';
 
 interface PropsPlaylistTile {

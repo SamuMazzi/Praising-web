@@ -5,6 +5,9 @@ import { type CustomSongInfo, getSongInfoVersions } from '../server/database';
 import { getVersionSong } from '../server/storage';
 import { getFromStorage } from '../local_logic';
 import useFirebaseAuth from './use_auth';
+import { useRouter } from 'next/router';
+import { StorageErrorCode, StorageError } from '@firebase/storage';
+
 // TODO: Prevent scrolling when downloading pdf
 
 export const fetcher = async (
@@ -42,6 +45,7 @@ export default function useContentSong(
   const [error, setError] = useState('');
   const [versions, setVersions] = useState<CustomSongInfo[]>([]);
   const { authUser, loading } = useFirebaseAuth();
+  const router = useRouter();
 
   /**
    * Collections:
@@ -70,13 +74,11 @@ export default function useContentSong(
   }
 
   async function fetchSong(idVersion?: string): Promise<void> {
-    // FIXME: Fix case in which version is not available anymore
-
     setLoadingContent(true);
     setError('');
     try {
       let contentSong = '';
-      if (idVersion !== undefined) {
+      if (idVersion) {
         contentSong = await getVersionSong(idVersion, idSong);
       } else {
         contentSong = await fetcher(
@@ -87,6 +89,26 @@ export default function useContentSong(
       }
       setContent(contentSong);
     } catch (e) {
+      if (
+        e instanceof StorageError &&
+        e.code === `storage/${StorageErrorCode.OBJECT_NOT_FOUND}` &&
+        idVersion
+      ) {
+        // We fallback to fetch the original song if the version is not found
+        await fetchSong();
+        // Update URL -----------------
+        const newQuery = router.query;
+        delete newQuery.v;
+        void router.replace(
+          {
+            query: newQuery
+          },
+          undefined,
+          { shallow: true, scroll: false }
+        );
+        // ---------------------------
+        return;
+      }
       setError(e as string);
     } finally {
       setLoadingContent(false);
@@ -97,9 +119,7 @@ export default function useContentSong(
     if (loading) {
       return;
     }
-    if (getFromStorage('debug_admin') !== null) {
-      void fetchVersions();
-    }
+    void fetchVersions();
     void fetchSong(stdIdVersion);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idSong, loading]);

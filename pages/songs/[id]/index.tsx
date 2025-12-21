@@ -26,7 +26,7 @@ import { MessageSnackbar } from '@/components/pers_snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseRounded from '@mui/icons-material/CloseRounded';
 import ShimmerSegments from '@/components/shimmer_effect/shimmer_segments';
-import { useTheme } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { driver } from 'driver.js';
 import 'driver.js/dist/driver.css';
 import { SongDiv } from '@/components/song_div';
@@ -37,6 +37,7 @@ import { EditableSong } from '@/components/editable_song';
 import { NextSeo } from 'next-seo';
 import { Playlist } from '@/logic/server/database';
 import { useRouter } from 'next/router';
+import { useSearchParams } from 'next/navigation';
 
 const driverObj = driver({
   // TODO: Sistema progress
@@ -133,10 +134,14 @@ export default function SongPage() {
   const infoSong: InfoLocalSong | undefined = useAppSelector((state) =>
     song?.id !== undefined ? state.infoSongs.infoSongs[song.id] : undefined
   );
+  const searchParams = useSearchParams();
+
+  const vFromUrl = searchParams.get('v') ?? '';
+  const [versionSong, setVersionSong] = useState(vFromUrl);
   const { content, versions, fetchSong, loadingContent, error } =
-    useContentSong(id_song, infoSong?.versionId);
+    useContentSong(id_song, versionSong ?? infoSong?.versionId);
   const songVersionIndex = versions.findIndex(
-    (v) => v.versionId === infoSong?.versionId
+    (v) => v.versionId === (versionSong ?? infoSong?.versionId)
   );
   const playlist: Playlist | undefined = useAppSelector((state) =>
     playlistIdCode !== undefined
@@ -152,6 +157,10 @@ export default function SongPage() {
   const [editMode, setEditMode] = useState(false);
   const theme = useTheme();
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    setVersionSong(vFromUrl);
+  }, [vFromUrl]);
 
   useEffect(() => {
     const tutorialNotShown = !(getFromStorage(TUTORIAL_SHOWN) ?? false);
@@ -191,6 +200,24 @@ export default function SongPage() {
     assert(song !== undefined, 'Song is undefined');
     if (index === songVersionIndex) return;
     const idVersion = index === -1 ? undefined : versions[index].versionId;
+    // Update URL ---------------
+    if (idVersion === undefined) {
+      delete router.query.v;
+    }
+    router.replace(
+      {
+        query: {
+          ...router.query,
+          ...(idVersion !== undefined ? { v: idVersion } : {})
+        }
+      },
+      undefined,
+      {
+        scroll: false,
+        shallow: true
+      }
+    );
+    // --------------------------
     dispatch(
       setLocalVersionSong({
         id: song.id,

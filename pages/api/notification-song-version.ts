@@ -26,26 +26,30 @@ export default async function handler(
     const { userId, songId, nameSong, versionId, email } = req.body as EmailPayloadVersionSong;
   
     // Validate required fields
-    if (!userId || !songId || !nameSong || !versionId) {
+    if (!userId || !songId || !nameSong || !versionId || !email) {
       return res.status(400).json({ 
         error: 'All fields are required (message, userId, songId, nameSong, versionId)' 
       });
     }
-  
+
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS || !process.env.RECIPIENT_EMAIL) {
+      console.error('Missing email environment variables');
+      return res.status(500).json({ error: 'Internal error' });
+    }
+
+    if (parseInt(songId, 10) <= 0 || Number.isNaN(parseInt(songId, 10))) {
+      return res.status(400).json({ error: 'Invalid songId' });
+    }
+
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      return res.status(400).json({ error: 'Invalid email format' });
+    }
+
     try {
-      await transporter.sendMail({
+      const personalMail = transporter.sendMail({
         from: process.env.EMAIL_USER,
         to: process.env.RECIPIENT_EMAIL,
         subject: `Praising - New version song: ${nameSong}`,
-        /* text: `
-            Message: ${message}
-            
-            Song Details:
-            - Song Name: ${nameSong}
-            - Song ID: ${songId}
-            - Shared by User ID: ${userId}
-        `, */
-        // Optional: HTML version
         html: `
           <h2>A new version has been uploaded</h2>
 
@@ -59,9 +63,25 @@ export default async function handler(
           </ul>
         `
       });
+
+      const userEmail = transporter.sendMail({
+        from: `Praising Staff <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: `Praising - Grazie per aver caricato una nuova versione per: ${nameSong}`,
+        html: `
+          <p>Ciao! Grazie per il tuo supporto nell'aiutare tutta la community con la tua versione di <strong>${nameSong}</strong></p>
+          <p>Provvederò a revisionare personalmente la versione che hai caricato e cercherò di confermarla il prima possibile
+          cosicchè anche tutti gli altri utenti possano vederla.</p>
+
+          <p>Ti auguro una buona giornata!</p>
+          <p>Praising Staff (per ora solo Samu)</p>
+        `
+      });
+      await Promise.all([personalMail, userEmail]);
   
       res.status(200).json({ message: 'Email sent successfully' });
     } catch (error) {
+      console.log('Sending email notification for new song version...', process.env.EMAIL_USER, process.env.RECIPIENT_EMAIL, process.env.EMAIL_PASS);
       console.error('Error sending email:', error);
       res.status(500).json({ error: 'Failed to send email' });
     }

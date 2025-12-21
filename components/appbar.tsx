@@ -22,9 +22,10 @@ import MenuItem from '@mui/material/MenuItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Badge from '@mui/material/Badge';
-import { useTheme } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 // import { setChordNotation } from '@/logic/redux/settings_slice';
@@ -45,12 +46,12 @@ import {
 import assert from 'assert';
 import HourglassBottomRoundedIcon from '@mui/icons-material/HourglassBottomRounded';
 import InterpreterModeRoundedIcon from '@mui/icons-material/InterpreterModeRounded';
-import { getFromStorage } from '@/logic/local_logic';
 import { PrintButton } from './print_button';
 import useFirebaseAuth from '@/logic/hooks/use_auth';
 import AnimatedOnboardingSlider from './onboard';
 import { ShareSong } from './shares';
 import Zoom from '@mui/material/Zoom';
+import { ProposeNewSongModal } from './modals';
 
 // This is really useful in the case we'll ever want to split a song in multiple pages (in case it's too long)
 /*
@@ -185,6 +186,7 @@ interface PropsAppBar {
   title: string;
   backIcon?: boolean;
   homeVersion?: boolean;
+  addSongIcon?: boolean;
   setShowUpdates?: (show: boolean) => void;
 }
 
@@ -193,6 +195,7 @@ export const verticalPaddingAppBar = 3;
 export default function PraisingAppBar(props: PropsAppBar) {
   const router = useRouter();
   const [showNews, setShowNews] = React.useState(false);
+  const [showProposeSong, setShowProposeSong] = React.useState(false);
   const [openTooltip, setOpenTooltip] = React.useState(false);
 
   useEffect(() => {
@@ -228,10 +231,27 @@ export default function PraisingAppBar(props: PropsAppBar) {
           {props.homeVersion === true ? (
             <Box
               sx={{
-                display: props.backIcon === true ? 'none' : 'flex',
+                display: 'flex',
                 justifyContent: 'center'
               }}
             >
+              {props.addSongIcon && (
+                <IconButton
+                  edge="start"
+                  sx={{
+                    top: '25%',
+                    left: { xs: '6%', md: '3%' },
+                    position: 'absolute',
+                    mr: 2,
+                    color: 'black'
+                  }}
+                  onClick={() => {
+                    setShowProposeSong(true);
+                  }}
+                >
+                  <AddRoundedIcon />
+                </IconButton>
+              )}
               <Typography
                 variant="h1"
                 component="h1"
@@ -241,7 +261,13 @@ export default function PraisingAppBar(props: PropsAppBar) {
               >
                 {props.title}
               </Typography>
-              <Box sx={{ top: '25%', right: '6%', position: 'absolute' }}>
+              <Box
+                sx={{
+                  top: '25%',
+                  right: { xs: '6%', md: '3%' },
+                  position: 'absolute'
+                }}
+              >
                 <Tooltip
                   title="Vuoi conoscere i vantaggi dell'app?"
                   placement="bottom-start"
@@ -325,6 +351,10 @@ export default function PraisingAppBar(props: PropsAppBar) {
           setShowNews(false);
         }}
       />
+      <ProposeNewSongModal
+        open={showProposeSong}
+        handleClose={() => setShowProposeSong(false)}
+      />
     </React.Fragment>
   );
 }
@@ -398,7 +428,7 @@ function MenuItemVersions(props: PropsMenuItemVersions) {
           >
             {version.state === 'pending' && (
               <ListItemIcon>
-                <Tooltip title="In revisione">
+                <Tooltip title="In revisione, potrai vederla solo tu per ora">
                   <HourglassBottomRoundedIcon />
                 </Tooltip>
               </ListItemIcon>
@@ -424,13 +454,9 @@ export const SongTitleAppBar = (props: {
         style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
       >
         {props.title}
-        <Typography
-          variant="subtitle1"
-          sx={{ maxLines: 1 }}
-          color="textDisabled"
-        >
-          {props.versionText}
-        </Typography>
+      </Typography>
+      <Typography variant="subtitle1" sx={{ maxLines: 1 }} color="textDisabled">
+        {props.versionText}
       </Typography>
     </Box>
   );
@@ -478,7 +504,13 @@ export const SongAppBar = (props: PropsSongAppBar) => {
               edge="start"
               sx={{ mr: 2 }}
               onClick={() => {
-                router.back();
+                // console.log("History length:", window.history.length);
+                if (window.history.length > 2) {
+                  // Still to understand well why the length is 2 in normal cases
+                  router.back();
+                } else {
+                  router.replace(Routes.Songs);
+                }
               }}
             >
               <ArrowBackRoundedIcon />
@@ -586,21 +618,18 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                     });
                   }}
                 />
-                {getFromStorage('debug_admin') === true && (
-                  <MenuItem
-                    onClick={() =>
-                      router.push(
-                        `${pathname}/parts?${searchParams.toString()}`
-                      )
-                    }
-                    style={{ fontWeight: 600 }}
-                  >
-                    <ListItemIcon>
-                      <InterpreterModeRoundedIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Seconde voci" />
-                  </MenuItem>
-                )}
+                <MenuItem
+                  // FIXME: Href seems to not work
+                  onClick={() =>
+                    router.push(`${pathname}/parts?${searchParams.toString()}`)
+                  }
+                  style={{ fontWeight: 600 }}
+                >
+                  <ListItemIcon>
+                    <InterpreterModeRoundedIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Seconde voci" />
+                </MenuItem>
                 {/* <MenuItem
                   sx={{ width: 200 }}
                   onClick={() => {
@@ -630,13 +659,11 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                   <ListItemText primary="Transpose" />
                   {props.transpose ?? '0'}
                 </MenuItem>
-                {getFromStorage('debug_admin') === true && (
-                  <MenuItemVersions
-                    versions={props.versions}
-                    setVersionSong={props.setVersionSong}
-                    selectedIndexVersion={props.selectedIndexVersion}
-                  />
-                )}
+                <MenuItemVersions
+                  versions={props.versions}
+                  setVersionSong={props.setVersionSong}
+                  selectedIndexVersion={props.selectedIndexVersion}
+                />
               </Menu>
             </Box>
           </Toolbar>

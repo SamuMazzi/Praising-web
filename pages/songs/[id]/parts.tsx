@@ -86,7 +86,7 @@ export default function PartsPage(props: PropsPartsPage) {
                 <ListItem key={p.idPart} sx={{ my: 1, borderRadius: 8 }}>
                   {p.state === 'pending' && (
                     <ListItemIcon>
-                      <Tooltip title="In revisione">
+                      <Tooltip title="In revisione, potrai vederla solo tu per ora">
                         <HourglassBottomRoundedIcon />
                       </Tooltip>
                     </ListItemIcon>

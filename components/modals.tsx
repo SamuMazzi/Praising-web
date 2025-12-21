@@ -248,6 +248,136 @@ export function ModalEditNamePlaylist(props: PropsModalEditNamePlaylist) {
   );
 }
 
+export function ProposeNewSongModal(props: GenericProps) {
+  const { authUser, loading } = useFirebaseAuth();
+  const [linkSong, setLinkSong] = useState('');
+  const [linkChords, setLinkChords] = useState('');
+  const [error, setError] = useState('');
+  const [done, setDone] = useState(false);
+  const [loadingFetch, setLoadingFetch] = useState(false);
+
+  if (loading) {
+    return null;
+  }
+
+  if (authUser === null) {
+    return (
+      <ModalCreateAccountForThisAction
+        open={props.open}
+        handleClose={props.handleClose}
+        title="Accedi per proporre nuove canzoni"
+        message="Crea un account per proporre nuove canzoni"
+      />
+    );
+  }
+
+  return (
+    <GenericModal
+      open={props.open}
+      handleClose={props.handleClose}
+      content={
+        <Grid
+          container
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Grid>
+            <Typography variant="h2" component="h2" sx={{ mb: 3 }}>
+              Proponi una nuova canzone (beta)
+            </Typography>
+          </Grid>
+          <Grid>
+            <Typography>
+              Inserisci il link (YouTube, Spotify, ecc.) della canzone che
+              vorresti aggiungere. Se vuoi che venga inserita più velocemente,
+              inserisci anche il link degli accordi.
+            </Typography>
+          </Grid>
+          <Grid sx={{ mt: 2 }}>
+            <TextField
+              disabled={loadingFetch || done}
+              sx={{ my: 1 }}
+              value={linkSong}
+              onChange={(e) => {
+                setLinkSong(e.currentTarget.value);
+              }}
+              label="Link della canzone"
+              fullWidth
+            />
+          </Grid>
+          <Grid>
+            <TextField
+              disabled={loadingFetch || done}
+              value={linkChords}
+              onChange={(e) => {
+                setLinkChords(e.currentTarget.value);
+              }}
+              sx={{ my: 1 }}
+              label="Link degli accordi (opzionale)"
+              fullWidth
+            />
+          </Grid>
+          <Grid sx={{ mt: 1 }}>
+            <Button
+              disabled={loadingFetch}
+              onClick={async () => {
+                if (done) {
+                  props.handleClose();
+                  return;
+                }
+                setError('');
+                setLoadingFetch(true);
+                const res = await fetch('/api/propose-song', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                    userId: authUser?.uid,
+                    linkSong: linkSong,
+                    linkChords: linkChords,
+                    email: authUser?.email
+                  })
+                });
+                if (res.status !== 200) {
+                  const text = await res.text();
+                  setError("Errore nell'invio della proposta: " + text);
+                } else {
+                  setError('');
+                }
+                setLoadingFetch(false);
+                props.handleClose();
+              }}
+              variant="contained"
+            >
+              {loadingFetch ? (
+                <CircularProgress size={20} />
+              ) : done ? (
+                'Fatto!'
+              ) : (
+                'Invia proposta'
+              )}
+            </Button>
+          </Grid>
+          {error && (
+            <Grid sx={{ mt: 2 }}>
+              <Typography color="error">{error}</Typography>
+            </Grid>
+          )}
+          {done && (
+            <Grid>
+              <Typography sx={{ color: 'green' }}>
+                Proposta inviata con successo! Grazie per il tuo contributo.
+              </Typography>
+            </Grid>
+          )}
+        </Grid>
+      }
+    />
+  );
+}
+
 interface PropsGenericModal extends GenericProps {
   content: React.ReactElement;
 }

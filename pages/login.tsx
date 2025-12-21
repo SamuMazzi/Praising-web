@@ -2,7 +2,7 @@
 
 import Container from '@mui/material/Container';
 import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import Image from 'next/image';
 import Typography from '@mui/material/Typography';
@@ -14,14 +14,16 @@ import {
   SignError,
   signInWithGoogle,
   signInWithEmail,
-  logout
+  auth,
+  afterSignGoogle
 } from '@/logic/server/auth';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import { useRouter } from 'next/router';
 import useFirebaseAuth from '@/logic/hooks/use_auth';
-import { type User } from 'firebase/auth';
+import { getRedirectResult, type User } from 'firebase/auth';
 import { GenericModal } from '@/components/modals';
+import { deleteUserFromDatabase } from '@/logic/server/database';
 
 export default function LoginPage() {
   const { authUser, loading } = useFirebaseAuth();
@@ -46,6 +48,8 @@ interface PropsInfoUserPage {
 }
 
 function InfoUser(props: PropsInfoUserPage) {
+  const { logout } = useFirebaseAuth();
+
   return (
     <Grid
       container
@@ -80,15 +84,16 @@ function InfoUser(props: PropsInfoUserPage) {
   );
 }
 
-function SignCard() {
+const EmailSignPart = (props: {
+  setWarningModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setCallbackSign: React.Dispatch<React.SetStateAction<CallableFunction>>;
+}) => {
   const { authUser, loading } = useFirebaseAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorEmail, setErrorEmail] = useState('');
   const [errorPassword, setErrorPassword] = useState('');
   const [loadingSign, setLoadingSign] = useState(false);
-  const [warningModal, setWarningModal] = useState(false);
-  const [callbackSign, setCallbackSign] = useState<CallableFunction>(() => {});
   const router = useRouter();
 
   const onSignEmailClick = async (type: 'login' | 'signup'): Promise<void> => {
@@ -115,8 +120,67 @@ function SignCard() {
       setLoadingSign(false);
     }
   };
+  return (
+    <>
+      <Grid sx={{ mb: 2 }}>
+        <TextField
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+          }}
+          label="Email"
+          helperText={errorEmail}
+        />
+      </Grid>
+      <Grid>
+        <TextField
+          value={password}
+          onChange={(e) => {
+            setPassword(e.target.value);
+          }}
+          label="Password"
+          helperText={errorPassword}
+          type="password"
+        />
+      </Grid>
+      <Grid sx={{ mt: 2 }}>
+        <Box display="flex">
+          <Button
+            sx={{ mr: 2 }}
+            variant="contained"
+            onClick={() => {
+              props.setCallbackSign(() => () => onSignEmailClick('login'));
+              props.setWarningModal(true);
+            }}
+            disabled={loadingSign}
+          >
+            Accedi
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => {
+              void onSignEmailClick('signup');
+            }}
+            disabled={loadingSign}
+          >
+            Registrati
+          </Button>
+        </Box>
+      </Grid>
+    </>
+  );
+};
+
+function SignCard() {
+  const { authUser, loading } = useFirebaseAuth();
+  const [pendingGoogle, setPendingGoogle] = useState(false);
+  const [errorGoogle, setErrorGoogle] = useState('');
+  const [loadingSign, setLoadingSign] = useState(false);
+  const [warningModal, setWarningModal] = useState(false);
+  const [callbackSign, setCallbackSign] = useState<CallableFunction>(() => {});
 
   const onGoogleClick = async (): Promise<void> => {
+    // TODO: Add analytics for sign in with google (and normal too)
     if (loading || !authUser) return;
     try {
       setLoadingSign(true);
@@ -124,10 +188,13 @@ function SignCard() {
     } catch (e) {
       console.log(e);
       if (e instanceof Error) {
-        setErrorEmail(e.message as string);
+        setErrorGoogle(e.message as string);
       }
     } finally {
       setLoadingSign(false);
+      if (sessionStorage.getItem('pendingGoogleSign') === 'true') {
+        setPendingGoogle(true);
+      }
     }
   };
 
@@ -172,54 +239,17 @@ function SignCard() {
               <InfoUser authUser={authUser!} />
             ) : (
               <>
-                <Grid sx={{ mb: 2 }}>
-                  <TextField
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                    }}
-                    label="Email"
-                    helperText={errorEmail}
+                {!pendingGoogle && (
+                  <EmailSignPart
+                    setWarningModal={setWarningModal}
+                    setCallbackSign={setCallbackSign}
                   />
-                </Grid>
-                <Grid>
-                  <TextField
-                    value={password}
-                    onChange={(e) => {
-                      setPassword(e.target.value);
-                    }}
-                    label="Password"
-                    helperText={errorPassword}
-                    type="password"
-                  />
-                </Grid>
-                <Grid sx={{ mt: 2 }}>
-                  <Box display="flex">
-                    <Button
-                      sx={{ mr: 2 }}
-                      variant="contained"
-                      onClick={() => {
-                        setCallbackSign(() => () => onSignEmailClick('login'));
-                        setWarningModal(true);
-                      }}
-                      disabled={loadingSign}
-                    >
-                      Accedi
-                    </Button>
-                    <Button
-                      variant="contained"
-                      onClick={() => {
-                        void onSignEmailClick('signup');
-                      }}
-                      disabled={loadingSign}
-                    >
-                      Registrati
-                    </Button>
-                  </Box>
-                </Grid>
-                <Divider flexItem sx={{ my: 2 }} textAlign="center">
-                  Oppure
-                </Divider>
+                )}
+                {!pendingGoogle && (
+                  <Divider flexItem sx={{ my: 2 }} textAlign="center">
+                    Oppure
+                  </Divider>
+                )}
                 <Grid>
                   <Button
                     variant="outlined"
@@ -233,13 +263,27 @@ function SignCard() {
                     }
                     disabled={loadingSign}
                     onClick={() => {
-                      setCallbackSign(() => () => onGoogleClick());
-                      setWarningModal(true);
+                      if (pendingGoogle) {
+                        onGoogleClick();
+                      } else {
+                        setCallbackSign(() => () => onGoogleClick());
+                        setWarningModal(true);
+                      }
                     }}
                     style={{ textTransform: 'none' }}
                   >
                     Accedi con Google
                   </Button>
+                  {pendingGoogle && (
+                    <Typography sx={{ mt: 2, textAlign: 'center' }}>
+                      Accedi di nuovo ;)
+                    </Typography>
+                  )}
+                  {!pendingGoogle && errorGoogle !== '' && (
+                    <Typography color="error" sx={{ mt: 1 }}>
+                      {errorGoogle}
+                    </Typography>
+                  )}
                 </Grid>
                 {loadingSign && (
                   <Grid sx={{ mt: 2 }}>
@@ -266,12 +310,19 @@ function SignCard() {
             <Grid>
               <Typography>
                 Se accedi con un account già registrato, perderai tutti i dati
-                salvati salvati fino ad adesso (per esempio playlist, canti
-                preferiti, ecc).
+                salvati salvati fino ad adesso sul dispositivo (per esempio
+                playlist, canti preferiti, ecc).
               </Typography>
             </Grid>
             <Grid>
-              <Box display="flex" justifyContent="center" mt={2}>
+              <Box display="flex" justifyContent="center" mt={2} gap={2}>
+                <Button
+                  variant="outlined"
+                  onClick={() => setWarningModal(false)}
+                  sx={{ textTransform: 'none' }}
+                >
+                  Indietro
+                </Button>
                 <Button
                   variant="contained"
                   onClick={() => {
@@ -281,12 +332,6 @@ function SignCard() {
                   }}
                 >
                   Continua
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={() => setWarningModal(false)}
-                >
-                  Indietro
                 </Button>
               </Box>
             </Grid>

@@ -23,12 +23,21 @@ export default function useFirebaseAuth(): {
   authUser: User | null;
   infoProfile: UserDatabase | undefined;
   loading: boolean;
+  logout: () => Promise<void>;
 } {
   const [authUser, setAuthUser] = useState<User | null>(null);
   const [infoProfile, setInfoProfile] = useState<UserDatabase | undefined>(
     undefined
   );
   const [loading, setLoading] = useState(true);
+
+  const createAnonymousUser = async (): Promise<void> => {
+    const credentials = await signInAnonymously(auth);
+    const infoUser = await addUserToDatabase(credentials.user.uid, {});
+    setInfoProfile(infoUser);
+    setAuthUser(credentials.user);
+    saveToStorage(LastTimeFetchedUserKey, Date.now(), 'sessionStorage');
+  };
 
   const authStateChanged = (authState: User | null): void => {
     setAuthUser(authState);
@@ -37,16 +46,15 @@ export default function useFirebaseAuth(): {
       setLoading(false);
     } else {
       setLoading(true);
+      createAnonymousUser().finally(() => {
+        setLoading(false);
+      });
     }
   };
 
   const onAuthStateReady = async (): Promise<void> => {
     if (auth.currentUser === null) {
-      const credentials = await signInAnonymously(auth);
-      const infoUser = await addUserToDatabase(credentials.user.uid, {});
-      setInfoProfile(infoUser);
-      setAuthUser(credentials.user);
-      saveToStorage(LastTimeFetchedUserKey, Date.now(), 'sessionStorage');
+      await createAnonymousUser();
     } else {
       setAuthUser(auth.currentUser);
       const lastTimeFetched = getFromStorage(
@@ -69,7 +77,15 @@ export default function useFirebaseAuth(): {
     setUserId(getAnalytics(fbApp), auth.currentUser?.uid ?? null);
   };
 
+  const logout = async (): Promise<void> => {
+    await auth.signOut();
+    setInfoProfile(undefined);
+    setAuthUser(null);
+    //TODO: Test better this one
+  };
+
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     void auth.authStateReady().then(() => {
       void onAuthStateReady();
@@ -83,6 +99,7 @@ export default function useFirebaseAuth(): {
   return {
     authUser,
     infoProfile,
-    loading
+    loading,
+    logout
   };
 }

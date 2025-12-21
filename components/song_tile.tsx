@@ -17,7 +17,7 @@ import DragHandleRoundedIcon from '@mui/icons-material/DragHandleRounded';
 import Routes from '@/logic/routes';
 import MusicNoteRoundedIcon from '@mui/icons-material/MusicNoteRounded';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import { useTheme, alpha } from '@mui/material';
+import { useTheme, alpha } from '@mui/material/styles';
 import React from 'react';
 import { setServerPlaylist, type Playlist } from '@/logic/server/database';
 

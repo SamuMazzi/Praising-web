@@ -40,6 +40,7 @@ export default function Home() {
           title="Praising"
           homeVersion
           setShowUpdates={setUpdatesIsShown}
+          addSongIcon
         />
         <Typography
           variant="h2"

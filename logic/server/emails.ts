@@ -14,3 +14,10 @@ export interface EmailPayloadPartSong {
   nameSong: string;
   email: string;
 }
+
+export interface EmailPayloadProposalSong {
+  userId: string;
+  linkSong: string;
+  linkChords: string;
+  email: string;
+}

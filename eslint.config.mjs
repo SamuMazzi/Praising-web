@@ -50,7 +50,9 @@ const exports = [
       sourceType: 'module'
     },
 
-    rules: {}
+    rules: {
+      'next-recommended/async-component-no-hooks': 'off'
+    }
   },
   {
     files: ['**/.eslintrc.{js,cjs}', '**/*.js', '**/*.ts', '**/*.tsx'],

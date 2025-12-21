@@ -4,6 +4,9 @@ import React, { useState } from 'react';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import TextField from '@mui/material/TextField';
 import Fab from '@mui/material/Fab';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
 import { addModifiedSongToServerStorage } from '@/logic/server/storage';
 import {
   addEditedSongToDatabase,
@@ -12,7 +15,8 @@ import {
 } from '@/logic/server/database';
 import useFirebaseAuth from '@/logic/hooks/use_auth';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
-import { Container, useTheme } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+
 import CloseRounded from '@mui/icons-material/CloseRounded';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -22,6 +26,8 @@ import Box from '@mui/material/Box';
 import { HideOnScroll, SongTitleAppBar } from './appbar';
 import { getSingleSong } from '@/logic/local_logic';
 import { EmailPayloadVersionSong } from '@/logic/server/emails';
+import { GenericModal } from './modals';
+import { useRouter } from 'next/router';
 
 interface PropsSongAppBar {
   id: string;
@@ -83,8 +89,10 @@ export const EditableSong = (props: {
 }) => {
   const { authUser, infoProfile, loading } = useFirebaseAuth();
   const [data, setData] = useState(props.data);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const song = getSingleSong(props.songId);
   const theme = useTheme();
+  const router = useRouter();
 
   const handleSave = async (): Promise<void> => {
     if (authUser === null || infoProfile === undefined || loading) {
@@ -130,6 +138,29 @@ export const EditableSong = (props: {
     }
   };
 
+  const handleDelete = async (): Promise<void> => {
+    if (props.idExistingVersion === undefined) {
+      return;
+    }
+    await deleteEditedSongFromDatabase(
+      authUser?.uid ?? '',
+      props.songId,
+      props.idExistingVersion
+    );
+    // Update URL -----------------------
+    const newQuery = { ...router.query };
+    delete newQuery.v;
+    router.replace(
+      {
+        query: newQuery
+      },
+      undefined,
+      { shallow: true, scroll: false }
+    );
+    // -----------------------------------
+    props.setEditMode(false);
+  };
+
   return (
     <Container
       disableGutters
@@ -143,17 +174,7 @@ export const EditableSong = (props: {
         goBack={() => {
           props.setEditMode(false, props.idExistingVersion);
         }}
-        deleteSong={async () => {
-          if (props.idExistingVersion === undefined) {
-            return;
-          }
-          await deleteEditedSongFromDatabase(
-            authUser?.uid ?? '',
-            props.songId,
-            props.idExistingVersion
-          );
-          props.setEditMode(true);
-        }}
+        deleteSong={async () => setIsDeleteModalOpen(true)}
       />
       <Container sx={{ py: 3.5 }} />
       <Container disableGutters sx={{ py: 1 }}>
@@ -209,6 +230,42 @@ export const EditableSong = (props: {
           <CheckRoundedIcon />
         </Fab>
       </Container>
+      <GenericModal
+        open={isDeleteModalOpen}
+        handleClose={() => setIsDeleteModalOpen(false)}
+        content={
+          <Container>
+            <Typography
+              variant="subtitle1"
+              sx={{ maxLines: 1 }}
+              color="textDisabled"
+            >
+              Sicuro di voler eliminare questa versione della canzone? Non
+              potrai più recuperarla dopo
+            </Typography>
+            <Box sx={{ mt: 3 }} display="flex" justifyContent="flex-end">
+              <Button
+                onClick={() => {
+                  setIsDeleteModalOpen(false);
+                }}
+                variant="outlined"
+                sx={{ mr: 2, textTransform: 'none' }}
+              >
+                Annulla
+              </Button>
+              <Button
+                variant="contained"
+                onClick={async () => {
+                  await handleDelete();
+                  setIsDeleteModalOpen(false);
+                }}
+              >
+                Conferma
+              </Button>
+            </Box>
+          </Container>
+        }
+      />
     </Container>
   );
 };

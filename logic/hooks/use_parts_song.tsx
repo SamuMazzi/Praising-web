@@ -55,9 +55,7 @@ export default function usePartsSong(idSong: string): {
     if (loading) {
       return;
     }
-    if (getFromStorage('debug_admin') !== null) {
-      void fetchParts();
-    }
+    void fetchParts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 

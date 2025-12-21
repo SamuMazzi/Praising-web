@@ -13,7 +13,7 @@ import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import { ModalEditNamePlaylist } from './modals';
 import { saveToStorage } from '@/logic/local_logic';
-import { useTheme } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { playlistToPdf } from '@/logic/song_to_pdf';
 import { type ChordNotations } from '@/logic/redux/settings_slice';
 import { PrintButton } from './print_button';

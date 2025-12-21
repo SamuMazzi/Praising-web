@@ -6,13 +6,17 @@ import {
   signInWithEmailAndPassword,
   linkWithPopup,
   linkWithCredential,
-  User
+  signInWithPopup,
+  User,
+  UserCredential
 } from 'firebase/auth';
+import { FirebaseError } from 'firebase/app';
 import app from './firebase_config';
 import {
   addUserToDatabase,
   deleteUserFromDatabase,
-  getUserFromDatabase
+  getUserFromDatabase,
+  UserDatabase
 } from './database';
 
 export const auth = getAuth(app);
@@ -26,40 +30,69 @@ export class SignError extends Error {
   }
 }
 
+export const afterSignGoogle = async (
+  result: UserCredential,
+  oldInfoUser?: UserDatabase,
+  checkIfExists: boolean = true
+) => {
+  const credential = GoogleAuthProvider.credentialFromResult(result);
+  if (credential === null) throw new Error('Credential is null');
+  if (checkIfExists === true) {
+    const user = result.user;
+    const serverInfo = await getUserFromDatabase(user.uid);
+    if (serverInfo === undefined) {
+      // User didn't exists yet, so we signed up actually
+      await addUserToDatabase(user.uid, oldInfoUser ?? {});
+    } // Otherwise we don't need to do anything
+  }
+  return credential;
+};
+
 export const signInWithGoogle = async (authUser: User) => {
   const provider = new GoogleAuthProvider();
   provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
-  // try {
-  const oldIdUser = authUser.uid;
-  const oldInfoUser = await getUserFromDatabase(oldIdUser);
-  const result = await linkWithPopup(authUser, provider);
-  const credential = GoogleAuthProvider.credentialFromResult(result);
-  if (credential === null) throw new Error('Credential is null');
-  const user = result.user;
-  const serverInfo = await getUserFromDatabase(user.uid);
-  if (serverInfo === undefined) {
-    // User didn't exists yet, so we signed up actually
-    await addUserToDatabase(user.uid, oldInfoUser ?? {});
-  } // Otherwise we don't need to do anything
-
-  // We delete the old user
-  await deleteUserFromDatabase(oldIdUser);
-  /* } catch (error: any) {
+  let oldIdUser = null;
+  let oldInfoUser = undefined;
+  try {
+    if (authUser.isAnonymous) {
+      oldIdUser = authUser.uid;
+      oldInfoUser = await getUserFromDatabase(oldIdUser);
+    }
+    let result: UserCredential;
+    if (sessionStorage.getItem('pendingGoogleSign')) {
+      result = await signInWithPopup(auth, provider);
+      sessionStorage.removeItem('pendingGoogleSign');
+    } else {
+      result = await linkWithPopup(authUser, provider);
+    }
+    await afterSignGoogle(result, oldInfoUser ?? undefined);
+    if (oldIdUser !== null) {
+      // We delete the old user
+      await deleteUserFromDatabase(oldIdUser);
+    }
+  } catch (error) {
     // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.customData.email;
-    // The AuthCredential type that was used.
-    const credential = GoogleAuthProvider.credentialFromError(error);
-    throw error;
-  } */
+    if (error instanceof FirebaseError) {
+      if (error.code === 'auth/credential-already-in-use') {
+        // 🔴 FALLBACK: REDIRECT
+        sessionStorage.setItem('pendingGoogleSign', 'true');
+        throw new SignError(
+          'Questo account è già collegato ad un altro account. Clicca di nuovo su "Accedi con Google".'
+        );
+      } else if (error.code === 'auth/popup-closed-by-user') {
+        return;
+      } else {
+        // const errorCode = error.code;
+        // const errorMessage = error.message;
+        // // The email of the user's account used.
+        // const email = error.customData?.email;
+        // // The AuthCredential type that was used.
+        // const credential = GoogleAuthProvider.credentialFromError(error);
+        throw new SignError(error.message);
+      }
+    } else throw error;
+  }
 };
-
-/**
- * - signup -> colleghi account anonimo al nuovo e sposti tutto
- * - signup (già fatto con altra mail) -> si dovrebbe lamentare che non puoi linkare questo account due volte (quindi alert per utente)
- */
 
 export const signInWithEmail = async (
   type: 'signup' | 'login',
@@ -78,7 +111,10 @@ export const signInWithEmail = async (
       await signInWithEmailAndPassword(auth, email, password);
     }
     await deleteUserFromDatabase(oldIdUser);
-  } catch (error: any) {
+  } catch (error) {
+    if (!(error instanceof FirebaseError)) {
+      throw error;
+    }
     let message = error.message as string;
     if (error.code === 'auth/provider-already-linked') {
       throw new SignError('Questo account è già collegato ad un altro account');
