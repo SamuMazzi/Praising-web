@@ -35,12 +35,19 @@ export function SharePlaylist(props: { playlist: Playlist }) {
       }
       sites={['whatsapp', 'telegram', 'telegram', 'facebook', 'mail']}
       closeText="Chiudi"
-      onSocialClick={() => {
+      onSocialClick={async () => {
         if (!props.playlist.shared) {
           const newPlaylist = { ...props.playlist, shared: true };
           dispatch(setPlaylist(newPlaylist));
           void setServerPlaylist(props.playlist);
         }
+
+        if (typeof window === 'undefined') return;
+
+        const { getAnalytics, logEvent } = await import('firebase/analytics');
+        const fbApp = (await import('@/logic/server/firebase_config')).default;
+        const analytics = getAnalytics(fbApp);
+        logEvent(analytics, 'share_playlist');
       }}
     >
       <MenuItem>
@@ -67,6 +74,17 @@ export function ShareSong(props: { title: string; id: string }) {
         linkMetaDesc={textToShow}
         sites={['whatsapp', 'telegram', 'telegram', 'facebook', 'mail']}
         closeText="Chiudi"
+        onSocialClick={async () => {
+          if (typeof window === 'undefined') return;
+
+          const { getAnalytics, logEvent } = await import('firebase/analytics');
+          const fbApp = (await import('@/logic/server/firebase_config'))
+            .default;
+          const analytics = getAnalytics(fbApp);
+          logEvent(analytics, 'share_song', {
+            song_id: props.id
+          });
+        }}
       >
         <MenuItem>
           <ListItemIcon>

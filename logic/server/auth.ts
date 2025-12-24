@@ -70,6 +70,7 @@ export const signInWithGoogle = async (authUser: User) => {
       // We delete the old user
       await deleteUserFromDatabase(oldIdUser);
     }
+    return result;
   } catch (error) {
     // Handle Errors here.
     if (error instanceof FirebaseError) {

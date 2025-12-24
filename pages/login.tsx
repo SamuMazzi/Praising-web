@@ -87,6 +87,10 @@ function InfoUser(props: PropsInfoUserPage) {
 const EmailSignPart = (props: {
   setWarningModal: React.Dispatch<React.SetStateAction<boolean>>;
   setCallbackSign: React.Dispatch<React.SetStateAction<CallableFunction>>;
+  logEventSign: (
+    operation: 'login' | 'signup',
+    method: 'google' | 'email'
+  ) => Promise<void>;
 }) => {
   const { authUser, loading } = useFirebaseAuth();
   const [email, setEmail] = useState('');
@@ -111,6 +115,7 @@ const EmailSignPart = (props: {
     try {
       setLoadingSign(true);
       await signInWithEmail(type, authUser, email, password);
+      await props.logEventSign(type, 'email');
       void router.replace('/');
     } catch (e: unknown) {
       if (e instanceof SignError) {
@@ -179,12 +184,31 @@ function SignCard() {
   const [warningModal, setWarningModal] = useState(false);
   const [callbackSign, setCallbackSign] = useState<CallableFunction>(() => {});
 
+  const logEventSign = async (
+    operation: 'login' | 'signup',
+    method: 'google' | 'email'
+  ) => {
+    if (typeof window === 'undefined') return;
+
+    const { getAnalytics, logEvent } = await import('firebase/analytics');
+    const fbApp = (await import('@/logic/server/firebase_config')).default;
+    const analytics = getAnalytics(fbApp);
+    //@ts-expect-error parameters for 'login' and 'signup' are the same so the error has no sense
+    logEvent(analytics, operation, { method: method });
+  };
+
   const onGoogleClick = async (): Promise<void> => {
-    // TODO: Add analytics for sign in with google (and normal too)
     if (loading || !authUser) return;
+
     try {
       setLoadingSign(true);
-      await signInWithGoogle(authUser);
+      const result = await signInWithGoogle(authUser);
+      if (result) {
+        await logEventSign(
+          result.operationType === 'link' ? 'signup' : 'login',
+          'google'
+        );
+      }
     } catch (e) {
       console.log(e);
       if (e instanceof Error) {
@@ -243,6 +267,7 @@ function SignCard() {
                   <EmailSignPart
                     setWarningModal={setWarningModal}
                     setCallbackSign={setCallbackSign}
+                    logEventSign={logEventSign}
                   />
                 )}
                 {!pendingGoogle && (

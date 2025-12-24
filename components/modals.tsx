@@ -182,6 +182,12 @@ export function ModalEditNamePlaylist(props: PropsModalEditNamePlaylist) {
         modifyName();
       } else {
         await createPlaylist();
+        if (typeof window === 'undefined') return;
+
+        const { getAnalytics, logEvent } = await import('firebase/analytics');
+        const fbApp = (await import('@/logic/server/firebase_config')).default;
+        const analytics = getAnalytics(fbApp);
+        logEvent(analytics, 'create_playlist');
       }
       props.handleClose();
     }
