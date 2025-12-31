@@ -27,7 +27,7 @@ export default function FeedbackPage() {
         <Grid sx={{ mb: 2 }}>
           <Card elevation={8} sx={{ borderRadius: 4, p: 2 }}>
             <Image
-              src="assets/undraw_illustrations/undraw_feedback.svg"
+              src="/assets/undraw_illustrations/undraw_feedback.svg"
               alt="feedback"
               width={230}
               height={230}

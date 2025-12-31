@@ -23,6 +23,7 @@ import {
 } from '@/logic/server/database';
 import { EmailPayloadPartSong } from '@/logic/server/emails';
 import { addPartSongToServerStorage } from '@/logic/server/storage';
+import * as Sentry from '@sentry/nextjs';
 
 interface PropsModalBottomSheet {
   open: boolean;
@@ -107,6 +108,7 @@ export function ModalBottomSheetAddPart(props: PropsModalBottomSheetAddPart) {
 
     const idPart = await addPartSongToDatabase(
       authUser.uid,
+      nameAuthor,
       props.idSong,
       namePart
     );
@@ -134,6 +136,9 @@ export function ModalBottomSheetAddPart(props: PropsModalBottomSheetAddPart) {
     if (response.status !== 200) {
       const text = await response.text();
       console.error('Error sending email.', text);
+      Sentry.captureMessage(
+        'Error sending part song email notification: ' + text
+      );
     }
     props.afterUpload();
     props.onClose();

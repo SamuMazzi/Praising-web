@@ -74,7 +74,7 @@ export default function ListSongs(props: PropsListSongs) {
     >
       <Grid sx={{ pt: 4 }}>
         <Image
-          src="assets/undraw_illustrations/undraw_more_music.svg"
+          src="/assets/undraw_illustrations/undraw_more_music.svg"
           alt="More music"
           width={200}
           height={200}

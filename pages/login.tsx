@@ -252,7 +252,7 @@ function SignCard() {
           </Grid>
           <Grid sx={{ pb: 6, pt: 3 }}>
             <Image
-              src="assets/undraw_illustrations/undraw_access_account.svg"
+              src="/assets/undraw_illustrations/undraw_access_account.svg"
               alt="Compose music"
               width="230"
               height="230"

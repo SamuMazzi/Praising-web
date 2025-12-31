@@ -457,6 +457,7 @@ export interface CustomSongInfo {
   creationTime: Timestamp;
   lastModified: Timestamp;
   author: string;
+  userId: string;
   rates?: number;
   state: 'approved' | 'pending';
 }
@@ -511,6 +512,7 @@ export const checkNamePartSongToDatabase = async (
 
 export const addPartSongToDatabase = async (
   userId: string,
+  authorName: string,
   songId: string,
   namePart: string
 ): Promise<string> => {
@@ -524,10 +526,11 @@ export const addPartSongToDatabase = async (
     {
       creationTime: Timestamp.now(),
       lastModified: Timestamp.now(),
-      author: userId,
+      author: authorName,
+      userId: userId,
       state: 'pending',
       name: namePart
-    }
+    } as PartSongInfo
   );
   await updateDoc(doc(firestore, USERS_COLLECTION, userId), {
     ownedParts: arrayUnion(newPartDocRef.path),
@@ -597,6 +600,7 @@ export interface PartSongInfo {
   creationTime: Timestamp;
   lastModified: Timestamp;
   author: string;
+  userId: string;
   rates?: number;
   state: 'approved' | 'pending';
 }

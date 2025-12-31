@@ -194,6 +194,7 @@ export default function ActionsSong(props: PropsActionSong) {
           return;
         }
         if (authUser?.email === null) {
+          setOpenModal(true);
           return;
         }
         props.setEditMode();
