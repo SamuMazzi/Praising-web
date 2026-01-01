@@ -8,7 +8,8 @@ interface BoxPlaylistState {
 }
 
 const initialState: BoxPlaylistState = {
-  playlist: getFromStorage('playlists') || {}
+  playlist:
+    (getFromStorage('playlists') as Record<string, Playlist> | null) || {}
 };
 
 interface ApplyDragParam {

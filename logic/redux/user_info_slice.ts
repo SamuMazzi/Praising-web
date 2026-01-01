@@ -5,11 +5,11 @@ const FAVORITE_SONGS_KEY = 'favorite_songs';
 
 interface SettingsState {
   favoriteSongs: string[];
-  others: any;
+  others: Record<string, string>;
 }
 
 const initialState: SettingsState = {
-  favoriteSongs: getFromStorage('favorite_songs') || [],
+  favoriteSongs: (getFromStorage('favorite_songs') as string[] | null) || [],
   others: {}
 };
 

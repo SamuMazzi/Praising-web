@@ -30,7 +30,7 @@ export const filterArgomenti: Record<string, string> = {
 
 export const saveToStorage = (
   key: string,
-  value: any,
+  value: unknown,
   type: 'localStorage' | 'sessionStorage' = 'localStorage'
 ): void => {
   if (typeof window !== 'undefined') {
@@ -45,7 +45,7 @@ export const saveToStorage = (
 export const getFromStorage = (
   key: string,
   type: 'localStorage' | 'sessionStorage' = 'localStorage'
-): any => {
+): unknown => {
   if (typeof window !== 'undefined') {
     const res = window[type].getItem(key);
     if (
@@ -105,7 +105,9 @@ export const getSingleSong = (id: string): Song | undefined => {
   const song: Song | undefined = songs.find((v) => v.id === id);
 
   if (song === undefined) return;
-  const infoLocalSong: InfoLocalSong | null = getFromStorage('song_' + song.id);
+  const infoLocalSong = getFromStorage(
+    'song_' + song.id
+  ) as InfoLocalSong | null;
   if (infoLocalSong !== null) {
     song.transpose = infoLocalSong.transpose;
     song.scaleFactor = infoLocalSong.scaleFactor;
@@ -115,7 +117,7 @@ export const getSingleSong = (id: string): Song | undefined => {
 
 export const updateLastRecentsSongs = (song: Song): string[] | undefined => {
   const limit = 7;
-  let recents: string[] = getFromStorage('recents') || [];
+  let recents = (getFromStorage('recents') as string[]) || [];
   if (recents.includes(song.id) && recents[0] === song.id) return;
   else if (recents.includes(song.id) && recents[0] !== song.id) {
     // Song exists but it's not the first one
@@ -131,7 +133,7 @@ export const updateLastRecentsSongs = (song: Song): string[] | undefined => {
 };
 
 export const getLastRecentsSongs = (): string[] => {
-  const recents: string[] = getFromStorage('recents') || [];
+  const recents = (getFromStorage('recents') as string[]) || [];
   return recents;
 };
 

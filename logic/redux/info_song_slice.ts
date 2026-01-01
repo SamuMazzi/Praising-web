@@ -14,7 +14,9 @@ interface BoxInfoSongsState {
 }
 
 const initialState: BoxInfoSongsState = {
-  infoSongs: getFromStorage(INFO_SONGS_KEY) || {}
+  infoSongs:
+    (getFromStorage(INFO_SONGS_KEY) as Record<string, InfoLocalSong> | null) ||
+    {}
 };
 
 interface PayloadModifySong {

@@ -60,7 +60,7 @@ export default function useFirebaseAuth(): {
       const lastTimeFetched = getFromStorage(
         LastTimeFetchedUserKey,
         'sessionStorage'
-      );
+      ) as number | null;
       // If user data already been fetched in 1 hour, don't fetch again
       if (
         (lastTimeFetched === null ||
