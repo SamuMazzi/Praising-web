@@ -6,6 +6,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { darkThemeOptions, lightThemeOptions } from '../styles/theme';
 import { Provider } from 'react-redux';
 import { store, useAppSelector } from '../logic/redux/store';
+import { useSync } from '../logic/hooks/use_sync_songs';
 import '../styles/globals.css';
 import { useEffect, useState } from 'react';
 import { AuthContextProvider } from '@/logic/context/auth_context';
@@ -42,8 +43,42 @@ import SEO from '../next-seo.config';
 // TODO: Implementare spazi fra accordi senza testo (per ora solo nelle righe intere senza testo, cerca canzoni con cui testare, sicuro "Mi perdo nel tuo amore")
 import { useFirebaseRoutesAnalytics } from '@/logic/hooks/use_firebase_analytics';
 
+const isPwa = (): boolean => {
+  if (typeof window === 'undefined') return false;
+
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+  const isIOSStandalone = (window.navigator as any).standalone === true;
+
+  return isStandalone || isIOSStandalone;
+};
+
 export default function App({ Component, pageProps }: AppProps) {
   const [mounted, setMounted] = useState(false);
+  const { syncSongs } = useSync();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      // 1. Run sync on every fresh load if online
+      if (!isPwa()) {
+        console.log('Running in browser: Skipping bulk song sync.');
+        return;
+      }
+
+      if (navigator.onLine) syncSongs();
+
+      // 2. Listen for Service Worker updates
+      const serwist = window.serwist;
+      if (serwist) {
+        serwist.addEventListener('installed', (event) => {
+          if (event.isUpdate) {
+            console.log('New version detected! Syncing new songs...');
+            syncSongs();
+          }
+        });
+      }
+    }
+  }, []);
+
   useFirebaseRoutesAnalytics();
 
   useEffect(() => {

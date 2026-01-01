@@ -6,6 +6,7 @@ import { getVersionSong } from '../server/storage';
 import useFirebaseAuth from './use_auth';
 import { useRouter } from 'next/router';
 import { StorageErrorCode, StorageError } from '@firebase/storage';
+import { db } from '../db';
 
 // TODO: Prevent scrolling when downloading pdf
 
@@ -80,11 +81,15 @@ export default function useContentSong(
       if (idVersion) {
         contentSong = await getVersionSong(idVersion, idSong);
       } else {
-        contentSong = await fetcher(
-          `/api/song/${encodeURIComponent(idSong)}`,
-          (window.performance.getEntries()[0] as PerformanceNavigationTiming)
-            .type === 'reload'
-        );
+        //@ts-expect-error if undefined will be handled
+        contentSong = (await db.songs.get(idSong))?.content;
+        if (!contentSong) {
+          contentSong = await fetcher(
+            `/api/song/${encodeURIComponent(idSong)}`,
+            (window.performance.getEntries()[0] as PerformanceNavigationTiming)
+              .type === 'reload'
+          );
+        }
       }
       setContent(contentSong);
     } catch (e) {

@@ -3,7 +3,7 @@ import type {
   SerwistGlobalConfig,
   RuntimeCaching
 } from 'serwist';
-import { Serwist, StaleWhileRevalidate } from 'serwist';
+import { NetworkFirst, Serwist, StaleWhileRevalidate } from 'serwist';
 import { defaultCache } from '@serwist/next/worker';
 
 // Beacause of too many requests to the server, the automatic caching of _everything_ has been disabled.
@@ -35,10 +35,12 @@ const cachingStrategies: RuntimeCaching[] = [
 ];
 
 // 'serwist-runtime-http://localhost:3000/'
+const a = self.__SW_MANIFEST
 
+console.log("manifest", a);
 const serwist = new Serwist({
   // All assets and "accordi" are automatically cached by default.
-  precacheEntries: self.__SW_MANIFEST, // additionalPrecacheEntries.concat(that self sw manifest || []),
+  precacheEntries: a, // additionalPrecacheEntries.concat(that self sw manifest || []),
   precacheOptions: {
     ignoreURLParametersMatching: [/.*/],
     cleanupOutdatedCaches: true
@@ -46,7 +48,15 @@ const serwist = new Serwist({
   skipWaiting: true,
   clientsClaim: true,
   navigationPreload: true,
-  runtimeCaching: defaultCache // cachingStrategies,
+  runtimeCaching: [
+    {
+      matcher: ({ url }) => url.pathname === "/" || url.pathname === "/playlist" || url.pathname === "/lectures" || url.pathname === "/song" || url.pathname.startsWith('/song/'),
+      handler: new NetworkFirst({
+        cacheName: 'main-routes'
+      }),
+    },
+    ...defaultCache,
+  ], // cachingStrategies,
   /* fallbacks: {
     entries: [
       {
