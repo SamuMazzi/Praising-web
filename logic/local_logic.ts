@@ -2,6 +2,8 @@ import { SOLFEGE } from 'chordsheetjs';
 import { type ChordNotations } from './redux/settings_slice';
 import songs from './songs.config.json';
 
+export const VERSION_APP = '0.6.7';
+
 export const filterMomenti: Record<string, string> = {
   Ingr: 'Introduzione',
   G: 'Gloria',

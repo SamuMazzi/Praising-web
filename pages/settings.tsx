@@ -17,7 +17,7 @@ import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/logic/redux/store';
 // import VolunteerActivismRoundedIcon from '@mui/icons-material/VolunteerActivismRounded';
 import SdStorageRoundedIcon from '@mui/icons-material/SdStorageRounded';
-import { clearStorage } from '@/logic/local_logic';
+import { clearStorage, VERSION_APP } from '@/logic/local_logic';
 import InstallPWA from '@/components/install_pwa_btn';
 import React from 'react';
 
@@ -95,7 +95,7 @@ export default function SettingsPage() {
             </ListItemButton>
           </ListItem>
         </List>
-        <p>Versione: 0.6.7</p>
+        <p>Versione: {VERSION_APP}</p>
       </Container>
     </main>
   );

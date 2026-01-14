@@ -38,7 +38,7 @@ export function ModalCreateSession(props: ModalAddSongProps) {
     setError('');
     if (name === '') {
       setError('Il nome non può essere vuoto');
-    } else if (name.length > 15) {
+    } else if (name.length > 25) {
       setError('Il nome deve essere più corto');
     } else {
       try {
@@ -175,8 +175,8 @@ export function ModalEditNamePlaylist(props: PropsModalEditNamePlaylist) {
     setLoading(true);
     if (name === '') {
       setError('Il nome non può essere vuoto');
-    } else if (name.length > 15) {
-      setError('Il nome deve essere più corto');
+    } else if (name.length > 25) {
+      setError('Il nome deve essere più corto di 25 caratteri');
     } else {
       if (props.playlist !== undefined) {
         modifyName();
