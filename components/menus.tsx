@@ -17,8 +17,13 @@ import { useTheme } from '@mui/material/styles';
 import { playlistToPdf } from '@/logic/song_to_pdf';
 import { type ChordNotations } from '@/logic/redux/settings_slice';
 import { PrintButton } from './print_button';
-import { type Playlist } from '@/logic/server/database';
+import {
+  deleteServerPlaylist,
+  removeSharedPlaylist,
+  type Playlist
+} from '@/logic/server/database';
 import { SharePlaylist } from './shares';
+import useFirebaseAuth from '@/logic/hooks/use_auth';
 
 interface PropsMenuPlaylist {
   anchorEl: HTMLElement | null;
@@ -35,6 +40,7 @@ export const MenuPlaylist = (props: PropsMenuPlaylist) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const theme = useTheme();
+  const { authUser } = useFirebaseAuth();
 
   const closeMenu = (): void => {
     props.setAnchorEl(null);
@@ -72,13 +78,18 @@ export const MenuPlaylist = (props: PropsMenuPlaylist) => {
         }}
       />
       <MenuItem
-        onClick={() => {
+        onClick={async () => {
           if (props.playlist === undefined) return;
           saveToStorage(
             'deleting_playlist',
             props.playlist.id,
             'sessionStorage'
           );
+          if (props.playlist.owner === authUser?.uid) {
+            await deleteServerPlaylist(props.playlist.id);
+          } else {
+            await removeSharedPlaylist(authUser!.uid, props.playlist.id);
+          }
           dispatch(deletePlaylist(props.playlist.id));
           if (props.back_on_delete ?? false)
             void router.replace(Routes.Playlist);

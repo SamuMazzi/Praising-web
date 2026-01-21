@@ -132,8 +132,8 @@ export const getMyPlaylists = async (
   userId: string,
   options?: { convertLocal?: boolean }
 ): Promise<Promise<Record<string, Playlist>>> => {
-  const c = collection(firestore, PLAYLIST_COLLECTION);
-  const q = query(c, where('owner', '==', userId));
+  const playlistColl = collection(firestore, PLAYLIST_COLLECTION);
+  const q = query(playlistColl, where('owner', '==', userId));
 
   const docRef = await getDocs(q);
   return docRef.docs
@@ -147,6 +147,10 @@ export const getMyPlaylists = async (
       );
     })
     .reduce((a, v) => ({ ...a, [v.id]: v }), {});
+};
+
+export const deleteServerPlaylist = async (playlistId: string) => {
+  await deleteDoc(doc(firestore, PLAYLIST_COLLECTION, playlistId));
 };
 
 // Get all the playlists that have been shared with me
@@ -173,7 +177,6 @@ export const getSharedPlaylists = async (
 };
 
 export const addSharedPlaylist = async (userId: string, playlistId: string) => {
-  console.log('about to add', userId, playlistId);
   await setDoc(
     doc(firestore, USERS_COLLECTION, userId),
     {
@@ -181,7 +184,6 @@ export const addSharedPlaylist = async (userId: string, playlistId: string) => {
     },
     { merge: true }
   );
-  console.log('set', playlistId);
 };
 
 export const removeSharedPlaylist = async (
