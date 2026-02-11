@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { LiturgyOfDay } from '../scraper_liturgy';
+import * as Sentry from '@sentry/nextjs';
 
 export const fetcher = async (
   url: string,
@@ -46,7 +47,14 @@ export default function useLecture(url: string): {
       );
       setContent(liturgy);
     } catch (e) {
-      setError(e as string);
+      if (e instanceof Error) {
+        setError(e.message);
+      } else {
+        setError(JSON.stringify(e));
+      }
+      Sentry.captureException(e, {
+        data: `Url fetched: ${url}`
+      });
     } finally {
       setLoading(false);
     }

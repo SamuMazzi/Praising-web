@@ -1,4 +1,9 @@
-import ChordSheetJS, { type Song, Key, SOLFEGE } from 'chordsheetjs';
+import ChordSheetJS, {
+  type Song,
+  Key,
+  type SerializedSong,
+  SOLFEGE
+} from 'chordsheetjs';
 import * as cheerio from 'cheerio';
 import { type ChordNotations } from './redux/settings_slice';
 import type { Element } from 'domhandler';
@@ -249,11 +254,14 @@ const internalEditTML = ($: cheerio.CheerioAPI, row: Element): void => {
   }
 };
 
-const removeChords = (serializedSong: any): void => {
-  serializedSong.lines.forEach((line: any) => {
-    line.items.map((v: any): any => {
+const removeChords = (serializedSong: SerializedSong): void => {
+  serializedSong.lines.forEach((line) => {
+    line.items.map((v) => {
+      //@ts-expect-error SerializedChordLyricsPair
       if (v.type === 'chordLyricsPair') {
+        //@ts-expect-error SerializedChordLyricsPair.chords
         v.chords = '';
+        //@ts-expect-error SerializedChordLyricsPair.chord
         v.chord = null;
       }
       return v;
@@ -314,9 +322,9 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
         const majorRootKey = Key.parseOrFail(deserialized.key).toMajor();
 
         if (DIESIS_NOTES.includes(majorRootKey.toString())) {
-          deserialized = deserialized.useModifier('#');
+          deserialized = deserialized.useAccidental('#');
         } else {
-          deserialized = deserialized.useModifier('b');
+          deserialized = deserialized.useAccidental('b');
         }
       } catch (e) {
         console.error(e);
