@@ -6,19 +6,23 @@ import * as Sentry from '@sentry/nextjs';
 
 export const fetcher = async (
   url: string,
-  forceReload: boolean
+  forceReload: boolean,
+  retryOnServerError: boolean = true
 ): Promise<LiturgyOfDay> => {
   try {
     const res = await fetch(url, {
       cache: forceReload ? 'reload' : 'force-cache',
       next: { revalidate: 3600 * 24 }
     });
-    if (res.status >= 400) {
-      const msg = JSON.parse(await res.text()).error;
-      throw Error(msg as string);
+    const data = await res.json();
+    if (res.status >= 500 && retryOnServerError) {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      return fetcher(url, forceReload, false);
     }
-    const json = await res.json();
-    return new LiturgyOfDay(json);
+    if (res.status >= 400) {
+      throw Error(data.error as string);
+    }
+    return new LiturgyOfDay(data);
   } catch (err) {
     console.error(err);
     throw err;
