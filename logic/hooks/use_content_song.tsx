@@ -28,7 +28,8 @@ export const fetcher = async (
 
 export default function useContentSong(
   idSong: string,
-  stdIdVersion?: string
+  stdIdVersion?: string,
+  initialContent?: string
 ): {
   content: string;
   versions: CustomSongInfo[];
@@ -38,8 +39,8 @@ export default function useContentSong(
   fetchSong: (idVersion?: string) => Promise<void>;
   fetchVersions: () => Promise<void>;
 } {
-  const [content, setContent] = useState('');
-  const [loadingContent, setLoadingContent] = useState(true);
+  const [content, setContent] = useState(initialContent ?? '');
+  const [loadingContent, setLoadingContent] = useState(!initialContent);
   const [loadingVersions, setLoadingVersions] = useState(true);
   const [error, setError] = useState('');
   const [versions, setVersions] = useState<CustomSongInfo[]>([]);
@@ -119,7 +120,10 @@ export default function useContentSong(
       return;
     }
     void fetchVersions();
-    void fetchSong(stdIdVersion);
+    // Skip initial fetch if SSG already provided content and no specific version is requested
+    if (!initialContent || stdIdVersion) {
+      void fetchSong(stdIdVersion);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idSong, loading]);
 

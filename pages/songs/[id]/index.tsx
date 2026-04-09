@@ -38,6 +38,11 @@ import { NextSeo } from 'next-seo';
 import { Playlist } from '@/logic/server/database';
 import { useRouter } from 'next/router';
 import { useSearchParams } from 'next/navigation';
+import type { GetStaticPaths, GetStaticProps } from 'next';
+import Head from 'next/head';
+import path from 'path';
+import { promises as fs } from 'fs';
+import songsConfig from '@/logic/songs.config.json';
 
 const driverObj = driver({
   // TODO: Sistema progress
@@ -125,10 +130,15 @@ const driverObj = driver({
 
 const TUTORIAL_SHOWN = 'tutorialShown_0';
 
-export default function SongPage() {
+interface SongPageProps {
+  initialContent: string;
+  songId: string;
+}
+
+export default function SongPage({ initialContent, songId }: SongPageProps) {
   const router = useRouter();
   const { id, playlistId } = router.query;
-  const id_song = id as string;
+  const id_song = (id as string | undefined) ?? songId;
   const playlistIdCode = playlistId as string | undefined;
   const song = getSingleSong(id_song);
   const infoSong: InfoLocalSong | undefined = useAppSelector((state) =>
@@ -139,7 +149,7 @@ export default function SongPage() {
   const vFromUrl = searchParams.get('v') ?? '';
   const [versionSong, setVersionSong] = useState(vFromUrl);
   const { content, versions, fetchSong, loadingContent, error } =
-    useContentSong(id_song, versionSong ?? infoSong?.versionId);
+    useContentSong(id_song, versionSong ?? infoSong?.versionId, initialContent);
   const songVersionIndex = versions.findIndex(
     (v) => v.versionId === (versionSong ?? infoSong?.versionId)
   );
@@ -280,18 +290,45 @@ export default function SongPage() {
   // fontsize std: lineHeigth 68, poi -4 tutte le volte
   assert(song !== undefined, 'Song is undefined');
 
+  const songUrl = `https://praising.vercel.app/songs/${song.id}`;
+  const songDescription = `Accordi e testo del canto "${song.name}"${song.author ? ` di ${song.author}` : ''}. Trasporta gli accordi, ascolta su YouTube ed esporta in PDF.`;
+  const songJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'MusicComposition',
+    name: song.name,
+    ...(song.author ? { composer: { '@type': 'Person', name: song.author } } : {}),
+    url: songUrl,
+    inLanguage: 'it',
+    keywords: `accordi, ${song.name}, canti cristiani, liturgia`
+  };
+
   const HeadComponent = () => (
-    <NextSeo
-      title={song.name}
-      description={'Guarda gli accordi del canto ' + song.name}
-      additionalMetaTags={[
-        {
-          name: 'keywords',
-          content:
-            song.name + ', accordi, ' + song.author + ', canzoniere, chords'
-        }
-      ]}
-    />
+    <>
+      <NextSeo
+        title={song.name + ' accordi'}
+        description={songDescription}
+        canonical={songUrl}
+        additionalMetaTags={[
+          {
+            name: 'keywords',
+            content: `${song.name}, accordi, ${song.author}, canti cristiani, canzoniere, chords, liturgia`
+          }
+        ]}
+        openGraph={{
+          title: `${song.name} accordi - Praising`,
+          description: songDescription,
+          url: songUrl,
+          type: 'website',
+          locale: 'it_IT'
+        }}
+      />
+      <Head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(songJsonLd) }}
+        />
+      </Head>
+    </>
   );
 
   if (editMode) {
@@ -394,6 +431,33 @@ export default function SongPage() {
     </>
   );
 }
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const paths = songsConfig.map((song) => ({
+    params: { id: song.Id.toString() }
+  }));
+  return { paths, fallback: false };
+};
+
+export const getStaticProps: GetStaticProps<SongPageProps> = async ({ params }) => {
+  const id = params?.id as string;
+  const songMeta = songsConfig.find((s) => s.Id.toString() === id);
+
+  if (!songMeta) {
+    return { notFound: true };
+  }
+
+  try {
+    const dir = path.resolve('./public', 'accordi');
+    const initialContent = await fs.readFile(
+      path.join(dir, songMeta['Nome file']),
+      'utf8'
+    );
+    return { props: { initialContent, songId: id } };
+  } catch {
+    return { props: { initialContent: '', songId: id } };
+  }
+};
 
 const YoutubeVideoBox = (props: { song: Song; closeVideo: () => void }) => {
   const [minimized, setMinimized] = useState(false);

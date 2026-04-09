@@ -1,10 +1,11 @@
 import html2canvas from 'html2canvas';
 import { type jsPDF } from 'jspdf';
 import { renderSong } from './handle_text_song';
-import { getSingleSong } from './local_logic';
+import { getSingleSong, VERSION_APP } from './local_logic';
 import { type ChordNotations } from './redux/settings_slice';
 import { fetcher } from './hooks/use_content_song';
 import { getHtmlPdfPage } from '@/components/pdf_page';
+import ChordSheetJS from 'chordsheetjs';
 
 const PAGE_WIDTH = 595.28; // width of regular a4 paper
 const PAGE_HEIGHT = 841.89; // height of regular a4 paper
@@ -104,6 +105,34 @@ class SongPDF {
     if (data === undefined || data === null || song === undefined) {
       return;
     }
+    let songParsed = new ChordSheetJS.ChordProParser().parse(data);
+    songParsed = songParsed.changeMetadata('title', song.name);
+    const formatter = new ChordSheetJS.PdfFormatter();
+    console.log(formatter.configuration);
+    formatter.configure({
+      version: VERSION_APP,
+      normalizeChords: true,
+      layout: {
+        header: {
+          height: 0,
+          content: []
+        },
+        footer: {
+          height: 0,
+          content: []
+        },
+        sections: {
+          base: {
+            display: {
+              // lyricsOnly: true
+            }
+          }
+        },
+        global: {} // Useless
+      }
+    });
+    formatter.format(songParsed);
+    formatter.save();
     const info = renderSong({
       fileContent: data,
       showChords: true,
