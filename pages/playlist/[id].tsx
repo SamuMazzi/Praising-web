@@ -29,7 +29,14 @@ export default function PlaylistPage() {
     }
     if (loadingPlaylist) {
       return (
-        <Container sx={{ minHeight: '100vh' }}>
+        <Container
+          sx={{
+            minHeight: '100vh',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
           <CircularProgress />
         </Container>
       );
