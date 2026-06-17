@@ -13,13 +13,17 @@ import {
 import { useAppDispatch } from '@/logic/redux/store';
 import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded';
 import Draggable from './react-smooth-dnd/Draggable';
-import DragHandleRoundedIcon from '@mui/icons-material/DragHandleRounded';
 import Routes from '@/logic/routes';
 import MusicNoteRoundedIcon from '@mui/icons-material/MusicNoteRounded';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { useTheme, alpha } from '@mui/material/styles';
 import React from 'react';
 import { setServerPlaylist, type Playlist } from '@/logic/server/database';
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import { GenericModal } from './modals';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
 
 /**
  * 
@@ -100,30 +104,87 @@ interface PropsSelectableSongTile {
 }
 
 export function PlaylistSongTile(props: PropsSelectableSongTile) {
+  const dispatch = useAppDispatch();
+  const [openConfirm, setOpenConfirm] = React.useState(false);
+
+  const handleDelete = () => {
+    const songs = handleSongForPlaylist(props.playlist, props.song.id);
+    const newPlaylist = { ...props.playlist, songs };
+    dispatch(setPlaylist(newPlaylist));
+    void setServerPlaylist(newPlaylist);
+  };
+
   // FIXME: Sometimes it throws "TypeError: Illegal invocation"
   return (
-    <Draggable key={props.song.id}>
-      <ListItem
-        sx={{ borderRadius: 8, my: 1 }}
-        secondaryAction={
-          <IconButton className="column-drag-handle">
-            <DragHandleRoundedIcon />
-          </IconButton>
-        }
-      >
-        <ListItemButton
-          component={NextLinkComposed}
-          to={{
-            pathname: Routes.Songs + '/' + props.song.id,
-            query: { playlistId: props.playlist.id }
-          }}
+    <>
+      <Draggable key={props.song.id}>
+        <ListItem
+          className="column-drag-handle"
+          sx={{ borderRadius: 8, my: 1 }}
+          secondaryAction={
+            <IconButton
+              onClick={(e) => {
+                e.preventDefault();
+                setOpenConfirm(true);
+              }}
+            >
+              <DeleteRoundedIcon />
+            </IconButton>
+          }
         >
-          <ListItemText
-            primary={props.song.name}
-            secondary={props.song.author}
-          />
-        </ListItemButton>
-      </ListItem>
-    </Draggable>
+          <ListItemButton
+            component={NextLinkComposed}
+            to={{
+              pathname: Routes.Songs + '/' + props.song.id,
+              query: { playlistId: props.playlist.id }
+            }}
+          >
+            <ListItemText
+              primary={props.song.name}
+              secondary={props.song.author}
+            />
+          </ListItemButton>
+        </ListItem>
+      </Draggable>
+      <GenericModal
+        open={openConfirm}
+        handleClose={() => setOpenConfirm(false)}
+        content={
+          <Grid container direction="column" alignItems="center">
+            <Grid>
+              <Typography variant="h2" component="h2" sx={{ mb: 2 }}>
+                Rimuovere il canto?
+              </Typography>
+            </Grid>
+            <Grid>
+              <Typography>
+                Vuoi rimuovere <strong>{props.song.name}</strong> dalla
+                playlist?
+              </Typography>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="center"
+              sx={{ mt: 3, gap: 2 }}
+            >
+              <Button variant="outlined" onClick={() => setOpenConfirm(false)}>
+                Annulla
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => {
+                  handleDelete();
+                  setOpenConfirm(false);
+                }}
+              >
+                Rimuovi
+              </Button>
+            </Grid>
+          </Grid>
+        }
+      />
+    </>
   );
 }
