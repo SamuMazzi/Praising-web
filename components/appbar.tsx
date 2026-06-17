@@ -446,13 +446,12 @@ export const SongTitleAppBar = (props: {
   versionText: string;
 }) => {
   return (
-    <Box sx={{ flexGrow: 1 }} alignItems="center">
-      <Typography
-        variant="h1"
-        sx={{ py: 1, width: { xs: '16rem', md: '40rem' } }}
-        noWrap
-        style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
-      >
+    <Box
+      sx={{ flexGrow: 1, flexShrink: 1, minWidth: 0, py: 1 }}
+      style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+      alignItems="center"
+    >
+      <Typography variant="h1" noWrap>
         {props.title}
       </Typography>
       <Typography variant="subtitle1" sx={{ maxLines: 1 }} color="textDisabled">
@@ -499,7 +498,7 @@ export const SongAppBar = (props: PropsSongAppBar) => {
             display: 'flex'
           }}
         >
-          <Toolbar>
+          <Toolbar sx={{ pr: { xs: 1, sm: 2 } }}>
             <IconButton
               edge="start"
               sx={{ mr: 2 }}
@@ -516,7 +515,10 @@ export const SongAppBar = (props: PropsSongAppBar) => {
               <ArrowBackRoundedIcon />
             </IconButton>
             <SongTitleAppBar title={props.title} versionText={versionText} />
-            <Box sx={{ flexGrow: 0, display: 'flex' }} alignItems="center">
+            <Box
+              sx={{ flexGrow: 0, flexShrink: 0, display: 'flex' }}
+              alignItems="center"
+            >
               {indexInPlaylist !== undefined &&
                 indexInPlaylist !== -1 &&
                 props.playlist !== undefined && (
@@ -532,10 +534,7 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                           props.playlist.id
                         }
                       >
-                        <IconButton
-                          sx={{ ml: 2, mr: 0.5 }}
-                          LinkComponent={Link}
-                        >
+                        <IconButton LinkComponent={Link}>
                           <FirstPageRoundedIcon />
                         </IconButton>
                       </Link>
@@ -551,7 +550,7 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                           props.playlist.id
                         }
                       >
-                        <IconButton sx={{ mr: 2 }} LinkComponent={Link}>
+                        <IconButton LinkComponent={Link}>
                           <LastPageRoundedIcon />
                         </IconButton>
                       </Link>

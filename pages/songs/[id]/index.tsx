@@ -296,7 +296,9 @@ export default function SongPage({ initialContent, songId }: SongPageProps) {
     '@context': 'https://schema.org',
     '@type': 'MusicComposition',
     name: song.name,
-    ...(song.author ? { composer: { '@type': 'Person', name: song.author } } : {}),
+    ...(song.author
+      ? { composer: { '@type': 'Person', name: song.author } }
+      : {}),
     url: songUrl,
     inLanguage: 'it',
     keywords: `accordi, ${song.name}, canti cristiani, liturgia`
@@ -439,7 +441,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
   return { paths, fallback: false };
 };
 
-export const getStaticProps: GetStaticProps<SongPageProps> = async ({ params }) => {
+export const getStaticProps: GetStaticProps<SongPageProps> = async ({
+  params
+}) => {
   const id = params?.id as string;
   const songMeta = songsConfig.find((s) => s.Id.toString() === id);
 
