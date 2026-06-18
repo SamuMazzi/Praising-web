@@ -45,7 +45,7 @@ export function SharePlaylist(props: { playlist: Playlist }) {
         if (typeof window === 'undefined') return;
 
         const { getAnalytics, logEvent } = await import('firebase/analytics');
-        const fbApp = (await import('@/logic/server/firebase_config')).default;
+        const fbApp = (await import('../logic/server/firebase_config')).default;
         const analytics = getAnalytics(fbApp);
         logEvent(analytics, 'share_playlist');
       }}
@@ -78,7 +78,7 @@ export function ShareSong(props: { title: string; id: string }) {
           if (typeof window === 'undefined') return;
 
           const { getAnalytics, logEvent } = await import('firebase/analytics');
-          const fbApp = (await import('@/logic/server/firebase_config'))
+          const fbApp = (await import('../logic/server/firebase_config'))
             .default;
           const analytics = getAnalytics(fbApp);
           logEvent(analytics, 'share_song', {

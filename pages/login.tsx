@@ -191,7 +191,7 @@ function SignCard() {
     if (typeof window === 'undefined') return;
 
     const { getAnalytics, logEvent } = await import('firebase/analytics');
-    const fbApp = (await import('@/logic/server/firebase_config')).default;
+    const fbApp = (await import('../logic/server/firebase_config')).default;
     const analytics = getAnalytics(fbApp);
     //@ts-expect-error parameters for 'login' and 'signup' are the same so the error has no sense
     logEvent(analytics, operation, { method: method });

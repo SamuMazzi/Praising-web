@@ -213,7 +213,7 @@ export default function PraisingAppBar(props: PropsAppBar) {
     if (typeof window === 'undefined') return;
 
     const { getAnalytics, logEvent } = await import('firebase/analytics');
-    const fbApp = (await import('@/logic/server/firebase_config')).default;
+    const fbApp = (await import('../logic/server/firebase_config')).default;
     const analytics = getAnalytics(fbApp);
     logEvent(analytics, 'see_functions_app', {
       firebase_screen: '/home'
