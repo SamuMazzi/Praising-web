@@ -1,0 +1,43 @@
+name: Coda di revisione
+
+# Reads the pending versions/parts straight from Firestore and keeps a single
+# GitHub issue in sync with them. The old notification emails were one-shot: if
+# a send failed the submission stayed pending and invisible forever. This job
+# re-reports the same state every run, so a failed run simply self-heals on the
+# next one.
+
+on:
+  schedule:
+    # 07:00 UTC every day.
+    - cron: '0 7 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: pending-review
+  cancel-in-progress: false
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.tool-versions'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Report the pending queue
+        run: node scripts/report_pending.mjs
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          # A submission is flagged as "stuck" after this many days pending.
+          STUCK_AFTER_DAYS: '3'

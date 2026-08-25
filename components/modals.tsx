@@ -3,7 +3,7 @@
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import { useAppDispatch } from '../logic/redux/store';
 import TextField from '@mui/material/TextField';
@@ -16,6 +16,7 @@ import {
   setServerPlaylist
 } from '@/logic/server/database';
 import useFirebaseAuth from '@/logic/hooks/use_auth';
+import { type EmailPayloadProposalSong } from '@/logic/server/emails';
 import assert from 'assert';
 
 interface GenericProps {
@@ -254,6 +255,8 @@ export function ModalEditNamePlaylist(props: PropsModalEditNamePlaylist) {
   );
 }
 
+const isValidLink = (link: string): boolean => /\S+\/\/\S+/.test(link.trim());
+
 export function ProposeNewSongModal(props: GenericProps) {
   const { authUser, loading } = useFirebaseAuth();
   const [linkSong, setLinkSong] = useState('');
@@ -262,11 +265,26 @@ export function ProposeNewSongModal(props: GenericProps) {
   const [done, setDone] = useState(false);
   const [loadingFetch, setLoadingFetch] = useState(false);
 
+  // The modal stays mounted between openings, so start from a clean form
+  // instead of showing the previous links and the previous error.
+  useEffect(() => {
+    if (props.open) {
+      setLinkSong('');
+      setLinkChords('');
+      setError('');
+      setDone(false);
+      setLoadingFetch(false);
+    }
+  }, [props.open]);
+
   if (loading) {
     return null;
   }
 
-  if (authUser === null) {
+  // Everyone is signed in anonymously on first visit, so `authUser` is
+  // practically never null: an anonymous account is what we have to catch here,
+  // as it has no email to reply to.
+  if (authUser === null || authUser.isAnonymous) {
     return (
       <ModalCreateAccountForThisAction
         open={props.open}
@@ -276,6 +294,52 @@ export function ProposeNewSongModal(props: GenericProps) {
       />
     );
   }
+
+  const sendProposal = async (): Promise<void> => {
+    if (!isValidLink(linkSong)) {
+      setError('Inserisci un link valido della canzone.');
+      return;
+    }
+    if (linkChords.trim() !== '' && !isValidLink(linkChords)) {
+      setError('Il link degli accordi non è valido.');
+      return;
+    }
+
+    setError('');
+    setLoadingFetch(true);
+    try {
+      const payload: EmailPayloadProposalSong = {
+        linkSong: linkSong.trim(),
+        linkChords: linkChords.trim()
+      };
+      const res = await fetch('/api/propose-song', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${await authUser.getIdToken()}`
+        },
+        body: JSON.stringify(payload)
+      });
+      if (res.status === 200) {
+        setDone(true);
+        return;
+      }
+      if (res.status === 429) {
+        setError('Hai inviato troppe proposte. Riprova più tardi.');
+        return;
+      }
+      setError(
+        "Errore nell'invio della proposta. Riprova, e se il problema persiste scrivici dalla pagina Feedback."
+      );
+    } catch (e) {
+      console.error('Error sending the song proposal', e);
+      setError(
+        'Non è stato possibile inviare la proposta: controlla la connessione e riprova.'
+      );
+    } finally {
+      setLoadingFetch(false);
+    }
+  };
 
   return (
     <GenericModal
@@ -327,33 +391,12 @@ export function ProposeNewSongModal(props: GenericProps) {
           <Grid sx={{ mt: 1 }}>
             <Button
               disabled={loadingFetch}
-              onClick={async () => {
+              onClick={() => {
                 if (done) {
                   props.handleClose();
                   return;
                 }
-                setError('');
-                setLoadingFetch(true);
-                const res = await fetch('/api/propose-song', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({
-                    userId: authUser?.uid,
-                    linkSong: linkSong,
-                    linkChords: linkChords,
-                    email: authUser?.email
-                  })
-                });
-                if (res.status !== 200) {
-                  const text = await res.text();
-                  setError("Errore nell'invio della proposta: " + text);
-                } else {
-                  setError('');
-                }
-                setLoadingFetch(false);
-                props.handleClose();
+                void sendProposal();
               }}
               variant="contained"
             >
@@ -372,7 +415,7 @@ export function ProposeNewSongModal(props: GenericProps) {
             </Grid>
           )}
           {done && (
-            <Grid>
+            <Grid sx={{ mt: 2 }}>
               <Typography sx={{ color: 'green' }}>
                 Proposta inviata con successo! Grazie per il tuo contributo.
               </Typography>

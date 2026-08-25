@@ -15,9 +15,11 @@ export interface EmailPayloadPartSong {
   email: string;
 }
 
+/**
+ * The proposer's identity is taken from the verified Firebase ID token sent in
+ * the `Authorization` header, so it is deliberately absent from the payload.
+ */
 export interface EmailPayloadProposalSong {
-  userId: string;
   linkSong: string;
   linkChords: string;
-  email: string;
 }

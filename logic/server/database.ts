@@ -389,8 +389,9 @@ export const addEditedSongToDatabase = async (
       creationTime: Timestamp.now(),
       lastModified: Timestamp.now(),
       author: userId,
+      userId,
       state: 'pending'
-    }
+    } as Omit<CustomSongInfo, 'versionId'>
   );
   await updateDoc(doc(firestore, USERS_COLLECTION, userId), {
     ownedSongs: arrayUnion(newSongDocRef.path),
@@ -458,8 +459,12 @@ export interface CustomSongInfo {
   versionId: string /* In firebase case the ID of the document */;
   creationTime: Timestamp;
   lastModified: Timestamp;
+  /** The uid of who created the version. NB: in PartSongInfo this same field
+   * holds a display name instead, so never compare the two across collections. */
   author: string;
-  userId: string;
+  /** Also the uid. Documents created before this field was written are missing
+   * it, so queries that must match old versions have to use `author`. */
+  userId?: string;
   rates?: number;
   state: 'approved' | 'pending';
 }
@@ -556,7 +561,7 @@ export const deletePartSongFromDatabase = async (
   const song = await getInfoPartSong(songId, idDoc);
   await deleteDoc(docRef);
   await updateDoc(doc(firestore, USERS_COLLECTION, userId), {
-    ownedPart: arrayRemove(docRef.path),
+    ownedParts: arrayRemove(docRef.path),
     counter_pending_parts: increment(song.state === 'pending' ? -1 : 0)
   });
   await deletePartSongFromServerStorage(idDoc, songId);
@@ -601,7 +606,10 @@ export interface PartSongInfo {
   idPart: string /* In firebase case the ID of the document */;
   creationTime: Timestamp;
   lastModified: Timestamp;
+  /** The *display name* typed by the uploader, not an id. Renaming the field
+   * would need a migration of the existing documents. */
   author: string;
+  /** The uid of who uploaded the part. */
   userId: string;
   rates?: number;
   state: 'approved' | 'pending';
