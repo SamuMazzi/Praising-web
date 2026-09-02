@@ -4,7 +4,11 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import { setPlaylist } from '@/logic/redux/playlist_slice';
 import Routes from '@/logic/routes';
-import { Playlist, setServerPlaylist } from '@/logic/server/database';
+import { type Playlist } from '@/logic/server/database';
+/** Firestore (~250 kB) non serve per disegnare la pagina: lo carichiamo solo
+ *  quando l'utente fa davvero un'azione che tocca il server. */
+const database = async () => await import('@/logic/server/database');
+
 import { MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import { useAppDispatch } from '@/logic/redux/store';
 
@@ -33,13 +37,15 @@ export function SharePlaylist(props: { playlist: Playlist }) {
       linkMetaDesc={
         'Visualizza la playlist ' + props.playlist!.name + " su 'Praising'!\n"
       }
-      sites={['whatsapp', 'telegram', 'telegram', 'facebook', 'mail']}
+      sites={['whatsapp', 'telegram', 'facebook', 'mail']}
       closeText="Chiudi"
       onSocialClick={async () => {
         if (!props.playlist.shared) {
           const newPlaylist = { ...props.playlist, shared: true };
           dispatch(setPlaylist(newPlaylist));
-          void setServerPlaylist(props.playlist);
+          void database().then(
+            async (db) => await db.setServerPlaylist(props.playlist)
+          );
         }
 
         if (typeof window === 'undefined') return;
@@ -72,7 +78,7 @@ export function ShareSong(props: { title: string; id: string }) {
         copyToClipboardText="Copia link"
         copySuccessText="Copiato"
         linkMetaDesc={textToShow}
-        sites={['whatsapp', 'telegram', 'telegram', 'facebook', 'mail']}
+        sites={['whatsapp', 'telegram', 'facebook', 'mail']}
         closeText="Chiudi"
         onSocialClick={async () => {
           if (typeof window === 'undefined') return;

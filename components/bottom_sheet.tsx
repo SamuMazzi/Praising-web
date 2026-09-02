@@ -11,7 +11,6 @@ import Box from '@mui/material/Box';
 import ListPlaylist from './list_playlist';
 import Button from '@mui/material/Button';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
-import { useTheme } from '@mui/material/styles';
 import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
@@ -24,6 +23,21 @@ import {
 import { EmailPayloadPartSong } from '@/logic/server/emails';
 import { addPartSongToServerStorage } from '@/logic/server/storage';
 import * as Sentry from '@sentry/nextjs';
+import { styled } from '@mui/material/styles';
+
+/** Pattern MUI: l'input resta nel flusso (quindi focusabile e attivabile con
+ *  Invio) ma invisibile, al posto di `hidden` che lo toglie dal tab order. */
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1
+});
 
 interface PropsModalBottomSheet {
   open: boolean;
@@ -42,7 +56,6 @@ export function ModalBottomSheetPlaylist(props: PropsModalBottomSheetPlaylist) {
   const playlist = useAppSelector(
     (state) => state.playlist.playlist[props.playlistId]
   );
-  const theme = useTheme();
 
   return (
     <Sheet isOpen={props.open} onClose={props.onClose}>
@@ -53,7 +66,7 @@ export function ModalBottomSheetPlaylist(props: PropsModalBottomSheetPlaylist) {
             title={'Canzoni per ' + playlist?.name}
           />
         </Sheet.Header>
-        <Sheet.Content className={theme.palette.mode}>
+        <Sheet.Content>
           <Sheet.Scroller>
             <ListSongs
               songs={songs}
@@ -75,7 +88,6 @@ interface PropsModalBottomSheetAddPart extends PropsModalBottomSheet {
 }
 
 export function ModalBottomSheetAddPart(props: PropsModalBottomSheetAddPart) {
-  const theme = useTheme();
   const { authUser } = useFirebaseAuth();
   const fileInput = React.useRef<HTMLInputElement>(null);
   const [namePart, setNamePart] = useState('');
@@ -150,7 +162,7 @@ export function ModalBottomSheetAddPart(props: PropsModalBottomSheetAddPart) {
         <Sheet.Header>
           <TitleModal onClose={props.onClose} title={'Carica una parte'} />
         </Sheet.Header>
-        <Sheet.Content className={theme.palette.mode}>
+        <Sheet.Content>
           <Sheet.Scroller style={{ marginLeft: 15, marginRight: 15 }}>
             <Grid
               container
@@ -177,7 +189,9 @@ export function ModalBottomSheetAddPart(props: PropsModalBottomSheetAddPart) {
               <Grid sx={{ mb: 2 }}>
                 <TextField
                   sx={{ mt: 2 }}
-                  placeholder="Nome della parte"
+                  label="Nome della parte"
+                  name="nome-parte"
+                  placeholder="Per esempio: Contralti"
                   value={namePart}
                   onChange={(e) => setNamePart(e.target.value)}
                 />
@@ -195,7 +209,9 @@ export function ModalBottomSheetAddPart(props: PropsModalBottomSheetAddPart) {
               <Grid sx={{ mb: 2 }}>
                 <TextField
                   sx={{ mt: 2 }}
-                  placeholder="Autore"
+                  label="Autore"
+                  name="autore"
+                  autoComplete="name"
                   value={nameAuthor}
                   onChange={(e) => setNameAuthor(e.target.value)}
                 />
@@ -209,8 +225,11 @@ export function ModalBottomSheetAddPart(props: PropsModalBottomSheetAddPart) {
                   color="primary"
                 >
                   Carica audio
-                  <input
-                    hidden
+                  {/* `hidden` toglie l'input dall'ordine di tabulazione e la
+                      <label> non e' focusabile: da tastiera il caricamento
+                      diventava irraggiungibile. Lo nascondiamo alla vista
+                      lasciandolo focusabile. */}
+                  <VisuallyHiddenInput
                     ref={fileInput}
                     multiple={false}
                     type="file"
@@ -262,8 +281,6 @@ interface PropsModalBottomSheetSong extends PropsModalBottomSheet {
 }
 
 export function ModalBottomSheetSong(props: PropsModalBottomSheetSong) {
-  const theme = useTheme();
-
   return (
     <>
       <Sheet isOpen={props.open} onClose={props.onClose}>
@@ -275,7 +292,7 @@ export function ModalBottomSheetSong(props: PropsModalBottomSheetSong) {
               openModal={props.openModalCreate}
             />
           </Sheet.Header>
-          <Sheet.Content className={theme.palette.mode}>
+          <Sheet.Content>
             <Sheet.Scroller>
               <ListPlaylist fromSongId={props.songId} />
             </Sheet.Scroller>
@@ -294,8 +311,6 @@ interface PropsTitleModal {
 }
 
 function TitleModal(props: PropsTitleModal) {
-  const theme = useTheme();
-
   return (
     <Box
       display="flex"
@@ -303,18 +318,28 @@ function TitleModal(props: PropsTitleModal) {
       justifyContent="space-between"
       sx={{
         pt: 1,
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: 'background.default',
         borderTopLeftRadius: 8,
         borderTopRightRadius: 8
       }}
     >
-      <IconButton edge="start" onClick={props.onClose} sx={{ ml: 1 }}>
+      <IconButton
+        edge="start"
+        aria-label="Chiudi"
+        onClick={props.onClose}
+        sx={{ ml: 1 }}
+      >
         <CloseRoundedIcon />
       </IconButton>
-      <Typography textAlign="center">{props.title}</Typography>
+      <Typography textAlign="center" noWrap sx={{ minWidth: 0, px: 1 }}>
+        {props.title}
+      </Typography>
       {props.openModal !== undefined ? (
+        // Il testo e' nascosto a tutte le larghezze: senza `aria-label` il
+        // pulsante resterebbe senza nome accessibile.
         <Button
           startIcon={<AddRoundedIcon />}
+          aria-label="Nuova playlist"
           sx={{ mr: 2 }}
           onClick={props.openModal}
         >

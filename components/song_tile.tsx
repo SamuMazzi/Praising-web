@@ -18,7 +18,11 @@ import MusicNoteRoundedIcon from '@mui/icons-material/MusicNoteRounded';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { useTheme, alpha } from '@mui/material/styles';
 import React from 'react';
-import { setServerPlaylist, type Playlist } from '@/logic/server/database';
+import { type Playlist } from '@/logic/server/database';
+/** Firestore (~250 kB) non serve per disegnare la pagina: lo carichiamo solo
+ *  quando l'utente fa davvero un'azione che tocca il server. */
+const database = async () => await import('@/logic/server/database');
+
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import { GenericModal } from './modals';
 import Button from '@mui/material/Button';
@@ -49,6 +53,7 @@ export default function SongTile(props: PropsSongTile) {
       style={{ WebkitTapHighlightColor: 'transparent' }}
       secondaryAction={
         <IconButton
+          aria-label={'Aggiungi ' + props.song.name + ' a una playlist'}
           onClick={(e) => {
             e.preventDefault();
             props.onSecondaryAction();
@@ -78,20 +83,23 @@ export function SelectableSongTile(props: PropsSelectableSongTile) {
 
   return (
     <ListItemButton
-      sx={{ borderRadius: 8, my: 1 }}
+      sx={{
+        borderRadius: 8,
+        my: 1,
+        backgroundColor: selected
+          ? alpha(theme.palette.primary.main, 0.4)
+          : 'divider'
+      }}
       selected={selected}
       onClick={() => {
         const songs = handleSongForPlaylist(props.playlist, props.song.id);
         const newPlaylist = { ...props.playlist, songs };
         dispatch(setPlaylist(newPlaylist));
-        void setServerPlaylist(newPlaylist);
+        void database().then(
+          async (db) => await db.setServerPlaylist(newPlaylist)
+        );
       }}
-      style={{
-        backgroundColor: selected
-          ? alpha(theme.palette.primary.main, 0.4)
-          : theme.palette.divider,
-        WebkitTapHighlightColor: 'transparent'
-      }}
+      style={{ WebkitTapHighlightColor: 'transparent' }}
     >
       <ListItemText primary={props.song.name} secondary={props.song.author} />
     </ListItemButton>
@@ -111,7 +119,7 @@ export function PlaylistSongTile(props: PropsSelectableSongTile) {
     const songs = handleSongForPlaylist(props.playlist, props.song.id);
     const newPlaylist = { ...props.playlist, songs };
     dispatch(setPlaylist(newPlaylist));
-    void setServerPlaylist(newPlaylist);
+    void database().then(async (db) => await db.setServerPlaylist(newPlaylist));
   };
 
   // FIXME: Sometimes it throws "TypeError: Illegal invocation"
@@ -123,6 +131,7 @@ export function PlaylistSongTile(props: PropsSelectableSongTile) {
           sx={{ borderRadius: 8, my: 1 }}
           secondaryAction={
             <IconButton
+              aria-label={'Rimuovi ' + props.song.name + ' dalla playlist'}
               onClick={(e) => {
                 e.preventDefault();
                 setOpenConfirm(true);

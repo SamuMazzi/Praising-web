@@ -1,4 +1,3 @@
-import html2canvas from 'html2canvas';
 import { type jsPDF } from 'jspdf';
 import { renderSong } from './handle_text_song';
 import { getSingleSong, VERSION_APP } from './local_logic';
@@ -161,6 +160,8 @@ class SongPDF {
   }
 
   private async addSongToPdf(input: HTMLElement): Promise<void> {
+    /** html2canvas pesa ~500 kB: serve solo qui, quando si esporta il PDF */
+    const html2canvas = (await import('html2canvas')).default;
     const canvas = await html2canvas(input, {
       backgroundColor: this.infoRendering.backgroundColor
     });

@@ -17,6 +17,7 @@ import {
 } from '@/logic/server/database';
 import useFirebaseAuth from '@/logic/hooks/use_auth';
 import { type EmailPayloadProposalSong } from '@/logic/server/emails';
+import { addProposedSong } from '@/logic/server/database';
 import assert from 'assert';
 
 interface GenericProps {
@@ -97,6 +98,58 @@ export function ModalCreateSession(props: ModalAddSongProps) {
   );
 }
 */
+
+interface PropsConfirmModal extends GenericProps {
+  title: string;
+  message: React.ReactNode;
+  confirmLabel: string;
+  onConfirm: () => void;
+}
+
+/**
+ * Conferma per le azioni distruttive: niente di irreversibile deve partire da
+ * un solo tocco, tanto piu' su mobile dove il dito ci finisce per sbaglio.
+ */
+export function ConfirmModal(props: PropsConfirmModal) {
+  return (
+    <GenericModal
+      open={props.open}
+      handleClose={props.handleClose}
+      content={
+        <Grid container direction="column" alignItems="center">
+          <Grid>
+            <Typography variant="h2" component="h2" sx={{ mb: 2 }}>
+              {props.title}
+            </Typography>
+          </Grid>
+          <Grid>
+            <Typography textAlign="center">{props.message}</Typography>
+          </Grid>
+          <Grid
+            container
+            direction="row"
+            justifyContent="center"
+            sx={{ mt: 3, gap: 2 }}
+          >
+            <Button variant="outlined" onClick={props.handleClose}>
+              Annulla
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => {
+                props.onConfirm();
+                props.handleClose();
+              }}
+            >
+              {props.confirmLabel}
+            </Button>
+          </Grid>
+        </Grid>
+      }
+    />
+  );
+}
 
 interface PropsModalCreateAccountForThisAction extends GenericProps {
   title: string;
@@ -261,6 +314,9 @@ export function ProposeNewSongModal(props: GenericProps) {
   const { authUser, loading } = useFirebaseAuth();
   const [linkSong, setLinkSong] = useState('');
   const [linkChords, setLinkChords] = useState('');
+  const [name, setName] = useState('');
+  const [author, setAuthor] = useState('');
+  const [chordpro, setChordpro] = useState('');
   const [error, setError] = useState('');
   const [done, setDone] = useState(false);
   const [loadingFetch, setLoadingFetch] = useState(false);
@@ -271,6 +327,9 @@ export function ProposeNewSongModal(props: GenericProps) {
     if (props.open) {
       setLinkSong('');
       setLinkChords('');
+      setName('');
+      setAuthor('');
+      setChordpro('');
       setError('');
       setDone(false);
       setLoadingFetch(false);
@@ -305,9 +364,27 @@ export function ProposeNewSongModal(props: GenericProps) {
       return;
     }
 
+    if (name.trim() === '') {
+      setError('Serve il titolo del canto.');
+      return;
+    }
+
     setError('');
     setLoadingFetch(true);
     try {
+      // La proposta vive su Firestore: e' li' che la coda di revisione la
+      // trova e da li' il build genera il canto. La mail resta, ma come
+      // notifica, non piu' come unico posto in cui la proposta esiste.
+      await addProposedSong({
+        name: name.trim(),
+        author: author.trim(),
+        linkSong: linkSong.trim(),
+        linkChords: linkChords.trim(),
+        chordpro: chordpro.trim(),
+        userId: authUser.uid,
+        email: authUser.email ?? ''
+      });
+
       const payload: EmailPayloadProposalSong = {
         linkSong: linkSong.trim(),
         linkChords: linkChords.trim()
@@ -320,17 +397,12 @@ export function ProposeNewSongModal(props: GenericProps) {
         },
         body: JSON.stringify(payload)
       });
-      if (res.status === 200) {
-        setDone(true);
-        return;
+      // La proposta e' gia' salvata: se salta solo la mail di notifica
+      // l'utente non deve rimandarla, la coda la vede lo stesso.
+      if (res.status !== 200) {
+        console.error('Proposta salvata ma notifica non inviata', res.status);
       }
-      if (res.status === 429) {
-        setError('Hai inviato troppe proposte. Riprova più tardi.');
-        return;
-      }
-      setError(
-        "Errore nell'invio della proposta. Riprova, e se il problema persiste scrivici dalla pagina Feedback."
-      );
+      setDone(true);
     } catch (e) {
       console.error('Error sending the song proposal', e);
       setError(
@@ -359,12 +431,39 @@ export function ProposeNewSongModal(props: GenericProps) {
           </Grid>
           <Grid>
             <Typography>
-              Inserisci il link (YouTube, Spotify, ecc.) della canzone che
-              vorresti aggiungere. Se vuoi che venga inserita più velocemente,
-              inserisci anche il link degli accordi.
+              Inserisci il titolo e il link (YouTube, Spotify, ecc.) della
+              canzone che vorresti aggiungere. Se sai trascrivere gli accordi
+              puoi incollarli qui sotto: il canto verrà pubblicato molto più in
+              fretta.
             </Typography>
           </Grid>
-          <Grid sx={{ mt: 2 }}>
+          <Grid sx={{ mt: 2 }} width="100%">
+            <TextField
+              disabled={loadingFetch || done}
+              sx={{ my: 1 }}
+              value={name}
+              onChange={(e) => {
+                setName(e.currentTarget.value);
+              }}
+              label="Titolo del canto"
+              name="titolo"
+              fullWidth
+            />
+          </Grid>
+          <Grid width="100%">
+            <TextField
+              disabled={loadingFetch || done}
+              sx={{ my: 1 }}
+              value={author}
+              onChange={(e) => {
+                setAuthor(e.currentTarget.value);
+              }}
+              label="Autore (opzionale)"
+              name="autore"
+              fullWidth
+            />
+          </Grid>
+          <Grid width="100%">
             <TextField
               disabled={loadingFetch || done}
               sx={{ my: 1 }}
@@ -373,10 +472,20 @@ export function ProposeNewSongModal(props: GenericProps) {
                 setLinkSong(e.currentTarget.value);
               }}
               label="Link della canzone"
+              name="link-canzone"
+              type="url"
+              slotProps={{
+                htmlInput: {
+                  inputMode: 'url',
+                  autoComplete: 'off',
+                  autoCapitalize: 'off',
+                  spellCheck: false
+                }
+              }}
               fullWidth
             />
           </Grid>
-          <Grid>
+          <Grid width="100%">
             <TextField
               disabled={loadingFetch || done}
               value={linkChords}
@@ -385,12 +494,48 @@ export function ProposeNewSongModal(props: GenericProps) {
               }}
               sx={{ my: 1 }}
               label="Link degli accordi (opzionale)"
+              name="link-accordi"
+              type="url"
+              slotProps={{
+                htmlInput: {
+                  inputMode: 'url',
+                  autoComplete: 'off',
+                  autoCapitalize: 'off',
+                  spellCheck: false
+                }
+              }}
+              fullWidth
+            />
+          </Grid>
+          <Grid width="100%">
+            <TextField
+              disabled={loadingFetch || done}
+              value={chordpro}
+              onChange={(e) => {
+                setChordpro(e.currentTarget.value);
+              }}
+              sx={{ my: 1 }}
+              label="Accordi e testo (opzionale)"
+              name="accordi"
+              slotProps={{
+                htmlInput: {
+                  autoCapitalize: 'off',
+                  autoCorrect: 'off',
+                  spellCheck: false
+                }
+              }}
+              placeholder={'[Do]Nel mio [Sol]cuore\n[Lam]canto a [Fa]Te'}
+              helperText="Formato ChordPro: gli accordi fra parentesi quadre, prima della sillaba su cui cadono."
+              multiline
+              minRows={4}
+              maxRows={12}
               fullWidth
             />
           </Grid>
           <Grid sx={{ mt: 1 }}>
             <Button
               disabled={loadingFetch}
+              aria-label={loadingFetch ? 'Invio in corso…' : undefined}
               onClick={() => {
                 if (done) {
                   props.handleClose();
@@ -401,7 +546,7 @@ export function ProposeNewSongModal(props: GenericProps) {
               variant="contained"
             >
               {loadingFetch ? (
-                <CircularProgress size={20} />
+                <CircularProgress size={20} aria-hidden="true" />
               ) : done ? (
                 'Fatto!'
               ) : (
@@ -409,18 +554,16 @@ export function ProposeNewSongModal(props: GenericProps) {
               )}
             </Button>
           </Grid>
-          {error && (
-            <Grid sx={{ mt: 2 }}>
-              <Typography color="error">{error}</Typography>
-            </Grid>
-          )}
-          {done && (
-            <Grid sx={{ mt: 2 }}>
-              <Typography sx={{ color: 'green' }}>
+          {/* Esito e errore compaiono dopo l'invio: senza `aria-live` chi non
+              vede lo schermo non saprebbe se la proposta e' partita. */}
+          <Grid sx={{ mt: 2 }} aria-live="polite">
+            {error && <Typography color="error">{error}</Typography>}
+            {done && (
+              <Typography sx={{ color: 'success.main' }}>
                 Proposta inviata con successo! Grazie per il tuo contributo.
               </Typography>
-            </Grid>
-          )}
+            )}
+          </Grid>
         </Grid>
       }
     />

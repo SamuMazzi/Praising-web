@@ -14,9 +14,7 @@ interface BoxInfoSongsState {
 }
 
 const initialState: BoxInfoSongsState = {
-  infoSongs:
-    (getFromStorage(INFO_SONGS_KEY) as Record<string, InfoLocalSong> | null) ||
-    {}
+  infoSongs: {}
 };
 
 interface PayloadModifySong {
@@ -34,6 +32,14 @@ const infoSongsSlice = createSlice({
   name: INFO_SONGS_KEY,
   initialState,
   reducers: {
+    /** Applica le info locali dei canti salvate in localStorage, dopo il mount */
+    hydrateInfoSongs: (state) => {
+      state.infoSongs =
+        (getFromStorage(INFO_SONGS_KEY) as Record<
+          string,
+          InfoLocalSong
+        > | null) ?? {};
+    },
     modifySong: (state, action: PayloadAction<PayloadModifySong>) => {
       const idS = action.payload.id;
       const songToModify = {
@@ -63,6 +69,7 @@ const infoSongsSlice = createSlice({
   }
 });
 
-export const { modifySong, setLocalVersionSong } = infoSongsSlice.actions;
+export const { modifySong, setLocalVersionSong, hydrateInfoSongs } =
+  infoSongsSlice.actions;
 
 export default infoSongsSlice.reducer;

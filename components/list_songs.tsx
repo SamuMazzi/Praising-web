@@ -22,7 +22,11 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import IconButton from '@mui/material/IconButton';
 import assert from 'assert';
-import { Playlist, setServerPlaylist } from '@/logic/server/database';
+import { type Playlist } from '@/logic/server/database';
+/** Firestore (~250 kB) non serve per disegnare la pagina: lo carichiamo solo
+ *  quando l'utente fa davvero un'azione che tocca il server. */
+const database = async () => await import('@/logic/server/database');
+
 import { type DropResult } from 'smooth-dnd';
 
 const AVOID_SPECIAL_CHARACTERS = /[^a-zA-Z0-9 ]/g;
@@ -93,6 +97,8 @@ export default function ListSongs(props: PropsListSongs) {
           <Box display="flex">
             <TypeSearch query={filter} setQuery={setFilter} />
             <IconButton
+              aria-label="Mostra solo i preferiti"
+              aria-pressed={showOnlyFavorites}
               sx={{ ml: 1 }}
               onClick={() => {
                 setShowOnlyFavorites(!showOnlyFavorites);
@@ -176,7 +182,9 @@ export function ListSongsPlaylist(props: PropsListSongsPlaylist) {
                 dragResult: e
               })
             );
-            void setServerPlaylist(props.playlist);
+            void database().then(
+              async (db) => await db.setServerPlaylist(props.playlist)
+            );
           }}
         >
           <>

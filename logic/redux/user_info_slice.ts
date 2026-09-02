@@ -9,7 +9,7 @@ interface SettingsState {
 }
 
 const initialState: SettingsState = {
-  favoriteSongs: (getFromStorage('favorite_songs') as string[] | null) || [],
+  favoriteSongs: [],
   others: {}
 };
 
@@ -21,6 +21,11 @@ const settingsSlice = createSlice({
       state.favoriteSongs = action.payload.favoriteSongs ?? [];
       /** Aggiornare con altri dati */
       saveToStorage(FAVORITE_SONGS_KEY, action.payload);
+    },
+    /** Applica i preferiti salvati in localStorage, dopo il mount */
+    hydrateUserInfo: (state) => {
+      state.favoriteSongs =
+        (getFromStorage(FAVORITE_SONGS_KEY) as string[] | null) ?? [];
     },
     /** This is only a local operation */
     setFavoriteSongs: (state, action: PayloadAction<string[]>) => {
@@ -48,7 +53,8 @@ export const {
   // setFavoriteSongs,
   addSongToFavoriteSongs,
   removeSongFromFavoriteSongs,
-  setUserInfo
+  setUserInfo,
+  hydrateUserInfo
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

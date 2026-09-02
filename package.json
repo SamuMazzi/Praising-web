@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && python3 script.py --fix-service-worker --update-sitemap",
+    "build": "node scripts/sync_songs.mjs && next build && python3 script.py --fix-service-worker --update-sitemap",
     "start": "next start",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "deploy": "python3 script.py --generate-revisions && vercel build --prod && vercel --prebuilt --prod",
@@ -16,7 +16,8 @@
     "format:check": "prettier --check .",
     "set_cors_fb": "gsutil cors set cors_firebase_storage.json gs://praising-web.appspot.com",
     "knip": "knip",
-    "pending": "node scripts/pending.mjs"
+    "pending": "node scripts/pending.mjs",
+    "sync:songs": "node scripts/sync_songs.mjs"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",

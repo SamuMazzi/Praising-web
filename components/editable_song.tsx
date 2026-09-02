@@ -15,7 +15,6 @@ import {
 } from '@/logic/server/database';
 import useFirebaseAuth from '@/logic/hooks/use_auth';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
-import { useTheme } from '@mui/material/styles';
 
 import CloseRounded from '@mui/icons-material/CloseRounded';
 import AppBar from '@mui/material/AppBar';
@@ -38,19 +37,22 @@ interface PropsSongAppBar {
 }
 
 const EditableSongAppBar = (props: PropsSongAppBar) => {
-  const theme = useTheme();
-
   return (
     <React.Fragment>
       <HideOnScroll {...props}>
         <AppBar
-          style={{
-            backgroundColor: theme.palette.background.default,
+          sx={{
+            backgroundColor: 'background.default',
             display: 'flex'
           }}
         >
           <Toolbar>
-            <IconButton edge="start" sx={{ mr: 2 }} onClick={props.goBack}>
+            <IconButton
+              edge="start"
+              aria-label="Esci dalla modifica"
+              sx={{ mr: 2 }}
+              onClick={props.goBack}
+            >
               <ArrowBackRoundedIcon />
             </IconButton>
             <SongTitleAppBar
@@ -62,6 +64,7 @@ const EditableSongAppBar = (props: PropsSongAppBar) => {
             <Box sx={{ flexGrow: 0, display: 'flex' }} alignItems="center">
               {props.versionIndex !== -1 && (
                 <IconButton
+                  aria-label="Elimina questa versione"
                   onClick={() => {
                     if (props.versionIndex === -1) {
                       return;
@@ -91,7 +94,6 @@ export const EditableSong = (props: {
   const [data, setData] = useState(props.data);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const song = getSingleSong(props.songId);
-  const theme = useTheme();
   const router = useRouter();
 
   const handleSave = async (): Promise<void> => {
@@ -164,8 +166,11 @@ export const EditableSong = (props: {
   return (
     <Container
       disableGutters
-      sx={{ minHeight: '100vh', width: '100vw' }}
-      style={{ backgroundColor: theme.palette.background.default }}
+      sx={{
+        minHeight: '100vh',
+        width: '100vw',
+        backgroundColor: 'background.default'
+      }}
     >
       <EditableSongAppBar
         id={props.songId}
@@ -181,6 +186,7 @@ export const EditableSong = (props: {
         <TextField
           fullWidth
           multiline
+          label="Accordi e testo"
           value={data}
           onChange={(e) => {
             setData(e.target.value);
@@ -188,9 +194,16 @@ export const EditableSong = (props: {
           rows={data.split('\n').length}
           sx={{ mt: 2, mb: 10, px: 0.5 }}
           slotProps={{
+            // Il ChordPro non e' prosa: correttore e maiuscole automatiche
+            // rovinerebbero gli accordi mentre si scrive.
+            htmlInput: {
+              autoCapitalize: 'off',
+              autoCorrect: 'off',
+              spellCheck: false
+            },
             input: {
               style: {
-                color: theme.palette.mode === 'dark' ? 'white' : 'black'
+                color: 'var(--mui-palette-text-primary)'
               }
             }
           }}
@@ -206,6 +219,7 @@ export const EditableSong = (props: {
             position: 'fixed'
           }}
           color="warning"
+          aria-label="Annulla le modifiche"
           onClick={() => {
             props.setEditMode(false, props.idExistingVersion);
           }}
@@ -222,7 +236,7 @@ export const EditableSong = (props: {
             position: 'fixed'
           }}
           color="primary"
-          aria-label="Confirm"
+          aria-label="Salva le modifiche"
           onClick={() => {
             void handleSave();
           }}
