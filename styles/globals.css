@@ -5,11 +5,8 @@ a {
   color: inherit;
   text-decoration: none;
 }
-.react-modal-sheet-content.light {
-  background-color: #f9f9f9; /** TODO: Finish it*/
-}
-.react-modal-sheet-content.dark {
-  background-color: #3a3a3a;
+.react-modal-sheet-content {
+  background-color: var(--mui-palette-background-default);
 }
 .row {
   display: flex;
@@ -43,4 +40,70 @@ main {
 
 .navbar {
   padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Un tocco non deve costare i 300 ms di attesa del doppio tap: la pagina
+   supporta gia' il pinch-to-zoom, il doppio tap non serve. */
+a,
+button,
+[role='button'],
+label,
+summary,
+input,
+select,
+textarea {
+  touch-action: manipulation;
+}
+
+/* I link dentro ai testi restano riconoscibili anche senza colore, e ogni
+   elemento interattivo deve mostrare dove sta il focus da tastiera. */
+a:not([class*='Mui']):hover {
+  text-decoration: underline;
+}
+:focus-visible {
+  outline: 2px solid var(--mui-palette-primary-main);
+  outline-offset: 2px;
+}
+
+/* Chi ha chiesto meno animazioni al sistema non deve subire slide, zoom e
+   transizioni: le riduciamo a un cambio di stato immediato. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Le tinte delle tessere sono campionate dalle schede degli argomenti
+   (public/assets/Illustrazioni, che hanno gia' il fondo sabbia dentro
+   l'immagine): la scala va dall'introduzione al finale e da' ritmo alla riga
+   senza icone, immagini o numeri.
+
+   La scala NON cambia in dark mode. Era l'errore di prima: smorzate, quelle
+   tinte diventavano marrone-oliva ed erano l'unica cosa slavata di una pagina
+   dove l'appbar e undici schede sono ambra piena. Sul fondo scuro il giallo
+   acceso e' la regola, non l'eccezione — e l'inchiostro sopra resta scuro,
+   come il titolo "Praising" sull'appbar. */
+:root {
+  --praising-sand-1: #f6e096;
+  --praising-sand-2: #f5db8c;
+  --praising-sand-3: #f4d582;
+  --praising-sand-4: #f3d077;
+  --praising-sand-5: #f2cb6d;
+  --praising-sand-6: #f1c563;
+  --praising-sand-7: #f0c059;
+  --praising-sand-8: #efbb4e;
+  --praising-sand-9: #eeb544;
+  --praising-sand-10: #edb03a;
+  --praising-sand-11: #ecab30;
+  --praising-sand-12: #eba626;
+  /* Inchiostro caldo, non grigio neutro: su un fondo ambra il grigio e' la
+     cosa che sa di segnaposto. Contrasto 10:1 sul gradino piu' chiaro,
+     6.2:1 sul piu' scuro. */
+  --praising-sand-ink: #412d0c;
+  --praising-ease-out: cubic-bezier(0.2, 0, 0, 1);
 }
