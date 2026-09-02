@@ -11,10 +11,9 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
-import { ModalEditNamePlaylist } from './modals';
-import { saveToStorage } from '@/logic/local_logic';
-import { useTheme } from '@mui/material/styles';
-import { playlistToPdf } from '@/logic/song_to_pdf';
+import { ConfirmModal, ModalEditNamePlaylist } from './modals';
+import { DELETING_PLAYLIST_KEY, saveToStorage } from '@/logic/local_logic';
+import { useSchemePalette } from '@/styles/theme';
 import { type ChordNotations } from '@/logic/redux/settings_slice';
 import { PrintButton } from './print_button';
 import {
@@ -37,13 +36,26 @@ export const MenuPlaylist = (props: PropsMenuPlaylist) => {
     (state) => state.settings.chordNotation
   );
   const [openEdit, setOpenEdit] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const theme = useTheme();
+  const palette = useSchemePalette();
   const { authUser } = useFirebaseAuth();
 
   const closeMenu = (): void => {
     props.setAnchorEl(null);
+  };
+
+  const handleDelete = async (): Promise<void> => {
+    if (props.playlist === undefined) return;
+    saveToStorage(DELETING_PLAYLIST_KEY, props.playlist.id, 'sessionStorage');
+    if (props.playlist.owner === authUser?.uid) {
+      await deleteServerPlaylist(props.playlist.id);
+    } else {
+      await removeSharedPlaylist(authUser!.uid, props.playlist.id);
+    }
+    dispatch(deletePlaylist(props.playlist.id));
+    if (props.back_on_delete ?? false) void router.replace(Routes.Playlist);
   };
 
   return (
@@ -69,30 +81,20 @@ export const MenuPlaylist = (props: PropsMenuPlaylist) => {
         onClick={async () => {
           if (props.playlist === undefined) return;
 
+          /** Import dinamico: la catena del PDF resta fuori dal bundle
+           *  iniziale e viene caricata solo quando si stampa davvero */
+          const { playlistToPdf } = await import('@/logic/song_to_pdf');
           await playlistToPdf(props.playlist.name, {
-            backgroundColor: theme.palette.background.default,
-            textColor: theme.palette.text.primary,
+            backgroundColor: palette.background.default,
+            textColor: palette.text.primary,
             chordNotation,
             songs: props.playlist.songs
           });
         }}
       />
       <MenuItem
-        onClick={async () => {
-          if (props.playlist === undefined) return;
-          saveToStorage(
-            'deleting_playlist',
-            props.playlist.id,
-            'sessionStorage'
-          );
-          if (props.playlist.owner === authUser?.uid) {
-            await deleteServerPlaylist(props.playlist.id);
-          } else {
-            await removeSharedPlaylist(authUser!.uid, props.playlist.id);
-          }
-          dispatch(deletePlaylist(props.playlist.id));
-          if (props.back_on_delete ?? false)
-            void router.replace(Routes.Playlist);
+        onClick={() => {
+          setOpenDelete(true);
         }}
       >
         <ListItemIcon>
@@ -100,6 +102,26 @@ export const MenuPlaylist = (props: PropsMenuPlaylist) => {
         </ListItemIcon>
         <ListItemText primary="Elimina" />
       </MenuItem>
+      <ConfirmModal
+        open={openDelete}
+        handleClose={() => {
+          setOpenDelete(false);
+          closeMenu();
+        }}
+        title="Eliminare la playlist?"
+        message={
+          <>
+            {props.playlist?.owner === authUser?.uid
+              ? 'La playlist verrà eliminata per tutti quelli con cui l’hai condivisa. '
+              : 'La playlist verrà rimossa dal tuo elenco. '}
+            Non potrai più recuperarla.
+          </>
+        }
+        confirmLabel="Elimina"
+        onConfirm={() => {
+          void handleDelete();
+        }}
+      />
       <ModalEditNamePlaylist
         open={openEdit}
         handleClose={() => {

@@ -105,7 +105,7 @@ const config: DefaultSeoProps = {
   openGraph: {
     type: 'website',
     locale: 'it_IT',
-    url: 'https://www.praising.vercel.app/',
+    url: 'https://praising.vercel.app/',
     title: 'Praising - Gli accordi per i tuoi canti cristiani',
     description:
       'Visualizza gli accordi per i tuoi canti cristiani, insieme a tante utilissime funzionalità'

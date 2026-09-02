@@ -11,13 +11,18 @@ export type ChordNotations = 'symbol' | 'solfege'; // It refers to the chordshee
 interface SettingsState {
   showChords: boolean;
   chordNotation: ChordNotations;
-  darkMode: boolean;
 }
 
+/**
+ * Valori di default deterministici: devono essere identici sul server e al
+ * primo render del client, altrimenti l'hydration di React fallisce. I valori
+ * salvati in localStorage vengono applicati dopo il mount da `hydrateSettings`
+ * (vedi `components/store_hydration.tsx`).
+ * Il tema non e' piu' qui: lo gestisce MUI tramite `data-mui-color-scheme`.
+ */
 const initialState: SettingsState = {
-  showChords: getFromStorage('show_chords') !== false,
-  chordNotation: getLocalChordNotation(),
-  darkMode: getFromStorage('dark_mode') !== false
+  showChords: true,
+  chordNotation: getLocalChordNotation()
 };
 
 const settingsSlice = createSlice({
@@ -32,14 +37,15 @@ const settingsSlice = createSlice({
       state.chordNotation = action.payload;
       setLocalChordNotation(action.payload);
     },
-    setDarkMode: (state, action: PayloadAction<boolean>) => {
-      state.darkMode = action.payload;
-      saveToStorage('dark_mode', action.payload);
+    /** Applica le preferenze salvate in localStorage, dopo il mount */
+    hydrateSettings: (state) => {
+      state.showChords = getFromStorage('show_chords') !== false;
+      state.chordNotation = getLocalChordNotation();
     }
   }
 });
 
-export const { setShowChords, setChordNotation, setDarkMode } =
+export const { setShowChords, setChordNotation, hydrateSettings } =
   settingsSlice.actions;
 
 export default settingsSlice.reducer;

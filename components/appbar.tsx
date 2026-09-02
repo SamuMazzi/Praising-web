@@ -15,6 +15,7 @@ import FirstPageRoundedIcon from '@mui/icons-material/FirstPageRounded';
 import LastPageRoundedIcon from '@mui/icons-material/LastPageRounded';
 import Routes from '@/logic/routes';
 import Link from 'next/link';
+import { NextLinkComposed } from './link_composed';
 import { useAppDispatch, useAppSelector } from '@/logic/redux/store';
 import { modifySong } from '@/logic/redux/info_song_slice';
 import Menu from '@mui/material/Menu';
@@ -22,7 +23,6 @@ import MenuItem from '@mui/material/MenuItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Badge from '@mui/material/Badge';
-import { useTheme } from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
@@ -37,18 +37,25 @@ import {
 } from '@/logic/redux/user_info_slice';
 import { MenuPlaylist } from './menus';
 // import { SOLFEGE, SYMBOL } from 'chordsheetjs';
-import {
-  type Playlist,
-  type CustomSongInfo,
-  addServerFavoriteSongs,
-  removeServerFavoriteSongs
-} from '@/logic/server/database';
+import { type Playlist, type CustomSongInfo } from '@/logic/server/database';
+/** Firestore (~250 kB) non serve per disegnare la pagina: lo carichiamo solo
+ *  quando l'utente fa davvero un'azione che tocca il server. */
+const database = async () => await import('@/logic/server/database');
+
 import assert from 'assert';
 import HourglassBottomRoundedIcon from '@mui/icons-material/HourglassBottomRounded';
 import InterpreterModeRoundedIcon from '@mui/icons-material/InterpreterModeRounded';
 import { PrintButton } from './print_button';
+import { useSchemePalette } from '@/styles/theme';
 import useFirebaseAuth from '@/logic/hooks/use_auth';
-import AnimatedOnboardingSlider from './onboard';
+import dynamic from 'next/dynamic';
+
+/** Le novita' si aprono raramente: framer-motion (~78 kB) resta fuori dal
+ *  bundle iniziale e il componente si monta solo al primo click. */
+const AnimatedOnboardingSlider = dynamic(
+  async () => await import('./onboard'),
+  { ssr: false }
+);
 import { ShareSong } from './shares';
 import Zoom from '@mui/material/Zoom';
 import { ProposeNewSongModal } from './modals';
@@ -195,6 +202,7 @@ export const verticalPaddingAppBar = 3;
 export default function PraisingAppBar(props: PropsAppBar) {
   const router = useRouter();
   const [showNews, setShowNews] = React.useState(false);
+  const [newsEverOpened, setNewsEverOpened] = React.useState(false);
   const [showProposeSong, setShowProposeSong] = React.useState(false);
   const [openTooltip, setOpenTooltip] = React.useState(false);
 
@@ -237,6 +245,7 @@ export default function PraisingAppBar(props: PropsAppBar) {
             >
               {props.addSongIcon && (
                 <IconButton
+                  aria-label="Proponi un canto"
                   edge="start"
                   sx={{
                     top: '25%',
@@ -281,6 +290,7 @@ export default function PraisingAppBar(props: PropsAppBar) {
                   }}
                 >
                   <IconButton
+                    aria-label="Novità"
                     edge="end"
                     style={{ color: 'black' }}
                     sx={{ mr: 0.5 }}
@@ -292,6 +302,7 @@ export default function PraisingAppBar(props: PropsAppBar) {
                         logEventShow();
                       }
                       props.setShowUpdates?.(!showNews);
+                      if (!showNews) setNewsEverOpened(true);
                       setShowNews(!showNews);
                     }}
                   >
@@ -302,7 +313,7 @@ export default function PraisingAppBar(props: PropsAppBar) {
                   edge="end"
                   style={{ color: 'black' }}
                   LinkComponent={Link}
-                  aria-label="Go to the settings page"
+                  aria-label="Vai alle impostazioni"
                   href={Routes.Settings}
                 >
                   <SettingsRoundedIcon />
@@ -312,6 +323,7 @@ export default function PraisingAppBar(props: PropsAppBar) {
           ) : props.backIcon === true ? (
             <Toolbar>
               <IconButton
+                aria-label="Torna indietro"
                 edge="start"
                 sx={{ mr: 2, color: 'black' }}
                 onClick={() => {
@@ -342,15 +354,18 @@ export default function PraisingAppBar(props: PropsAppBar) {
           )}
         </AppBar>
       </HideOnScroll>
-      {/* TODO: Make this import dynamic!!!! */}
-      <AnimatedOnboardingSlider
-        isOpen={showNews}
-        closeFn={() => {
-          document.body.style.overflow = 'unset';
-          props.setShowUpdates?.(false);
-          setShowNews(false);
-        }}
-      />
+      {/* Montato solo dopo la prima apertura, ma poi tenuto in vita per non
+          troncare l'animazione di chiusura */}
+      {newsEverOpened && (
+        <AnimatedOnboardingSlider
+          isOpen={showNews}
+          closeFn={() => {
+            document.body.style.overflow = 'unset';
+            props.setShowUpdates?.(false);
+            setShowNews(false);
+          }}
+        />
+      )}
       <ProposeNewSongModal
         open={showProposeSong}
         handleClose={() => setShowProposeSong(false)}
@@ -454,7 +469,13 @@ export const SongTitleAppBar = (props: {
       <Typography variant="h1" noWrap>
         {props.title}
       </Typography>
-      <Typography variant="subtitle1" sx={{ maxLines: 1 }} color="textDisabled">
+      <Typography
+        variant="subtitle1"
+        component="span"
+        display="block"
+        sx={{ maxLines: 1 }}
+        color="textDisabled"
+      >
         {props.versionText}
       </Typography>
     </Box>
@@ -474,7 +495,7 @@ export const SongAppBar = (props: PropsSongAppBar) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const theme = useTheme();
+  const palette = useSchemePalette();
   const indexInPlaylist = props.playlist?.songs.indexOf(props.id);
   const chordNotation = useAppSelector((state) => state.settings.chordNotation);
   const favoriteSongs = useAppSelector((state) => state.userInfo.favoriteSongs);
@@ -493,13 +514,14 @@ export const SongAppBar = (props: PropsSongAppBar) => {
     <React.Fragment>
       <HideOnScroll {...props}>
         <AppBar
-          style={{
-            backgroundColor: theme.palette.background.default,
+          sx={{
+            backgroundColor: 'background.default',
             display: 'flex'
           }}
         >
           <Toolbar sx={{ pr: { xs: 1, sm: 2 } }}>
             <IconButton
+              aria-label="Torna indietro"
               edge="start"
               sx={{ mr: 2 }}
               onClick={() => {
@@ -523,37 +545,40 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                 indexInPlaylist !== -1 &&
                 props.playlist !== undefined && (
                   <>
+                    {/* Il Link non avvolge l'IconButton: `LinkComponent` fa
+                        gia' rendere un <a>, e annidarne due e' HTML non valido
+                        (il secondo viene scartato dal parser). */}
                     {indexInPlaylist > 0 && (
-                      <Link
+                      <IconButton
+                        aria-label="Canto precedente della playlist"
+                        component={NextLinkComposed}
                         replace
-                        href={
-                          Routes.Songs +
-                          '/' +
-                          props.playlist.songs[indexInPlaylist - 1] +
-                          '?playlistId=' +
-                          props.playlist.id
-                        }
+                        to={{
+                          pathname:
+                            Routes.Songs +
+                            '/' +
+                            props.playlist.songs[indexInPlaylist - 1],
+                          query: { playlistId: props.playlist.id }
+                        }}
                       >
-                        <IconButton LinkComponent={Link}>
-                          <FirstPageRoundedIcon />
-                        </IconButton>
-                      </Link>
+                        <FirstPageRoundedIcon />
+                      </IconButton>
                     )}
                     {indexInPlaylist <= props.playlist.songs.length - 2 && (
-                      <Link
+                      <IconButton
+                        aria-label="Canto successivo della playlist"
+                        component={NextLinkComposed}
                         replace
-                        href={
-                          Routes.Songs +
-                          '/' +
-                          props.playlist.songs[indexInPlaylist + 1] +
-                          '?playlistId=' +
-                          props.playlist.id
-                        }
+                        to={{
+                          pathname:
+                            Routes.Songs +
+                            '/' +
+                            props.playlist.songs[indexInPlaylist + 1],
+                          query: { playlistId: props.playlist.id }
+                        }}
                       >
-                        <IconButton LinkComponent={Link}>
-                          <LastPageRoundedIcon />
-                        </IconButton>
-                      </Link>
+                        <LastPageRoundedIcon />
+                      </IconButton>
                     )}
                   </>
                 )}
@@ -570,7 +595,7 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                   horizontal: 'right'
                 }}
               >
-                <IconButton onClick={openMenu}>
+                <IconButton aria-label="Altre opzioni" onClick={openMenu}>
                   <MoreVertIcon color="action" />
                 </IconButton>
               </Badge>
@@ -588,11 +613,23 @@ export const SongAppBar = (props: PropsSongAppBar) => {
 
                     if (favoriteSongs.includes(props.id)) {
                       if (!authUser.isAnonymous)
-                        void removeServerFavoriteSongs(authUser.uid, props.id);
+                        void database().then(
+                          async (db) =>
+                            await db.removeServerFavoriteSongs(
+                              authUser.uid,
+                              props.id
+                            )
+                        );
                       dispatch(removeSongFromFavoriteSongs(props.id));
                     } else {
                       if (!authUser.isAnonymous)
-                        void addServerFavoriteSongs(authUser.uid, props.id);
+                        void database().then(
+                          async (db) =>
+                            await db.addServerFavoriteSongs(
+                              authUser.uid,
+                              props.id
+                            )
+                        );
                       dispatch(addSongToFavoriteSongs(props.id));
                     }
                   }}
@@ -611,8 +648,8 @@ export const SongAppBar = (props: PropsSongAppBar) => {
                     const printDocument = (await import('@/logic/song_to_pdf'))
                       .printDocument;
                     await printDocument(props.id, {
-                      backgroundColor: theme.palette.background.default,
-                      textColor: theme.palette.text.primary,
+                      backgroundColor: palette.background.default,
+                      textColor: palette.text.primary,
                       chordNotation
                     });
                   }}
@@ -679,7 +716,6 @@ interface PropsPlaylistAppBar {
 export const PlaylistAppBar = (props: PropsPlaylistAppBar) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const router = useRouter();
-  const theme = useTheme();
 
   const openMenu = (event: React.MouseEvent<HTMLButtonElement>): void => {
     setAnchorEl(event.currentTarget);
@@ -690,13 +726,14 @@ export const PlaylistAppBar = (props: PropsPlaylistAppBar) => {
       <CssBaseline />
       <HideOnScroll {...props}>
         <AppBar
-          style={{
-            backgroundColor: theme.palette.background.default,
+          sx={{
+            backgroundColor: 'background.default',
             display: 'flex'
           }}
         >
           <Toolbar>
             <IconButton
+              aria-label="Torna indietro"
               edge="start"
               sx={{ mr: 2 }}
               onClick={() => {
@@ -705,13 +742,16 @@ export const PlaylistAppBar = (props: PropsPlaylistAppBar) => {
             >
               <ArrowBackRoundedIcon />
             </IconButton>
-            <Box sx={{ flexGrow: 1, display: 'flex' }} alignItems="center">
-              <Typography variant="h1" component="h1" sx={{ py: 1 }}>
+            <Box
+              sx={{ flexGrow: 1, flexShrink: 1, minWidth: 0, display: 'flex' }}
+              alignItems="center"
+            >
+              <Typography variant="h1" component="h1" noWrap sx={{ py: 1 }}>
                 {props.playlist?.name}
               </Typography>
             </Box>
             <Box sx={{ flexGrow: 0, display: 'flex' }} alignItems="center">
-              <IconButton onClick={openMenu}>
+              <IconButton aria-label="Altre opzioni" onClick={openMenu}>
                 <MoreVertIcon color="action" />
               </IconButton>
               <MenuPlaylist

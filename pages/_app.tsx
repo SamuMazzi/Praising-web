@@ -1,18 +1,33 @@
 'use client';
 
 import type { AppProps } from 'next/app';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { darkThemeOptions, lightThemeOptions } from '../styles/theme';
+import appTheme from '../styles/theme';
 import { Provider } from 'react-redux';
-import { store, useAppSelector } from '../logic/redux/store';
+import { store } from '../logic/redux/store';
 import '../styles/globals.css';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { AuthContextProvider } from '@/logic/context/auth_context';
+import StoreHydration from '@/components/store_hydration';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import { itIT } from '@mui/x-date-pickers/locales';
-import { DefaultSeo } from 'next-seo';
+import { DefaultSeo, NextSeo } from 'next-seo';
 import SEO from '../next-seo.config';
+import { useRouter } from 'next/router';
+
+/**
+ * Pagine legate allo stato dell'utente: non hanno nulla da offrire in ricerca
+ * e vanno tenute fuori dall'indice (e fuori dalla sitemap, vedi script.py).
+ */
+const NO_INDEX_ROUTES = [
+  '/login',
+  '/settings',
+  '/feedback',
+  '/playlist',
+  '/playlist/[id]',
+  '/songs/[id]/parts',
+  '/_offline'
+];
 
 //TODO: Check out https://vaul.emilkowal.ski/ and https://sonner.emilkowal.ski/
 
@@ -41,55 +56,68 @@ import SEO from '../next-seo.config';
 
 // TODO: Implementare spazi fra accordi senza testo (per ora solo nelle righe intere senza testo, cerca canzoni con cui testare, sicuro "Mi perdo nel tuo amore")
 import { useFirebaseRoutesAnalytics } from '@/logic/hooks/use_firebase_analytics';
+import { warmOfflineOnStartup } from '@/logic/offline_cache';
 
 export default function App({ Component, pageProps }: AppProps) {
-  const [mounted, setMounted] = useState(false);
+  const { pathname } = useRouter();
   useFirebaseRoutesAnalytics();
 
+  // Registrazione del service worker.
+  //
+  // Il codice precedente chiamava `window.serwist.register()` solo se
+  // `window.serwist !== undefined`, ma in @serwist/next 9 quel global lo
+  // definisce <SerwistProvider>, che l'app non usava: la condizione era
+  // sempre falsa e il service worker non e' mai stato registrato. Il
+  // provider pero' non si puo' montare qui, perche' importa
+  // `@serwist/window` anche lato server e fa fallire l'export statico delle
+  // pagine: registriamo direttamente, che e' anche una dipendenza in meno
+  // dalle API di contorno della libreria.
   useEffect(() => {
-    if ('serviceWorker' in navigator && window.serwist !== undefined) {
-      // console.log('service worker in navigator');
-      window.serwist
-        .register()
-        .then((registration) => {
-          if (registration === undefined) return;
-          console.log(
-            'Service Worker registered with scope:',
-            registration.scope
-          );
+    if (!('serviceWorker' in navigator)) return;
+    if (process.env.NODE_ENV === 'development') {
+      // In sviluppo il service worker non viene generato, ma quello installato
+      // da una build di produzione sulla stessa origine (localhost) resta
+      // registrato e prova a riprecacheare gli asset di quella build: gli hash
+      // non esistono piu' e l'install fallisce con `bad-precaching-response`.
+      // Lo togliamo di mezzo.
+      void navigator.serviceWorker
+        .getRegistrations()
+        .then(async (registrations) => {
+          await Promise.all(registrations.map(async (r) => r.unregister()));
         })
-        .catch((error) => {
-          console.error('Service Worker registration failed:', error);
-        });
+        .catch(() => {});
+      return;
     }
-    setMounted(true);
-  }, []);
 
-  // Maybe it disables SSR? But it solves the problem of themes
-  if (!mounted) return <></>;
+    navigator.serviceWorker
+      .register('/sw.js', { scope: '/' })
+      .then(async () => {
+        await navigator.serviceWorker.ready;
+        // Scarica in background i dati di tutti i canti (~1,2 MB), una
+        // volta per deploy, senza competere col caricamento iniziale.
+        window.setTimeout(() => {
+          void warmOfflineOnStartup();
+        }, 5000);
+      })
+      .catch((error) => {
+        console.error('Service Worker registration failed:', error);
+      });
+  }, []);
 
   return (
     <>
       <DefaultSeo {...SEO} />
+      {NO_INDEX_ROUTES.includes(pathname) && <NextSeo noindex nofollow />}
       <Provider store={store}>
-        <ThemedComponent Component={Component} pageProps={pageProps} />
+        <ThemeProvider theme={appTheme} defaultMode="dark">
+          <CssBaseline />
+          <StoreHydration />
+          <AuthContextProvider>
+            <Component {...pageProps} />
+            <SpeedInsights />
+          </AuthContextProvider>
+        </ThemeProvider>
       </Provider>
     </>
-  );
-}
-
-function ThemedComponent({ Component, pageProps }: any) {
-  const darkMode = useAppSelector((state) => state.settings.darkMode);
-
-  return (
-    <ThemeProvider
-      theme={createTheme(darkMode ? darkThemeOptions : lightThemeOptions, itIT)}
-    >
-      <CssBaseline />
-      <AuthContextProvider>
-        <Component {...pageProps} />
-        <SpeedInsights />
-      </AuthContextProvider>
-    </ThemeProvider>
   );
 }

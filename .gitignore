@@ -49,3 +49,13 @@ info_revision.json
 
 # Sentry Config File
 .env.sentry-build-plugin
+
+# credenziali: service account Firebase, mai nel repo
+praising-web-firebase-service-account.json
+*-service-account.json
+
+# tooling degli agenti (dati locali, non fanno parte dell'app)
+.agents/
+.claude/
+.serena/
+skills-lock.json

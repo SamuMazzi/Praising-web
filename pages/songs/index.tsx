@@ -5,6 +5,7 @@ import PraisingAppBar, { verticalPaddingAppBar } from '@/components/appbar';
 import ListSongs from '@/components/list_songs';
 import React from 'react';
 import { NextSeo } from 'next-seo';
+import Routes from '@/logic/routes';
 
 export default function SongsPage() {
   const localSongs = getLocalSongs();
@@ -12,8 +13,9 @@ export default function SongsPage() {
   return (
     <>
       <NextSeo
-        title="Canzoni"
-        description="Qui troverai tutti i testi e accordi dei tuoi canti preferiti!"
+        title="Canzoni - accordi e testi dei canti cristiani"
+        description="Tutti i testi e gli accordi dei canti cristiani per la messa: cerca un canto, trasporta gli accordi ed esporta in PDF."
+        canonical={Routes.Base + Routes.Songs}
         additionalMetaTags={[
           {
             name: 'keywords',

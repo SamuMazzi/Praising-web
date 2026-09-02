@@ -8,8 +8,7 @@ interface BoxPlaylistState {
 }
 
 const initialState: BoxPlaylistState = {
-  playlist:
-    (getFromStorage('playlists') as Record<string, Playlist> | null) || {}
+  playlist: {}
 };
 
 interface ApplyDragParam {
@@ -34,6 +33,11 @@ const playlistSlice = createSlice({
   name: 'playlist',
   initialState,
   reducers: {
+    /** Applica le playlist salvate in localStorage, dopo il mount */
+    hydratePlaylists: (state) => {
+      state.playlist =
+        (getFromStorage('playlists') as Record<string, Playlist> | null) ?? {};
+    },
     applyDrag: (state, action: PayloadAction<ApplyDragParam>) => {
       const { removedIndex, addedIndex, payload } = action.payload.dragResult;
       if (removedIndex === null && addedIndex === null) return;
@@ -99,6 +103,7 @@ const playlistSlice = createSlice({
 });
 
 export const {
+  hydratePlaylists,
   setPlaylist,
   deletePlaylist,
   applyDrag,

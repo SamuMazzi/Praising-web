@@ -10,21 +10,29 @@ import ListItemText from '@mui/material/ListItemText';
 import InsertCommentRoundedIcon from '@mui/icons-material/InsertCommentRounded';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
-import { setDarkMode } from '@/logic/redux/settings_slice';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import Routes from '@/logic/routes';
 import Link from 'next/link';
-import { useAppDispatch, useAppSelector } from '@/logic/redux/store';
+import { useColorScheme } from '@mui/material/styles';
 // import VolunteerActivismRoundedIcon from '@mui/icons-material/VolunteerActivismRounded';
 import SdStorageRoundedIcon from '@mui/icons-material/SdStorageRounded';
 import { clearStorage, VERSION_APP } from '@/logic/local_logic';
 import InstallPWA from '@/components/install_pwa_btn';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import { ConfirmModal } from '@/components/modals';
+import OfflineAvailability from '@/components/offline_availability';
 import React from 'react';
 
 export default function SettingsPage() {
-  const darkTheme = useAppSelector((state) => state.settings.darkMode);
-  const dispatch = useAppDispatch();
+  const { mode, systemMode, setMode } = useColorScheme();
+  const [openClearCache, setOpenClearCache] = React.useState(false);
   const borderRadius = 8;
+  const currentMode = mode === 'system' ? systemMode : mode;
+
+  const toggleTheme = (): void => {
+    setMode(currentMode === 'dark' ? 'light' : 'dark');
+  };
 
   return (
     <main>
@@ -47,11 +55,51 @@ export default function SettingsPage() {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton onClick={() => dispatch(setDarkMode(!darkTheme))}>
+            <ListItemButton onClick={toggleTheme}>
+              {/* Le due icone sono sempre entrambe nel markup e vengono
+                  mostrate via CSS in base allo schema di colore: cosi' il
+                  render del server combacia con quello del client. */}
               <ListItemIcon>
-                {darkTheme ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}
+                <LightModeRoundedIcon
+                  sx={(theme) => ({
+                    display: 'inline-block',
+                    ...theme.applyStyles('dark', { display: 'none' })
+                  })}
+                />
+                <DarkModeRoundedIcon
+                  sx={(theme) => ({
+                    display: 'none',
+                    ...theme.applyStyles('dark', { display: 'inline-block' })
+                  })}
+                />
               </ListItemIcon>
-              <ListItemText primary="Tema" />
+              {/* Come per le icone, lo schema attivo lo dice il CSS e non il
+                  render: `mode` lato server e' sempre undefined. */}
+              <ListItemText
+                primary="Tema"
+                secondary={
+                  <>
+                    <Box
+                      component="span"
+                      sx={(theme) => ({
+                        display: 'inline',
+                        ...theme.applyStyles('dark', { display: 'none' })
+                      })}
+                    >
+                      Chiaro
+                    </Box>
+                    <Box
+                      component="span"
+                      sx={(theme) => ({
+                        display: 'none',
+                        ...theme.applyStyles('dark', { display: 'inline' })
+                      })}
+                    >
+                      Scuro
+                    </Box>
+                  </>
+                }
+              />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
@@ -73,6 +121,9 @@ export default function SettingsPage() {
           <ListItem disablePadding>
             <InstallPWA />
           </ListItem>
+          <ListItem disablePadding>
+            <OfflineAvailability />
+          </ListItem>
           <ListItem
             disablePadding
             sx={{
@@ -82,7 +133,7 @@ export default function SettingsPage() {
           >
             <ListItemButton
               onClick={() => {
-                clearStorage();
+                setOpenClearCache(true);
               }}
             >
               <ListItemIcon>
@@ -95,7 +146,19 @@ export default function SettingsPage() {
             </ListItemButton>
           </ListItem>
         </List>
-        <p>Versione: {VERSION_APP}</p>
+        <ConfirmModal
+          open={openClearCache}
+          handleClose={() => {
+            setOpenClearCache(false);
+          }}
+          title="Eliminare la cache?"
+          message="Perderai playlist, preferiti e canti recenti salvati su questo dispositivo. I dati del tuo account restano al sicuro."
+          confirmLabel="Elimina"
+          onConfirm={() => {
+            clearStorage();
+          }}
+        />
+        <Typography sx={{ py: 2 }}>Versione: {VERSION_APP}</Typography>
       </Container>
     </main>
   );

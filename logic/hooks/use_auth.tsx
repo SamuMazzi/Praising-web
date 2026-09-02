@@ -3,14 +3,13 @@
 import { useState, useEffect } from 'react';
 import { type User, signInAnonymously } from 'firebase/auth';
 import { auth } from '../server/auth';
-import {
-  addUserToDatabase,
-  getUserFromDatabase,
-  UserDatabase
-} from '../server/database';
+import { type UserDatabase } from '../server/database';
+
+/** Vedi auth.ts: Firestore entra in gioco solo quando c'e' davvero un profilo
+ *  da leggere o creare. */
+const database = async () => await import('../server/database');
 import { getFromStorage, saveToStorage } from '../local_logic';
 import fbApp from '../server/firebase_config';
-import { getAnalytics, setUserId } from 'firebase/analytics';
 
 const LastTimeFetchedUserKey = 'last_time_fetched_user_profile';
 
@@ -33,7 +32,9 @@ export default function useFirebaseAuth(): {
 
   const createAnonymousUser = async (): Promise<void> => {
     const credentials = await signInAnonymously(auth);
-    const infoUser = await addUserToDatabase(credentials.user.uid, {});
+    const infoUser = await (
+      await database()
+    ).addUserToDatabase(credentials.user.uid, {});
     setInfoProfile(infoUser);
     setAuthUser(credentials.user);
     saveToStorage(LastTimeFetchedUserKey, Date.now(), 'sessionStorage');
@@ -68,12 +69,15 @@ export default function useFirebaseAuth(): {
         !auth.currentUser.isAnonymous
       ) {
         /** Fetch from firebase */
-        const infoProfileDoc = await getUserFromDatabase(auth.currentUser.uid);
+        const infoProfileDoc = await (
+          await database()
+        ).getUserFromDatabase(auth.currentUser.uid);
         // console.log('infoProfileDoc', infoProfileDoc);
         saveToStorage(LastTimeFetchedUserKey, Date.now(), 'sessionStorage');
         setInfoProfile(infoProfileDoc);
       }
     }
+    const { getAnalytics, setUserId } = await import('firebase/analytics');
     setUserId(getAnalytics(fbApp), auth.currentUser?.uid ?? null);
   };
 

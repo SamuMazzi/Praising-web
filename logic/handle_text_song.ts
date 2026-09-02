@@ -1,11 +1,11 @@
 import ChordSheetJS, {
   type Song,
   Key,
-  type SerializedSong,
-  SOLFEGE
+  type SerializedSong
 } from 'chordsheetjs';
 import * as cheerio from 'cheerio';
 import { type ChordNotations } from './redux/settings_slice';
+import { SOLFEGE } from './local_logic';
 import type { Element } from 'domhandler';
 
 interface ParamsRenderSong {
@@ -168,7 +168,9 @@ const editHTML = (
 ): string[] => {
   const sections: string[] = [];
   let isChorus = false;
-  let $2 = cheerio.load(`<div class=${SECTION_CSS}_0></div>`, {}, true);
+  // isDocument = false: senza questo cheerio serializza un documento intero
+  // (<html><head></head><body>...) dentro ogni sezione del canto.
+  let $2 = cheerio.load(`<div class=${SECTION_CSS}_0></div>`, {}, false);
   $(`.${LYRICS_CSS}`).each((j, htmlLyrics) => {
     const out = $(htmlLyrics).text().replace(/,\s*,/gm, ',');
     $(htmlLyrics).text(out);
@@ -194,7 +196,7 @@ const editHTML = (
       $2 = cheerio.load(
         `<div class=${SECTION_CSS}_${sections.length}></div>`,
         {},
-        true
+        false
       );
     }
     $2(`.${SECTION_CSS}_${sections.length}`).append($(row));

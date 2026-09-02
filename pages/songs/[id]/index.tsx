@@ -12,7 +12,7 @@ import {
 import ActionsSong from '@/components/actions_song';
 import { ModalBottomSheetSong } from '@/components/bottom_sheet';
 import { useEffect, useState } from 'react';
-import YouTube from 'react-youtube';
+import dynamic from 'next/dynamic';
 import Box from '@mui/material/Box';
 import { useWakeLock } from 'react-screen-wake-lock';
 import Typography from '@mui/material/Typography';
@@ -26,9 +26,7 @@ import { MessageSnackbar } from '@/components/pers_snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseRounded from '@mui/icons-material/CloseRounded';
 import ShimmerSegments from '@/components/shimmer_effect/shimmer_segments';
-import { useTheme } from '@mui/material/styles';
-import { driver } from 'driver.js';
-import 'driver.js/dist/driver.css';
+import { type Config as DriverConfig } from 'driver.js';
 import { SongDiv } from '@/components/song_div';
 import assert from 'assert';
 import useContentSong from '@/logic/hooks/use_content_song';
@@ -44,7 +42,13 @@ import path from 'path';
 import { promises as fs } from 'fs';
 import songsConfig from '@/logic/songs.config.json';
 
-const driverObj = driver({
+/** Il player serve solo se l'utente apre il video: lo teniamo fuori dal bundle
+ *  iniziale, e senza SSR visto che dipende dall'iframe API di YouTube. */
+const YouTube = dynamic(async () => await import('react-youtube'), {
+  ssr: false
+});
+
+const driverConfig: DriverConfig = {
   // TODO: Sistema progress
   nextBtnText: 'Avanti',
   prevBtnText: 'Indietro',
@@ -126,7 +130,15 @@ const driverObj = driver({
     },
     { popover: { title: 'Buon divertimento!', description: ':)' } }
   ]
-});
+};
+
+/** driver.js (JS + CSS) viene caricato solo la prima volta che si apre un
+ *  canto, quando il tutorial parte davvero. */
+const startTutorial = async (): Promise<void> => {
+  const { driver } = await import('driver.js');
+  await import('driver.js/dist/driver.css');
+  driver(driverConfig).drive();
+};
 
 const TUTORIAL_SHOWN = 'tutorialShown_0';
 
@@ -165,7 +177,6 @@ export default function SongPage({ initialContent, songId }: SongPageProps) {
   const [messageSnackbar, setMessageSnackbar] = useState('');
   const chordNotation = useAppSelector((state) => state.settings.chordNotation);
   const [editMode, setEditMode] = useState(false);
-  const theme = useTheme();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -176,7 +187,7 @@ export default function SongPage({ initialContent, songId }: SongPageProps) {
     const tutorialNotShown = !(getFromStorage(TUTORIAL_SHOWN) ?? false);
     if (tutorialNotShown) {
       saveToStorage(TUTORIAL_SHOWN, true);
-      driverObj.drive();
+      void startTutorial();
     }
     const handleVisibilityChange = async (): Promise<void> => {
       if (
@@ -258,8 +269,9 @@ export default function SongPage({ initialContent, songId }: SongPageProps) {
             <ShimmerSegments numSegments={30} />
           </Box>
         ) : (
-          <Typography sx={{ pt: 15 }} textAlign="center">
-            {"C'è stato un'errore, riprovare"}
+          <Typography sx={{ pt: 15 }} textAlign="center" role="alert">
+            Non siamo riusciti a caricare il canto. Controlla la connessione e
+            ricarica la pagina.
           </Typography>
         )}
       </Container>
@@ -313,7 +325,17 @@ export default function SongPage({ initialContent, songId }: SongPageProps) {
         additionalMetaTags={[
           {
             name: 'keywords',
-            content: `${song.name}, accordi, ${song.author}, canti cristiani, canzoniere, chords, liturgia`
+            content: [
+              song.name,
+              'accordi',
+              song.author,
+              'canti cristiani',
+              'canzoniere',
+              'chords',
+              'liturgia'
+            ]
+              .filter(Boolean)
+              .join(', ')
           }
         ]}
         openGraph={{
@@ -372,8 +394,13 @@ export default function SongPage({ initialContent, songId }: SongPageProps) {
       <main>
         <Container
           disableGutters
-          sx={{ minHeight: '100vh', width: '100vw' }}
-          style={{ backgroundColor: theme.palette.background.default }}
+          sx={{
+            minHeight: '100vh',
+            // `100vw` include la barra di scorrimento verticale e produceva
+            // una barra orizzontale su desktop.
+            width: '100%',
+            backgroundColor: 'background.default'
+          }}
         >
           {!isSupported && (
             <Typography>Questo browser non supporta il wakelock</Typography>
@@ -495,7 +522,11 @@ const YoutubeVideoBox = (props: { song: Song; closeVideo: () => void }) => {
           width: '100%'
         }}
       >
-        <IconButton edge="start" onClick={props.closeVideo}>
+        <IconButton
+          edge="start"
+          aria-label="Chiudi il video"
+          onClick={props.closeVideo}
+        >
           <CloseRounded />
         </IconButton>
         <Typography
@@ -507,6 +538,8 @@ const YoutubeVideoBox = (props: { song: Song; closeVideo: () => void }) => {
         </Typography>
         <IconButton
           edge="end"
+          aria-label={minimized ? 'Ingrandisci il video' : 'Riduci il video'}
+          aria-expanded={!minimized}
           onClick={() => {
             const newStateMinimized = !minimized;
             const boxVideo = document.getElementsByClassName(

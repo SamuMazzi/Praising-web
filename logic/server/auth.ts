@@ -1,5 +1,8 @@
 import {
-  getAuth,
+  initializeAuth,
+  indexedDBLocalPersistence,
+  browserLocalPersistence,
+  browserPopupRedirectResolver,
   GoogleAuthProvider,
   EmailAuthProvider,
   signOut,
@@ -12,14 +15,29 @@ import {
 } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
 import app from './firebase_config';
-import {
-  addUserToDatabase,
-  deleteUserFromDatabase,
-  getUserFromDatabase,
-  UserDatabase
-} from './database';
+import { type UserDatabase } from './database';
 
-export const auth = getAuth(app);
+/** Firestore pesa ~280 kB e serve solo nei flussi di accesso/collegamento
+ *  account: lo carichiamo al momento, non in ogni pagina. */
+const database = async () => await import('./database');
+
+/**
+ * `getAuth()` include di default il popup/redirect resolver: e' l'iframe
+ * ospitato su `<authDomain>/__/auth/iframe.js` piu' `gapi` (~127 kB di
+ * script di terze parti) che veniva caricato su *ogni* pagina, anche se il
+ * login avviene solo in /login. Inizializzando qui senza resolver, l'iframe
+ * viene caricato solo dove serve: i due punti che aprono un popup lo passano
+ * esplicitamente (vedi `browserPopupRedirectResolver` piu' sotto).
+ *
+ * Durante il prerender non c'e' browser: niente persistenza, tanto lato
+ * server l'istanza non viene mai usata.
+ */
+export const auth =
+  typeof window === 'undefined'
+    ? initializeAuth(app)
+    : initializeAuth(app, {
+        persistence: [indexedDBLocalPersistence, browserLocalPersistence]
+      });
 auth.languageCode = 'it';
 
 export class SignError extends Error {
@@ -39,10 +57,10 @@ export const afterSignGoogle = async (
   if (credential === null) throw new Error('Credential is null');
   if (checkIfExists === true) {
     const user = result.user;
-    const serverInfo = await getUserFromDatabase(user.uid);
+    const serverInfo = await (await database()).getUserFromDatabase(user.uid);
     if (serverInfo === undefined) {
       // User didn't exists yet, so we signed up actually
-      await addUserToDatabase(user.uid, oldInfoUser ?? {});
+      await (await database()).addUserToDatabase(user.uid, oldInfoUser ?? {});
     } // Otherwise we don't need to do anything
   }
   return credential;
@@ -56,19 +74,27 @@ export const signInWithGoogle = async (authUser: User) => {
   try {
     if (authUser.isAnonymous) {
       oldIdUser = authUser.uid;
-      oldInfoUser = await getUserFromDatabase(oldIdUser);
+      oldInfoUser = await (await database()).getUserFromDatabase(oldIdUser);
     }
     let result: UserCredential;
     if (sessionStorage.getItem('pendingGoogleSign')) {
-      result = await signInWithPopup(auth, provider);
+      result = await signInWithPopup(
+        auth,
+        provider,
+        browserPopupRedirectResolver
+      );
       sessionStorage.removeItem('pendingGoogleSign');
     } else {
-      result = await linkWithPopup(authUser, provider);
+      result = await linkWithPopup(
+        authUser,
+        provider,
+        browserPopupRedirectResolver
+      );
     }
     await afterSignGoogle(result, oldInfoUser ?? undefined);
     if (oldIdUser !== null) {
       // We delete the old user
-      await deleteUserFromDatabase(oldIdUser);
+      await (await database()).deleteUserFromDatabase(oldIdUser);
     }
     return result;
   } catch (error) {
@@ -104,14 +130,18 @@ export const signInWithEmail = async (
   try {
     const oldIdUser = authUser.uid;
     if (type === 'signup') {
-      const oldInfoUser = await getUserFromDatabase(oldIdUser);
+      const oldInfoUser = await (
+        await database()
+      ).getUserFromDatabase(oldIdUser);
       const emailUserCredential = EmailAuthProvider.credential(email, password);
       await linkWithCredential(authUser, emailUserCredential);
-      await addUserToDatabase(authUser.uid, oldInfoUser ?? {});
+      await (
+        await database()
+      ).addUserToDatabase(authUser.uid, oldInfoUser ?? {});
     } else if (type === 'login') {
       await signInWithEmailAndPassword(auth, email, password);
     }
-    await deleteUserFromDatabase(oldIdUser);
+    await (await database()).deleteUserFromDatabase(oldIdUser);
   } catch (error) {
     if (!(error instanceof FirebaseError)) {
       throw error;

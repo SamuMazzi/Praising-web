@@ -6,6 +6,7 @@ import { getVersionSong } from '../server/storage';
 import useFirebaseAuth from './use_auth';
 import { useRouter } from 'next/router';
 import { StorageErrorCode, StorageError } from '@firebase/storage';
+import { getSingleSong } from '../local_logic';
 
 // TODO: Prevent scrolling when downloading pdf
 
@@ -24,6 +25,38 @@ export const fetcher = async (
     console.error(err);
     throw err;
   }
+};
+
+/**
+ * Scarica il ChordPro di un canto del repertorio.
+ *
+ * Legge direttamente `public/accordi/<nome file>.crd`, che il service worker
+ * tiene nel precache: e' permanente, quindi funziona offline anche a distanza
+ * di mesi e senza aver mai aperto quel canto. `/api/song/<id>` resta come
+ * ripiego: restituisce lo stesso identico file, ma passando dal server e da
+ * una cache runtime che scade.
+ */
+export const fetchSongContent = async (
+  idSong: string,
+  forceReload: boolean
+): Promise<string> => {
+  const song = getSingleSong(idSong);
+  const cacheMode: RequestCache = forceReload ? 'reload' : 'force-cache';
+
+  if (song !== undefined && song.nameFile !== '') {
+    try {
+      const res = await fetch(`/accordi/${encodeURIComponent(song.nameFile)}`, {
+        cache: cacheMode
+      });
+      if (res.ok) {
+        return await res.text();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  return await fetcher(`/api/song/${encodeURIComponent(idSong)}`, forceReload);
 };
 
 export default function useContentSong(
@@ -81,8 +114,8 @@ export default function useContentSong(
       if (idVersion) {
         contentSong = await getVersionSong(idVersion, idSong);
       } else {
-        contentSong = await fetcher(
-          `/api/song/${encodeURIComponent(idSong)}`,
+        contentSong = await fetchSongContent(
+          idSong,
           (window.performance.getEntries()[0] as PerformanceNavigationTiming)
             .type === 'reload'
         );

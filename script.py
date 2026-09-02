@@ -4,7 +4,8 @@ import os
 import re
 import hashlib
 import xml.etree.ElementTree as ET
-from datetime import datetime, timedelta
+import subprocess
+from datetime import datetime, timezone
 
 parser = argparse.ArgumentParser(
                 prog='Helper script Praising',
@@ -130,75 +131,103 @@ def generate_revisions_pages():
 
 
 
-def parse_datetime(date_str: str):
+BASE_URL = 'https://praising.vercel.app'
+
+# Pagine statiche indicizzabili. Le pagine legate allo stato dell'utente
+# (/login, /settings, /playlist, /feedback) sono noindex lato app e non vanno
+# in sitemap: vedi NO_INDEX_ROUTES in pages/_app.tsx.
+STATIC_PAGES = [
+    ('/', 'pages/index.tsx', '1.0'),
+    ('/songs', 'pages/songs/index.tsx', '1.0'),
+    ('/lectures', 'pages/lectures.tsx', '0.5'),
+    ('/contribute', 'pages/contribute.tsx', '0.5'),
+]
+
+
+def git_lastmod(path: str):
+    """Data dell'ultimo commit che ha toccato il file.
+
+    Su CI il mtime del filesystem e' quello del checkout, quindi inutile come
+    lastmod: git e' l'unica fonte affidabile. Fallback sul mtime in locale.
+    """
     try:
-        return datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S.%fZ')
-    except ValueError:
-        # Handle potential different format
-        return datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%SZ')
+        out = subprocess.run(
+            ['git', 'log', '-1', '--format=%cI', '--', path],
+            capture_output=True, text=True, check=True).stdout.strip()
+        if out:
+            return datetime.fromisoformat(out).astimezone(timezone.utc)
+    except (subprocess.CalledProcessError, FileNotFoundError, ValueError):
+        pass
+    if os.path.exists(path):
+        return datetime.fromtimestamp(os.path.getmtime(path), tz=timezone.utc)
+    return datetime.now(timezone.utc)
+
+
+def format_lastmod(dt: datetime) -> str:
+    return dt.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+
+
+def read_filters(local_logic_path: str):
+    """Estrae le chiavi di filterMomenti/filterArgomenti da local_logic.ts."""
+    source = open(local_logic_path, 'r', encoding='utf-8').read()
+    filters = []
+    for name in ('filterMomenti', 'filterArgomenti'):
+        match = re.search(
+            r'export const %s: Record<string, string> = \{(.*?)\}' % name,
+            source, re.S)
+        if match is None:
+            continue
+        filters.extend(re.findall(r"(\w+):\s*'", match.group(1)))
+    return filters
+
 
 def update_sitemap(sitemap_path: str, json_path: str, songs_directory: str):
-    ET.register_namespace('', 'http://www.sitemaps.org/schemas/sitemap/0.9')
+    """Rigenera da zero public/sitemap.xml.
 
-    tree = ET.parse(sitemap_path)
-    root = tree.getroot()
-    
-    # Get namespace
-    namespace = root.tag.split('}')[0] + '}'
-    
-    # Read JSON file
+    Rigenerare invece di aggiornare in-place evita che restino URL non piu'
+    indicizzabili (era il caso di /settings, /login, /playlist).
+    """
+    ET.register_namespace('', 'http://www.sitemaps.org/schemas/sitemap/0.9')
+    root = ET.Element('{http://www.sitemaps.org/schemas/sitemap/0.9}urlset')
+
+    def add_url(loc: str, lastmod: datetime, changefreq: str, priority: str):
+        url_element = ET.SubElement(
+            root, '{http://www.sitemaps.org/schemas/sitemap/0.9}url')
+        ET.SubElement(
+            url_element,
+            '{http://www.sitemaps.org/schemas/sitemap/0.9}loc').text = loc
+        ET.SubElement(
+            url_element,
+            '{http://www.sitemaps.org/schemas/sitemap/0.9}lastmod'
+        ).text = format_lastmod(lastmod)
+        ET.SubElement(
+            url_element,
+            '{http://www.sitemaps.org/schemas/sitemap/0.9}changefreq'
+        ).text = changefreq
+        ET.SubElement(
+            url_element,
+            '{http://www.sitemaps.org/schemas/sitemap/0.9}priority'
+        ).text = priority
+
     with open(json_path, 'r') as f:
         songs_data = json.load(f)
-    
-    # Create a dictionary of existing URLs and their elements
-    existing_urls = {}
-    for url_elem in root.findall(f'{namespace}url'):
-        loc = url_elem.find(f'{namespace}loc').text
-        existing_urls[loc] = url_elem
-    
-    # Process each song
+
+    catalog_lastmod = git_lastmod(json_path)
+
+    for route, source_file, priority in STATIC_PAGES:
+        add_url(BASE_URL + route if route != '/' else BASE_URL,
+                git_lastmod(source_file), 'weekly', priority)
+
+    for filter_key in read_filters('logic/local_logic.ts'):
+        add_url(f'{BASE_URL}/songs/filter/{filter_key}',
+                catalog_lastmod, 'weekly', '0.7')
+
     for song in songs_data:
-        song_url = f'https://praising.vercel.app/songs/{song["Id"]}'
         song_file_path = os.path.join(songs_directory, song['Nome file'])
-        
-        # Get file's last modification time
-        if os.path.exists(song_file_path):
-            mtime = datetime.fromtimestamp(os.path.getmtime(song_file_path))
-            new_lastmod = mtime.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
-        else:
-            mtime = datetime.now()
-            new_lastmod = mtime.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
-        
-        if song_url in existing_urls:
-            # URL exists, check if we need to update lastmod
-            url_element = existing_urls[song_url]
-            lastmod_elem = url_element.find(f'{namespace}lastmod')
-            if lastmod_elem is not None:
-                existing_date = parse_datetime(lastmod_elem.text)
-                if mtime > (existing_date + timedelta(seconds=1)):
-                    # Timedelta is needed to avoid issues with microseconds
-                    print(f"Updating lastmod for {song_file_path} because {mtime} > {existing_date}")
-                    lastmod_elem.text = new_lastmod
-        else:
-            # Create new URL element
-            url_element = ET.SubElement(root, f'{namespace}url')
-            
-            # Add location
-            loc = ET.SubElement(url_element, f'{namespace}loc')
-            loc.text = song_url
-            
-            # Add last modified date
-            lastmod_elem = ET.SubElement(url_element, f'{namespace}lastmod')
-            lastmod_elem.text = new_lastmod
-            
-            # Add change frequency
-            changefreq = ET.SubElement(url_element, f'{namespace}changefreq')
-            changefreq.text = 'always'
-            
-            # Add priority
-            priority = ET.SubElement(url_element, f'{namespace}priority')
-            priority.text = '0.9'
-    
+        add_url(f'{BASE_URL}/songs/{song["Id"]}',
+                git_lastmod(song_file_path), 'monthly', '0.9')
+
+    tree = ET.ElementTree(root)
     ET.indent(tree, space="\t", level=0)
     tree.write(sitemap_path, encoding='utf-8', xml_declaration=True)
 
