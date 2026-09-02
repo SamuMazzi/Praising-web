@@ -53,6 +53,7 @@ const CUSTOM_SONGS_COLLECTION = 'songs';
 const VERSIONS_CUSTOM_SONGS_COLLECTION = 'versions';
 const PARTS_SONGS_COLLECTION = 'parts';
 const PLAYLIST_COLLECTION = 'playlist';
+const PROPOSED_SONGS_COLLECTION = 'proposed_songs';
 
 export interface Playlist {
   name: string;
@@ -372,6 +373,56 @@ export const getUserFromDatabase = async (
     console.error(e);
     return undefined;
   }
+};
+
+/**
+ * Proposta di un canto nuovo, cioe' un canto che ancora non esiste nel
+ * catalogo statico (`logic/songs.config.json`).
+ *
+ * Il ChordPro sta in un campo del documento e non su Storage, al contrario
+ * delle versioni utente: un canto e' 860 byte in media, e tenerlo qui rende
+ * l'approvazione una singola scrittura atomica invece di due passaggi su
+ * sistemi diversi che possono divergere. Il testo non deve pero' finire
+ * nelle liste: `scripts/lib/pending_queue.mjs` lo esclude con `.select()`.
+ *
+ * Il documento non viene mai letto dall'app: e' materia della coda di
+ * revisione e del build, che da qui genera `.crd` e voce di catalogo.
+ */
+export interface ProposedSong {
+  /** Titolo del canto, come apparira' nel catalogo. */
+  name: string;
+  author: string;
+  /** Link alla canzone (YouTube, Spotify...), come nella proposta storica. */
+  linkSong: string;
+  /** Link a degli accordi gia' esistenti, se l'utente non li trascrive. */
+  linkChords: string;
+  /** ChordPro trascritto dall'utente. Vuoto = proposta da lavorare a mano. */
+  chordpro: string;
+  userId: string;
+  email: string;
+  state: 'pending' | 'approved';
+  creationTime: Timestamp;
+  /**
+   * Assegnati all'approvazione, non alla proposta: il build deve poter
+   * rigenerare sempre gli stessi id, altrimenti a ogni deploy le URL dei
+   * canti pubblicati da qui cambierebbero.
+   */
+  songId?: string;
+  nameFile?: string;
+}
+
+export const addProposedSong = async (
+  proposal: Omit<ProposedSong, 'state' | 'creationTime' | 'songId' | 'nameFile'>
+): Promise<string> => {
+  const docRef = await addDoc(
+    collection(firestore, PROPOSED_SONGS_COLLECTION),
+    {
+      ...proposal,
+      state: 'pending',
+      creationTime: Timestamp.now()
+    } satisfies Omit<ProposedSong, 'songId' | 'nameFile'>
+  );
+  return docRef.id;
 };
 
 export const addEditedSongToDatabase = async (

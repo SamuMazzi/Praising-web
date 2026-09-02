@@ -47,7 +47,9 @@ export const renderRow = (item, isStuck) => {
   const what =
     item.kind === 'version'
       ? 'versione'
-      : `parte${item.partName ? ` "${item.partName}"` : ''}`;
+      : item.kind === 'song'
+        ? 'canto nuovo'
+        : `parte${item.partName ? ` "${item.partName}"` : ''}`;
   const who = item.authorName
     ? `${item.authorName} (${item.email})`
     : item.email;
@@ -55,7 +57,11 @@ export const renderRow = (item, isStuck) => {
   const flags = [];
   if (isStuck) flags.push('⚠️ ferma');
   if (item.fileMissing === true) flags.push('❌ file mancante');
-  return `| ${what} | ${item.songName} | ${who} | ${age} ${flags.join(' ')} | [apri](${item.previewUrl}) |`;
+  // Un canto proposto non ha ancora una pagina sul sito: al suo posto il
+  // link alla canzone, se l'utente ne ha messo uno.
+  const link = item.previewUrl ?? item.linkSong;
+  const openCell = link ? `[apri](${link})` : '—';
+  return `| ${what} | ${item.songName} | ${who} | ${age} ${flags.join(' ')} | ${openCell} |`;
 };
 
 export const renderBody = (items) => {

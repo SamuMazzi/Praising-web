@@ -12,6 +12,7 @@
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import nextEnv from '@next/env';
 import { cert, getApps, initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { getAuth } from 'firebase-admin/auth';
@@ -21,6 +22,13 @@ const REPO_ROOT = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   '../..'
 );
+
+/**
+ * Gli script girano con node puro, che a differenza di `next` non legge da
+ * solo `.env.local`: senza questo, le credenziali andrebbero esportate a mano
+ * a ogni comando. Logger muto per non sporcare l'output del build.
+ */
+nextEnv.loadEnvConfig(REPO_ROOT, false, { info: () => {}, error: () => {} });
 
 export const PROJECT_ID = 'praising-web';
 export const STORAGE_BUCKET = 'praising-web.appspot.com';
@@ -50,6 +58,8 @@ const loadCredential = async () => {
     'No credentials: set FIREBASE_SERVICE_ACCOUNT (JSON) or GOOGLE_APPLICATION_CREDENTIALS (path to the key file).'
   );
 };
+
+export const PROPOSED_SONGS_COLLECTION = 'proposed_songs';
 
 export const OWNED_FIELD = { version: 'ownedSongs', part: 'ownedParts' };
 export const COUNTER_FIELD = {
@@ -140,10 +150,51 @@ const readGroup = async (db, collectionId, kind) => {
  * failure in between leaves a document with nothing behind it. Needs read
  * access to Storage, which the read-only Action credential does not have.
  */
+/**
+ * Proposte di canti nuovi.
+ *
+ * A differenza di versioni e parti non stanno sotto `songs/{songId}`: un
+ * canto proposto un songId non ce l'ha ancora, glielo assegna
+ * l'approvazione. Il ChordPro sta in un campo del documento, e la `.select()`
+ * lo lascia deliberatamente fuori: la lista non deve scaricare il testo di
+ * ogni proposta per stampare due righe di riepilogo.
+ */
+const readProposedSongs = async (db) => {
+  const snap = await db
+    .collection(PROPOSED_SONGS_COLLECTION)
+    .where('state', '==', 'pending')
+    .select(
+      'name',
+      'author',
+      'linkSong',
+      'linkChords',
+      'userId',
+      'creationTime'
+    )
+    .get();
+  return snap.docs.map((doc) => {
+    const data = doc.data();
+    const createdAt = data.creationTime?.toDate?.() ?? new Date(0);
+    return {
+      kind: 'song',
+      docId: doc.id,
+      docPath: doc.ref.path,
+      uid: data.userId,
+      songName: data.name || '(senza titolo)',
+      authorName: data.author || undefined,
+      linkSong: data.linkSong,
+      linkChords: data.linkChords,
+      createdAt,
+      ageDays: daysSince(createdAt)
+    };
+  });
+};
+
 const flagMissingFiles = async (items) => {
   const bucket = getStorage().bucket();
   await Promise.all(
     items.map(async (item) => {
+      if (!item.storagePath) return;
       try {
         const [exists] = await bucket.file(item.storagePath).exists();
         item.fileMissing = !exists;
@@ -156,13 +207,14 @@ const flagMissingFiles = async (items) => {
 
 export const fetchPendingQueue = async ({ checkStorage = false } = {}) => {
   const { db, auth } = await initAdmin();
-  const [songNames, versions, parts] = await Promise.all([
+  const [songNames, versions, parts, proposals] = await Promise.all([
     loadSongNames(),
     readGroup(db, 'versions', 'version'),
-    readGroup(db, 'parts', 'part')
+    readGroup(db, 'parts', 'part'),
+    readProposedSongs(db)
   ]);
 
-  const items = [...versions, ...parts].sort(
+  const items = [...versions, ...parts, ...proposals].sort(
     (a, b) => a.createdAt - b.createdAt
   );
   const emails = await resolveEmails(
@@ -171,8 +223,10 @@ export const fetchPendingQueue = async ({ checkStorage = false } = {}) => {
   );
 
   for (const item of items) {
-    item.songName =
-      songNames.get(item.songId) ?? `(canto sconosciuto ${item.songId})`;
+    if (item.kind !== 'song') {
+      item.songName =
+        songNames.get(item.songId) ?? `(canto sconosciuto ${item.songId})`;
+    }
     item.email = emails.get(item.uid) ?? '(utente non trovato)';
   }
 

@@ -16,7 +16,8 @@ npm run deploy         # script.py --generate-revisions && vercel build --prod &
 npm run lint:check     # eslint .   (lint:fix to autofix; note: `npm run linter` calls a non-existent lint:next script)
 npm run format         # prettier --write .  (format:check to verify)
 npm run knip           # unused files/exports/deps
-npm run pending        # review queue CLI: list | approve | reject | recount (see below)
+npm run pending        # review queue CLI: list | show | approve | reject | recount (see below)
+npm run sync:songs     # materialise Firestore-approved songs into the static catalog
 npx tsc --noEmit       # typecheck — the build does NOT fail on lint (eslint.ignoreDuringBuilds: true)
 ```
 
@@ -68,6 +69,8 @@ JSON or `GOOGLE_APPLICATION_CREDENTIALS` path):
   `reject`, `recount [--fix]`. `approve` does the state flip and the counter
   decrement in one batch so they cannot drift.
 
+New songs (as opposed to versions of existing ones) are proposed from the app into `proposed_songs/{id}` in Firestore, ChordPro included as a document field — a song averages 860 B, and keeping it in the document makes approval one atomic write instead of two systems that can diverge. Listings must project with `.select()` so the text never travels. `npm run pending -- show|approve|reject song <docId>` handles them, and **approval assigns the `songId`**, not the build, so published URLs stay stable across deploys. `scripts/sync_songs.mjs` (first step of `npm run build`) is a pure projection: it materialises approved proposals into `public/accordi/*.crd` + `logic/songs.config.json`, is idempotent, and skips silently without Firebase credentials. Approving POSTs to `VERCEL_DEPLOY_HOOK_URL` when it is set.
+
 The `pages/api/notification-song-*` emails are a _convenience ping only_ — they
 are one-shot and were previously the only signal that anything was pending.
 Never treat them as the source of truth again.
@@ -83,6 +86,20 @@ documents created before 2026-08 have no `userId` field at all.
 ### PWA / service worker
 
 `@serwist/next` compiles `init-service-worker.ts` → `public/sw.js` (disabled in development, registered manually in `_app.tsx`, not by the plugin). `public/sw.js` and `public/sitemap.xml` are **generated build outputs** — edit `init-service-worker.ts` / `script.py`, never the generated files.
+
+Registration is a plain `navigator.serviceWorker.register('/sw.js')`. Do **not** reintroduce `<SerwistProvider>`: it imports `@serwist/window` on the server and breaks the static export (`ENOENT .next/export/songs/*.html`). The old code guarded on `window.serwist`, which only that provider defines, so the worker was never registered at all.
+
+Precache entries for `public/` come from `publicPrecacheEntries()` in `next.config.mjs`, not from Serwist's own scan: 28 `.crd` names contain a comma and Next 404s on a literal comma in a path. Precaching is all-or-nothing, so that single 404 aborted every install. URLs are encoded per segment with `encodeURIComponent`, matching how the client requests them.
+
+Offline has three layers, in growing weight:
+
+- **`.crd` chord files** — in the precache, permanent. `use_content_song.tsx` reads `/accordi/<file>.crd` directly; `/api/song/<id>` is only a fallback.
+- **`_next/data/<buildId>/songs/<id>.json`** (~1.2 MB total) — warmed in background once per deploy by `warmOfflineOnStartup`. Enough to open any song by navigating inside the app. The SW rule needs `matchOptions: { ignoreSearch: true }`, because Next requests them as `…json?id=<id>`.
+- **page HTML** (~16 MB) — only for cold opens (shared link, refresh, PWA reopened on that URL). Opt-in from Settings → "Disponibilità offline"; unwarmed cold opens land on `public/offline.html`.
+
+Warm-up runs inside the SW on a `PRAISING_WARM_OFFLINE` message, never in `install`: 233 requests there block activation, and one failure loses the whole cache. The caches in `OFFLINE_CACHES` deliberately have no `ExpirationPlugin` — `defaultCache` caps everything at 32 entries / 24h, useless for a 233-song repertoire.
+
+Testing offline: DevTools' "Offline" checkbox does **not** put the service worker offline and produces false passes. Stop the server instead.
 
 ### Other conventions
 

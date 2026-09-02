@@ -12,17 +12,28 @@
  *   npm run pending -- list --check-storage  also flag documents with no file
  *   npm run pending -- approve version 42 abc123
  *   npm run pending -- reject  part    42 def456
+ *   npm run pending -- show    song   abc123    stampa gli accordi proposti
+ *   npm run pending -- approve song   abc123    assegna un id e pubblica
  *   npm run pending -- recount [--fix]       repair drifted pending counters
  */
 import { FieldValue } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
+import { readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 import {
   COUNTER_FIELD,
   OWNED_FIELD,
+  PROPOSED_SONGS_COLLECTION,
   fetchPendingQueue,
   initAdmin,
   uidOf
 } from './lib/pending_queue.mjs';
+
+const REPO_ROOT = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  '..'
+);
 
 const args = process.argv.slice(2);
 const flags = new Set(args.filter((a) => a.startsWith('--')));
@@ -49,6 +60,21 @@ const list = async () => {
   }
   console.log(`${items.length} contributi in attesa (dal più vecchio):\n`);
   for (const i of items) {
+    if (i.kind === 'song') {
+      console.log(`  canto nuovo — ${i.songName}`);
+      console.log(
+        `    da <${i.email}>, in attesa da ${Math.floor(i.ageDays)} giorni`
+      );
+      if (i.authorName) console.log(`    autore: ${i.authorName}`);
+      if (i.linkSong) console.log(`    ${i.linkSong}`);
+      if (i.linkChords) console.log(`    accordi: ${i.linkChords}`);
+      console.log(
+        `    accordi proposti: npm run pending -- show song ${i.docId}`
+      );
+      console.log(`    approva: npm run pending -- approve song ${i.docId}`);
+      console.log('');
+      continue;
+    }
     const what =
       i.kind === 'version' ? 'versione' : `parte "${i.partName ?? '?'}"`;
     const who = i.authorName ? `${i.authorName} <${i.email}>` : `<${i.email}>`;
@@ -73,7 +99,138 @@ const requireTarget = () => {
   return { kind, songId, docId };
 };
 
+/** I canti proposti non hanno un songId: l'id glielo assegna l'approvazione. */
+const requireProposalId = () => {
+  const docId = positional[2];
+  if (!docId) die(`Uso: npm run pending -- ${command} song <docId>`);
+  return docId;
+};
+
+const proposalRef = (db, docId) =>
+  db.collection(PROPOSED_SONGS_COLLECTION).doc(docId);
+
+const loadCatalog = async () =>
+  JSON.parse(
+    await readFile(path.join(REPO_ROOT, 'logic/songs.config.json'), 'utf8')
+  );
+
+/**
+ * Un id nuovo, piu' alto sia di quelli del catalogo statico sia di quelli
+ * già assegnati ad altre proposte approvate ma non ancora committate.
+ */
+const nextSongId = async (db) => {
+  const catalog = await loadCatalog();
+  let max = catalog.reduce((m, song) => Math.max(m, Number(song.Id) || 0), 0);
+  const approved = await db
+    .collection(PROPOSED_SONGS_COLLECTION)
+    .where('state', '==', 'approved')
+    .select('songId')
+    .get();
+  for (const doc of approved.docs) {
+    max = Math.max(max, Number(doc.data().songId) || 0);
+  }
+  return String(max + 1);
+};
+
+/**
+ * Il nome file finisce in un URL: niente separatori di percorso. Virgole e
+ * apostrofi restano, il precache del service worker li codifica (vedi
+ * `publicPrecacheEntries` in next.config.mjs).
+ */
+const fileNameFor = (name, catalog) => {
+  const clean = name.replace(/[/\\]/g, '-').replace(/\s+/g, ' ').trim();
+  const taken = new Set(catalog.map((song) => song['Nome file']));
+  let candidate = `${clean}.crd`;
+  let n = 2;
+  while (taken.has(candidate)) {
+    candidate = `${clean} (${n}).crd`;
+    n += 1;
+  }
+  return candidate;
+};
+
+/**
+ * Approvare non pubblica da solo: il canto entra nel sito al build
+ * successivo, che lo legge da Firestore (`scripts/sync_songs.mjs`). Se il
+ * deploy hook e' configurato quel build parte subito.
+ */
+const triggerDeploy = async () => {
+  const hook = process.env.VERCEL_DEPLOY_HOOK_URL;
+  if (!hook) {
+    console.log(
+      'VERCEL_DEPLOY_HOOK_URL non impostata: il canto sarà online al prossimo deploy.'
+    );
+    return;
+  }
+  try {
+    const res = await fetch(hook, { method: 'POST' });
+    console.log(
+      res.ok
+        ? 'Deploy avviato su Vercel.'
+        : `Deploy hook ha risposto ${res.status}: lancia il deploy a mano.`
+    );
+  } catch (e) {
+    console.log(`Deploy hook non raggiungibile (${e.message}).`);
+  }
+};
+
+const showProposal = async () => {
+  const docId = requireProposalId();
+  const { db } = await initAdmin();
+  const snap = await proposalRef(db, docId).get();
+  if (!snap.exists) die(`Proposta non trovata: ${docId}`);
+  const data = snap.data();
+  console.log(`${data.name}${data.author ? ` — ${data.author}` : ''}`);
+  console.log(`stato: ${data.state}, da <${data.email ?? '?'}>`);
+  if (data.linkSong) console.log(`canzone: ${data.linkSong}`);
+  if (data.linkChords) console.log(`accordi: ${data.linkChords}`);
+  console.log('');
+  console.log(
+    data.chordpro?.trim()
+      ? data.chordpro
+      : '(nessun accordo trascritto: va scritto a mano)'
+  );
+};
+
+const approveProposal = async () => {
+  const docId = requireProposalId();
+  const { db } = await initAdmin();
+  const ref = proposalRef(db, docId);
+  const snap = await ref.get();
+  if (!snap.exists) die(`Proposta non trovata: ${docId}`);
+
+  const data = snap.data();
+  if (data.state !== 'pending') {
+    console.log(`Già in stato '${data.state}', niente da fare.`);
+    return;
+  }
+  if (!data.chordpro?.trim()) {
+    die(
+      'La proposta non ha accordi: aggiungi il ChordPro al documento prima di approvarla.'
+    );
+  }
+
+  const catalog = await loadCatalog();
+  const songId = await nextSongId(db);
+  const nameFile = fileNameFor(data.name || `Canto ${songId}`, catalog);
+
+  await ref.update({ state: 'approved', songId, nameFile });
+  console.log(`Approvato "${data.name}" come id ${songId} (${nameFile}).`);
+  await triggerDeploy();
+};
+
+const rejectProposal = async () => {
+  const docId = requireProposalId();
+  const { db } = await initAdmin();
+  const ref = proposalRef(db, docId);
+  const snap = await ref.get();
+  if (!snap.exists) die(`Proposta non trovata: ${docId}`);
+  await ref.delete();
+  console.log(`Proposta "${snap.data().name}" rifiutata ed eliminata.`);
+};
+
 const approve = async () => {
+  if (positional[1] === 'song') return await approveProposal();
   const { kind, songId, docId } = requireTarget();
   const { db } = await initAdmin();
   const ref = docRefFor(db, kind, songId, docId);
@@ -101,6 +258,7 @@ const approve = async () => {
 };
 
 const reject = async () => {
+  if (positional[1] === 'song') return await rejectProposal();
   const { kind, songId, docId } = requireTarget();
   const { db } = await initAdmin();
   const ref = docRefFor(db, kind, songId, docId);
@@ -205,7 +363,7 @@ const recount = async () => {
   console.log(`\nCorretti ${drifted.length} utenti.`);
 };
 
-const commands = { list, approve, reject, recount };
+const commands = { list, approve, reject, recount, show: showProposal };
 
 const run = commands[command];
 if (!run) {
