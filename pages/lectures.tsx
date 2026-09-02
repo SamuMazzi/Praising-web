@@ -13,6 +13,7 @@ import { type Lettura } from '@/logic/scraper_liturgy';
 import ShimmerSegments from '@/components/shimmer_effect/shimmer_segments';
 import useLecture from '@/logic/hooks/use_lecture';
 import { NextSeo } from 'next-seo';
+import Routes from '@/logic/routes';
 
 // TODO: 19 agosto 2024 check because it give some "formatting" error
 
@@ -70,7 +71,11 @@ export default function Lectures() {
 
   return (
     <main>
-      <NextSeo title="Letture" />
+      <NextSeo
+        title="Liturgia del giorno - letture e Vangelo"
+        description="Le letture e il Vangelo della liturgia del giorno, insieme agli accordi dei canti per la messa."
+        canonical={Routes.Base + Routes.LetturaDelGiorno}
+      />
       <Container
         sx={{
           minHeight: '100vh',

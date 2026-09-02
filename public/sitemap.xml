@@ -2,1442 +2,1544 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<url>
 		<loc>https://praising.vercel.app</loc>
-		<lastmod>2024-10-29T15:02:24.021Z</lastmod>
-		<changefreq>always</changefreq>
-		<priority>1</priority>
+		<lastmod>2025-12-21T18:35:00.000Z</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>1.0</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs</loc>
-		<lastmod>2024-10-29T15:02:24.021Z</lastmod>
-		<changefreq>always</changefreq>
-		<priority>1</priority>
+		<lastmod>2025-12-21T18:35:00.000Z</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>1.0</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/lectures</loc>
-		<lastmod>2024-10-29T15:02:24.021Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-12-18T09:50:26.000Z</lastmod>
+		<changefreq>weekly</changefreq>
 		<priority>0.5</priority>
 	</url>
 	<url>
-		<loc>https://praising.vercel.app/playlist</loc>
-		<lastmod>2024-10-29T15:02:24.021Z</lastmod>
-		<changefreq>always</changefreq>
-		<priority>0.8</priority>
+		<loc>https://praising.vercel.app/contribute</loc>
+		<lastmod>2025-08-16T13:23:59.000Z</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.5</priority>
 	</url>
 	<url>
-		<loc>https://praising.vercel.app/settings</loc>
-		<lastmod>2024-10-29T15:02:24.021Z</lastmod>
-		<changefreq>always</changefreq>
-		<priority>0.4</priority>
+		<loc>https://praising.vercel.app/songs/filter/Ingr</loc>
+		<lastmod>2025-08-19T15:57:07.000Z</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.7</priority>
 	</url>
 	<url>
-		<loc>https://praising.vercel.app/login</loc>
-		<lastmod>2024-10-29T15:02:24.021Z</lastmod>
-		<changefreq>always</changefreq>
-		<priority>0.6</priority>
+		<loc>https://praising.vercel.app/songs/filter/G</loc>
+		<lastmod>2025-08-19T15:57:07.000Z</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.7</priority>
 	</url>
 	<url>
-		<loc>https://praising.vercel.app/feedback</loc>
-		<lastmod>2024-10-29T15:02:24.021Z</lastmod>
-		<changefreq>always</changefreq>
-		<priority>0.3</priority>
+		<loc>https://praising.vercel.app/songs/filter/S</loc>
+		<lastmod>2025-08-19T15:57:07.000Z</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.7</priority>
+	</url>
+	<url>
+		<loc>https://praising.vercel.app/songs/filter/All</loc>
+		<lastmod>2025-08-19T15:57:07.000Z</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.7</priority>
+	</url>
+	<url>
+		<loc>https://praising.vercel.app/songs/filter/Lode</loc>
+		<lastmod>2025-08-19T15:57:07.000Z</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.7</priority>
+	</url>
+	<url>
+		<loc>https://praising.vercel.app/songs/filter/Off</loc>
+		<lastmod>2025-08-19T15:57:07.000Z</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.7</priority>
+	</url>
+	<url>
+		<loc>https://praising.vercel.app/songs/filter/San</loc>
+		<lastmod>2025-08-19T15:57:07.000Z</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.7</priority>
+	</url>
+	<url>
+		<loc>https://praising.vercel.app/songs/filter/Agn</loc>
+		<lastmod>2025-08-19T15:57:07.000Z</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.7</priority>
+	</url>
+	<url>
+		<loc>https://praising.vercel.app/songs/filter/Com</loc>
+		<lastmod>2025-08-19T15:57:07.000Z</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.7</priority>
+	</url>
+	<url>
+		<loc>https://praising.vercel.app/songs/filter/Fin</loc>
+		<lastmod>2025-08-19T15:57:07.000Z</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.7</priority>
+	</url>
+	<url>
+		<loc>https://praising.vercel.app/songs/filter/Qua</loc>
+		<lastmod>2025-08-19T15:57:07.000Z</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.7</priority>
+	</url>
+	<url>
+		<loc>https://praising.vercel.app/songs/filter/Avv</loc>
+		<lastmod>2025-08-19T15:57:07.000Z</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.7</priority>
+	</url>
+	<url>
+		<loc>https://praising.vercel.app/songs/filter/Nat</loc>
+		<lastmod>2025-08-19T15:57:07.000Z</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.7</priority>
+	</url>
+	<url>
+		<loc>https://praising.vercel.app/songs/filter/Pas</loc>
+		<lastmod>2025-08-19T15:57:07.000Z</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.7</priority>
+	</url>
+	<url>
+		<loc>https://praising.vercel.app/songs/filter/SS</loc>
+		<lastmod>2025-08-19T15:57:07.000Z</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.7</priority>
+	</url>
+	<url>
+		<loc>https://praising.vercel.app/songs/filter/Mar</loc>
+		<lastmod>2025-08-19T15:57:07.000Z</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.7</priority>
+	</url>
+	<url>
+		<loc>https://praising.vercel.app/songs/filter/Matr</loc>
+		<lastmod>2025-08-19T15:57:07.000Z</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.7</priority>
+	</url>
+	<url>
+		<loc>https://praising.vercel.app/songs/filter/Ado</loc>
+		<lastmod>2025-08-19T15:57:07.000Z</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.7</priority>
+	</url>
+	<url>
+		<loc>https://praising.vercel.app/songs/filter/Ingl</loc>
+		<lastmod>2025-08-19T15:57:07.000Z</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.7</priority>
+	</url>
+	<url>
+		<loc>https://praising.vercel.app/songs/filter/Can</loc>
+		<lastmod>2025-08-19T15:57:07.000Z</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.7</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/1</loc>
-		<lastmod>2024-12-02T00:37:25.864Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-11-01T12:57:37.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/2</loc>
-		<lastmod>2024-12-02T00:37:25.865Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/3</loc>
-		<lastmod>2024-12-02T00:37:25.865Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-11-01T12:57:37.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/4</loc>
-		<lastmod>2024-12-02T00:37:25.865Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-08-19T14:23:41.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/5</loc>
-		<lastmod>2024-12-02T00:37:25.865Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-08-19T14:23:41.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/6</loc>
-		<lastmod>2024-12-02T00:37:25.865Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-11-01T12:57:37.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/7</loc>
-		<lastmod>2024-12-02T00:37:25.865Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/8</loc>
-		<lastmod>2024-12-02T00:37:25.865Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-06-03T12:50:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/9</loc>
-		<lastmod>2025-05-08T22:59:37.427Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/10</loc>
-		<lastmod>2024-12-02T00:37:25.865Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/11</loc>
-		<lastmod>2024-12-02T00:37:25.865Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/12</loc>
-		<lastmod>2024-12-02T00:37:25.865Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/13</loc>
-		<lastmod>2024-12-02T00:37:25.865Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/14</loc>
-		<lastmod>2024-12-02T00:37:25.865Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/15</loc>
-		<lastmod>2024-12-02T00:37:25.865Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/16</loc>
-		<lastmod>2024-12-02T00:37:25.865Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/17</loc>
-		<lastmod>2024-12-02T00:37:25.865Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/18</loc>
-		<lastmod>2024-12-02T00:37:25.865Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/19</loc>
-		<lastmod>2024-12-02T00:37:25.865Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/20</loc>
-		<lastmod>2024-12-02T00:37:25.865Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/21</loc>
-		<lastmod>2024-12-02T00:37:25.865Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/22</loc>
-		<lastmod>2024-12-02T00:37:25.865Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/23</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/24</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/25</loc>
-		<lastmod>2025-05-08T22:59:37.427Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/26</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/27</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/28</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/29</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/30</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/31</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/32</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/33</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/34</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/35</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/36</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/37</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/38</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/39</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/40</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/41</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-09-26T08:51:21.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/42</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/43</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/44</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/45</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-07-14T12:54:55.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/46</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-11-15T15:56:53.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/47</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/48</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-11-01T12:57:37.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/49</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/50</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/51</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/52</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/53</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/54</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-11-01T12:57:37.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/55</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/56</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/57</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/58</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/59</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/60</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/61</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/62</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/63</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/64</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-05-03T15:02:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/65</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/66</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/67</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/68</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/69</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/70</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/71</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/72</loc>
-		<lastmod>2025-05-08T22:59:37.427Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/73</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/74</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-04-21T09:15:28.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/75</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/76</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-04-23T07:47:51.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/77</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-06-03T12:50:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/78</loc>
-		<lastmod>2025-05-08T23:15:56.876Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/79</loc>
-		<lastmod>2025-05-08T22:59:37.427Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/80</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/81</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-11-01T12:57:37.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/82</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-11-01T12:57:37.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/83</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/84</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-11-01T12:57:37.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/85</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/86</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/87</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/88</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/89</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/90</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/91</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-04-21T11:50:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/92</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/93</loc>
-		<lastmod>2025-05-08T22:59:37.428Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/94</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-07-14T12:54:55.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/95</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/96</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/97</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/98</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/99</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/100</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/101</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/102</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/103</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/104</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/105</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-11-01T12:57:37.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/106</loc>
-		<lastmod>2025-05-08T22:59:37.428Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/107</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-02-03T21:41:54.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/108</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/109</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/110</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/111</loc>
-		<lastmod>2024-12-02T00:37:25.866Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-11-01T12:57:37.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/112</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/113</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-27T15:31:38.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/114</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/115</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/116</loc>
-		<lastmod>2025-08-16T00:36:27.952Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-08-15T22:38:02.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/117</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/118</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/119</loc>
-		<lastmod>2025-05-08T22:59:37.427Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/120</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/121</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/122</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/123</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/124</loc>
-		<lastmod>2025-05-08T22:59:37.427Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/125</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/126</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/127</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/128</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/129</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/130</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/131</loc>
-		<lastmod>2025-05-08T22:59:37.427Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/132</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/133</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/134</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/135</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/136</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/137</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/138</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/139</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/140</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-11-01T12:57:37.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/141</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/142</loc>
-		<lastmod>2025-05-08T22:59:37.427Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/143</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/144</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-11-01T12:57:37.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/145</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/146</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/147</loc>
-		<lastmod>2025-05-08T22:59:37.427Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/148</loc>
-		<lastmod>2025-05-08T22:59:37.428Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/149</loc>
-		<lastmod>2025-05-08T22:59:37.427Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/150</loc>
-		<lastmod>2025-05-08T22:59:37.427Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/151</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-11-01T12:57:37.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/152</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/153</loc>
-		<lastmod>2025-05-08T22:59:37.427Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/154</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/155</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/156</loc>
-		<lastmod>2025-05-08T22:59:37.428Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/157</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-11-15T15:00:33.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/158</loc>
-		<lastmod>2025-05-08T22:59:37.427Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/159</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/160</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/161</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/162</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/163</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/164</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/165</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/166</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/167</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/168</loc>
-		<lastmod>2025-05-08T22:59:37.427Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/169</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-02-17T18:07:03.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/170</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/171</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/172</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-04-21T09:15:28.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/173</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/174</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/175</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-08-30T21:53:29.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/176</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/177</loc>
-		<lastmod>2025-05-08T22:59:37.428Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/178</loc>
-		<lastmod>2025-05-08T22:59:37.428Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/179</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/180</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/181</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/182</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-06-03T12:50:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/183</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/184</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/185</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-05-23T14:04:42.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/186</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/187</loc>
-		<lastmod>2025-05-08T22:59:37.427Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/188</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/189</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/190</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/191</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/192</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-02-17T18:07:03.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/193</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/194</loc>
-		<lastmod>2025-05-08T22:59:37.427Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/195</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-07-14T12:54:55.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/196</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/197</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/198</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/199</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/200</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/201</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/202</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/203</loc>
-		<lastmod>2024-12-02T00:37:25.867Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/204</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/205</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/206</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/207</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/208</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-06-05T08:29:54.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/209</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/210</loc>
-		<lastmod>2025-05-08T22:59:37.428Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/211</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/212</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-18T21:47:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/213</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-06-03T12:50:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/214</loc>
-		<lastmod>2025-05-08T22:59:37.427Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/215</loc>
-		<lastmod>2025-05-08T22:59:37.428Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-05-08T21:17:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/216</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-08-19T10:58:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/217</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-28T14:15:00.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/218</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2023-12-28T14:15:00.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/219</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-02-03T21:41:54.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/220</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-04-21T09:15:28.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/221</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-05-05T13:56:56.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/222</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-05-04T09:28:35.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/223</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-05-23T14:04:42.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/224</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-06-03T12:50:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/225</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-06-05T08:29:54.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/226</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-06-03T12:50:40.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/227</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-07-01T14:26:44.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/228</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-08-19T10:58:27.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/229</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-09-26T08:51:21.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/230</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-10-31T18:36:05.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/231</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-11-01T12:57:37.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/232</loc>
-		<lastmod>2024-12-02T00:37:25.868Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2024-11-15T15:00:33.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 	<url>
 		<loc>https://praising.vercel.app/songs/233</loc>
-		<lastmod>2025-08-20T09:48:01.714Z</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2025-08-19T15:57:07.000Z</lastmod>
+		<changefreq>monthly</changefreq>
 		<priority>0.9</priority>
 	</url>
 </urlset>

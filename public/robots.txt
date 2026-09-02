@@ -1,9 +1,8 @@
-# Block all crawlers for /settings
-User-agent: *
-Disallow: /settings
-
-# Allow all crawlers
+# Le pagine legate allo stato dell'utente (/login, /settings, /playlist,
+# /feedback, /songs/*/parts) sono escluse dall'indice con un meta noindex
+# renderizzato lato server: vedi NO_INDEX_ROUTES in pages/_app.tsx.
+# Non vanno bloccate qui, altrimenti Google non potrebbe leggere il noindex.
 User-agent: *
 Allow: /
 
-Sitemap: https://www.praising.vercel.app/sitemap.xml
+Sitemap: https://praising.vercel.app/sitemap.xml
