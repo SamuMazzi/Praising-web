@@ -199,7 +199,8 @@ export const EditableSong = (props: {
             htmlInput: {
               autoCapitalize: 'off',
               autoCorrect: 'off',
-              spellCheck: false
+              spellCheck: false,
+              translate: 'no'
             },
             input: {
               style: {

@@ -47,7 +47,10 @@ export default function PlaylistTile(props: PropsPlaylistTile) {
           </IconButton>
         }
       >
-        <ListItemText primary={props.playlist.name} />
+        <ListItemText
+          primary={props.playlist.name}
+          slotProps={{ primary: { translate: 'no' } }}
+        />
       </ListItem>
       <MenuPlaylist
         anchorEl={anchorEl}
@@ -89,7 +92,10 @@ export function SelectablePlaylistTile(props: PropsSelectablePlaylistTile) {
         }}
         style={{ WebkitTapHighlightColor: 'transparent' }}
       >
-        <ListItemText primary={props.playlist.name} />
+        <ListItemText
+          primary={props.playlist.name}
+          slotProps={{ primary: { translate: 'no' } }}
+        />
       </ListItemButton>
     </>
   );

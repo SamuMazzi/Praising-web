@@ -66,7 +66,11 @@ export default function SongTile(props: PropsSongTile) {
       <ListItemIcon>
         <MusicNoteRoundedIcon />
       </ListItemIcon>
-      <ListItemText primary={props.song.name} secondary={props.song.author} />
+      <ListItemText
+        primary={props.song.name}
+        secondary={props.song.author}
+        slotProps={{ primary: { translate: 'no' } }}
+      />
     </ListItem>
   );
 }
@@ -101,7 +105,11 @@ export function SelectableSongTile(props: PropsSelectableSongTile) {
       }}
       style={{ WebkitTapHighlightColor: 'transparent' }}
     >
-      <ListItemText primary={props.song.name} secondary={props.song.author} />
+      <ListItemText
+        primary={props.song.name}
+        secondary={props.song.author}
+        slotProps={{ primary: { translate: 'no' } }}
+      />
     </ListItemButton>
   );
 }
@@ -151,6 +159,7 @@ export function PlaylistSongTile(props: PropsSelectableSongTile) {
             <ListItemText
               primary={props.song.name}
               secondary={props.song.author}
+              slotProps={{ primary: { translate: 'no' } }}
             />
           </ListItemButton>
         </ListItem>
@@ -167,8 +176,8 @@ export function PlaylistSongTile(props: PropsSelectableSongTile) {
             </Grid>
             <Grid>
               <Typography>
-                Vuoi rimuovere <strong>{props.song.name}</strong> dalla
-                playlist?
+                Vuoi rimuovere <strong translate="no">{props.song.name}</strong>{' '}
+                dalla playlist?
               </Typography>
             </Grid>
             <Grid

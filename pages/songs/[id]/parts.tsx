@@ -61,7 +61,11 @@ export default function PartsPage(props: PropsPartsPage) {
           minHeight: '100vh'
         }}
       >
-        <PraisingAppBar title={'Parti - ' + song?.name} backIcon />
+        <PraisingAppBar
+          title={'Parti - ' + song?.name}
+          noTranslateTitle
+          backIcon
+        />
         <Container sx={{ py: verticalPaddingAppBar + 2 }} />
         <Box sx={{ display: 'flex', alignItems: 'center', my: 2 }}>
           <Typography variant="h2" component="h2" sx={{ mr: 2 }}>

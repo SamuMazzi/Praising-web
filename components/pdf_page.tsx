@@ -18,6 +18,7 @@ const PagePDFSong = (props: PropsPdfPage) => {
     <>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <p
+          translate="no"
           style={{
             fontSize: 35,
             fontWeight: 'bold',
