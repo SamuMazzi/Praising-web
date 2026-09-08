@@ -12,7 +12,10 @@ interface PropsSongDiv {
 
 export const SongDiv = (props: PropsSongDiv) => {
   return (
-    <div>
+    // Accordi e testo non vanno mai tradotti: la traduzione automatica del
+    // browser riscrive i nodi di testo e cosi' perde gli accordi (che sono
+    // <span> allineati alle sillabe) e storpia le parole del canto.
+    <div lang="it" translate="no" className="notranslate">
       {props.sections.map((section, index) => {
         return (
           <SectionSong
@@ -50,6 +53,9 @@ function SectionSong(props: {
     >
       <div className={styles.expandable} onClick={onClickExpandable}>
         <p
+          lang="it"
+          translate="no"
+          className="notranslate"
           style={{ fontSize: props.infoSong?.zoom ?? 17 }}
           dangerouslySetInnerHTML={{ __html: props.section }}
         />

@@ -63,7 +63,11 @@ export function ModalBottomSheetPlaylist(props: PropsModalBottomSheetPlaylist) {
         <Sheet.Header>
           <TitleModal
             onClose={props.onClose}
-            title={'Canzoni per ' + playlist?.name}
+            title={
+              <>
+                Canzoni per <span translate="no">{playlist?.name}</span>
+              </>
+            }
           />
         </Sheet.Header>
         <Sheet.Content>
@@ -306,7 +310,9 @@ export function ModalBottomSheetSong(props: PropsModalBottomSheetSong) {
 
 interface PropsTitleModal {
   onClose: () => void;
-  title: string;
+  // Nodo e non stringa: i nomi delle playlist vanno marcati `translate="no"`
+  // dentro un titolo altrimenti traducibile.
+  title: React.ReactNode;
   openModal?: () => void;
 }
 

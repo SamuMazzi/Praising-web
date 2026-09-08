@@ -191,6 +191,8 @@ export const HideOnScroll = (props: PropsHideOnScroll) => {
 
 interface PropsAppBar {
   title: string;
+  /** Il titolo contiene il nome di un canto: niente traduzione automatica. */
+  noTranslateTitle?: boolean;
   backIcon?: boolean;
   homeVersion?: boolean;
   addSongIcon?: boolean;
@@ -265,6 +267,7 @@ export default function PraisingAppBar(props: PropsAppBar) {
                 variant="h1"
                 component="h1"
                 textAlign="center"
+                translate={props.noTranslateTitle === true ? 'no' : undefined}
                 style={{ color: 'black' }}
                 sx={{ py: verticalPaddingAppBar }}
               >
@@ -336,6 +339,7 @@ export default function PraisingAppBar(props: PropsAppBar) {
                 variant="h1"
                 component="h1"
                 textAlign="center"
+                translate={props.noTranslateTitle === true ? 'no' : undefined}
                 sx={{ color: 'black', py: verticalPaddingAppBar }}
               >
                 {props.title}
@@ -346,6 +350,7 @@ export default function PraisingAppBar(props: PropsAppBar) {
               variant="h1"
               component="h1"
               textAlign="center"
+              translate={props.noTranslateTitle === true ? 'no' : undefined}
               style={{ color: 'black' }}
               sx={{ py: verticalPaddingAppBar }}
             >
@@ -466,7 +471,7 @@ export const SongTitleAppBar = (props: {
       style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
       alignItems="center"
     >
-      <Typography variant="h1" noWrap>
+      <Typography variant="h1" noWrap translate="no">
         {props.title}
       </Typography>
       <Typography
@@ -746,7 +751,13 @@ export const PlaylistAppBar = (props: PropsPlaylistAppBar) => {
               sx={{ flexGrow: 1, flexShrink: 1, minWidth: 0, display: 'flex' }}
               alignItems="center"
             >
-              <Typography variant="h1" component="h1" noWrap sx={{ py: 1 }}>
+              <Typography
+                variant="h1"
+                component="h1"
+                noWrap
+                translate="no"
+                sx={{ py: 1 }}
+              >
                 {props.playlist?.name}
               </Typography>
             </Box>

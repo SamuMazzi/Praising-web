@@ -531,6 +531,7 @@ const YoutubeVideoBox = (props: { song: Song; closeVideo: () => void }) => {
         </IconButton>
         <Typography
           className="title-video"
+          translate="no"
           style={{ display: 'none' }}
           sx={{ px: 2 }}
         >
