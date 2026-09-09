@@ -17,7 +17,8 @@
     "set_cors_fb": "gsutil cors set cors_firebase_storage.json gs://praising-web.appspot.com",
     "knip": "knip",
     "pending": "node scripts/pending.mjs",
-    "sync:songs": "node scripts/sync_songs.mjs"
+    "sync:songs": "node scripts/sync_songs.mjs",
+    "chordpro": "node scripts/to_chordpro.mjs"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
