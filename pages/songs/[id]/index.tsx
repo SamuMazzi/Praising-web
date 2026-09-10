@@ -11,7 +11,7 @@ import {
 } from '@/logic/local_logic';
 import ActionsSong from '@/components/actions_song';
 import { ModalBottomSheetSong } from '@/components/bottom_sheet';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Box from '@mui/material/Box';
 import { useWakeLock } from 'react-screen-wake-lock';
@@ -257,6 +257,25 @@ export default function SongPage({ initialContent, songId }: SongPageProps) {
     }
   };
 
+  /**
+   * `renderSong` fa il parsing ChordPro con chordsheetjs e poi ricostruisce
+   * l'HTML con cheerio: e' l'operazione piu' costosa della pagina (decine di
+   * ms su mobile). Senza memo veniva rifatta a ogni render, quindi anche
+   * all'apertura di un modale, allo snackbar o a ogni cambio di stato del
+   * wakelock. Il risultato dipende solo da questi cinque valori.
+   */
+  const info = useMemo(
+    () =>
+      renderSong({
+        fileContent: content,
+        showChords,
+        transpose: infoSong?.transpose,
+        fontSize: infoSong?.zoom,
+        chordNotation
+      }),
+    [content, showChords, infoSong?.transpose, infoSong?.zoom, chordNotation]
+  );
+
   if (error !== '' || loadingContent) {
     if (error !== '') {
       console.error(error);
@@ -278,14 +297,6 @@ export default function SongPage({ initialContent, songId }: SongPageProps) {
     );
   }
 
-  const info = renderSong({
-    fileContent: content,
-    showChords,
-    transpose: infoSong?.transpose,
-    fontSize: infoSong?.zoom,
-    chordNotation
-  });
-
   if (info.error !== undefined) {
     return (
       <Container sx={{ minHeight: '100vh' }}>
@@ -297,7 +308,7 @@ export default function SongPage({ initialContent, songId }: SongPageProps) {
     );
   }
 
-  const sections: string[] = info.sections;
+  const html: string = info.html;
   const fontSize: number = info.fontSize;
   // fontsize std: lineHeigth 68, poi -4 tutte le volte
   assert(song !== undefined, 'Song is undefined');
@@ -416,7 +427,7 @@ export default function SongPage({ initialContent, songId }: SongPageProps) {
           />
           <Container sx={{ py: 3.5 }} />
           <Container disableGutters sx={{ py: 1 }}>
-            <SongDiv sections={sections} infoSong={infoSong} />
+            <SongDiv html={html} infoSong={infoSong} />
           </Container>
           <ActionsSong
             song={song}

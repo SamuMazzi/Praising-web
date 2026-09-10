@@ -40,7 +40,7 @@ const PagePDFSong = (props: PropsPdfPage) => {
           - Praising
         </p>
       </div>
-      <SongDiv sections={props.info.sections} infoSong={props.song} />
+      <SongDiv html={props.info.html} infoSong={props.song} />
     </>
   );
 };

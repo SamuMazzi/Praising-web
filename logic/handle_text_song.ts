@@ -1,12 +1,30 @@
-import ChordSheetJS, {
-  type Song,
+// Import per nome, non l'export di default della libreria: quel default e' un
+// oggetto che tiene insieme tutti i formatter (PdfFormatter, i measurer,
+// ecc.), quindi usarlo impedisce il tree-shaking e si porta dietro l'intera
+// chordsheetjs — 597 kB gzip invece di 281.
+import {
+  ChordLyricsPair,
+  ChordProParser,
+  ChordSheetSerializer,
+  HtmlDivFormatter,
   Key,
-  type SerializedSong
+  type SerializedSong,
+  type Song
 } from 'chordsheetjs';
-import * as cheerio from 'cheerio';
 import { type ChordNotations } from './redux/settings_slice';
 import { SOLFEGE } from './local_logic';
-import type { Element } from 'domhandler';
+import type { Document, Element } from 'domhandler';
+import {
+  addClass,
+  byClass,
+  childrenByClass,
+  getText,
+  hasClass,
+  parseHtml,
+  removeClass,
+  renderNodes,
+  setText
+} from './dom_light';
 
 interface ParamsRenderSong {
   fileContent: string;
@@ -40,23 +58,18 @@ const CHORD_CSS = 'chord';
 const COLUMN_CSS = 'column';
 const LYRICS_CSS = 'lyrics';
 const ROW_CSS = 'row';
-const SECTION_CSS = 'section';
 
 const findLinesChorus = (deserialized: Song): number[] => {
   const linesChorus: number[] = [];
   let cont = 0;
   deserialized.lines.forEach((line) => {
     let isChordLyricsPair = false;
-    if (
-      line.items.every((item) => item instanceof ChordSheetJS.ChordLyricsPair)
-    ) {
+    if (line.items.every((item) => item instanceof ChordLyricsPair)) {
       isChordLyricsPair = true;
     }
     if (isChordLyricsPair) {
       const lyrics = line.items
-        .map(
-          (item) => item instanceof ChordSheetJS.ChordLyricsPair && item.lyrics
-        )
+        .map((item) => item instanceof ChordLyricsPair && item.lyrics)
         .join('')
         .trim();
       if (line.isChorus() && lyrics !== '') {
@@ -73,45 +86,42 @@ const findLinesChorus = (deserialized: Song): number[] => {
 };
 
 /** Needed to remove the space that .chord css selecter would take */
-const toggleShowChords = ($: cheerio.CheerioAPI, showChords: boolean): void => {
-  $(`.${CHORD_CSS}`).each((i, chord) => {
+const toggleShowChords = (doc: Document, showChords: boolean): void => {
+  byClass(doc, CHORD_CSS).forEach((chord) => {
     if (!showChords) {
-      if ($(chord).hasClass(CHORD_CSS)) {
-        $(chord).removeClass(CHORD_CSS);
-      }
+      removeClass(chord, CHORD_CSS);
     } else {
-      if (!$(chord).hasClass(CHORD_CSS)) {
-        $(chord).addClass(CHORD_CSS);
-      }
+      addClass(chord, CHORD_CSS);
     }
   });
 };
 
-const boldenChorus = ($: cheerio.CheerioAPI, linesChorus: number[]): void => {
+const boldenChorus = (doc: Document, linesChorus: number[]): void => {
   let cont = -1;
-  $(`.${ROW_CSS}`).each((i, row) => {
-    if (rowHasLyrics($, row)) {
+  byClass(doc, ROW_CSS).forEach((row) => {
+    if (rowHasLyrics(row)) {
       cont += 1;
     }
     //* Se è Chorus
     if (linesChorus.includes(cont)) {
-      if (!$(row).hasClass(CHORUS_CSS)) {
-        $(row).addClass(CHORUS_CSS);
-      }
+      addClass(row, CHORUS_CSS);
     }
   });
 };
 
-const getLyricsRow = ($: cheerio.CheerioAPI, row: Element): string => {
-  return $(row)
-    .find(`.${COLUMN_CSS} > .${LYRICS_CSS}`)
-    .filter((i, l) => $(l).text().trim() !== '')
-    .text();
-};
+/** I `.lyrics` figli diretti di una `.column` dentro la riga. */
+const lyricsOfRow = (row: Element): Element[] =>
+  byClass(row, COLUMN_CSS).flatMap((column) =>
+    childrenByClass(column, LYRICS_CSS)
+  );
 
-const rowHasLyrics = ($: cheerio.CheerioAPI, row: Element): boolean => {
-  return getLyricsRow($, row).length !== 0;
-};
+const getLyricsRow = (row: Element): string =>
+  lyricsOfRow(row)
+    .filter((l) => getText(l).trim() !== '')
+    .map((l) => getText(l))
+    .join('');
+
+const rowHasLyrics = (row: Element): boolean => getLyricsRow(row).length !== 0;
 
 const measureText = (text: string, fontSize: number): number => {
   const widths = [
@@ -139,14 +149,14 @@ const measureText = (text: string, fontSize: number): number => {
   );
 };
 
-const adjustFontSize = ($: cheerio.CheerioAPI, oldFontSize: number): number => {
+const adjustFontSize = (doc: Document, oldFontSize: number): number => {
   if (typeof window === 'undefined') {
     return oldFontSize;
   }
   let maxLen = 0;
   let maxLenRow = '';
-  $(`.${ROW_CSS}`).each((i, div) => {
-    const text = $(div).text();
+  byClass(doc, ROW_CSS).forEach((div) => {
+    const text = getText(div);
     const lenText = measureText(text, oldFontSize);
     maxLen = Math.max(lenText, maxLen);
     if (lenText === maxLen) {
@@ -162,22 +172,13 @@ const adjustFontSize = ($: cheerio.CheerioAPI, oldFontSize: number): number => {
   return i;
 };
 
-const editHTML = (
-  $: cheerio.CheerioAPI,
-  chordNotation: ChordNotations
-): string[] => {
-  const sections: string[] = [];
-  let isChorus = false;
-  // isDocument = false: senza questo cheerio serializza un documento intero
-  // (<html><head></head><body>...) dentro ogni sezione del canto.
-  let $2 = cheerio.load(`<div class=${SECTION_CSS}_0></div>`, {}, false);
-  $(`.${LYRICS_CSS}`).each((j, htmlLyrics) => {
-    const out = $(htmlLyrics).text().replace(/,\s*,/gm, ',');
-    $(htmlLyrics).text(out);
+const editHTML = (doc: Document, chordNotation: ChordNotations): string => {
+  byClass(doc, LYRICS_CSS).forEach((htmlLyrics) => {
+    setText(htmlLyrics, getText(htmlLyrics).replace(/,\s*,/gm, ','));
   });
   // Substitutes chords with their variants
-  $(`.${CHORD_CSS}`).each((j, htmlChord) => {
-    let out = $(htmlChord).text();
+  byClass(doc, CHORD_CSS).forEach((htmlChord) => {
+    let out = getText(htmlChord);
     if (chordNotation === SOLFEGE) {
       out = out
         .replace('ma', '+')
@@ -185,26 +186,14 @@ const editHTML = (
         .replace('m', '-')
         .replace(/sus(\d*)/gm, (match, p1) => p1 || '4');
     }
-    $(htmlChord).text(out);
+    setText(htmlChord, out);
   });
-  $(`.${ROW_CSS}`).each((i, row) => {
-    internalEditTML($, row);
-    // Divide in sections
-    const isNewChorus = $(row).hasClass(CHORUS_CSS);
-    if (isChorus !== isNewChorus) {
-      sections.push($2.html());
-      $2 = cheerio.load(
-        `<div class=${SECTION_CSS}_${sections.length}></div>`,
-        {},
-        false
-      );
-    }
-    $2(`.${SECTION_CSS}_${sections.length}`).append($(row));
-    isChorus = isNewChorus;
+  const rows = byClass(doc, ROW_CSS);
+  rows.forEach((row) => {
+    internalEditTML(row);
   });
-  sections.push($2.html());
 
-  return sections;
+  return renderNodes(rows);
 };
 
 /**
@@ -214,45 +203,42 @@ const editHTML = (
  * - It sets spaces around chords without lyrics
  * - Fix bug in ChordSheetJS: if there's an empty chord with only whitespace lyrics, it renders an empty <div>
  */
-const internalEditTML = ($: cheerio.CheerioAPI, row: Element): void => {
+const internalEditTML = (row: Element): void => {
   // TODO: Understand better the purpose of this function
 
+  /** Discendenti con quella classe, passando per le `.column` della riga:
+   *  e' il vecchio selettore `.column .classe`. */
+  const underColumns = (name: string): Element[] =>
+    byClass(byClass(row, COLUMN_CSS), name);
+
   //* Only lyrics
-  if ($(row).children(`.${COLUMN_CSS}`).length === 1) {
-    $(row)
-      .find(`.${COLUMN_CSS} .${CHORD_CSS}`)
-      .each((index, lyrics) => {
-        if ($(lyrics).hasClass(CHORD_CSS) && !$(lyrics).hasClass(CHORUS_CSS)) {
-          $(lyrics).removeClass(CHORD_CSS);
-        }
-      });
+  if (childrenByClass(row, COLUMN_CSS).length === 1) {
+    underColumns(CHORD_CSS).forEach((lyrics) => {
+      if (hasClass(lyrics, CHORD_CSS) && !hasClass(lyrics, CHORUS_CSS)) {
+        removeClass(lyrics, CHORD_CSS);
+      }
+    });
   }
 
   //* Bug in ChordSheetJS: if there's an empty chord with only whitespace lyrics, it renders an empty <div>
   // :has(.no-chord) doesn't work, so this is actually a non-optimal solution, but it should never give any kind of error
-  $(row)
-    .find(`.${COLUMN_CSS} > .${LYRICS_CSS}`)
-    .each((index, lyrics) => {
-      if ($(lyrics).text() === '') {
-        $(lyrics).text(' ');
-      }
-    });
+  lyricsOfRow(row).forEach((lyrics) => {
+    if (getText(lyrics) === '') {
+      setText(lyrics, ' ');
+    }
+  });
 
   //* Only chords
-  if (!rowHasLyrics($, row)) {
-    $(row)
-      .find(`.${COLUMN_CSS} .${LYRICS_CSS}`)
-      .each((index, lyrics) => {
-        if ($(lyrics).hasClass(LYRICS_CSS) && !$(lyrics).hasClass(CHORUS_CSS)) {
-          $(lyrics).removeClass(LYRICS_CSS);
-        }
-      });
+  if (!rowHasLyrics(row)) {
+    underColumns(LYRICS_CSS).forEach((lyrics) => {
+      if (hasClass(lyrics, LYRICS_CSS) && !hasClass(lyrics, CHORUS_CSS)) {
+        removeClass(lyrics, LYRICS_CSS);
+      }
+    });
     //* Put spaces around chords
-    $(row)
-      .find(`.${COLUMN_CSS} .${CHORD_CSS}`)
-      .each((index, chord) => {
-        $(chord).text(' ' + $(chord).text() + ' ');
-      });
+    underColumns(CHORD_CSS).forEach((chord) => {
+      setText(chord, ' ' + getText(chord) + ' ');
+    });
   }
 };
 
@@ -272,7 +258,7 @@ const removeChords = (serializedSong: SerializedSong): void => {
 };
 
 export interface InfoRenderSong {
-  sections: string[];
+  html: string;
   fontSize: number;
   error?: string;
 }
@@ -287,25 +273,19 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
     props.fileContent = props.fileContent.trim();
     if (props.fileContent === '') {
       return {
-        sections: [],
+        html: '',
         fontSize: 17,
         error: 'Il file è vuoto.'
       };
     }
-    const songParsed = new ChordSheetJS.ChordProParser().parse(
-      props.fileContent
-    );
+    const songParsed = new ChordProParser().parse(props.fileContent);
 
-    const serializedSong = new ChordSheetJS.ChordSheetSerializer().serialize(
-      songParsed
-    );
+    const serializedSong = new ChordSheetSerializer().serialize(songParsed);
     if (!props.showChords) {
       removeChords(serializedSong);
     }
 
-    let deserialized = new ChordSheetJS.ChordSheetSerializer().deserialize(
-      serializedSong
-    );
+    let deserialized = new ChordSheetSerializer().deserialize(serializedSong);
 
     const transpose = props.transpose ?? 0;
     // FIXME: Don't why there's this actually big problem, it can't really change chords from ita to eng
@@ -338,27 +318,26 @@ export const renderSong = (props: ParamsRenderSong): InfoRenderSong => {
       props.chordNotation
     );
 
-    const disp = new ChordSheetJS.HtmlDivFormatter({
+    const disp = new HtmlDivFormatter({
       normalizeChords: true
     }).format(deserialized);
-    const $ = cheerio.load(disp);
+    const doc = parseHtml(disp);
 
     const linesChorus = findLinesChorus(deserialized);
-    toggleShowChords($, props.showChords);
-    boldenChorus($, linesChorus);
+    toggleShowChords(doc, props.showChords);
+    boldenChorus(doc, linesChorus);
     const stdZoomLevel = 17;
-    const fontSize = (props.fontSize ??= adjustFontSize($, stdZoomLevel));
-    const sections = editHTML($, props.chordNotation);
+    const fontSize = (props.fontSize ??= adjustFontSize(doc, stdZoomLevel));
+    const html = editHTML(doc, props.chordNotation);
     // props.fontSize is undefined when first time opening the song or zoom not set
     return {
-      // songText: $.html(),
-      sections,
+      html,
       fontSize
     };
   } catch (error) {
     console.error(error);
     return {
-      sections: [],
+      html: '',
       fontSize: 17,
       error:
         "C'è stato un errore nel leggere il file, riprovare.\n" +
