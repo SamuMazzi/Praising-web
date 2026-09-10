@@ -41,10 +41,18 @@ import Grid from '@mui/material/Grid';
 
 interface PropsSongTile {
   song: Song;
-  onSecondaryAction: () => void;
+  /** Riceve l'id cosi' il chiamante puo' passare una callback stabile: una
+   *  closure creata a ogni render annullerebbe il memo qui sotto. */
+  onSecondaryAction: (idSong: string) => void;
 }
 
-export default function SongTile(props: PropsSongTile) {
+/**
+ * La lista dei canti monta 234 tile insieme, e ognuna e' un ListItem MUI con
+ * icona e IconButton: ridisegnarle tutte a ogni tasto premuto nella ricerca
+ * costa piu' del filtro stesso. `memo` le tiene ferme finche' non cambiano
+ * davvero canto e callback (che il chiamante mantiene stabile).
+ */
+const SongTile = React.memo(function SongTile(props: PropsSongTile) {
   return (
     <ListItem
       component={NextLinkComposed}
@@ -56,7 +64,7 @@ export default function SongTile(props: PropsSongTile) {
           aria-label={'Aggiungi ' + props.song.name + ' a una playlist'}
           onClick={(e) => {
             e.preventDefault();
-            props.onSecondaryAction();
+            props.onSecondaryAction(props.song.id);
           }}
         >
           <PlaylistAddRoundedIcon />
@@ -73,7 +81,9 @@ export default function SongTile(props: PropsSongTile) {
       />
     </ListItem>
   );
-}
+});
+
+export default SongTile;
 
 interface PropsSelectableSongTile {
   song: Song;

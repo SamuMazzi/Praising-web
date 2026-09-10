@@ -1,23 +1,10 @@
 import { type CheerioAPI, load } from 'cheerio';
+import type { Lettura, Salmo, WebStructLiturgy } from './liturgy';
 
-export interface WebStructLiturgy {
-  firstLecture: Lettura;
-  psalm: Salmo;
-  secondLecture?: Lettura;
-  gospel: Lettura;
-}
-
-export interface Lettura {
-  title: string;
-  verse: string;
-  content: string;
-}
-
-interface Salmo {
-  title: string;
-  chorus: string[] /* Array because there can be possibly more than one */;
-  verses: string[];
-}
+/** Lo scraping vive solo lato server (`pages/api/lectures/[date].ts`): tipi e
+ *  modello stanno in `./liturgy`, cosi' il client non si porta dietro
+ *  cheerio. */
+export type { Lettura, Salmo, WebStructLiturgy } from './liturgy';
 
 const fetchLiturgia = async (url: string): Promise<CheerioAPI> => {
   const data = await fetch(url);
@@ -99,17 +86,3 @@ export const extractLiturgia = async (
   const out: WebStructLiturgy = { firstLecture, secondLecture, psalm, gospel };
   return out;
 };
-
-export class LiturgyOfDay {
-  firstLecture: Lettura;
-  psalm: Salmo;
-  secondLecture?: Lettura;
-  gospel: Lettura;
-
-  constructor(body: WebStructLiturgy) {
-    this.firstLecture = body.firstLecture;
-    this.psalm = body.psalm;
-    this.secondLecture = body.secondLecture;
-    this.gospel = body.gospel;
-  }
-}

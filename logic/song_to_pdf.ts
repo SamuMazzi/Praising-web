@@ -4,7 +4,9 @@ import { getSingleSong, VERSION_APP } from './local_logic';
 import { type ChordNotations } from './redux/settings_slice';
 import { fetcher } from './hooks/use_content_song';
 import { getHtmlPdfPage } from '@/components/pdf_page';
-import ChordSheetJS from 'chordsheetjs';
+// Per nome anche qui: cosi' PdfFormatter (con jspdf al seguito) resta
+// confinato in questo chunk, caricato solo quando si esporta in PDF.
+import { ChordProParser, PdfFormatter } from 'chordsheetjs';
 
 const PAGE_WIDTH = 595.28; // width of regular a4 paper
 const PAGE_HEIGHT = 841.89; // height of regular a4 paper
@@ -104,9 +106,9 @@ class SongPDF {
     if (data === undefined || data === null || song === undefined) {
       return;
     }
-    let songParsed = new ChordSheetJS.ChordProParser().parse(data);
+    let songParsed = new ChordProParser().parse(data);
     songParsed = songParsed.changeMetadata('title', song.name);
-    const formatter = new ChordSheetJS.PdfFormatter();
+    const formatter = new PdfFormatter();
     console.log(formatter.configuration);
     formatter.configure({
       version: VERSION_APP,

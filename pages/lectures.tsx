@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { CalendarSelectSingleDay } from '@/components/calendar';
 import 'dayjs/locale/it';
-import { type Lettura } from '@/logic/scraper_liturgy';
+import { type Lettura } from '@/logic/liturgy';
 import ShimmerSegments from '@/components/shimmer_effect/shimmer_segments';
 import useLecture from '@/logic/hooks/use_lecture';
 import { NextSeo } from 'next-seo';

@@ -59,6 +59,12 @@ export default function NavBar() {
               icon={iconsPages[index]}
               sx={{ pt: 1 }}
               component={NextLinkComposed}
+              // Le quattro schede sono sempre a schermo e sono le
+              // destinazioni piu' probabili: qui il prefetch automatico di
+              // Next conviene davvero (quattro chunk, non duecento), ed e' la
+              // ragione per cui passare da una scheda all'altra sembrava una
+              // navigazione "vera" invece di un cambio di vista.
+              prefetch
               to={{
                 pathname: routesPages[index]
               }}

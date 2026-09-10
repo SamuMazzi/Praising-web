@@ -8,7 +8,14 @@ import SongTile, {
   SelectableSongTile
 } from '@/components/song_tile';
 import TypeSearch from '@/components/search_field';
-import React, { useState } from 'react';
+import VirtualizedSongList from '@/components/virtualized_song_list';
+import React, {
+  useCallback,
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
 import { applyDrag } from '@/logic/redux/playlist_slice';
 import { ModalBottomSheetSong } from './bottom_sheet';
 import DragContainer from './react-smooth-dnd/Container';
@@ -28,6 +35,8 @@ import { type Playlist } from '@/logic/server/database';
 const database = async () => await import('@/logic/server/database');
 
 import { type DropResult } from 'smooth-dnd';
+import { useRouter } from 'next/router';
+import Routes from '@/logic/routes';
 
 const AVOID_SPECIAL_CHARACTERS = /[^a-zA-Z0-9 ]/g;
 
@@ -43,11 +52,40 @@ interface PropsListSongs {
  * @param auto_sorting Default = True
  */
 export default function ListSongs(props: PropsListSongs) {
+  const router = useRouter();
   const [songModal, setSongModal] = useState('');
   const [showModalCreatePlaylist, setShowModalCreatePlaylist] = useState(false);
   const [filter, setFilter] = useState('');
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
   const favoriteSongs = useAppSelector((state) => state.userInfo.favoriteSongs);
+
+  /** Il filtro applicato alla lista resta indietro di un frame rispetto al
+   *  campo di testo: cosi' la digitazione non aspetta il ridisegno delle
+   *  tile. */
+  const deferredFilter = useDeferredValue(filter);
+
+  const openSongModal = useCallback((idSong: string): void => {
+    setSongModal(idSong);
+  }, []);
+
+  /**
+   * Tutte le tile puntano alla stessa rotta `/songs/[id]`, quindi un solo
+   * prefetch basta a scaricare e compilare il chunk della pagina canto: al
+   * primo tap resta da prendere solo il JSON dei dati. Lo facciamo quando il
+   * browser e' inattivo, per non rubare banda al caricamento della lista.
+   */
+  const firstSongId = props.songs[0]?.id;
+  useEffect(() => {
+    if (props.mode !== 'normal' || firstSongId === undefined) return;
+    const schedule =
+      window.requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 1500));
+    const handle = schedule(() => {
+      void router.prefetch(`${Routes.Songs}/${firstSongId}`).catch(() => {});
+    });
+    return () => {
+      window.cancelIdleCallback?.(handle as number);
+    };
+  }, [router, props.mode, firstSongId]);
 
   const filterSong = (v: Song): boolean => {
     const favoritePart =
@@ -59,15 +97,26 @@ export default function ListSongs(props: PropsListSongs) {
       .replace(AVOID_SPECIAL_CHARACTERS, '')
       .toLowerCase();
     const fitInFilter = (nameToFilter + ' ' + authorToFilter).includes(
-      filter.replace(AVOID_SPECIAL_CHARACTERS, '').toLowerCase() // This replace is needed to avoid special characters... it could be handled better
+      deferredFilter.replace(AVOID_SPECIAL_CHARACTERS, '').toLowerCase() // This replace is needed to avoid special characters... it could be handled better
     );
     return favoritePart && fitInFilter;
   };
 
-  let localSongs = props.songs.filter(filterSong);
-  if (props.auto_sorting !== false) {
-    localSongs = localSongs.sort((a, b) => ('' + a.name).localeCompare(b.name));
-  }
+  // Filtro + ordinamento su 234 canti (con una localeCompare per confronto)
+  // giravano a ogni render, anche quando cambiava solo lo stato di un modale.
+  const localSongs = useMemo(() => {
+    const filtered = props.songs.filter(filterSong);
+    return props.auto_sorting !== false
+      ? filtered.sort((a, b) => ('' + a.name).localeCompare(b.name))
+      : filtered;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    props.songs,
+    props.auto_sorting,
+    deferredFilter,
+    showOnlyFavorites,
+    favoriteSongs
+  ]);
 
   return props.songs.length === 0 ? (
     <Grid
@@ -108,31 +157,17 @@ export default function ListSongs(props: PropsListSongs) {
             </IconButton>
           </Box>
         ))}
-      <List>
-        {localSongs.map((song) => {
+      <VirtualizedSongList songs={localSongs}>
+        {(song) => {
           if (props.mode === 'normal')
-            return (
-              <SongTile
-                key={song.id}
-                song={song}
-                onSecondaryAction={() => {
-                  setSongModal(song.id);
-                }}
-              />
-            );
+            return <SongTile song={song} onSecondaryAction={openSongModal} />;
           if (props.mode === 'selection_playlist') {
             assert(props.playlist !== undefined, 'Playlist is required');
-            return (
-              <SelectableSongTile
-                key={song.id}
-                song={song}
-                playlist={props.playlist}
-              />
-            );
+            return <SelectableSongTile song={song} playlist={props.playlist} />;
           }
-          return <></>;
-        })}
-      </List>
+          return null;
+        }}
+      </VirtualizedSongList>
       <ModalBottomSheetSong
         open={songModal !== ''}
         onClose={() => {

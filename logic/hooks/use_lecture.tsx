@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { LiturgyOfDay } from '../scraper_liturgy';
+import { LiturgyOfDay } from '../liturgy';
 import * as Sentry from '@sentry/nextjs';
 
 export const fetcher = async (
