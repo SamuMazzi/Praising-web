@@ -14,7 +14,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import nextEnv from '@next/env';
 import { cert, getApps, initializeApp } from 'firebase-admin/app';
-import { getFirestore } from 'firebase-admin/firestore';
+import { FieldValue, getFirestore } from 'firebase-admin/firestore';
 import { getAuth } from 'firebase-admin/auth';
 import { getStorage } from 'firebase-admin/storage';
 
@@ -102,6 +102,27 @@ const resolveEmails = async (auth, uids) => {
     }
   }
   return emails;
+};
+
+/**
+ * Lascia un avviso sul profilo dell'utente, che l'app mostra al prossimo
+ * avvio (`components/notification_song_published.tsx`).
+ *
+ * Sta sul documento `users/{uid}` e non su `proposed_songs` perche' quello
+ * l'app lo legge gia': nessuna query in piu' e nessuna regola nuova. L'`id`
+ * e' stabile per proposta, cosi' rilanciare il comando non crea doppioni.
+ */
+export const pushUserNotification = async (db, userId, notification) => {
+  if (!userId) return false;
+  const ref = db.collection('users').doc(userId);
+  const snap = await ref.get();
+  if (!snap.exists) return false;
+  const existing = snap.data().notifications ?? [];
+  if (existing.some((n) => n.id === notification.id)) return false;
+  await ref.update({
+    notifications: FieldValue.arrayUnion(notification)
+  });
+  return true;
 };
 
 const daysSince = (date) =>

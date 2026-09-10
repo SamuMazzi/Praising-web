@@ -92,7 +92,13 @@ export const signInWithGoogle = async (authUser: User) => {
       );
     }
     await afterSignGoogle(result, oldInfoUser ?? undefined);
-    if (oldIdUser !== null) {
+    /**
+     * Stesso inganno di `signInWithEmail`: `linkWithPopup` conserva l'uid
+     * dell'anonimo, quindi `oldIdUser` e' il documento che `afterSignGoogle`
+     * ha appena creato. Solo il ramo `signInWithPopup` cambia davvero uid, ed
+     * e' li' che il vecchio documento va cancellato.
+     */
+    if (oldIdUser !== null && oldIdUser !== auth.currentUser?.uid) {
       // We delete the old user
       await (await database()).deleteUserFromDatabase(oldIdUser);
     }
@@ -140,8 +146,27 @@ export const signInWithEmail = async (
       ).addUserToDatabase(authUser.uid, oldInfoUser ?? {});
     } else if (type === 'login') {
       await signInWithEmailAndPassword(auth, email, password);
+      // Chi si e' registrato quando la cancellazione qui sotto era
+      // incondizionata (vedi commento) e' rimasto senza profilo: lo
+      // ricreiamo al primo accesso, altrimenti preferiti, playlist e avvisi
+      // non hanno dove appoggiarsi.
+      const newId = auth.currentUser?.uid;
+      if (newId !== undefined) {
+        const serverInfo = await (await database()).getUserFromDatabase(newId);
+        if (serverInfo === undefined) {
+          await (await database()).addUserToDatabase(newId, {});
+        }
+      }
     }
-    await (await database()).deleteUserFromDatabase(oldIdUser);
+    /**
+     * Solo se l'accesso ha davvero cambiato uid, cioe' nel caso 'login'.
+     * In 'signup' `linkWithCredential` conserva l'uid dell'anonimo, quindi
+     * `oldIdUser` e' lo stesso documento appena creato qui sopra: cancellarlo
+     * senza questo controllo lasciava ogni nuovo iscritto senza profilo.
+     */
+    if (oldIdUser !== auth.currentUser?.uid) {
+      await (await database()).deleteUserFromDatabase(oldIdUser);
+    }
   } catch (error) {
     if (!(error instanceof FirebaseError)) {
       throw error;

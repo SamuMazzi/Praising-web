@@ -338,6 +338,27 @@ export const addUserToDatabase = async (
   return userInfo;
 };
 
+/**
+ * Avviso da mostrare all'utente la prossima volta che apre l'app.
+ *
+ * Vive sul documento dell'utente e non su `proposed_songs` perche' il profilo
+ * l'app lo legge gia' (`getUserFromDatabase`): nessuna query in piu' e, cosa
+ * che conta di piu', nessuna regola di sicurezza nuova da scrivere.
+ *
+ * Lo scrive la coda di revisione (`scripts/pending.mjs`), lo cancella il
+ * client quando l'utente lo chiude.
+ */
+export interface UserNotification {
+  /** Stabile: e' quello che rende l'invio ripetibile senza doppioni. */
+  id: string;
+  type: 'song_published';
+  /** Id del canto nel catalogo statico, per il link. */
+  songId: string;
+  songName: string;
+  /** Millisecondi, non Timestamp: viaggia dentro un array. */
+  createdAt: number;
+}
+
 export interface UserDatabase {
   favoriteSongs?: string[];
   sharedPlaylists?: string[] /* Array of playlist id got from other users */;
@@ -345,7 +366,22 @@ export interface UserDatabase {
   ownedParts?: string[];
   counter_pending_songs?: number;
   counter_pending_parts?: number;
+  notifications?: UserNotification[];
 }
+
+/**
+ * `arrayRemove` confronta l'oggetto intero: passiamo lo stesso che abbiamo
+ * letto dal profilo, cosi' due schede aperte insieme non si sovrascrivono
+ * l'array a vicenda.
+ */
+export const dismissUserNotification = async (
+  userId: string,
+  notification: UserNotification
+): Promise<void> => {
+  await updateDoc(doc(firestore, USERS_COLLECTION, userId), {
+    notifications: arrayRemove(notification)
+  });
+};
 
 export const deleteUserFromDatabase = async (userId: string) => {
   // TODO: Sooner or later we'll need to do this in firebase functions (now there is security issue)

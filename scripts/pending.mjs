@@ -27,6 +27,7 @@ import {
   PROPOSED_SONGS_COLLECTION,
   fetchPendingQueue,
   initAdmin,
+  pushUserNotification,
   uidOf
 } from './lib/pending_queue.mjs';
 
@@ -174,6 +175,31 @@ const triggerDeploy = async () => {
   }
 };
 
+/**
+ * Chi ha proposto il canto lo scopre aprendo l'app: l'avviso resta sul suo
+ * profilo finche' non lo chiude. L'`id` e' legato alla proposta, quindi
+ * riapprovare due volte non lascia due avvisi.
+ */
+const notifyProposer = async (db, userId, docId, songId, songName) => {
+  try {
+    const sent = await pushUserNotification(db, userId, {
+      id: `song:${docId}`,
+      type: 'song_published',
+      songId: String(songId),
+      songName: songName || `Canto ${songId}`,
+      createdAt: Date.now()
+    });
+    console.log(
+      sent
+        ? 'Avviso lasciato sul profilo di chi ha proposto il canto.'
+        : "Nessun avviso da lasciare (profilo assente o avviso gia' presente)."
+    );
+  } catch (e) {
+    // L'approvazione e' gia' andata a buon fine: l'avviso non la annulla.
+    console.log(`Avviso non salvato (${e.message}).`);
+  }
+};
+
 const showProposal = async () => {
   const docId = requireProposalId();
   const { db } = await initAdmin();
@@ -216,6 +242,7 @@ const approveProposal = async () => {
 
   await ref.update({ state: 'approved', songId, nameFile });
   console.log(`Approvato "${data.name}" come id ${songId} (${nameFile}).`);
+  await notifyProposer(db, data.userId, docId, songId, data.name);
   await triggerDeploy();
 };
 

@@ -10,6 +10,7 @@ import '../styles/globals.css';
 import { useEffect } from 'react';
 import { AuthContextProvider } from '@/logic/context/auth_context';
 import StoreHydration from '@/components/store_hydration';
+import NotificationSongPublished from '@/components/notification_song_published';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { DefaultSeo, NextSeo } from 'next-seo';
 import SEO from '../next-seo.config';
@@ -114,6 +115,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <StoreHydration />
           <AuthContextProvider>
             <Component {...pageProps} />
+            <NotificationSongPublished />
             <SpeedInsights />
           </AuthContextProvider>
         </ThemeProvider>
