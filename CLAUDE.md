@@ -16,7 +16,7 @@ npm run deploy         # script.py --generate-revisions && vercel build --prod &
 npm run lint:check     # eslint .   (lint:fix to autofix; note: `npm run linter` calls a non-existent lint:next script)
 npm run format         # prettier --write .  (format:check to verify)
 npm run knip           # unused files/exports/deps
-npm run pending        # review queue CLI: list | show | approve | reject | recount (see below)
+npm run pending        # review queue CLI: list | review | show | approve | reject | recount (see below)
 npm run sync:songs     # materialise Firestore-approved songs into the static catalog
 npx tsc --noEmit       # typecheck — the build does NOT fail on lint (eslint.ignoreDuringBuilds: true)
 ```
@@ -65,9 +65,12 @@ JSON or `GOOGLE_APPLICATION_CREDENTIALS` path):
 - `.github/workflows/pending-review.yml` runs `scripts/report_pending.mjs` daily
   and keeps **one** GitHub issue in sync (created when work is pending, updated
   silently, commented on only for new/newly-stuck items, closed when empty).
-- `npm run pending` (`scripts/pending.mjs`) acts on it: `list`, `approve`,
-  `reject`, `recount [--fix]`. `approve` does the state flip and the counter
-  decrement in one batch so they cannot drift.
+- `npm run pending` (`scripts/pending.mjs`) acts on it: `list`, `review`,
+  `approve`, `reject`, `recount [--fix]`. `review` walks the queue one item at
+  a time and asks what to do with each (approve / reject / show chords / skip),
+  reusing the same helpers as the one-shot commands; it needs a TTY. `approve`
+  does the state flip and the counter decrement in one batch so they cannot
+  drift.
 
 New songs (as opposed to versions of existing ones) are proposed from the app into `proposed_songs/{id}` in Firestore, ChordPro included as a document field — a song averages 860 B, and keeping it in the document makes approval one atomic write instead of two systems that can diverge. Listings must project with `.select()` so the text never travels. `npm run pending -- show|approve|reject song <docId>` handles them, and **approval assigns the `songId`**, not the build, so published URLs stay stable across deploys. `scripts/sync_songs.mjs` (first step of `npm run build`) is a pure projection: it materialises approved proposals into `public/accordi/*.crd` + `logic/songs.config.json`, is idempotent, and skips silently without Firebase credentials. Approving POSTs to `VERCEL_DEPLOY_HOOK_URL` when it is set.
 

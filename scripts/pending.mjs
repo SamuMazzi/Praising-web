@@ -9,6 +9,7 @@
  *
  * Usage:
  *   npm run pending                          list the queue
+ *   npm run pending -- review                walk the queue one item at a time
  *   npm run pending -- list --check-storage  also flag documents with no file
  *   npm run pending -- approve version 42 abc123
  *   npm run pending -- reject  part    42 def456
@@ -19,6 +20,7 @@
 import { FieldValue } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
 import { readFile } from 'node:fs/promises';
+import { createInterface } from 'node:readline/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import {
@@ -51,6 +53,40 @@ const die = (msg) => {
 const docRefFor = (db, kind, songId, docId) =>
   db.collection('songs').doc(songId).collection(COLLECTION[kind]).doc(docId);
 
+/** `hints` stampa i comandi da copiare: in `review` le azioni sono i tasti. */
+const printItem = (i, { hints = false } = {}) => {
+  if (i.kind === 'song') {
+    console.log(`  canto nuovo — ${i.songName}`);
+    console.log(
+      `    da <${i.email}>, in attesa da ${Math.floor(i.ageDays)} giorni`
+    );
+    if (i.authorName) console.log(`    autore: ${i.authorName}`);
+    if (i.linkSong) console.log(`    ${i.linkSong}`);
+    if (i.linkChords) console.log(`    accordi: ${i.linkChords}`);
+    if (hints) {
+      console.log(
+        `    accordi proposti: npm run pending -- show song ${i.docId}`
+      );
+      console.log(`    approva: npm run pending -- approve song ${i.docId}`);
+    }
+    return;
+  }
+  const what =
+    i.kind === 'version' ? 'versione' : `parte "${i.partName ?? '?'}"`;
+  const who = i.authorName ? `${i.authorName} <${i.email}>` : `<${i.email}>`;
+  console.log(`  ${what} — ${i.songName}`);
+  console.log(`    da ${who}, in attesa da ${Math.floor(i.ageDays)} giorni`);
+  console.log(`    ${i.previewUrl}`);
+  if (i.fileMissing === true) {
+    console.log(`    ❌ nessun file in storage: ${i.storagePath}`);
+  }
+  if (hints) {
+    console.log(
+      `    approva: npm run pending -- approve ${i.kind} ${i.songId} ${i.docId}`
+    );
+  }
+};
+
 const list = async () => {
   const items = await fetchPendingQueue({
     checkStorage: flags.has('--check-storage')
@@ -61,33 +97,7 @@ const list = async () => {
   }
   console.log(`${items.length} contributi in attesa (dal più vecchio):\n`);
   for (const i of items) {
-    if (i.kind === 'song') {
-      console.log(`  canto nuovo — ${i.songName}`);
-      console.log(
-        `    da <${i.email}>, in attesa da ${Math.floor(i.ageDays)} giorni`
-      );
-      if (i.authorName) console.log(`    autore: ${i.authorName}`);
-      if (i.linkSong) console.log(`    ${i.linkSong}`);
-      if (i.linkChords) console.log(`    accordi: ${i.linkChords}`);
-      console.log(
-        `    accordi proposti: npm run pending -- show song ${i.docId}`
-      );
-      console.log(`    approva: npm run pending -- approve song ${i.docId}`);
-      console.log('');
-      continue;
-    }
-    const what =
-      i.kind === 'version' ? 'versione' : `parte "${i.partName ?? '?'}"`;
-    const who = i.authorName ? `${i.authorName} <${i.email}>` : `<${i.email}>`;
-    console.log(`  ${what} — ${i.songName}`);
-    console.log(`    da ${who}, in attesa da ${Math.floor(i.ageDays)} giorni`);
-    console.log(`    ${i.previewUrl}`);
-    if (i.fileMissing === true) {
-      console.log(`    ❌ nessun file in storage: ${i.storagePath}`);
-    }
-    console.log(
-      `    approva: npm run pending -- approve ${i.kind} ${i.songId} ${i.docId}`
-    );
+    printItem(i, { hints: true });
     console.log('');
   }
 };
@@ -200,9 +210,7 @@ const notifyProposer = async (db, userId, docId, songId, songName) => {
   }
 };
 
-const showProposal = async () => {
-  const docId = requireProposalId();
-  const { db } = await initAdmin();
+const showProposalDoc = async (db, docId) => {
   const snap = await proposalRef(db, docId).get();
   if (!snap.exists) die(`Proposta non trovata: ${docId}`);
   const data = snap.data();
@@ -218,9 +226,13 @@ const showProposal = async () => {
   );
 };
 
-const approveProposal = async () => {
+const showProposal = async () => {
   const docId = requireProposalId();
   const { db } = await initAdmin();
+  await showProposalDoc(db, docId);
+};
+
+const approveProposalDoc = async (db, docId, { deploy = true } = {}) => {
   const ref = proposalRef(db, docId);
   const snap = await ref.get();
   if (!snap.exists) die(`Proposta non trovata: ${docId}`);
@@ -228,7 +240,7 @@ const approveProposal = async () => {
   const data = snap.data();
   if (data.state !== 'pending') {
     console.log(`Già in stato '${data.state}', niente da fare.`);
-    return;
+    return false;
   }
   if (!data.chordpro?.trim()) {
     die(
@@ -243,12 +255,18 @@ const approveProposal = async () => {
   await ref.update({ state: 'approved', songId, nameFile });
   console.log(`Approvato "${data.name}" come id ${songId} (${nameFile}).`);
   await notifyProposer(db, data.userId, docId, songId, data.name);
-  await triggerDeploy();
+  // In `review` il deploy parte una volta sola, alla fine del giro.
+  if (deploy) await triggerDeploy();
+  return true;
 };
 
-const rejectProposal = async () => {
+const approveProposal = async () => {
   const docId = requireProposalId();
   const { db } = await initAdmin();
+  await approveProposalDoc(db, docId);
+};
+
+const rejectProposalDoc = async (db, docId) => {
   const ref = proposalRef(db, docId);
   const snap = await ref.get();
   if (!snap.exists) die(`Proposta non trovata: ${docId}`);
@@ -256,10 +274,13 @@ const rejectProposal = async () => {
   console.log(`Proposta "${snap.data().name}" rifiutata ed eliminata.`);
 };
 
-const approve = async () => {
-  if (positional[1] === 'song') return await approveProposal();
-  const { kind, songId, docId } = requireTarget();
+const rejectProposal = async () => {
+  const docId = requireProposalId();
   const { db } = await initAdmin();
+  await rejectProposalDoc(db, docId);
+};
+
+const approveTarget = async (db, { kind, songId, docId }) => {
   const ref = docRefFor(db, kind, songId, docId);
   const snap = await ref.get();
   if (!snap.exists) die(`Documento non trovato: ${ref.path}`);
@@ -284,10 +305,13 @@ const approve = async () => {
   );
 };
 
-const reject = async () => {
-  if (positional[1] === 'song') return await rejectProposal();
-  const { kind, songId, docId } = requireTarget();
+const approve = async () => {
+  if (positional[1] === 'song') return await approveProposal();
   const { db } = await initAdmin();
+  await approveTarget(db, requireTarget());
+};
+
+const rejectTarget = async (db, { kind, songId, docId }) => {
   const ref = docRefFor(db, kind, songId, docId);
   const snap = await ref.get();
   if (!snap.exists) die(`Documento non trovato: ${ref.path}`);
@@ -316,6 +340,12 @@ const reject = async () => {
   } catch (e) {
     console.log(`Rifiutato ${ref.path}. File non rimosso (${e.message}).`);
   }
+};
+
+const reject = async () => {
+  if (positional[1] === 'song') return await rejectProposal();
+  const { db } = await initAdmin();
+  await rejectTarget(db, requireTarget());
 };
 
 /**
@@ -390,7 +420,117 @@ const recount = async () => {
   console.log(`\nCorretti ${drifted.length} utenti.`);
 };
 
-const commands = { list, approve, reject, recount, show: showProposal };
+/**
+ * Scorre la coda un elemento alla volta chiedendo cosa farne.
+ *
+ * Le azioni sono esattamente quelle dei comandi singoli: qui cambia solo il
+ * modo di sceglierle, cosi' non serve copiare songId e docId a mano. Il
+ * default e' saltare — un invio a vuoto non tocca niente — e il rifiuto, che
+ * cancella documento e file, chiede sempre conferma.
+ */
+const review = async () => {
+  if (!process.stdin.isTTY) {
+    die('`review` ha bisogno di un terminale interattivo.');
+  }
+  const items = await fetchPendingQueue({
+    checkStorage: flags.has('--check-storage')
+  });
+  if (items.length === 0) {
+    console.log('Nessun contributo in attesa.');
+    return;
+  }
+
+  const { db } = await initAdmin();
+  const rl = createInterface({ input: process.stdin, output: process.stdout });
+  const ask = async (q) => (await rl.question(q)).trim().toLowerCase();
+  const confirmed = async (q) => ['s', 'si', 'sì'].includes(await ask(q));
+
+  const done = { approvati: 0, rifiutati: 0, saltati: 0 };
+  let deployPending = false;
+  let quit = false;
+
+  try {
+    for (const [index, item] of items.entries()) {
+      if (quit) break;
+      console.log(`\n[${index + 1}/${items.length}]`);
+      printItem(item);
+
+      let acted = false;
+      while (!acted) {
+        const choice = await ask(
+          item.kind === 'song'
+            ? '  a) approva  r) rifiuta  t) mostra accordi  s) salta  q) esci > '
+            : '  a) approva  r) rifiuta  s) salta  q) esci > '
+        );
+        switch (choice) {
+          case 'a':
+            if (item.kind === 'song') {
+              // Il deploy parte una volta sola, dopo l'ultimo elemento.
+              deployPending =
+                (await approveProposalDoc(db, item.docId, { deploy: false })) ||
+                deployPending;
+            } else {
+              await approveTarget(db, item);
+            }
+            done.approvati += 1;
+            acted = true;
+            break;
+          case 'r':
+            if (
+              !(await confirmed(
+                '  Il rifiuto cancella documento e file: confermi? [s/N] '
+              ))
+            ) {
+              break;
+            }
+            if (item.kind === 'song') {
+              await rejectProposalDoc(db, item.docId);
+            } else {
+              await rejectTarget(db, item);
+            }
+            done.rifiutati += 1;
+            acted = true;
+            break;
+          case 't':
+            if (item.kind === 'song') {
+              console.log('');
+              await showProposalDoc(db, item.docId);
+            }
+            break;
+          case 'q':
+            quit = true;
+            acted = true;
+            break;
+          case '':
+          case 's':
+            done.saltati += 1;
+            acted = true;
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  } finally {
+    rl.close();
+  }
+
+  const rimasti = items.length - done.approvati - done.rifiutati - done.saltati;
+  console.log(
+    `\n${done.approvati} approvati, ${done.rifiutati} rifiutati, ` +
+      `${done.saltati} saltati${rimasti > 0 ? `, ${rimasti} non visti` : ''}.`
+  );
+  if (deployPending) await triggerDeploy();
+};
+
+const commands = {
+  list,
+  review,
+  approve,
+  reject,
+  recount,
+  show: showProposal
+};
 
 const run = commands[command];
 if (!run) {
