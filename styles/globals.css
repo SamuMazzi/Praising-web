@@ -17,6 +17,10 @@ a {
 .chorus {
   font-weight: bold;
 }
+/* Stacco tra strofa e ritornello (classe messa da handle_text_song). */
+.block-start {
+  margin-top: 1.2rem;
+}
 
 .chord {
   color: #f0b647;

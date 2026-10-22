@@ -1,5 +1,6 @@
 import { type InfoLocalSong } from '@/logic/redux/info_song_slice';
 import React from 'react';
+import { SONG_SIDE_PADDING } from '@/logic/handle_text_song';
 
 interface PropsSongDiv {
   html: string;
@@ -16,7 +17,12 @@ export const SongDiv = (props: PropsSongDiv) => {
         lang="it"
         translate="no"
         className="notranslate"
-        style={{ fontSize: props.infoSong?.zoom ?? 17, marginTop: '1.2rem' }}
+        style={{
+          fontSize: props.infoSong?.zoom ?? 17,
+          marginTop: '1.2rem',
+          paddingLeft: SONG_SIDE_PADDING,
+          paddingRight: SONG_SIDE_PADDING
+        }}
         dangerouslySetInnerHTML={{ __html: props.html }}
       />
     </div>

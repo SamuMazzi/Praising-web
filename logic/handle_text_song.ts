@@ -58,6 +58,11 @@ const CHORD_CSS = 'chord';
 const COLUMN_CSS = 'column';
 const LYRICS_CSS = 'lyrics';
 const ROW_CSS = 'row';
+/** Prima riga di un blocco strofa/ritornello: in CSS prende lo spazio sopra
+ *  che una volta davano le sezioni comprimibili. */
+const BLOCK_START_CSS = 'block-start';
+/** Margine orizzontale del testo, per lato (vedi `SongDiv`). */
+export const SONG_SIDE_PADDING = 20;
 
 const findLinesChorus = (deserialized: Song): number[] => {
   const linesChorus: number[] = [];
@@ -165,7 +170,7 @@ const adjustFontSize = (doc: Document, oldFontSize: number): number => {
   });
   let i = oldFontSize;
   for (i = oldFontSize; i > 1; --i) {
-    if (measureText(maxLenRow, i) < window.innerWidth) {
+    if (measureText(maxLenRow, i) < window.innerWidth - 2 * SONG_SIDE_PADDING) {
       break;
     }
   }
@@ -189,8 +194,14 @@ const editHTML = (doc: Document, chordNotation: ChordNotations): string => {
     setText(htmlChord, out);
   });
   const rows = byClass(doc, ROW_CSS);
-  rows.forEach((row) => {
+  let isChorus = false;
+  rows.forEach((row, i) => {
     internalEditTML(row);
+    const isNewChorus = hasClass(row, CHORUS_CSS);
+    if (i > 0 && isChorus !== isNewChorus) {
+      addClass(row, BLOCK_START_CSS);
+    }
+    isChorus = isNewChorus;
   });
 
   return renderNodes(rows);
