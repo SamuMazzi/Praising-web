@@ -20,6 +20,8 @@ church.
 
 The app and its song catalog are in Italian.
 
+[▶ Watch the demo video](docs/demo.mp4)
+
 ## Features
 
 - **Songs with chords**: ChordPro rendering with highlighted choruses and
