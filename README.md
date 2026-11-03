@@ -20,7 +20,7 @@ church.
 
 The app and its song catalog are in Italian.
 
-[▶ Watch the demo video](docs/demo.mp4)
+[![Praising demo](docs/demo.gif)](docs/demo.mp4)
 
 ## Features
 
